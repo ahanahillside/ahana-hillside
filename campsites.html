@@ -107,6 +107,8 @@
             margin: 0 auto;
             padding: 2rem 2rem 0;
             animation: fadeIn 0.6s ease-out 0.15s both;
+            position: relative;
+            z-index: 10;
         }
 
         .search-bar-inner {
@@ -237,8 +239,7 @@
         .campsite-media .carousel {
             position: relative;
             overflow: hidden;
-            height: 100%;
-            min-height: 380px;
+            aspect-ratio: 5 / 4;
         }
 
         .carousel-track {
@@ -923,8 +924,6 @@
             }
 
             .campsite-media .carousel {
-                min-height: auto;
-                height: auto;
                 aspect-ratio: 4 / 3;
             }
 
