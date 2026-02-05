@@ -44,7 +44,7 @@ const DEFAULT_CONFIG = {
 
 const DEFAULT_PASSWORD = 'ahana2026';
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
-const MAX_IMAGES_PER_SITE = 20;
+const MAX_IMAGES_PER_SITE = 15;
 
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.some(o => origin && origin.startsWith(o));
