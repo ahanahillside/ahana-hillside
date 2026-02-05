@@ -2,8 +2,8 @@
 // Deploy: npx wrangler deploy worker/ical-proxy.js --name ahana-ical-proxy
 
 const ICAL_FEEDS = {
-  samavas: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=87645&s=940738',
-  chhaya: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=87646&s=1103648',
+  samavas: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=92310&s=940738',
+  chhaya: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=92309&s=1103648',
 };
 
 const ALLOWED_ORIGINS = [
