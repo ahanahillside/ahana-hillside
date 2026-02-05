@@ -475,6 +475,38 @@
         .dot-loading { background: var(--color-stone); }
         .dot-error { background: #b44; }
 
+        /* Rules section */
+        .rules {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+            text-align: center;
+            animation: fadeIn 0.6s ease-out 0.3s both;
+        }
+
+        .rules h2 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 1rem;
+        }
+
+        .rules ul {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+        }
+
+        .rules li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid var(--color-light-stone);
+        }
+
+        .rules li:last-child {
+            border-bottom: none;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -530,7 +562,7 @@
                 <div class="campsite-name">SAMAVAS</div>
                 <div class="campsite-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
                 <p class="campsite-description">
-                    Our eco-friendly facilities blend seamlessly with the environment, ensuring a minimal footprint while providing the essentials for a comfortable stay in nature.
+                    Our largest site, accommodating up to 15 people. Set furthest from the main house for maximum privacy, SAMAVAS is ideal for groups and families looking for a secluded spot in the rainforest.
                 </p>
                 <div class="campsite-amenities">
                     <div class="amenity">
@@ -608,7 +640,7 @@
                 <div class="campsite-name">CHHAYA</div>
                 <div class="campsite-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
                 <p class="campsite-description">
-                    Our eco-friendly facilities blend seamlessly with the environment, ensuring a minimal footprint while providing the essentials for a comfortable stay in nature.
+                    A cosy, intimate site perfect for couples and solo campers. CHHAYA is just a few metres from the toilets, offering convenience without sacrificing the peaceful rainforest setting.
                 </p>
                 <div class="campsite-amenities">
                     <div class="amenity">
@@ -678,6 +710,15 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="rules">
+        <h2>Campground Rules</h2>
+        <ul>
+            <li>No parties allowed without prior permission</li>
+            <li>No loud or open music</li>
+            <li>All dogs must be kept on a leash when on the main campground</li>
+        </ul>
     </div>
 
     <!-- Lightbox -->
