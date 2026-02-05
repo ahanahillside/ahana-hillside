@@ -478,6 +478,114 @@
             border-top: 1px solid var(--color-light-stone);
         }
 
+        /* Calendar */
+        .cal-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .cal-nav-btn {
+            background: none;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.3rem 0.75rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            color: var(--color-charcoal);
+            transition: border-color 0.2s;
+        }
+
+        .cal-nav-btn:hover { border-color: var(--color-forest); }
+
+        .cal-month-label {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .cal-header-cell {
+            text-align: center;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-stone);
+            padding: 0.3rem 0;
+        }
+
+        .cal-cell {
+            text-align: center;
+            padding: 0.4rem 0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: background 0.15s, color 0.15s;
+            user-select: none;
+        }
+
+        .cal-cell:hover { background: var(--color-light-stone); }
+
+        .cal-cell.empty {
+            cursor: default;
+        }
+
+        .cal-cell.empty:hover { background: none; }
+
+        .cal-cell.past {
+            color: #ccc;
+            cursor: default;
+        }
+
+        .cal-cell.past:hover { background: none; }
+
+        .cal-cell.blocked {
+            background: #c0392b;
+            color: #fff;
+            border-radius: 2px;
+        }
+
+        .cal-cell.blocked:hover {
+            background: #a93226;
+        }
+
+        .cal-cell.today {
+            border: 1px solid var(--color-forest);
+            font-weight: 600;
+        }
+
+        .cal-legend {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .legend-swatch {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 1px solid var(--color-light-stone);
+        }
+
+        .legend-available { background: #fff; }
+        .legend-blocked { background: #c0392b; border-color: #c0392b; }
+        .legend-past { background: #f0f0f0; }
+
         /* Upload zone */
         .upload-zone {
             border: 2px dashed var(--color-light-stone);
@@ -629,7 +737,8 @@
 
     <!-- Sub-tabs for Campsites -->
     <div class="sub-tabs" id="campsites-sub-tabs">
-        <button class="sub-tab-btn active" data-subtab="images">Images</button>
+        <button class="sub-tab-btn active" data-subtab="availability">Availability</button>
+        <button class="sub-tab-btn" data-subtab="images">Images</button>
         <button class="sub-tab-btn" data-subtab="pricing">Pricing</button>
         <button class="sub-tab-btn" data-subtab="content">Content</button>
         <button class="sub-tab-btn" data-subtab="promos">Promo Codes</button>
@@ -648,8 +757,50 @@
         <!-- CAMPSITES PANEL (contains sub-panels) -->
         <div class="tab-panel" id="panel-campsites">
 
+            <!-- Availability sub-panel -->
+            <div class="sub-panel active" id="subpanel-availability">
+                <div class="panel-title">Availability</div>
+                <div class="panel-desc">Click dates to block or unblock them. Blocked dates cannot be booked by guests. Red = blocked.</div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">SAMAVAS</div>
+                        <div class="cal-nav">
+                            <button class="cal-nav-btn" onclick="calNav('samavas', -1)">&larr;</button>
+                            <span class="cal-month-label" id="cal-label-samavas"></span>
+                            <button class="cal-nav-btn" onclick="calNav('samavas', 1)">&rarr;</button>
+                        </div>
+                        <div class="cal-grid" id="cal-grid-samavas"></div>
+                        <div class="save-bar" style="margin-top:1rem">
+                            <button class="btn btn-primary" onclick="saveBlockedDates('samavas')">Save</button>
+                            <span class="save-msg" id="avail-samavas-msg"></span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">CHHAYA</div>
+                        <div class="cal-nav">
+                            <button class="cal-nav-btn" onclick="calNav('chhaya', -1)">&larr;</button>
+                            <span class="cal-month-label" id="cal-label-chhaya"></span>
+                            <button class="cal-nav-btn" onclick="calNav('chhaya', 1)">&rarr;</button>
+                        </div>
+                        <div class="cal-grid" id="cal-grid-chhaya"></div>
+                        <div class="save-bar" style="margin-top:1rem">
+                            <button class="btn btn-primary" onclick="saveBlockedDates('chhaya')">Save</button>
+                            <span class="save-msg" id="avail-chhaya-msg"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cal-legend">
+                    <span class="legend-item"><span class="legend-swatch legend-available"></span> Available</span>
+                    <span class="legend-item"><span class="legend-swatch legend-blocked"></span> Blocked</span>
+                    <span class="legend-item"><span class="legend-swatch legend-past"></span> Past</span>
+                </div>
+            </div>
+
             <!-- Images sub-panel -->
-            <div class="sub-panel active" id="subpanel-images">
+            <div class="sub-panel" id="subpanel-images">
                 <div class="panel-title">Campsite Images</div>
                 <div class="panel-desc">Upload, reorder, and manage photos for each campsite. First image is the cover photo. Max 15 images per site, 5MB each (JPEG, PNG, WebP).</div>
 
@@ -890,6 +1041,7 @@
         loadConfig();
         loadMessages();
         loadImages();
+        loadBlockedDates();
     }
 
     // --- Config ---
@@ -1185,6 +1337,108 @@
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
+    }
+
+    // --- Availability / Blocked Dates ---
+    const calState = {
+        samavas: { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
+        chhaya:  { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
+    };
+
+    async function loadBlockedDates() {
+        for (const site of ['samavas', 'chhaya']) {
+            try {
+                const res = await fetch(WORKER_URL + '/blocked-dates/' + site);
+                const data = await res.json();
+                calState[site].blocked = new Set(data.blockedDates || []);
+            } catch (err) {
+                calState[site].blocked = new Set();
+            }
+            renderCalendar(site);
+        }
+    }
+
+    function renderCalendar(site) {
+        const state = calState[site];
+        const year = state.year;
+        const month = state.month;
+        const grid = document.getElementById('cal-grid-' + site);
+        const label = document.getElementById('cal-label-' + site);
+
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        label.textContent = monthNames[month] + ' ' + year;
+
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+        const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        let html = '';
+        // Day headers
+        ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+            html += '<div class="cal-header-cell">' + d + '</div>';
+        });
+
+        // Empty cells before first day
+        for (let i = 0; i < firstDay; i++) {
+            html += '<div class="cal-cell empty"></div>';
+        }
+
+        // Day cells
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+            const isPast = dateStr < todayStr;
+            const isBlocked = state.blocked.has(dateStr);
+            const isToday = dateStr === todayStr;
+
+            let cls = 'cal-cell';
+            if (isPast) cls += ' past';
+            if (isBlocked) cls += ' blocked';
+            if (isToday) cls += ' today';
+
+            const clickHandler = isPast ? '' : ' onclick="toggleDate(\'' + site + '\',\'' + dateStr + '\')"';
+            html += '<div class="' + cls + '"' + clickHandler + '>' + d + '</div>';
+        }
+
+        grid.innerHTML = html;
+    }
+
+    function toggleDate(site, dateStr) {
+        const state = calState[site];
+        if (state.blocked.has(dateStr)) {
+            state.blocked.delete(dateStr);
+        } else {
+            state.blocked.add(dateStr);
+        }
+        renderCalendar(site);
+    }
+
+    function calNav(site, dir) {
+        const state = calState[site];
+        state.month += dir;
+        if (state.month > 11) { state.month = 0; state.year++; }
+        if (state.month < 0) { state.month = 11; state.year--; }
+        renderCalendar(site);
+    }
+
+    async function saveBlockedDates(site) {
+        const dates = [...calState[site].blocked].sort();
+        try {
+            const res = await fetch(WORKER_URL + '/blocked-dates', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ site, dates }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMsg('avail-' + site, 'Saved — ' + data.count + ' dates blocked', 'success');
+            } else {
+                showMsg('avail-' + site, data.error || 'Save failed', 'error');
+            }
+        } catch (err) {
+            showMsg('avail-' + site, 'Connection error', 'error');
+        }
     }
 
     // --- Images ---
