@@ -315,6 +315,40 @@
             color: var(--color-stone);
         }
 
+        .date-warning {
+            display: none;
+            font-size: 0.8rem;
+            color: #b44;
+            padding: 0.5rem 0.65rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-warning.show {
+            display: block;
+        }
+
+        .availability-status {
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: var(--color-stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .availability-status .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 0.3rem;
+            vertical-align: middle;
+        }
+
+        .dot-live { background: #5a9a5a; }
+        .dot-loading { background: var(--color-stone); }
+        .dot-error { background: #b44; }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -388,6 +422,10 @@
                     <span class="price-note">for 2 guests</span>
                 </div>
 
+                <div class="availability-status" id="samavas-status">
+                    <span class="dot dot-loading"></span> Checking availability...
+                </div>
+
                 <form class="booking-form" onsubmit="handleBooking(event, 'samavas')">
                     <div class="form-row">
                         <div class="form-field">
@@ -419,6 +457,7 @@
                         <label for="samavas-email">Email</label>
                         <input type="email" id="samavas-email" placeholder="you@email.com" required>
                     </div>
+                    <div class="date-warning" id="samavas-warning">Selected dates are unavailable. Please choose different dates.</div>
                     <button type="submit" class="btn-book">Request Booking</button>
                 </form>
 
@@ -463,6 +502,10 @@
                     <span class="price-note">for 2 guests</span>
                 </div>
 
+                <div class="availability-status" id="chhaya-status">
+                    <span class="dot dot-loading"></span> Checking availability...
+                </div>
+
                 <form class="booking-form" onsubmit="handleBooking(event, 'chhaya')">
                     <div class="form-row">
                         <div class="form-field">
@@ -494,6 +537,7 @@
                         <label for="chhaya-email">Email</label>
                         <input type="email" id="chhaya-email" placeholder="you@email.com" required>
                     </div>
+                    <div class="date-warning" id="chhaya-warning">Selected dates are unavailable. Please choose different dates.</div>
                     <button type="submit" class="btn-book">Request Booking</button>
                 </form>
 
@@ -506,16 +550,70 @@
     </div>
 
     <script>
-        // Set minimum dates to today
+        // --- Configuration ---
+        // Replace this URL with your deployed Cloudflare Worker URL
+        const WORKER_URL = 'https://ahana-ical-proxy.YOUR_SUBDOMAIN.workers.dev';
+
+        // --- State ---
+        const bookedDates = { samavas: [], chhaya: [] };
+
+        // --- Date helpers ---
         const today = new Date().toISOString().split('T')[0];
         document.querySelectorAll('input[type="date"]').forEach(input => {
             input.setAttribute('min', today);
         });
 
-        // Auto-set checkout to day after check-in
+        function getDatesInRange(start, end) {
+            const dates = [];
+            const current = new Date(start);
+            const endDate = new Date(end);
+            while (current < endDate) {
+                dates.push(current.toISOString().split('T')[0]);
+                current.setDate(current.getDate() + 1);
+            }
+            return dates;
+        }
+
+        function hasConflict(site, checkinVal, checkoutVal) {
+            if (!checkinVal || !checkoutVal) return false;
+            const requested = getDatesInRange(checkinVal, checkoutVal);
+            return requested.some(d => bookedDates[site].includes(d));
+        }
+
+        function updateWarning(site) {
+            const checkin = document.getElementById(site + '-checkin').value;
+            const checkout = document.getElementById(site + '-checkout').value;
+            const warning = document.getElementById(site + '-warning');
+            const conflict = hasConflict(site, checkin, checkout);
+            warning.classList.toggle('show', conflict);
+            return conflict;
+        }
+
+        // --- Fetch availability from Cloudflare Worker ---
+        async function fetchAvailability(site) {
+            const statusEl = document.getElementById(site + '-status');
+            try {
+                const res = await fetch(WORKER_URL + '?site=' + site);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                bookedDates[site] = data.bookedDates || [];
+
+                if (bookedDates[site].length > 0) {
+                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; ' + bookedDates[site].length + ' date(s) booked';
+                } else {
+                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; all dates available';
+                }
+            } catch (err) {
+                statusEl.innerHTML = '<span class="dot dot-error"></span> Could not load availability';
+                console.warn('Availability fetch failed for ' + site + ':', err);
+            }
+        }
+
+        // --- Date picker logic ---
         ['samavas', 'chhaya'].forEach(site => {
             const checkin = document.getElementById(site + '-checkin');
             const checkout = document.getElementById(site + '-checkout');
+
             checkin.addEventListener('change', () => {
                 if (checkin.value) {
                     const next = new Date(checkin.value);
@@ -525,15 +623,22 @@
                         checkout.value = next.toISOString().split('T')[0];
                     }
                 }
+                updateWarning(site);
             });
+
+            checkout.addEventListener('change', () => updateWarning(site));
         });
 
+        // --- Booking handler ---
         function handleBooking(event, site) {
             event.preventDefault();
+
+            // Check for date conflicts
+            if (updateWarning(site)) return;
+
             const form = event.target;
             const confirmation = document.getElementById(site + '-confirmation');
 
-            // Build mailto link as a simple booking mechanism
             const checkin = document.getElementById(site + '-checkin').value;
             const checkout = document.getElementById(site + '-checkout').value;
             const guests = document.getElementById(site + '-guests').value;
@@ -553,10 +658,13 @@
                 + encodeURIComponent(subject)
                 + '&body=' + encodeURIComponent(body);
 
-            // Show confirmation
             form.style.display = 'none';
             confirmation.classList.add('show');
         }
+
+        // --- Init: fetch availability on page load ---
+        fetchAvailability('samavas');
+        fetchAvailability('chhaya');
     </script>
 </body>
 </html>
