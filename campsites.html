@@ -838,11 +838,11 @@
                     <div class="form-row">
                         <div class="form-field">
                             <label for="samavas-checkin">Check-in</label>
-                            <input type="text" id="samavas-checkin" readonly placeholder="DD/MM/YYYY" required>
+                            <input type="text" id="samavas-checkin" readonly placeholder="DD/MM/YYYY">
                         </div>
                         <div class="form-field">
                             <label for="samavas-checkout">Check-out</label>
-                            <input type="text" id="samavas-checkout" readonly placeholder="DD/MM/YYYY" required>
+                            <input type="text" id="samavas-checkout" readonly placeholder="DD/MM/YYYY">
                         </div>
                     </div>
                     <div class="form-row">
@@ -928,11 +928,11 @@
                     <div class="form-row">
                         <div class="form-field">
                             <label for="chhaya-checkin">Check-in</label>
-                            <input type="text" id="chhaya-checkin" readonly placeholder="DD/MM/YYYY" required>
+                            <input type="text" id="chhaya-checkin" readonly placeholder="DD/MM/YYYY">
                         </div>
                         <div class="form-field">
                             <label for="chhaya-checkout">Check-out</label>
-                            <input type="text" id="chhaya-checkout" readonly placeholder="DD/MM/YYYY" required>
+                            <input type="text" id="chhaya-checkout" readonly placeholder="DD/MM/YYYY">
                         </div>
                     </div>
                     <div class="form-row">
@@ -1640,7 +1640,10 @@
             const email = document.getElementById(site + '-email').value;
             const phone = document.getElementById(site + '-phone').value;
 
-            if (!checkin || !checkout) return;
+            if (!checkin || !checkout) {
+                alert('Please select check-in and check-out dates.');
+                return;
+            }
 
             // Calculate pricing
             const cfg = siteConfig[site];
