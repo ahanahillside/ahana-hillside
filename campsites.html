@@ -855,6 +855,8 @@
     </div>
 
     <script>
+        const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+
         // --- Image carousel & lightbox ---
         const SITES = {
             samavas: { folder: 'images/samavas/', maxImages: 10, alt: 'SAMAVAS campsite at Ahana Hillside' },
@@ -1002,17 +1004,31 @@
         });
 
         // --- Init carousels ---
+        // Try loading from Worker (uploaded images), fall back to local files
         async function initCarousels() {
             for (const [site, cfg] of Object.entries(SITES)) {
-                const images = await probeImages(cfg.folder, cfg.maxImages);
+                let images = [];
+
+                // Try Worker-hosted images first
+                try {
+                    const res = await fetch(WORKER_URL + '/images/list/' + site);
+                    const data = await res.json();
+                    if (data.images && data.images.length > 0) {
+                        images = data.images.map(img => WORKER_URL + '/images/' + site + '/' + img.id);
+                    }
+                } catch (e) {}
+
+                // Fall back to local files if no Worker images
+                if (images.length === 0) {
+                    images = await probeImages(cfg.folder, cfg.maxImages);
+                }
+
                 buildCarousel('carousel-' + site, images, cfg.alt);
             }
         }
         initCarousels();
 
         // --- Configuration ---
-        const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
-
         // Default config (used as fallback if worker config fetch fails)
         const DEFAULT_CONFIG = {
             samavas: { basePrice: 66, extraGuestFee: 15, maxGuests: 20 },

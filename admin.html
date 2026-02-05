@@ -478,6 +478,115 @@
             border-top: 1px solid var(--color-light-stone);
         }
 
+        /* Upload zone */
+        .upload-zone {
+            border: 2px dashed var(--color-light-stone);
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            margin-bottom: 0.75rem;
+            color: var(--color-stone);
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--color-forest);
+            background: rgba(44, 62, 45, 0.03);
+        }
+
+        .upload-zone svg {
+            display: block;
+            margin: 0 auto 0.5rem;
+            color: var(--color-stone);
+        }
+
+        .upload-zone span {
+            font-size: 0.8rem;
+        }
+
+        .upload-progress {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            margin-bottom: 0.5rem;
+            min-height: 1em;
+        }
+
+        /* Image grid */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+        }
+
+        .img-thumb {
+            position: relative;
+            aspect-ratio: 4/3;
+            border: 1px solid var(--color-light-stone);
+            overflow: hidden;
+            background: #eee;
+        }
+
+        .img-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .img-thumb .img-order {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            font-size: 0.6rem;
+            padding: 1px 5px;
+            border-radius: 2px;
+        }
+
+        .img-thumb .img-actions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            gap: 1px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .img-thumb:hover .img-actions {
+            opacity: 1;
+        }
+
+        .img-action-btn {
+            flex: 1;
+            padding: 4px 0;
+            border: none;
+            font-size: 0.6rem;
+            font-family: var(--font-sans);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .img-action-btn.move-btn {
+            background: rgba(44, 62, 45, 0.85);
+            color: #fff;
+        }
+
+        .img-action-btn.delete-btn {
+            background: rgba(187, 68, 68, 0.85);
+            color: #fff;
+        }
+
+        .img-empty {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            padding: 0.5rem 0;
+            grid-column: 1 / -1;
+        }
+
         /* Responsive */
         @media (max-width: 700px) {
             .card-grid { grid-template-columns: 1fr; }
@@ -520,7 +629,8 @@
 
     <!-- Sub-tabs for Campsites -->
     <div class="sub-tabs" id="campsites-sub-tabs">
-        <button class="sub-tab-btn active" data-subtab="pricing">Pricing</button>
+        <button class="sub-tab-btn active" data-subtab="images">Images</button>
+        <button class="sub-tab-btn" data-subtab="pricing">Pricing</button>
         <button class="sub-tab-btn" data-subtab="content">Content</button>
         <button class="sub-tab-btn" data-subtab="promos">Promo Codes</button>
         <button class="sub-tab-btn" data-subtab="rules">Rules</button>
@@ -538,8 +648,38 @@
         <!-- CAMPSITES PANEL (contains sub-panels) -->
         <div class="tab-panel" id="panel-campsites">
 
+            <!-- Images sub-panel -->
+            <div class="sub-panel active" id="subpanel-images">
+                <div class="panel-title">Campsite Images</div>
+                <div class="panel-desc">Upload, reorder, and manage photos for each campsite. First image is the cover photo. Max 20 images per site, 5MB each (JPEG, PNG, WebP).</div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">SAMAVAS</div>
+                        <div class="upload-zone" id="upload-zone-samavas" onclick="document.getElementById('file-samavas').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-samavas" accept="image/jpeg,image/png,image/webp" multiple style="display:none" onchange="handleFileSelect('samavas', this.files)">
+                        </div>
+                        <div class="upload-progress" id="progress-samavas"></div>
+                        <div class="image-grid" id="images-samavas"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">CHHAYA</div>
+                        <div class="upload-zone" id="upload-zone-chhaya" onclick="document.getElementById('file-chhaya').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-chhaya" accept="image/jpeg,image/png,image/webp" multiple style="display:none" onchange="handleFileSelect('chhaya', this.files)">
+                        </div>
+                        <div class="upload-progress" id="progress-chhaya"></div>
+                        <div class="image-grid" id="images-chhaya"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Pricing sub-panel -->
-            <div class="sub-panel active" id="subpanel-pricing">
+            <div class="sub-panel" id="subpanel-pricing">
                 <div class="panel-title">Pricing</div>
                 <div class="panel-desc">Set base prices and extra guest fees for each campsite. Prices are per night in AUD.</div>
 
@@ -749,6 +889,7 @@
         document.getElementById('dashboard').classList.add('show');
         loadConfig();
         loadMessages();
+        loadImages();
     }
 
     // --- Config ---
@@ -1045,6 +1186,145 @@
         div.textContent = str;
         return div.innerHTML;
     }
+
+    // --- Images ---
+    let siteImages = { samavas: [], chhaya: [] };
+
+    async function loadImages() {
+        for (const site of ['samavas', 'chhaya']) {
+            try {
+                const res = await fetch(WORKER_URL + '/images/list/' + site);
+                const data = await res.json();
+                siteImages[site] = data.images || [];
+            } catch (err) {
+                siteImages[site] = [];
+            }
+            renderImages(site);
+        }
+    }
+
+    function renderImages(site) {
+        const container = document.getElementById('images-' + site);
+        const images = siteImages[site];
+
+        if (images.length === 0) {
+            container.innerHTML = '<div class="img-empty">No images uploaded yet.</div>';
+            return;
+        }
+
+        container.innerHTML = images.map((img, i) => {
+            const imgUrl = WORKER_URL + '/images/' + site + '/' + img.id;
+            return '<div class="img-thumb">'
+                + '<img src="' + imgUrl + '" alt="' + escHtml(img.name || '') + '" loading="lazy">'
+                + '<span class="img-order">' + (i + 1) + '</span>'
+                + '<div class="img-actions">'
+                + (i > 0 ? '<button class="img-action-btn move-btn" onclick="moveImage(\'' + site + '\',' + i + ',-1)" title="Move left">&larr;</button>' : '')
+                + (i < images.length - 1 ? '<button class="img-action-btn move-btn" onclick="moveImage(\'' + site + '\',' + i + ',1)" title="Move right">&rarr;</button>' : '')
+                + '<button class="img-action-btn delete-btn" onclick="deleteImage(\'' + site + '\',\'' + img.id + '\')" title="Delete">DEL</button>'
+                + '</div>'
+                + '</div>';
+        }).join('');
+    }
+
+    async function handleFileSelect(site, files) {
+        if (!files || files.length === 0) return;
+        const progressEl = document.getElementById('progress-' + site);
+        const total = files.length;
+        let uploaded = 0;
+
+        for (const file of files) {
+            progressEl.textContent = 'Uploading ' + (uploaded + 1) + ' of ' + total + '...';
+
+            const formData = new FormData();
+            formData.append('site', site);
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(WORKER_URL + '/images/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + authToken },
+                    body: formData,
+                });
+                const data = await res.json();
+                if (data.success) {
+                    siteImages[site].push({
+                        id: data.id,
+                        name: file.name,
+                        contentType: file.type,
+                        size: file.size,
+                    });
+                    uploaded++;
+                } else {
+                    progressEl.textContent = 'Error: ' + (data.error || 'Upload failed');
+                    break;
+                }
+            } catch (err) {
+                progressEl.textContent = 'Upload failed — connection error';
+                break;
+            }
+        }
+
+        if (uploaded === total) {
+            progressEl.textContent = uploaded + ' image(s) uploaded successfully';
+            setTimeout(() => { progressEl.textContent = ''; }, 3000);
+        }
+
+        renderImages(site);
+        // Reset file input
+        document.getElementById('file-' + site).value = '';
+    }
+
+    async function deleteImage(site, id) {
+        if (!confirm('Delete this image?')) return;
+        try {
+            await fetch(WORKER_URL + '/images/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ site, id }),
+            });
+            siteImages[site] = siteImages[site].filter(img => img.id !== id);
+            renderImages(site);
+        } catch (err) {}
+    }
+
+    async function moveImage(site, index, direction) {
+        const images = siteImages[site];
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= images.length) return;
+
+        // Swap
+        [images[index], images[newIndex]] = [images[newIndex], images[index]];
+        renderImages(site);
+
+        // Save new order to server
+        const order = images.map(img => img.id);
+        try {
+            await fetch(WORKER_URL + '/images/reorder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ site, order }),
+            });
+        } catch (err) {}
+    }
+
+    // Drag & drop support
+    ['samavas', 'chhaya'].forEach(site => {
+        const zone = document.getElementById('upload-zone-' + site);
+        if (!zone) return;
+
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('dragover');
+        });
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('dragover');
+        });
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('dragover');
+            handleFileSelect(site, e.dataTransfer.files);
+        });
+    });
 
     // --- UI helpers ---
     function showMsg(tab, text, type) {

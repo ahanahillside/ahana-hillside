@@ -1,5 +1,5 @@
 // Cloudflare Worker — Ahana Hillside API
-// Handles: iCal calendar proxy, site configuration, admin authentication
+// Handles: iCal calendar proxy, site configuration, admin authentication, messages, images
 // Requires KV Namespace binding: CONFIG
 // Deploy: paste into Cloudflare Workers dashboard
 
@@ -43,6 +43,8 @@ const DEFAULT_CONFIG = {
 };
 
 const DEFAULT_PASSWORD = 'ahana2026';
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
+const MAX_IMAGES_PER_SITE = 20;
 
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.some(o => origin && origin.startsWith(o));
@@ -125,6 +127,19 @@ async function verifyAuth(request, env) {
   const token = authHeader.replace('Bearer ', '');
   const password = await getPassword(env);
   return token === password;
+}
+
+// --- Image helpers ---
+async function getImageList(env, site) {
+  try {
+    const list = await env.CONFIG.get(`images:${site}`, 'json');
+    if (list) return list;
+  } catch (e) {}
+  return [];
+}
+
+async function saveImageList(env, site, list) {
+  await env.CONFIG.put(`images:${site}`, JSON.stringify(list));
 }
 
 export default {
@@ -268,6 +283,158 @@ export default {
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- POST /images/upload — admin only, uploads an image for a site ---
+    if (path === '/images/upload' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const formData = await request.formData();
+        const site = formData.get('site');
+        const file = formData.get('file');
+
+        if (!site || !['samavas', 'chhaya'].includes(site)) {
+          return jsonResponse({ error: 'Invalid site' }, 400, origin);
+        }
+        if (!file || !(file instanceof File)) {
+          return jsonResponse({ error: 'No file provided' }, 400, origin);
+        }
+
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+          return jsonResponse({ error: 'Only JPEG, PNG, and WebP images are allowed' }, 400, origin);
+        }
+
+        // Validate file size
+        if (file.size > MAX_IMAGE_SIZE) {
+          return jsonResponse({ error: 'Image must be under 5MB' }, 400, origin);
+        }
+
+        // Check image count limit
+        const imageList = await getImageList(env, site);
+        if (imageList.length >= MAX_IMAGES_PER_SITE) {
+          return jsonResponse({ error: `Maximum ${MAX_IMAGES_PER_SITE} images per site` }, 400, origin);
+        }
+
+        // Generate unique ID
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+        // Store image binary in KV
+        const arrayBuffer = await file.arrayBuffer();
+        await env.CONFIG.put(`image:${id}`, arrayBuffer, {
+          metadata: { contentType: file.type, site, name: file.name },
+        });
+
+        // Add to image list
+        imageList.push({
+          id,
+          name: file.name,
+          contentType: file.type,
+          size: file.size,
+          uploadedAt: new Date().toISOString(),
+        });
+        await saveImageList(env, site, imageList);
+
+        return jsonResponse({ success: true, id, index: imageList.length }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Upload failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- GET /images/list/:site — public, returns image list for a site ---
+    const listMatch = path.match(/^\/images\/list\/(samavas|chhaya)$/);
+    if (listMatch && request.method === 'GET') {
+      const site = listMatch[1];
+      const imageList = await getImageList(env, site);
+      return jsonResponse({ site, images: imageList }, 200, origin, 'public, max-age=60');
+    }
+
+    // --- GET /images/:site/:id — public, serves an image ---
+    const imgMatch = path.match(/^\/images\/(samavas|chhaya)\/([a-z0-9]+)$/);
+    if (imgMatch && request.method === 'GET') {
+      const imgId = imgMatch[2];
+      try {
+        const { value, metadata } = await env.CONFIG.getWithMetadata(
+          `image:${imgId}`,
+          'arrayBuffer'
+        );
+        if (!value) {
+          return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+        }
+        return new Response(value, {
+          status: 200,
+          headers: {
+            'Content-Type': metadata?.contentType || 'image/jpeg',
+            'Cache-Control': 'public, max-age=86400',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      }
+    }
+
+    // --- POST /images/delete — admin only, deletes an image ---
+    if (path === '/images/delete' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { site, id } = await request.json();
+        if (!site || !['samavas', 'chhaya'].includes(site)) {
+          return jsonResponse({ error: 'Invalid site' }, 400, origin);
+        }
+
+        // Remove from list
+        let imageList = await getImageList(env, site);
+        imageList = imageList.filter(img => img.id !== id);
+        await saveImageList(env, site, imageList);
+
+        // Delete binary
+        await env.CONFIG.delete(`image:${id}`);
+
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- POST /images/reorder — admin only, reorders images for a site ---
+    if (path === '/images/reorder' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { site, order } = await request.json();
+        if (!site || !['samavas', 'chhaya'].includes(site)) {
+          return jsonResponse({ error: 'Invalid site' }, 400, origin);
+        }
+        if (!Array.isArray(order)) {
+          return jsonResponse({ error: 'Order must be an array of image IDs' }, 400, origin);
+        }
+
+        // Reorder: build new list based on provided order
+        const imageList = await getImageList(env, site);
+        const byId = {};
+        imageList.forEach(img => { byId[img.id] = img; });
+
+        const newList = order
+          .filter(id => byId[id])
+          .map(id => byId[id]);
+
+        // Add any images not in the order array at the end
+        imageList.forEach(img => {
+          if (!order.includes(img.id)) newList.push(img);
+        });
+
+        await saveImageList(env, site, newList);
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Reorder failed', detail: err.message }, 500, origin);
       }
     }
 
