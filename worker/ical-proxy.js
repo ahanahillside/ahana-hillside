@@ -789,6 +789,97 @@ export default {
       }
     }
 
+    // --- GET /calendar/:site.ics — public, iCal feed for Hipcamp to import ---
+    const calMatch = path.match(/^\/calendar\/(samavas|chhaya)\.ics$/);
+    if (calMatch && request.method === 'GET') {
+      const calSite = calMatch[1];
+      try {
+        // Gather blocked dates
+        let blockedDates = [];
+        try {
+          blockedDates = await env.CONFIG.get(`blocked-dates:${calSite}`, 'json') || [];
+        } catch (e) {}
+
+        // Gather confirmed bookings
+        let bookings = [];
+        try {
+          const stored = await env.CONFIG.get('bookings', 'json');
+          if (stored) bookings = stored.filter(b =>
+            b.site === calSite && (b.status === 'confirmed' || b.status === 'completed')
+          );
+        } catch (e) {}
+
+        // Collect all blocked dates from bookings
+        const bookingDates = new Set();
+        bookings.forEach(b => {
+          const start = new Date(b.checkin);
+          const end = new Date(b.checkout);
+          const cur = new Date(start);
+          while (cur < end) {
+            bookingDates.add(cur.toISOString().split('T')[0]);
+            cur.setDate(cur.getDate() + 1);
+          }
+        });
+
+        // Merge all unavailable dates
+        const allDates = [...new Set([...blockedDates, ...bookingDates])].sort();
+
+        // Build iCal
+        let ical = 'BEGIN:VCALENDAR\r\n';
+        ical += 'VERSION:2.0\r\n';
+        ical += 'PRODID:-//Ahana Hillside//Calendar//EN\r\n';
+        ical += 'CALSCALE:GREGORIAN\r\n';
+        ical += 'METHOD:PUBLISH\r\n';
+        ical += 'X-WR-CALNAME:' + calSite.toUpperCase() + '\r\n';
+
+        // Group consecutive dates into single events
+        let i = 0;
+        while (i < allDates.length) {
+          const startDate = allDates[i];
+          let endDate = startDate;
+          while (i + 1 < allDates.length) {
+            const next = allDates[i + 1];
+            const cur = new Date(endDate);
+            cur.setDate(cur.getDate() + 1);
+            if (cur.toISOString().split('T')[0] === next) {
+              endDate = next;
+              i++;
+            } else break;
+          }
+
+          // DTEND is exclusive in iCal, so add one day
+          const dtstart = startDate.replace(/-/g, '');
+          const endD = new Date(endDate);
+          endD.setDate(endD.getDate() + 1);
+          const dtend = endD.toISOString().split('T')[0].replace(/-/g, '');
+
+          ical += 'BEGIN:VEVENT\r\n';
+          ical += 'DTSTART;VALUE=DATE:' + dtstart + '\r\n';
+          ical += 'DTEND;VALUE=DATE:' + dtend + '\r\n';
+          ical += 'SUMMARY:Unavailable\r\n';
+          ical += 'UID:' + dtstart + '-' + calSite + '@ahanahillside.com\r\n';
+          ical += 'END:VEVENT\r\n';
+          i++;
+        }
+
+        ical += 'END:VCALENDAR\r\n';
+
+        return new Response(ical, {
+          status: 200,
+          headers: {
+            'Content-Type': 'text/calendar; charset=utf-8',
+            'Cache-Control': 'public, max-age=300',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Error generating calendar', {
+          status: 500,
+          headers: corsHeaders(origin),
+        });
+      }
+    }
+
     // --- GET /blocked-dates/:site — public, returns manually blocked dates ---
     const blockedMatch = path.match(/^\/blocked-dates\/(samavas|chhaya)$/);
     if (blockedMatch && request.method === 'GET') {
