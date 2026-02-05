@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campsites — Ahana Hillside</title>
+    <meta name="description" content="Book a campsite at Ahana Hillside. Two unique eco-friendly sites nestled in the Cairns tropical rainforest.">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #FAF8F5;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2.5rem 2rem 1rem;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .header a {
+            text-decoration: none;
+        }
+
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            letter-spacing: 0.02em;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: var(--color-forest);
+        }
+
+        /* Page intro */
+        .page-intro {
+            text-align: center;
+            padding: 2rem 2rem 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeIn 0.6s ease-out 0.1s both;
+        }
+
+        .page-intro h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-intro p {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--color-charcoal);
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 1.5rem auto 0;
+        }
+
+        /* Campsites grid */
+        .campsites {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2.5rem 2rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Individual campsite */
+        .campsite {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.6s ease-out both;
+        }
+
+        .campsite:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .campsite-image-wrap {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+        }
+
+        .campsite-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .campsite:hover .campsite-image {
+            transform: scale(1.03);
+        }
+
+        .campsite-image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-forest) 0%, #4a6b4d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .campsite-body {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .campsite-name {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-forest);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .campsite-type {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        .campsite-description {
+            font-size: 0.9rem;
+            color: var(--color-charcoal);
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+        }
+
+        .campsite-amenities {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.35rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.8rem;
+            color: var(--color-charcoal);
+        }
+
+        .amenity {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .amenity svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            stroke: var(--color-stone);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .campsite-price {
+            font-size: 0.9rem;
+            margin-bottom: 1.25rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-light-stone);
+            margin-top: auto;
+        }
+
+        .campsite-price strong {
+            font-size: 1.15rem;
+            color: var(--color-forest);
+        }
+
+        .campsite-price .price-note {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
+
+        /* Booking form */
+        .booking-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .form-field label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-stone);
+        }
+
+        .form-field input,
+        .form-field select {
+            padding: 0.55rem 0.65rem;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-field input:focus,
+        .form-field select:focus {
+            border-color: var(--color-forest);
+        }
+
+        .btn-book {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-cream);
+            background-color: var(--color-forest);
+            border: 1px solid var(--color-forest);
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-book:hover {
+            background-color: transparent;
+            color: var(--color-forest);
+        }
+
+        /* Confirmation message */
+        .booking-confirmation {
+            display: none;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .booking-confirmation.show {
+            display: block;
+        }
+
+        .booking-confirmation p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+
+        .booking-confirmation .conf-detail {
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            color: var(--color-stone);
+        }
+
+        .date-warning {
+            display: none;
+            font-size: 0.8rem;
+            color: #b44;
+            padding: 0.5rem 0.65rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-warning.show {
+            display: block;
+        }
+
+        .availability-status {
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: var(--color-stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .availability-status .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 0.3rem;
+            vertical-align: middle;
+        }
+
+        .dot-live { background: #5a9a5a; }
+        .dot-loading { background: var(--color-stone); }
+        .dot-error { background: #b44; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .campsites {
+                grid-template-columns: 1fr;
+                padding: 2rem 1.25rem 3rem;
+            }
+
+            .campsite-amenities {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html">
+            <div class="header-logo">Ahana Hillside</div>
+        </a>
+        <br>
+        <a href="index.html" class="back-link">&larr; Back to home</a>
+    </div>
+
+    <div class="page-intro">
+        <h1>Our Campsites</h1>
+        <p>Eco-friendly sites nestled in the Cairns tropical rainforest</p>
+        <div class="divider"></div>
+    </div>
+
+    <div class="campsites">
+        <!-- SAMAVAS -->
+        <div class="campsite">
+            <div class="campsite-image-wrap">
+                <div class="campsite-image-placeholder">Photo coming soon</div>
+            </div>
+            <div class="campsite-body">
+                <div class="campsite-name">SAMAVAS</div>
+                <div class="campsite-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
+                <p class="campsite-description">
+                    Our eco-friendly facilities blend seamlessly with the environment, ensuring a minimal footprint while providing the essentials for a comfortable stay in nature.
+                </p>
+                <div class="campsite-amenities">
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
+                        Campfires allowed
+                    </div>
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
+                        Pets allowed
+                    </div>
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                        Toilet
+                    </div>
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
+                        Potable water
+                    </div>
+                </div>
+                <div class="campsite-price">
+                    from <strong>AU$66</strong> / night
+                    <span class="price-note">for 2 guests</span>
+                </div>
+
+                <div class="availability-status" id="samavas-status">
+                    <span class="dot dot-loading"></span> Checking availability...
+                </div>
+
+                <form class="booking-form" onsubmit="handleBooking(event, 'samavas')">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="samavas-checkin">Check-in</label>
+                            <input type="date" id="samavas-checkin" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="samavas-checkout">Check-out</label>
+                            <input type="date" id="samavas-checkout" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="samavas-guests">Guests</label>
+                            <select id="samavas-guests">
+                                <option>1 guest</option>
+                                <option selected>2 guests</option>
+                                <option>3 guests</option>
+                                <option>4 guests</option>
+                                <option>5+ guests</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="samavas-name">Your name</label>
+                            <input type="text" id="samavas-name" placeholder="Full name" required>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="samavas-email">Email</label>
+                        <input type="email" id="samavas-email" placeholder="you@email.com" required>
+                    </div>
+                    <div class="date-warning" id="samavas-warning">Selected dates are unavailable. Please choose different dates.</div>
+                    <button type="submit" class="btn-book">Request Booking</button>
+                </form>
+
+                <div class="booking-confirmation" id="samavas-confirmation">
+                    <p>Booking request sent!</p>
+                    <span class="conf-detail">We'll get back to you shortly to confirm your stay at SAMAVAS.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHHAYA -->
+        <div class="campsite">
+            <div class="campsite-image-wrap">
+                <div class="campsite-image-placeholder">Photo coming soon</div>
+            </div>
+            <div class="campsite-body">
+                <div class="campsite-name">CHHAYA</div>
+                <div class="campsite-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
+                <p class="campsite-description">
+                    Our eco-friendly facilities blend seamlessly with the environment, ensuring a minimal footprint while providing the essentials for a comfortable stay in nature.
+                </p>
+                <div class="campsite-amenities">
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
+                        Campfires allowed
+                    </div>
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
+                        Pets allowed
+                    </div>
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                        Toilet
+                    </div>
+                    <div class="amenity">
+                        <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
+                        Potable water
+                    </div>
+                </div>
+                <div class="campsite-price">
+                    from <strong>AU$60</strong> / night
+                    <span class="price-note">for 2 guests</span>
+                </div>
+
+                <div class="availability-status" id="chhaya-status">
+                    <span class="dot dot-loading"></span> Checking availability...
+                </div>
+
+                <form class="booking-form" onsubmit="handleBooking(event, 'chhaya')">
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="chhaya-checkin">Check-in</label>
+                            <input type="date" id="chhaya-checkin" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="chhaya-checkout">Check-out</label>
+                            <input type="date" id="chhaya-checkout" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="chhaya-guests">Guests</label>
+                            <select id="chhaya-guests">
+                                <option>1 guest</option>
+                                <option selected>2 guests</option>
+                                <option>3 guests</option>
+                                <option>4 guests</option>
+                                <option>5+ guests</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="chhaya-name">Your name</label>
+                            <input type="text" id="chhaya-name" placeholder="Full name" required>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="chhaya-email">Email</label>
+                        <input type="email" id="chhaya-email" placeholder="you@email.com" required>
+                    </div>
+                    <div class="date-warning" id="chhaya-warning">Selected dates are unavailable. Please choose different dates.</div>
+                    <button type="submit" class="btn-book">Request Booking</button>
+                </form>
+
+                <div class="booking-confirmation" id="chhaya-confirmation">
+                    <p>Booking request sent!</p>
+                    <span class="conf-detail">We'll get back to you shortly to confirm your stay at CHHAYA.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        // Replace this URL with your deployed Cloudflare Worker URL
+        const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+
+        // --- State ---
+        const bookedDates = { samavas: [], chhaya: [] };
+
+        // --- Date helpers ---
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('input[type="date"]').forEach(input => {
+            input.setAttribute('min', today);
+        });
+
+        function getDatesInRange(start, end) {
+            const dates = [];
+            const current = new Date(start);
+            const endDate = new Date(end);
+            while (current < endDate) {
+                dates.push(current.toISOString().split('T')[0]);
+                current.setDate(current.getDate() + 1);
+            }
+            return dates;
+        }
+
+        function hasConflict(site, checkinVal, checkoutVal) {
+            if (!checkinVal || !checkoutVal) return false;
+            const requested = getDatesInRange(checkinVal, checkoutVal);
+            return requested.some(d => bookedDates[site].includes(d));
+        }
+
+        function updateWarning(site) {
+            const checkin = document.getElementById(site + '-checkin').value;
+            const checkout = document.getElementById(site + '-checkout').value;
+            const warning = document.getElementById(site + '-warning');
+            const conflict = hasConflict(site, checkin, checkout);
+            warning.classList.toggle('show', conflict);
+            return conflict;
+        }
+
+        // --- Fetch availability from Cloudflare Worker ---
+        async function fetchAvailability(site) {
+            const statusEl = document.getElementById(site + '-status');
+            try {
+                const res = await fetch(WORKER_URL + '?site=' + site);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                bookedDates[site] = data.bookedDates || [];
+
+                if (bookedDates[site].length > 0) {
+                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; ' + bookedDates[site].length + ' date(s) booked';
+                } else {
+                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; all dates available';
+                }
+            } catch (err) {
+                statusEl.innerHTML = '<span class="dot dot-error"></span> Could not load availability';
+                console.warn('Availability fetch failed for ' + site + ':', err);
+            }
+        }
+
+        // --- Date picker logic ---
+        ['samavas', 'chhaya'].forEach(site => {
+            const checkin = document.getElementById(site + '-checkin');
+            const checkout = document.getElementById(site + '-checkout');
+
+            checkin.addEventListener('change', () => {
+                if (checkin.value) {
+                    const next = new Date(checkin.value);
+                    next.setDate(next.getDate() + 1);
+                    checkout.setAttribute('min', next.toISOString().split('T')[0]);
+                    if (!checkout.value || checkout.value <= checkin.value) {
+                        checkout.value = next.toISOString().split('T')[0];
+                    }
+                }
+                updateWarning(site);
+            });
+
+            checkout.addEventListener('change', () => updateWarning(site));
+        });
+
+        // --- Booking handler ---
+        function handleBooking(event, site) {
+            event.preventDefault();
+
+            // Check for date conflicts
+            if (updateWarning(site)) return;
+
+            const form = event.target;
+            const confirmation = document.getElementById(site + '-confirmation');
+
+            const checkin = document.getElementById(site + '-checkin').value;
+            const checkout = document.getElementById(site + '-checkout').value;
+            const guests = document.getElementById(site + '-guests').value;
+            const name = document.getElementById(site + '-name').value;
+            const email = document.getElementById(site + '-email').value;
+            const siteName = site.toUpperCase();
+
+            const subject = 'Booking Request — ' + siteName + ' at Ahana Hillside';
+            const body = 'Name: ' + name + '\n'
+                + 'Email: ' + email + '\n'
+                + 'Campsite: ' + siteName + '\n'
+                + 'Check-in: ' + checkin + '\n'
+                + 'Check-out: ' + checkout + '\n'
+                + 'Guests: ' + guests;
+
+            window.location.href = 'mailto:ahanahillside@gmail.com?subject='
+                + encodeURIComponent(subject)
+                + '&body=' + encodeURIComponent(body);
+
+            form.style.display = 'none';
+            confirmation.classList.add('show');
+        }
+
+        // --- Init: fetch availability on page load ---
+        fetchAvailability('samavas');
+        fetchAvailability('chhaya');
+    </script>
+</body>
+</html>
