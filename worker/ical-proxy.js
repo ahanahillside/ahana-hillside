@@ -189,6 +189,88 @@ export default {
       }
     }
 
+    // --- POST /messages — public, stores a contact message ---
+    if (path === '/messages' && request.method === 'POST') {
+      try {
+        const msg = await request.json();
+        if (!msg.name || !msg.email || !msg.message) {
+          return jsonResponse({ error: 'Name, email, and message are required' }, 400, origin);
+        }
+
+        // Get existing messages
+        let messages = [];
+        try {
+          const stored = await env.CONFIG.get('messages', 'json');
+          if (stored) messages = stored;
+        } catch (e) {}
+
+        // Add new message with unique ID
+        messages.unshift({
+          id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+          name: msg.name.slice(0, 200),
+          email: msg.email.slice(0, 200),
+          subject: (msg.subject || 'No subject').slice(0, 200),
+          message: msg.message.slice(0, 5000),
+          date: msg.date || new Date().toISOString(),
+          read: false,
+        });
+
+        // Keep max 200 messages
+        if (messages.length > 200) messages = messages.slice(0, 200);
+
+        await env.CONFIG.put('messages', JSON.stringify(messages));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to save message', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- GET /messages — admin only, returns all messages ---
+    if (path === '/messages' && request.method === 'GET') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const messages = await env.CONFIG.get('messages', 'json') || [];
+        return jsonResponse({ messages }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ messages: [] }, 200, origin);
+      }
+    }
+
+    // --- POST /messages/delete — admin only, deletes a message ---
+    if (path === '/messages/delete' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { id } = await request.json();
+        let messages = await env.CONFIG.get('messages', 'json') || [];
+        messages = messages.filter(m => m.id !== id);
+        await env.CONFIG.put('messages', JSON.stringify(messages));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to delete', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- POST /messages/read — admin only, marks a message as read ---
+    if (path === '/messages/read' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { id } = await request.json();
+        let messages = await env.CONFIG.get('messages', 'json') || [];
+        const msg = messages.find(m => m.id === id);
+        if (msg) msg.read = true;
+        await env.CONFIG.put('messages', JSON.stringify(messages));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed', detail: err.message }, 500, origin);
+      }
+    }
+
     // --- iCal proxy (existing) ---
     const site = url.searchParams.get('site');
 

@@ -366,6 +366,83 @@
             border-color: var(--color-forest);
         }
 
+        /* Message badge */
+        .msg-badge {
+            display: none;
+            font-size: 0.6rem;
+            background: var(--color-error);
+            color: #fff;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            vertical-align: middle;
+            margin-left: 0.3rem;
+        }
+
+        .msg-badge.show { display: inline-block; }
+
+        /* Message cards */
+        .message-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .message-card.unread {
+            border-left: 3px solid var(--color-forest);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-from {
+            font-weight: 500;
+            color: var(--color-forest);
+            font-size: 0.9rem;
+        }
+
+        .message-email {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
+
+        .message-date {
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            white-space: nowrap;
+        }
+
+        .message-subject {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+            margin-bottom: 0.4rem;
+        }
+
+        .message-body {
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--color-light-stone);
+        }
+
         /* Responsive */
         @media (max-width: 700px) {
             .card-grid { grid-template-columns: 1fr; }
@@ -398,7 +475,8 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" data-tab="pricing">Pricing</button>
+        <button class="tab-btn active" data-tab="messages">Messages <span class="msg-badge" id="msg-badge"></span></button>
+        <button class="tab-btn" data-tab="pricing">Pricing</button>
         <button class="tab-btn" data-tab="content">Content</button>
         <button class="tab-btn" data-tab="promos">Promo Codes</button>
         <button class="tab-btn" data-tab="rules">Rules</button>
@@ -407,8 +485,15 @@
 
     <div class="tab-content">
 
+        <!-- MESSAGES TAB -->
+        <div class="tab-panel active" id="panel-messages">
+            <div class="panel-title">Messages</div>
+            <div class="panel-desc">Messages from visitors via the Contact Us page.</div>
+            <div id="messages-list"><div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">Loading messages...</div></div>
+        </div>
+
         <!-- PRICING TAB -->
-        <div class="tab-panel active" id="panel-pricing">
+        <div class="tab-panel" id="panel-pricing">
             <div class="panel-title">Pricing</div>
             <div class="panel-desc">Set base prices and extra guest fees for each campsite. Prices are per night in AUD.</div>
 
@@ -614,7 +699,8 @@
     async function showDashboard() {
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('dashboard').classList.add('show');
-        await loadConfig();
+        loadConfig();
+        loadMessages();
     }
 
     // --- Config ---
@@ -820,6 +906,97 @@
     function removeRule(index) {
         siteConfig.rules.splice(index, 1);
         renderRules();
+    }
+
+    // --- Messages ---
+    let messages = [];
+
+    async function loadMessages() {
+        try {
+            const res = await fetch(WORKER_URL + '/messages', {
+                headers: { 'Authorization': 'Bearer ' + authToken },
+            });
+            const data = await res.json();
+            messages = data.messages || [];
+            renderMessages();
+            updateBadge();
+        } catch (err) {
+            document.getElementById('messages-list').innerHTML = '<div style="font-size:0.85rem;color:var(--color-error);padding:0.5rem 0;">Could not load messages.</div>';
+        }
+    }
+
+    function renderMessages() {
+        const container = document.getElementById('messages-list');
+
+        if (messages.length === 0) {
+            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">No messages yet. Messages from the Contact Us page will appear here.</div>';
+            return;
+        }
+
+        container.innerHTML = messages.map(m => {
+            const date = new Date(m.date).toLocaleDateString('en-AU', {
+                day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            return '<div class="message-card' + (m.read ? '' : ' unread') + '" data-id="' + m.id + '">'
+                + '<div class="message-header">'
+                + '<div><div class="message-from">' + escHtml(m.name) + '</div>'
+                + '<div class="message-email">' + escHtml(m.email) + '</div></div>'
+                + '<div class="message-date">' + date + '</div>'
+                + '</div>'
+                + (m.subject && m.subject !== 'No subject' ? '<div class="message-subject">' + escHtml(m.subject) + '</div>' : '')
+                + '<div class="message-body">' + escHtml(m.message) + '</div>'
+                + '<div class="message-actions">'
+                + (m.read ? '' : '<button class="btn btn-secondary" onclick="markRead(\'' + m.id + '\')" style="padding:0.3rem 0.75rem;font-size:0.7rem">Mark read</button>')
+                + '<a href="mailto:' + encodeURIComponent(m.email) + '?subject=Re: ' + encodeURIComponent(m.subject || 'Your message') + '" class="btn btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem;text-decoration:none">Reply</a>'
+                + '<button class="btn btn-danger" onclick="deleteMessage(\'' + m.id + '\')">Delete</button>'
+                + '</div>'
+                + '</div>';
+        }).join('');
+    }
+
+    function updateBadge() {
+        const unread = messages.filter(m => !m.read).length;
+        const badge = document.getElementById('msg-badge');
+        if (unread > 0) {
+            badge.textContent = unread;
+            badge.classList.add('show');
+        } else {
+            badge.classList.remove('show');
+        }
+    }
+
+    async function markRead(id) {
+        try {
+            await fetch(WORKER_URL + '/messages/read', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ id }),
+            });
+            const msg = messages.find(m => m.id === id);
+            if (msg) msg.read = true;
+            renderMessages();
+            updateBadge();
+        } catch (err) {}
+    }
+
+    async function deleteMessage(id) {
+        if (!confirm('Delete this message?')) return;
+        try {
+            await fetch(WORKER_URL + '/messages/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ id }),
+            });
+            messages = messages.filter(m => m.id !== id);
+            renderMessages();
+            updateBadge();
+        } catch (err) {}
+    }
+
+    function escHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
     }
 
     // --- UI helpers ---
