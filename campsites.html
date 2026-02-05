@@ -101,34 +101,144 @@
             margin: 1.5rem auto 0;
         }
 
-        /* Campsites grid */
-        .campsites {
-            max-width: 1000px;
+        /* Search bar */
+        .search-bar {
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 2.5rem 2rem 4rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            padding: 2rem 2rem 0;
+            animation: fadeIn 0.6s ease-out 0.15s both;
+        }
+
+        .search-bar-inner {
+            display: flex;
+            align-items: flex-end;
+            gap: 1rem;
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .search-field {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .search-field label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-stone);
+        }
+
+        .search-field input,
+        .search-field select {
+            padding: 0.65rem 0.75rem;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--color-charcoal);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-field input:focus,
+        .search-field select:focus {
+            border-color: var(--color-forest);
+        }
+
+        .search-field input::placeholder {
+            color: var(--color-stone);
+            opacity: 0.7;
+        }
+
+        .btn-search {
+            padding: 0.7rem 1.5rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-cream);
+            background-color: var(--color-forest);
+            border: 1px solid var(--color-forest);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-search:hover {
+            background-color: transparent;
+            color: var(--color-forest);
+        }
+
+        /* Campsites list */
+        .campsites {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+            display: flex;
+            flex-direction: column;
             gap: 2rem;
         }
 
-        /* Individual campsite */
+        /* Individual campsite — horizontal card */
         .campsite {
             background: #fff;
             border: 1px solid var(--color-light-stone);
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 2fr 3fr;
             animation: fadeIn 0.6s ease-out both;
+            position: relative;
+            overflow: hidden;
+            transition: opacity 0.3s ease;
         }
 
         .campsite:nth-child(2) {
             animation-delay: 0.15s;
         }
 
+        /* Grey-out when guests exceed max */
+        .campsite.guest-exceeded {
+            opacity: 0.4;
+        }
+
+        .campsite.guest-exceeded .booking-form {
+            display: none !important;
+        }
+
+        .campsite.guest-exceeded .price-breakdown {
+            display: none !important;
+        }
+
+        .guest-message {
+            display: none;
+            text-align: center;
+            padding: 1.25rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            font-size: 0.85rem;
+            color: #b44;
+            margin-top: 0.75rem;
+        }
+
+        .campsite.guest-exceeded .guest-message {
+            display: block;
+        }
+
+        /* Campsite media (left) */
+        .campsite-media {
+            overflow: hidden;
+        }
+
         /* Carousel */
-        .carousel {
+        .campsite-media .carousel {
             position: relative;
             overflow: hidden;
-            aspect-ratio: 4 / 3;
+            height: 100%;
+            min-height: 380px;
         }
 
         .carousel-track {
@@ -280,11 +390,19 @@
             font-size: 0.85rem;
         }
 
+        /* Campsite details (right) */
         .campsite-body {
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
             flex: 1;
+        }
+
+        .campsite-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.25rem;
         }
 
         .campsite-name {
@@ -293,7 +411,18 @@
             font-weight: 600;
             color: var(--color-forest);
             letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
+        }
+
+        .max-badge {
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            background: var(--color-light-stone);
+            color: var(--color-charcoal);
+            border-radius: 2px;
+            white-space: nowrap;
         }
 
         .campsite-type {
@@ -401,6 +530,26 @@
         .form-field select:focus {
             border-color: var(--color-forest);
         }
+
+        .availability-status {
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            color: var(--color-stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .availability-status .dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 0.3rem;
+            vertical-align: middle;
+        }
+
+        .dot-live { background: #5a9a5a; }
+        .dot-loading { background: var(--color-stone); }
+        .dot-error { background: #b44; }
 
         /* Price breakdown */
         .price-breakdown {
@@ -693,26 +842,6 @@
 
         .dp-footer a:hover { color: var(--color-forest); }
 
-        .availability-status {
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            color: var(--color-stone);
-            margin-bottom: 0.75rem;
-        }
-
-        .availability-status .dot {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            margin-right: 0.3rem;
-            vertical-align: middle;
-        }
-
-        .dot-live { background: #5a9a5a; }
-        .dot-loading { background: var(--color-stone); }
-        .dot-error { background: #b44; }
-
         /* Rules section */
         .rules {
             max-width: 600px;
@@ -780,9 +909,23 @@
         }
 
         @media (max-width: 700px) {
+            .search-bar-inner {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
             .campsites {
-                grid-template-columns: 1fr;
                 padding: 2rem 1.25rem 3rem;
+            }
+
+            .campsite {
+                grid-template-columns: 1fr;
+            }
+
+            .campsite-media .carousel {
+                min-height: auto;
+                height: auto;
+                aspect-ratio: 4 / 3;
             }
 
             .campsite-amenities {
@@ -795,6 +938,8 @@
 
             .form-field input,
             .form-field select,
+            .search-field input,
+            .search-field select,
             .promo-row input {
                 font-size: 16px;
             }
@@ -839,12 +984,39 @@
         <div class="divider"></div>
     </div>
 
+    <!-- Search bar -->
+    <div class="search-bar">
+        <div class="search-bar-inner">
+            <div class="search-field">
+                <label for="search-checkin">Check-in</label>
+                <input type="text" id="search-checkin" readonly placeholder="DD/MM/YYYY">
+            </div>
+            <div class="search-field">
+                <label for="search-checkout">Check-out</label>
+                <input type="text" id="search-checkout" readonly placeholder="DD/MM/YYYY">
+            </div>
+            <div class="search-field">
+                <label for="search-guests">Guests</label>
+                <select id="search-guests">
+                    <option value="1">1 guest</option>
+                    <option value="2" selected>2 guests</option>
+                </select>
+            </div>
+            <button type="button" class="btn-search" onclick="checkAvailability()">Check Availability</button>
+        </div>
+    </div>
+
     <div class="campsites">
         <!-- SAMAVAS -->
-        <div class="campsite">
-            <div class="carousel" id="carousel-samavas"></div>
+        <div class="campsite" id="campsite-samavas">
+            <div class="campsite-media">
+                <div class="carousel" id="carousel-samavas"></div>
+            </div>
             <div class="campsite-body">
-                <div class="campsite-name">SAMAVAS</div>
+                <div class="campsite-header">
+                    <div class="campsite-name">SAMAVAS</div>
+                    <span class="max-badge" id="samavas-max-badge">Max 20 guests</span>
+                </div>
                 <div class="campsite-type" id="samavas-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
                 <p class="campsite-description" id="samavas-desc">
                     Our largest site, accommodating up to 15 people. Set furthest from the main house for maximum privacy, SAMAVAS is ideal for groups and families looking for a secluded spot in the rainforest.
@@ -876,39 +1048,24 @@
                     <span class="dot dot-loading"></span> Checking availability...
                 </div>
 
-                <form class="booking-form" onsubmit="handleBooking(event, 'samavas')">
+                <div class="guest-message" id="samavas-guest-msg">
+                    This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
+                </div>
+
+                <form class="booking-form" id="samavas-form" onsubmit="handleBooking(event, 'samavas')">
                     <div class="form-row">
-                        <div class="form-field">
-                            <label for="samavas-checkin">Check-in</label>
-                            <input type="text" id="samavas-checkin" readonly placeholder="DD/MM/YYYY">
-                        </div>
-                        <div class="form-field">
-                            <label for="samavas-checkout">Check-out</label>
-                            <input type="text" id="samavas-checkout" readonly placeholder="DD/MM/YYYY">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="samavas-guests">Guests</label>
-                            <select id="samavas-guests">
-                                <option value="1">1 guest</option>
-                                <option value="2" selected>2 guests</option>
-                            </select>
-                        </div>
                         <div class="form-field">
                             <label for="samavas-name">Your name</label>
                             <input type="text" id="samavas-name" placeholder="Full name" required>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-field">
                             <label for="samavas-email">Email</label>
                             <input type="email" id="samavas-email" placeholder="you@email.com" required>
                         </div>
-                        <div class="form-field">
-                            <label for="samavas-phone">Phone</label>
-                            <input type="tel" id="samavas-phone" placeholder="+61 4XX XXX XXX" required>
-                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="samavas-phone">Phone</label>
+                        <input type="tel" id="samavas-phone" placeholder="+61 4XX XXX XXX" required>
                     </div>
                     <div class="form-field">
                         <label>Promo code</label>
@@ -919,7 +1076,7 @@
                         <div class="promo-msg" id="samavas-promo-msg"></div>
                     </div>
                     <div class="price-breakdown" id="samavas-breakdown"></div>
-                    <div class="date-warning" id="samavas-warning">Selected dates are unavailable. Please choose different dates.</div>
+                    <div class="date-warning" id="samavas-warning">Selected dates are unavailable for SAMAVAS. Please choose different dates.</div>
                     <button type="submit" class="btn-book">Request Booking</button>
                 </form>
 
@@ -931,10 +1088,15 @@
         </div>
 
         <!-- CHHAYA -->
-        <div class="campsite">
-            <div class="carousel" id="carousel-chhaya"></div>
+        <div class="campsite" id="campsite-chhaya">
+            <div class="campsite-media">
+                <div class="carousel" id="carousel-chhaya"></div>
+            </div>
             <div class="campsite-body">
-                <div class="campsite-name">CHHAYA</div>
+                <div class="campsite-header">
+                    <div class="campsite-name">CHHAYA</div>
+                    <span class="max-badge" id="chhaya-max-badge">Max 20 guests</span>
+                </div>
                 <div class="campsite-type" id="chhaya-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
                 <p class="campsite-description" id="chhaya-desc">
                     A cosy, intimate site perfect for couples and solo campers. CHHAYA is just a few metres from the toilets, offering convenience without sacrificing the peaceful rainforest setting.
@@ -966,39 +1128,24 @@
                     <span class="dot dot-loading"></span> Checking availability...
                 </div>
 
-                <form class="booking-form" onsubmit="handleBooking(event, 'chhaya')">
+                <div class="guest-message" id="chhaya-guest-msg">
+                    This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
+                </div>
+
+                <form class="booking-form" id="chhaya-form" onsubmit="handleBooking(event, 'chhaya')">
                     <div class="form-row">
-                        <div class="form-field">
-                            <label for="chhaya-checkin">Check-in</label>
-                            <input type="text" id="chhaya-checkin" readonly placeholder="DD/MM/YYYY">
-                        </div>
-                        <div class="form-field">
-                            <label for="chhaya-checkout">Check-out</label>
-                            <input type="text" id="chhaya-checkout" readonly placeholder="DD/MM/YYYY">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="chhaya-guests">Guests</label>
-                            <select id="chhaya-guests">
-                                <option value="1">1 guest</option>
-                                <option value="2" selected>2 guests</option>
-                            </select>
-                        </div>
                         <div class="form-field">
                             <label for="chhaya-name">Your name</label>
                             <input type="text" id="chhaya-name" placeholder="Full name" required>
                         </div>
-                    </div>
-                    <div class="form-row">
                         <div class="form-field">
                             <label for="chhaya-email">Email</label>
                             <input type="email" id="chhaya-email" placeholder="you@email.com" required>
                         </div>
-                        <div class="form-field">
-                            <label for="chhaya-phone">Phone</label>
-                            <input type="tel" id="chhaya-phone" placeholder="+61 4XX XXX XXX" required>
-                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="chhaya-phone">Phone</label>
+                        <input type="tel" id="chhaya-phone" placeholder="+61 4XX XXX XXX" required>
                     </div>
                     <div class="form-field">
                         <label>Promo code</label>
@@ -1009,7 +1156,7 @@
                         <div class="promo-msg" id="chhaya-promo-msg"></div>
                     </div>
                     <div class="price-breakdown" id="chhaya-breakdown"></div>
-                    <div class="date-warning" id="chhaya-warning">Selected dates are unavailable. Please choose different dates.</div>
+                    <div class="date-warning" id="chhaya-warning">Selected dates are unavailable for CHHAYA. Please choose different dates.</div>
                     <button type="submit" class="btn-book">Request Booking</button>
                 </form>
 
@@ -1061,7 +1208,6 @@
         let lightboxImages = [];
         let lightboxIndex = 0;
 
-        // Probe which images exist (1.jpg through 10.jpg)
         async function probeImages(folder, max) {
             const found = [];
             for (let i = 1; i <= max; i++) {
@@ -1080,7 +1226,7 @@
         function buildCarousel(containerId, images, alt) {
             const container = document.getElementById(containerId);
             if (images.length === 0) {
-                container.innerHTML = '<div style="width:100%;height:100%;background:linear-gradient(135deg,#2C3E2D,#4a6b4d);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;aspect-ratio:4/3;">Photos coming soon</div>';
+                container.innerHTML = '<div style="width:100%;height:100%;background:linear-gradient(135deg,#2C3E2D,#4a6b4d);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;">Photos coming soon</div>';
                 return;
             }
 
@@ -1108,20 +1254,17 @@
             html += '<div class="carousel-counter">' + '1 / ' + images.length + '</div>';
             container.innerHTML = html;
 
-            // Slide click → open lightbox
             container.querySelectorAll('.carousel-slide').forEach(slide => {
                 slide.addEventListener('click', () => {
                     openLightbox(carousels[site].images, parseInt(slide.dataset.index));
                 });
             });
 
-            // Prev/next buttons
             const prevBtn = container.querySelector('.carousel-btn-prev');
             const nextBtn = container.querySelector('.carousel-btn-next');
             if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); moveCarousel(site, -1); });
             if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); moveCarousel(site, 1); });
 
-            // Dot buttons
             container.querySelectorAll('.carousel-dot').forEach(dot => {
                 dot.addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -1184,12 +1327,10 @@
             updateLightbox();
         });
 
-        // Close on background click
         document.getElementById('lightbox').addEventListener('click', (e) => {
             if (e.target === e.currentTarget) closeLightbox();
         });
 
-        // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (!document.getElementById('lightbox').classList.contains('open')) return;
             if (e.key === 'Escape') closeLightbox();
@@ -1198,12 +1339,9 @@
         });
 
         // --- Init carousels ---
-        // Try loading from Worker (uploaded images), fall back to local files
         async function initCarousels() {
             for (const [site, cfg] of Object.entries(SITES)) {
                 let images = [];
-
-                // Try Worker-hosted images first
                 try {
                     const res = await fetch(WORKER_URL + '/images/list/' + site);
                     const data = await res.json();
@@ -1211,19 +1349,15 @@
                         images = data.images.map(img => WORKER_URL + '/images/' + site + '/' + img.id);
                     }
                 } catch (e) {}
-
-                // Fall back to local files if no Worker images
                 if (images.length === 0) {
                     images = await probeImages(cfg.folder, cfg.maxImages);
                 }
-
                 buildCarousel('carousel-' + site, images, cfg.alt);
             }
         }
         initCarousels();
 
         // --- Configuration ---
-        // Default config (used as fallback if worker config fetch fails)
         const DEFAULT_CONFIG = {
             samavas: { basePrice: 66, extraGuestFee: 15, maxGuests: 20 },
             chhaya:  { basePrice: 60, extraGuestFee: 10, maxGuests: 20 },
@@ -1243,6 +1377,74 @@
         // --- State ---
         const bookedDates = { samavas: [], chhaya: [] };
         const appliedPromos = { samavas: null, chhaya: null };
+
+        // --- Search bar helpers ---
+        function getSearchDate(field) {
+            return document.getElementById('search-' + field).dataset.date || '';
+        }
+
+        function setSearchDate(field, isoDate) {
+            const input = document.getElementById('search-' + field);
+            input.dataset.date = isoDate || '';
+            if (isoDate) {
+                const [y, m, d] = isoDate.split('-');
+                input.value = d + '/' + m + '/' + y;
+            } else {
+                input.value = '';
+            }
+        }
+
+        function getSearchGuests() {
+            return parseInt(document.getElementById('search-guests').value) || 2;
+        }
+
+        // --- Check availability (button) ---
+        function checkAvailability() {
+            const checkin = getSearchDate('checkin');
+            const checkout = getSearchDate('checkout');
+
+            if (!checkin || !checkout) {
+                alert('Please select check-in and check-out dates.');
+                return;
+            }
+
+            updateAllCards();
+            document.querySelector('.campsites').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // --- Update all campsite cards ---
+        function updateAllCards() {
+            ['samavas', 'chhaya'].forEach(site => {
+                updatePerNightPrice(site);
+                updatePriceBreakdown(site);
+                updateWarning(site);
+            });
+            updateGuestAvailability();
+        }
+
+        // --- Guest availability: grey out sites that exceed max ---
+        function updateGuestAvailability() {
+            const guests = getSearchGuests();
+
+            ['samavas', 'chhaya'].forEach(site => {
+                const cfg = siteConfig[site];
+                if (!cfg) return;
+                const maxG = cfg.maxGuests || 20;
+                const card = document.getElementById('campsite-' + site);
+                const msg = document.getElementById(site + '-guest-msg');
+
+                if (guests > maxG) {
+                    card.classList.add('guest-exceeded');
+                } else {
+                    card.classList.remove('guest-exceeded');
+                }
+            });
+        }
+
+        // --- Guest change listener ---
+        document.getElementById('search-guests').addEventListener('change', () => {
+            updateAllCards();
+        });
 
         // --- Fetch site config from worker ---
         async function fetchConfig() {
@@ -1264,17 +1466,14 @@
                 const cfg = siteConfig[site];
                 if (!cfg) return;
 
-                // Update description
                 if (cfg.description) {
                     document.getElementById(site + '-desc').textContent = cfg.description;
                 }
 
-                // Update type line
                 if (cfg.type) {
                     document.getElementById(site + '-type').innerHTML = cfg.type.replace(/·/g, '&middot;');
                 }
 
-                // Update price display
                 const sym = currencySymbol();
                 document.getElementById(site + '-price').innerHTML =
                     'from <strong>' + sym + cfg.basePrice + '</strong> / night '
@@ -1282,24 +1481,33 @@
                     + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
                     + '</span>';
 
-                // Build guest dropdown
-                const select = document.getElementById(site + '-guests');
+                // Update max badge
                 const maxG = cfg.maxGuests || 20;
-                select.innerHTML = '';
-                for (let i = 1; i <= maxG; i++) {
-                    const opt = document.createElement('option');
-                    opt.value = i;
-                    opt.textContent = i + (i === 1 ? ' guest' : ' guests');
-                    if (i === 2) opt.selected = true;
-                    select.appendChild(opt);
-                }
+                document.getElementById(site + '-max-badge').textContent = 'Max ' + maxG + ' guests';
 
-                // Listen for guest changes to update pricing
-                select.addEventListener('change', () => {
-                    updatePerNightPrice(site);
-                    updatePriceBreakdown(site);
-                });
+                // Update guest message
+                const msgEl = document.getElementById(site + '-guest-msg');
+                msgEl.innerHTML = 'This site accommodates up to <strong>' + maxG + ' guests</strong>. Please select fewer guests.';
             });
+
+            // Build shared guest dropdown with max of both sites
+            const maxGuests = Math.max(
+                siteConfig.samavas?.maxGuests || 20,
+                siteConfig.chhaya?.maxGuests || 20
+            );
+            const select = document.getElementById('search-guests');
+            const currentVal = select.value;
+            select.innerHTML = '';
+            for (let i = 1; i <= maxGuests; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i + (i === 1 ? ' guest' : ' guests');
+                if (i === parseInt(currentVal)) opt.selected = true;
+                select.appendChild(opt);
+            }
+            if (!select.value) {
+                select.value = '2';
+            }
 
             // Update rules
             if (siteConfig.rules && siteConfig.rules.length > 0) {
@@ -1313,6 +1521,9 @@
                     btn.textContent = 'Book & Pay';
                 });
             }
+
+            // Initial guest availability check
+            updateGuestAvailability();
         }
 
         // --- Per-night price display (updates with guest count) ---
@@ -1320,7 +1531,7 @@
             const cfg = siteConfig[site];
             if (!cfg) return;
             const sym = currencySymbol();
-            const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
+            const guestCount = getSearchGuests();
             const extraGuests = Math.max(0, guestCount - 2);
             const perNight = cfg.basePrice + (extraGuests * cfg.extraGuestFee);
 
@@ -1366,9 +1577,9 @@
 
         // --- Price breakdown ---
         function updatePriceBreakdown(site) {
-            const checkin = getDateValue(site, 'checkin');
-            const checkout = getDateValue(site, 'checkout');
-            const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
+            const checkin = getSearchDate('checkin');
+            const checkout = getSearchDate('checkout');
+            const guestCount = getSearchGuests();
             const breakdownEl = document.getElementById(site + '-breakdown');
 
             if (!checkin || !checkout || checkout <= checkin) {
@@ -1417,21 +1628,6 @@
         }
 
         // --- Date helpers ---
-        function getDateValue(site, field) {
-            return document.getElementById(site + '-' + field).dataset.date || '';
-        }
-
-        function setDateValue(site, field, isoDate) {
-            const input = document.getElementById(site + '-' + field);
-            input.dataset.date = isoDate || '';
-            if (isoDate) {
-                const [y, m, d] = isoDate.split('-');
-                input.value = d + '/' + m + '/' + y;
-            } else {
-                input.value = '';
-            }
-        }
-
         function getDatesInRange(start, end) {
             const dates = [];
             const current = new Date(start);
@@ -1450,8 +1646,8 @@
         }
 
         function updateWarning(site) {
-            const checkin = getDateValue(site, 'checkin');
-            const checkout = getDateValue(site, 'checkout');
+            const checkin = getSearchDate('checkin');
+            const checkout = getSearchDate('checkout');
             const warning = document.getElementById(site + '-warning');
             const conflict = hasConflict(site, checkin, checkout);
             warning.classList.toggle('show', conflict);
@@ -1462,7 +1658,6 @@
         async function fetchAvailability(site) {
             const statusEl = document.getElementById(site + '-status');
             try {
-                // Fetch Hipcamp calendar + manual blocked dates in parallel
                 const [calRes, blockedRes] = await Promise.all([
                     fetch(WORKER_URL + '?site=' + site).then(r => r.ok ? r.json() : { bookedDates: [] }).catch(() => ({ bookedDates: [] })),
                     fetch(WORKER_URL + '/blocked-dates/' + site).then(r => r.ok ? r.json() : { blockedDates: [] }).catch(() => ({ blockedDates: [] })),
@@ -1483,50 +1678,34 @@
             }
         }
 
-        // --- Guest change listener ---
-        ['samavas', 'chhaya'].forEach(site => {
-            document.getElementById(site + '-guests').addEventListener('change', () => {
-                updatePerNightPrice(site);
-                updatePriceBreakdown(site);
-            });
-        });
-
-        // --- Custom date picker ---
-        const dpState = {};
+        // --- Custom date picker (shared search bar) ---
+        const dpState = {
+            month: new Date().getMonth(),
+            year: new Date().getFullYear(),
+        };
 
         function initDatePickers() {
-            ['samavas', 'chhaya'].forEach(site => {
-                dpState[site] = {
-                    month: new Date().getMonth(),
-                    year: new Date().getFullYear(),
-                };
+            ['checkin', 'checkout'].forEach(field => {
+                const input = document.getElementById('search-' + field);
+                input.dataset.date = '';
+                input.classList.add('dp-input');
 
-                ['checkin', 'checkout'].forEach(field => {
-                    const input = document.getElementById(site + '-' + field);
-                    input.dataset.date = '';
-                    input.classList.add('dp-input');
+                const wrapper = document.createElement('div');
+                wrapper.className = 'date-picker-wrapper';
+                input.parentNode.insertBefore(wrapper, input);
+                wrapper.appendChild(input);
 
-                    // Wrap in position-relative container
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'date-picker-wrapper';
-                    input.parentNode.insertBefore(wrapper, input);
-                    wrapper.appendChild(input);
+                const dropdown = document.createElement('div');
+                dropdown.className = 'dp-dropdown';
+                dropdown.id = 'dp-search-' + field;
+                wrapper.appendChild(dropdown);
 
-                    // Create dropdown
-                    const dropdown = document.createElement('div');
-                    dropdown.className = 'dp-dropdown';
-                    dropdown.id = 'dp-' + site + '-' + field;
-                    wrapper.appendChild(dropdown);
-
-                    // Open on click
-                    input.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        openDatePicker(site, field);
-                    });
+                input.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openDatePicker(field);
                 });
             });
 
-            // Close on outside click
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.date-picker-wrapper')) {
                     closeAllDatePickers();
@@ -1534,46 +1713,48 @@
             });
         }
 
-        function openDatePicker(site, field) {
+        function openDatePicker(field) {
             closeAllDatePickers();
 
-            const currentVal = document.getElementById(site + '-' + field).dataset.date;
+            const currentVal = document.getElementById('search-' + field).dataset.date;
             if (currentVal) {
                 const d = new Date(currentVal);
-                dpState[site].month = d.getMonth();
-                dpState[site].year = d.getFullYear();
+                dpState.month = d.getMonth();
+                dpState.year = d.getFullYear();
             } else {
-                dpState[site].month = new Date().getMonth();
-                dpState[site].year = new Date().getFullYear();
+                dpState.month = new Date().getMonth();
+                dpState.year = new Date().getFullYear();
             }
 
-            renderDatePicker(site, field);
-            document.getElementById('dp-' + site + '-' + field).classList.add('open');
+            renderDatePicker(field);
+            document.getElementById('dp-search-' + field).classList.add('open');
         }
 
         function closeAllDatePickers() {
             document.querySelectorAll('.dp-dropdown').forEach(d => d.classList.remove('open'));
         }
 
-        function renderDatePicker(site, field) {
-            const state = dpState[site];
-            const dropdown = document.getElementById('dp-' + site + '-' + field);
-            const year = state.year;
-            const month = state.month;
+        function renderDatePicker(field) {
+            const dropdown = document.getElementById('dp-search-' + field);
+            const year = dpState.year;
+            const month = dpState.month;
 
             const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
             const todayStr = new Date().toISOString().split('T')[0];
-            const checkinVal = getDateValue(site, 'checkin');
-            const checkoutVal = getDateValue(site, 'checkout');
+            const checkinVal = getSearchDate('checkin');
+            const checkoutVal = getSearchDate('checkout');
+
+            // Union of blocked dates from all sites
+            const allBlocked = [...new Set([...bookedDates.samavas, ...bookedDates.chhaya])];
 
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const startDay = (firstDay + 6) % 7; // Monday-start
+            const startDay = (firstDay + 6) % 7;
 
             let html = '<div class="dp-nav">';
-            html += '<button type="button" class="dp-arrow" onclick="event.stopPropagation();dpNav(\'' + site + '\',\'' + field + '\',-1)">&lsaquo;</button>';
+            html += '<button type="button" class="dp-arrow" onclick="event.stopPropagation();dpNav(\'' + field + '\',-1)">&lsaquo;</button>';
             html += '<span class="dp-month-label">' + monthNames[month] + ' ' + year + '</span>';
-            html += '<button type="button" class="dp-arrow" onclick="event.stopPropagation();dpNav(\'' + site + '\',\'' + field + '\',1)">&rsaquo;</button>';
+            html += '<button type="button" class="dp-arrow" onclick="event.stopPropagation();dpNav(\'' + field + '\',1)">&rsaquo;</button>';
             html += '</div>';
 
             html += '<div class="dp-grid">';
@@ -1588,7 +1769,8 @@
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
                 const isPast = dateStr < todayStr;
-                const isBlocked = bookedDates[site].includes(dateStr);
+                // Show blocked if BOTH sites block this date
+                const blockedBoth = bookedDates.samavas.includes(dateStr) && bookedDates.chhaya.includes(dateStr);
                 const isToday = dateStr === todayStr;
                 const isSelected = dateStr === checkinVal || dateStr === checkoutVal;
 
@@ -1601,13 +1783,13 @@
 
                 let cls = 'dp-day';
                 if (isDisabled) cls += ' dp-past';
-                if (isBlocked && !isPast) cls += ' dp-blocked';
+                if (blockedBoth && !isPast) cls += ' dp-blocked';
                 if (isToday && !isDisabled) cls += ' dp-today';
                 if (isSelected) cls += ' dp-selected';
-                if (inRange && !isBlocked) cls += ' dp-in-range';
+                if (inRange && !blockedBoth) cls += ' dp-in-range';
 
-                const canClick = !isDisabled && !isBlocked;
-                const handler = canClick ? ' onclick="event.stopPropagation();dpSelect(\'' + site + '\',\'' + field + '\',\'' + dateStr + '\')"' : '';
+                const canClick = !isDisabled && !blockedBoth;
+                const handler = canClick ? ' onclick="event.stopPropagation();dpSelect(\'' + field + '\',\'' + dateStr + '\')"' : '';
 
                 html += '<div class="' + cls + '"' + handler + '>' + d + '</div>';
             }
@@ -1615,52 +1797,50 @@
             html += '</div>';
 
             html += '<div class="dp-footer">';
-            html += '<a onclick="event.stopPropagation();dpClear(\'' + site + '\',\'' + field + '\')">Clear</a>';
-            html += '<a onclick="event.stopPropagation();dpToday(\'' + site + '\',\'' + field + '\')">Today</a>';
+            html += '<a onclick="event.stopPropagation();dpClear(\'' + field + '\')">Clear</a>';
+            html += '<a onclick="event.stopPropagation();dpToday(\'' + field + '\')">Today</a>';
             html += '</div>';
 
             dropdown.innerHTML = html;
         }
 
-        function dpNav(site, field, dir) {
-            const state = dpState[site];
-            state.month += dir;
-            if (state.month > 11) { state.month = 0; state.year++; }
-            if (state.month < 0) { state.month = 11; state.year--; }
-            renderDatePicker(site, field);
+        function dpNav(field, dir) {
+            dpState.month += dir;
+            if (dpState.month > 11) { dpState.month = 0; dpState.year++; }
+            if (dpState.month < 0) { dpState.month = 11; dpState.year--; }
+            renderDatePicker(field);
         }
 
-        function dpSelect(site, field, dateStr) {
-            setDateValue(site, field, dateStr);
+        function dpSelect(field, dateStr) {
+            setSearchDate(field, dateStr);
 
             if (field === 'checkin') {
-                const checkoutVal = getDateValue(site, 'checkout');
+                const checkoutVal = getSearchDate('checkout');
                 if (!checkoutVal || checkoutVal <= dateStr) {
                     const next = new Date(dateStr);
                     next.setDate(next.getDate() + 1);
-                    setDateValue(site, 'checkout', next.toISOString().split('T')[0]);
+                    setSearchDate('checkout', next.toISOString().split('T')[0]);
                 }
                 closeAllDatePickers();
-                setTimeout(() => openDatePicker(site, 'checkout'), 100);
+                setTimeout(() => openDatePicker('checkout'), 100);
             } else {
                 closeAllDatePickers();
             }
 
-            updateWarning(site);
-            updatePriceBreakdown(site);
+            updateAllCards();
         }
 
-        function dpClear(site, field) {
-            setDateValue(site, field, '');
+        function dpClear(field) {
+            setSearchDate(field, '');
             closeAllDatePickers();
-            updateWarning(site);
-            updatePriceBreakdown(site);
+            updateAllCards();
         }
 
-        function dpToday(site, field) {
+        function dpToday(field) {
             const todayStr = new Date().toISOString().split('T')[0];
-            if (!bookedDates[site].includes(todayStr)) {
-                dpSelect(site, field, todayStr);
+            const blockedBoth = bookedDates.samavas.includes(todayStr) && bookedDates.chhaya.includes(todayStr);
+            if (!blockedBoth) {
+                dpSelect(field, todayStr);
             }
         }
 
@@ -1668,26 +1848,24 @@
         async function handleBooking(event, site) {
             event.preventDefault();
 
-            // Check for date conflicts
             if (updateWarning(site)) return;
 
             const form = event.target;
             const confirmation = document.getElementById(site + '-confirmation');
             const submitBtn = form.querySelector('.btn-book');
 
-            const checkin = getDateValue(site, 'checkin');
-            const checkout = getDateValue(site, 'checkout');
-            const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
+            const checkin = getSearchDate('checkin');
+            const checkout = getSearchDate('checkout');
+            const guestCount = getSearchGuests();
             const name = document.getElementById(site + '-name').value;
             const email = document.getElementById(site + '-email').value;
             const phone = document.getElementById(site + '-phone').value;
 
             if (!checkin || !checkout) {
-                alert('Please select check-in and check-out dates.');
+                alert('Please select check-in and check-out dates from the search bar above.');
                 return;
             }
 
-            // Calculate pricing
             const cfg = siteConfig[site];
             const nights = Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
             const baseCost = cfg.basePrice * nights;
@@ -1729,11 +1907,9 @@
                 const result = await res.json();
                 if (result.success) {
                     if (result.checkout_url) {
-                        // Stripe enabled — redirect to payment
                         submitBtn.textContent = 'Redirecting to payment...';
                         window.location.href = result.checkout_url;
                     } else {
-                        // No Stripe — show confirmation
                         form.style.display = 'none';
                         confirmation.classList.add('show');
                     }
