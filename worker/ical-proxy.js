@@ -1,27 +1,62 @@
-// Cloudflare Worker — iCal proxy for Ahana Hillside
-// Deploy: npx wrangler deploy worker/ical-proxy.js --name ahana-ical-proxy
+// Cloudflare Worker — Ahana Hillside API
+// Handles: iCal calendar proxy, site configuration, admin authentication
+// Requires KV Namespace binding: CONFIG
+// Deploy: paste into Cloudflare Workers dashboard
 
 const ICAL_FEEDS = {
-  samavas: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=87645&s=940738',
-  chhaya: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=87646&s=1103648',
+  samavas: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=92310&s=940738',
+  chhaya: 'https://www.hipcamp.com/en-AU/bookings/cc06b2c9-7536-49df-a407-4bac49630d71/agenda.ics?cal=92309&s=1103648',
 };
 
 const ALLOWED_ORIGINS = [
+  'https://ahanahillside.com',
+  'https://www.ahanahillside.com',
   'https://ahanahillside.github.io',
-  'https://ahana-hillside.com',
-  'https://www.ahana-hillside.com',
   'http://localhost',
   'http://127.0.0.1',
 ];
+
+const DEFAULT_CONFIG = {
+  samavas: {
+    name: 'SAMAVAS',
+    type: 'RV / Tent Site · Sleeps 15 · Vehicles under 30 m',
+    description: 'Our largest site, accommodating up to 15 people. Set furthest from the main house for maximum privacy, SAMAVAS is ideal for groups and families looking for a secluded spot in the rainforest.',
+    basePrice: 66,
+    extraGuestFee: 15,
+    maxGuests: 20,
+  },
+  chhaya: {
+    name: 'CHHAYA',
+    type: 'RV / Tent Site · Sleeps 6 · Vehicles under 24 m',
+    description: 'A cosy, intimate site perfect for couples and solo campers. CHHAYA is just a few metres from the toilets, offering convenience without sacrificing the peaceful rainforest setting.',
+    basePrice: 60,
+    extraGuestFee: 10,
+    maxGuests: 20,
+  },
+  currency: 'AUD',
+  promoCodes: {},
+  rules: [
+    'No parties allowed without prior permission',
+    'No loud or open music',
+    'All dogs must be kept on a leash when on the main campground',
+  ],
+};
+
+const DEFAULT_PASSWORD = 'ahana2026';
 
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.some(o => origin && origin.startsWith(o));
   return {
     'Access-Control-Allow-Origin': allowed ? origin : ALLOWED_ORIGINS[0],
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Cache-Control': 'public, max-age=300',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   };
+}
+
+function jsonResponse(data, status, origin, cache) {
+  const headers = { 'Content-Type': 'application/json', ...corsHeaders(origin) };
+  if (cache) headers['Cache-Control'] = cache;
+  return new Response(JSON.stringify(data), { status, headers });
 }
 
 function parseIcal(icsText) {
@@ -38,7 +73,6 @@ function parseIcal(icsText) {
       const start = dtstart[1];
       const end = dtend ? dtend[1] : start;
 
-      // Build array of all dates in the range
       const dates = [];
       const current = new Date(
         parseInt(start.slice(0, 4)),
@@ -68,21 +102,100 @@ function parseIcal(icsText) {
   return events;
 }
 
+async function getConfig(env) {
+  try {
+    const stored = await env.CONFIG.get('site-config', 'json');
+    if (stored) return stored;
+  } catch (e) {
+    // KV not bound or empty — use defaults
+  }
+  return DEFAULT_CONFIG;
+}
+
+async function getPassword(env) {
+  try {
+    const pwd = await env.CONFIG.get('admin-password');
+    if (pwd) return pwd;
+  } catch (e) {}
+  return DEFAULT_PASSWORD;
+}
+
+async function verifyAuth(request, env) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.replace('Bearer ', '');
+  const password = await getPassword(env);
+  return token === password;
+}
+
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
     const origin = request.headers.get('Origin') || '';
+    const path = url.pathname;
 
+    // CORS preflight
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: corsHeaders(origin) });
     }
 
+    // --- GET /config — public, returns site configuration ---
+    if (path === '/config' && request.method === 'GET') {
+      const config = await getConfig(env);
+      return jsonResponse(config, 200, origin, 'public, max-age=60');
+    }
+
+    // --- POST /config — admin only, updates site configuration ---
+    if (path === '/config' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const newConfig = await request.json();
+        await env.CONFIG.put('site-config', JSON.stringify(newConfig));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Invalid data', detail: err.message }, 400, origin);
+      }
+    }
+
+    // --- POST /auth — login, returns token on success ---
+    if (path === '/auth' && request.method === 'POST') {
+      try {
+        const { password } = await request.json();
+        const stored = await getPassword(env);
+        if (password === stored) {
+          return jsonResponse({ success: true, token: stored }, 200, origin);
+        }
+        return jsonResponse({ error: 'Invalid password' }, 401, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Invalid request' }, 400, origin);
+      }
+    }
+
+    // --- POST /password — admin only, changes admin password ---
+    if (path === '/password' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { newPassword } = await request.json();
+        if (!newPassword || newPassword.length < 6) {
+          return jsonResponse({ error: 'Password must be at least 6 characters' }, 400, origin);
+        }
+        await env.CONFIG.put('admin-password', newPassword);
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Invalid request' }, 400, origin);
+      }
+    }
+
+    // --- iCal proxy (existing) ---
     const site = url.searchParams.get('site');
 
     if (!site || !ICAL_FEEDS[site]) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid site. Use ?site=samavas or ?site=chhaya' }),
-        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } }
+      return jsonResponse(
+        { error: 'Invalid site. Use ?site=samavas or ?site=chhaya' },
+        400, origin
       );
     }
 
@@ -97,18 +210,23 @@ export default {
 
       const icsText = await response.text();
       const events = parseIcal(icsText);
-
-      // Flatten all booked dates into a single array
       const bookedDates = [...new Set(events.flatMap(e => e.dates))].sort();
 
       return new Response(
         JSON.stringify({ site, bookedDates, events, updatedAt: new Date().toISOString() }),
-        { status: 200, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } }
+        {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+            ...corsHeaders(origin),
+            'Cache-Control': 'public, max-age=300',
+          },
+        }
       );
     } catch (err) {
-      return new Response(
-        JSON.stringify({ error: 'Failed to fetch calendar', detail: err.message }),
-        { status: 502, headers: { 'Content-Type': 'application/json', ...corsHeaders(origin) } }
+      return jsonResponse(
+        { error: 'Failed to fetch calendar', detail: err.message },
+        502, origin
       );
     }
   },

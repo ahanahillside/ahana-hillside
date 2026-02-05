@@ -396,6 +396,86 @@
             border-color: var(--color-forest);
         }
 
+        /* Price breakdown */
+        .price-breakdown {
+            display: none;
+            font-size: 0.8rem;
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-breakdown.show {
+            display: block;
+        }
+
+        .price-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.2rem 0;
+            color: var(--color-charcoal);
+        }
+
+        .price-line.discount {
+            color: #5a9a5a;
+        }
+
+        .price-line.total {
+            font-weight: 500;
+            color: var(--color-forest);
+            border-top: 1px solid var(--color-light-stone);
+            margin-top: 0.3rem;
+            padding-top: 0.4rem;
+        }
+
+        .promo-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .promo-row input {
+            flex: 1;
+            padding: 0.55rem 0.65rem;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+            outline: none;
+            text-transform: uppercase;
+            transition: border-color 0.2s ease;
+        }
+
+        .promo-row input:focus { border-color: var(--color-forest); }
+
+        .promo-apply {
+            padding: 0.55rem 0.85rem;
+            font-family: var(--font-sans);
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid var(--color-forest);
+            background: transparent;
+            color: var(--color-forest);
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .promo-apply:hover {
+            background: var(--color-forest);
+            color: var(--color-cream);
+        }
+
+        .promo-msg {
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+        }
+
+        .promo-msg.valid { color: #5a9a5a; }
+        .promo-msg.invalid { color: #b44; }
+
         .btn-book {
             display: block;
             width: 100%;
@@ -560,8 +640,8 @@
             <div class="carousel" id="carousel-samavas"></div>
             <div class="campsite-body">
                 <div class="campsite-name">SAMAVAS</div>
-                <div class="campsite-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
-                <p class="campsite-description">
+                <div class="campsite-type" id="samavas-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
+                <p class="campsite-description" id="samavas-desc">
                     Our largest site, accommodating up to 15 people. Set furthest from the main house for maximum privacy, SAMAVAS is ideal for groups and families looking for a secluded spot in the rainforest.
                 </p>
                 <div class="campsite-amenities">
@@ -582,7 +662,7 @@
                         Potable water
                     </div>
                 </div>
-                <div class="campsite-price">
+                <div class="campsite-price" id="samavas-price">
                     from <strong>AU$66</strong> / night
                     <span class="price-note">for 2 guests</span>
                 </div>
@@ -606,11 +686,8 @@
                         <div class="form-field">
                             <label for="samavas-guests">Guests</label>
                             <select id="samavas-guests">
-                                <option>1 guest</option>
-                                <option selected>2 guests</option>
-                                <option>3 guests</option>
-                                <option>4 guests</option>
-                                <option>5+ guests</option>
+                                <option value="1">1 guest</option>
+                                <option value="2" selected>2 guests</option>
                             </select>
                         </div>
                         <div class="form-field">
@@ -622,6 +699,15 @@
                         <label for="samavas-email">Email</label>
                         <input type="email" id="samavas-email" placeholder="you@email.com" required>
                     </div>
+                    <div class="form-field">
+                        <label>Promo code</label>
+                        <div class="promo-row">
+                            <input type="text" id="samavas-promo" placeholder="Optional">
+                            <button type="button" class="promo-apply" onclick="applyPromo('samavas')">Apply</button>
+                        </div>
+                        <div class="promo-msg" id="samavas-promo-msg"></div>
+                    </div>
+                    <div class="price-breakdown" id="samavas-breakdown"></div>
                     <div class="date-warning" id="samavas-warning">Selected dates are unavailable. Please choose different dates.</div>
                     <button type="submit" class="btn-book">Request Booking</button>
                 </form>
@@ -638,8 +724,8 @@
             <div class="carousel" id="carousel-chhaya"></div>
             <div class="campsite-body">
                 <div class="campsite-name">CHHAYA</div>
-                <div class="campsite-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
-                <p class="campsite-description">
+                <div class="campsite-type" id="chhaya-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
+                <p class="campsite-description" id="chhaya-desc">
                     A cosy, intimate site perfect for couples and solo campers. CHHAYA is just a few metres from the toilets, offering convenience without sacrificing the peaceful rainforest setting.
                 </p>
                 <div class="campsite-amenities">
@@ -660,7 +746,7 @@
                         Potable water
                     </div>
                 </div>
-                <div class="campsite-price">
+                <div class="campsite-price" id="chhaya-price">
                     from <strong>AU$60</strong> / night
                     <span class="price-note">for 2 guests</span>
                 </div>
@@ -684,11 +770,8 @@
                         <div class="form-field">
                             <label for="chhaya-guests">Guests</label>
                             <select id="chhaya-guests">
-                                <option>1 guest</option>
-                                <option selected>2 guests</option>
-                                <option>3 guests</option>
-                                <option>4 guests</option>
-                                <option>5+ guests</option>
+                                <option value="1">1 guest</option>
+                                <option value="2" selected>2 guests</option>
                             </select>
                         </div>
                         <div class="form-field">
@@ -700,6 +783,15 @@
                         <label for="chhaya-email">Email</label>
                         <input type="email" id="chhaya-email" placeholder="you@email.com" required>
                     </div>
+                    <div class="form-field">
+                        <label>Promo code</label>
+                        <div class="promo-row">
+                            <input type="text" id="chhaya-promo" placeholder="Optional">
+                            <button type="button" class="promo-apply" onclick="applyPromo('chhaya')">Apply</button>
+                        </div>
+                        <div class="promo-msg" id="chhaya-promo-msg"></div>
+                    </div>
+                    <div class="price-breakdown" id="chhaya-breakdown"></div>
                     <div class="date-warning" id="chhaya-warning">Selected dates are unavailable. Please choose different dates.</div>
                     <button type="submit" class="btn-book">Request Booking</button>
                 </form>
@@ -714,7 +806,7 @@
 
     <div class="rules">
         <h2>Campground Rules</h2>
-        <ul>
+        <ul id="rules-list">
             <li>No parties allowed without prior permission</li>
             <li>No loud or open music</li>
             <li>All dogs must be kept on a leash when on the main campground</li>
@@ -889,8 +981,170 @@
         // --- Configuration ---
         const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
 
+        // Default config (used as fallback if worker config fetch fails)
+        const DEFAULT_CONFIG = {
+            samavas: { basePrice: 66, extraGuestFee: 15, maxGuests: 20 },
+            chhaya:  { basePrice: 60, extraGuestFee: 10, maxGuests: 20 },
+            currency: 'AUD',
+            promoCodes: {},
+            rules: [],
+        };
+
+        let siteConfig = DEFAULT_CONFIG;
+
+        const CURRENCY_SYMBOLS = { AUD: 'AU$', USD: 'US$', EUR: '\u20AC', GBP: '\u00A3' };
+
+        function currencySymbol() {
+            return CURRENCY_SYMBOLS[siteConfig.currency] || siteConfig.currency + ' ';
+        }
+
         // --- State ---
         const bookedDates = { samavas: [], chhaya: [] };
+        const appliedPromos = { samavas: null, chhaya: null };
+
+        // --- Fetch site config from worker ---
+        async function fetchConfig() {
+            try {
+                const res = await fetch(WORKER_URL + '/config');
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                if (data && data.samavas && data.chhaya) {
+                    siteConfig = data;
+                    applyConfig();
+                }
+            } catch (err) {
+                console.warn('Config fetch failed, using defaults:', err);
+            }
+        }
+
+        function applyConfig() {
+            ['samavas', 'chhaya'].forEach(site => {
+                const cfg = siteConfig[site];
+                if (!cfg) return;
+
+                // Update description
+                if (cfg.description) {
+                    document.getElementById(site + '-desc').textContent = cfg.description;
+                }
+
+                // Update type line
+                if (cfg.type) {
+                    document.getElementById(site + '-type').innerHTML = cfg.type.replace(/·/g, '&middot;');
+                }
+
+                // Update price display
+                const sym = currencySymbol();
+                document.getElementById(site + '-price').innerHTML =
+                    'from <strong>' + sym + cfg.basePrice + '</strong> / night '
+                    + '<span class="price-note">for 2 guests'
+                    + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
+                    + '</span>';
+
+                // Build guest dropdown
+                const select = document.getElementById(site + '-guests');
+                const maxG = cfg.maxGuests || 20;
+                select.innerHTML = '';
+                for (let i = 1; i <= maxG; i++) {
+                    const opt = document.createElement('option');
+                    opt.value = i;
+                    opt.textContent = i + (i === 1 ? ' guest' : ' guests');
+                    if (i === 2) opt.selected = true;
+                    select.appendChild(opt);
+                }
+
+                // Listen for guest changes to update pricing
+                select.addEventListener('change', () => updatePriceBreakdown(site));
+            });
+
+            // Update rules
+            if (siteConfig.rules && siteConfig.rules.length > 0) {
+                const rulesList = document.getElementById('rules-list');
+                rulesList.innerHTML = siteConfig.rules.map(r => '<li>' + r + '</li>').join('');
+            }
+        }
+
+        // --- Promo codes ---
+        function applyPromo(site) {
+            const input = document.getElementById(site + '-promo');
+            const msgEl = document.getElementById(site + '-promo-msg');
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                appliedPromos[site] = null;
+                msgEl.textContent = '';
+                msgEl.className = 'promo-msg';
+                updatePriceBreakdown(site);
+                return;
+            }
+
+            const promos = siteConfig.promoCodes || {};
+            if (promos[code]) {
+                appliedPromos[site] = { code, ...promos[code] };
+                const label = promos[code].type === 'percent'
+                    ? promos[code].value + '% off'
+                    : currencySymbol() + promos[code].value + ' off';
+                msgEl.textContent = 'Code applied: ' + label;
+                msgEl.className = 'promo-msg valid';
+            } else {
+                appliedPromos[site] = null;
+                msgEl.textContent = 'Invalid promo code';
+                msgEl.className = 'promo-msg invalid';
+            }
+
+            updatePriceBreakdown(site);
+        }
+
+        // --- Price breakdown ---
+        function updatePriceBreakdown(site) {
+            const checkin = document.getElementById(site + '-checkin').value;
+            const checkout = document.getElementById(site + '-checkout').value;
+            const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
+            const breakdownEl = document.getElementById(site + '-breakdown');
+
+            if (!checkin || !checkout || checkout <= checkin) {
+                breakdownEl.classList.remove('show');
+                return;
+            }
+
+            const cfg = siteConfig[site];
+            if (!cfg) return;
+
+            const nights = Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
+            if (nights <= 0) {
+                breakdownEl.classList.remove('show');
+                return;
+            }
+
+            const sym = currencySymbol();
+            const baseCost = cfg.basePrice * nights;
+            const extraGuests = Math.max(0, guestCount - 2);
+            const extraCost = extraGuests * cfg.extraGuestFee * nights;
+            let subtotal = baseCost + extraCost;
+
+            let html = '';
+            html += '<div class="price-line"><span>' + nights + ' night' + (nights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + baseCost.toFixed(2) + '</span></div>';
+
+            if (extraCost > 0) {
+                html += '<div class="price-line"><span>' + extraGuests + ' extra guest' + (extraGuests > 1 ? 's' : '') + ' x ' + sym + cfg.extraGuestFee + ' x ' + nights + ' night' + (nights > 1 ? 's' : '') + '</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
+            }
+
+            let discount = 0;
+            const promo = appliedPromos[site];
+            if (promo) {
+                if (promo.type === 'percent') {
+                    discount = subtotal * (promo.value / 100);
+                } else {
+                    discount = Math.min(promo.value, subtotal);
+                }
+                html += '<div class="price-line discount"><span>Promo: ' + promo.code + '</span><span>-' + sym + discount.toFixed(2) + '</span></div>';
+            }
+
+            const total = subtotal - discount;
+            html += '<div class="price-line total"><span>Total</span><span>' + sym + total.toFixed(2) + '</span></div>';
+
+            breakdownEl.innerHTML = html;
+            breakdownEl.classList.add('show');
+        }
 
         // --- Date helpers ---
         const today = new Date().toISOString().split('T')[0];
@@ -959,9 +1213,13 @@
                     }
                 }
                 updateWarning(site);
+                updatePriceBreakdown(site);
             });
 
-            checkout.addEventListener('change', () => updateWarning(site));
+            checkout.addEventListener('change', () => {
+                updateWarning(site);
+                updatePriceBreakdown(site);
+            });
         });
 
         // --- Booking handler ---
@@ -976,18 +1234,44 @@
 
             const checkin = document.getElementById(site + '-checkin').value;
             const checkout = document.getElementById(site + '-checkout').value;
-            const guests = document.getElementById(site + '-guests').value;
+            const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
             const name = document.getElementById(site + '-name').value;
             const email = document.getElementById(site + '-email').value;
             const siteName = site.toUpperCase();
 
+            // Calculate pricing for the email
+            const cfg = siteConfig[site];
+            const nights = Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
+            const sym = currencySymbol();
+            const baseCost = cfg.basePrice * nights;
+            const extraGuests = Math.max(0, guestCount - 2);
+            const extraCost = extraGuests * cfg.extraGuestFee * nights;
+            let subtotal = baseCost + extraCost;
+            let discount = 0;
+            const promo = appliedPromos[site];
+            if (promo) {
+                discount = promo.type === 'percent' ? subtotal * (promo.value / 100) : Math.min(promo.value, subtotal);
+            }
+            const total = subtotal - discount;
+
             const subject = 'Booking Request — ' + siteName + ' at Ahana Hillside';
-            const body = 'Name: ' + name + '\n'
+            let body = 'Name: ' + name + '\n'
                 + 'Email: ' + email + '\n'
                 + 'Campsite: ' + siteName + '\n'
                 + 'Check-in: ' + checkin + '\n'
                 + 'Check-out: ' + checkout + '\n'
-                + 'Guests: ' + guests;
+                + 'Guests: ' + guestCount + '\n'
+                + 'Nights: ' + nights + '\n'
+                + '\n--- Pricing ---\n'
+                + 'Base: ' + sym + baseCost.toFixed(2) + ' (' + nights + ' nights x ' + sym + cfg.basePrice + ')\n';
+
+            if (extraCost > 0) {
+                body += 'Extra guests: ' + sym + extraCost.toFixed(2) + ' (' + extraGuests + ' x ' + sym + cfg.extraGuestFee + ' x ' + nights + ' nights)\n';
+            }
+            if (promo) {
+                body += 'Promo (' + promo.code + '): -' + sym + discount.toFixed(2) + '\n';
+            }
+            body += 'Total: ' + sym + total.toFixed(2) + '\n';
 
             window.location.href = 'mailto:ahanahillside@gmail.com?subject='
                 + encodeURIComponent(subject)
@@ -997,7 +1281,8 @@
             confirmation.classList.add('show');
         }
 
-        // --- Init: fetch availability on page load ---
+        // --- Init ---
+        fetchConfig();
         fetchAvailability('samavas');
         fetchAvailability('chhaya');
     </script>
