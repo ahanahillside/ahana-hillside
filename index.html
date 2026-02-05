@@ -147,6 +147,27 @@
             color: var(--color-cream);
         }
 
+        .contact-link-row {
+            margin-top: 1.5rem;
+            animation: fadeIn 1s ease-out 1s both;
+        }
+
+        .contact-link {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--color-charcoal);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-stone);
+            padding-bottom: 2px;
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .contact-link:hover {
+            color: var(--color-forest);
+            border-color: var(--color-forest);
+        }
+
         .footer {
             position: absolute;
             bottom: 1.5rem;
@@ -215,6 +236,9 @@
                 href="campsites.html"
                 class="book-btn book-btn-outline"
             >Book Campsite</a>
+            <div class="contact-link-row">
+                <a href="contact.html" class="contact-link">Have a question? Contact Us &rarr;</a>
+            </div>
         </div>
         <div class="footer">
             <a href="campsites.html">Campsites</a>
