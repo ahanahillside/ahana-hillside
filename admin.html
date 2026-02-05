@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Ahana Hillside</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #FAF8F5;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+            --color-success: #5a9a5a;
+            --color-error: #b44;
+
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Login screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 3rem 2.5rem;
+            max-width: 380px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-card h1 {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.25rem;
+        }
+
+        .login-card .subtitle {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 0.7rem 0.85rem;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            color: var(--color-charcoal);
+            outline: none;
+            margin-bottom: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .login-card input:focus { border-color: var(--color-forest); }
+
+        .login-error {
+            display: none;
+            font-size: 0.8rem;
+            color: var(--color-error);
+            margin-bottom: 1rem;
+        }
+
+        .login-error.show { display: block; }
+
+        /* Dashboard */
+        .dashboard { display: none; }
+        .dashboard.show { display: block; }
+
+        .dash-header {
+            background: var(--color-forest);
+            color: var(--color-cream);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dash-header h1 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        .dash-header .logout-btn {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: var(--color-cream);
+            padding: 0.4rem 1rem;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .dash-header .logout-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--color-light-stone);
+            padding: 0 2rem;
+            background: #fff;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.85rem 1.25rem;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .tab-btn:hover { color: var(--color-charcoal); }
+        .tab-btn.active {
+            color: var(--color-forest);
+            border-bottom-color: var(--color-forest);
+        }
+
+        /* Tab content */
+        .tab-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .panel-title {
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.25rem;
+        }
+
+        .panel-desc {
+            font-size: 0.85rem;
+            color: var(--color-stone);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--color-forest);
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-light-stone);
+        }
+
+        .field {
+            margin-bottom: 1rem;
+        }
+
+        .field:last-child { margin-bottom: 0; }
+
+        .field label {
+            display: block;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-stone);
+            margin-bottom: 0.3rem;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 0.55rem 0.65rem;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: var(--color-forest);
+        }
+
+        .field textarea {
+            min-height: 80px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .field .hint {
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            margin-top: 0.2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.65rem 1.75rem;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 1px solid var(--color-forest);
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--color-forest);
+            color: var(--color-cream);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--color-forest);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-forest);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-forest);
+            color: var(--color-cream);
+        }
+
+        .btn-danger {
+            border-color: var(--color-error);
+            background: transparent;
+            color: var(--color-error);
+            padding: 0.3rem 0.75rem;
+            font-size: 0.7rem;
+        }
+
+        .btn-danger:hover {
+            background: var(--color-error);
+            color: #fff;
+        }
+
+        .save-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .save-msg {
+            font-size: 0.8rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .save-msg.show { opacity: 1; }
+        .save-msg.success { color: var(--color-success); }
+        .save-msg.error { color: var(--color-error); }
+
+        /* Promo / Rules list */
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 0.75rem;
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .list-item .item-info {
+            flex: 1;
+        }
+
+        .list-item .item-label {
+            font-weight: 500;
+            color: var(--color-forest);
+        }
+
+        .list-item .item-detail {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
+
+        .add-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .add-row input, .add-row select {
+            padding: 0.5rem 0.6rem;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            color: var(--color-charcoal);
+            outline: none;
+        }
+
+        .add-row input:focus, .add-row select:focus {
+            border-color: var(--color-forest);
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .card-grid { grid-template-columns: 1fr; }
+            .tabs { padding: 0 1rem; }
+            .tab-content { padding: 1.5rem 1rem; }
+            .tab-btn { padding: 0.75rem 0.85rem; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="login-screen">
+    <div class="login-card">
+        <h1>Ahana Hillside</h1>
+        <div class="subtitle">Admin Dashboard</div>
+        <form onsubmit="handleLogin(event)">
+            <input type="password" id="login-password" placeholder="Enter admin password" autocomplete="current-password" required>
+            <div class="login-error" id="login-error">Invalid password. Please try again.</div>
+            <button type="submit" class="btn btn-primary" style="width:100%">Sign In</button>
+        </form>
+    </div>
+</div>
+
+<!-- Dashboard -->
+<div class="dashboard" id="dashboard">
+    <div class="dash-header">
+        <h1>Ahana Hillside — Admin</h1>
+        <button class="logout-btn" onclick="handleLogout()">Log out</button>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="pricing">Pricing</button>
+        <button class="tab-btn" data-tab="content">Content</button>
+        <button class="tab-btn" data-tab="promos">Promo Codes</button>
+        <button class="tab-btn" data-tab="rules">Rules</button>
+        <button class="tab-btn" data-tab="settings">Settings</button>
+    </div>
+
+    <div class="tab-content">
+
+        <!-- PRICING TAB -->
+        <div class="tab-panel active" id="panel-pricing">
+            <div class="panel-title">Pricing</div>
+            <div class="panel-desc">Set base prices and extra guest fees for each campsite. Prices are per night in AUD.</div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title">SAMAVAS</div>
+                    <div class="field">
+                        <label>Base price per night (1-2 guests)</label>
+                        <input type="number" id="p-samavas-base" min="0" step="1">
+                        <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                    </div>
+                    <div class="field">
+                        <label>Extra guest fee (per person per night)</label>
+                        <input type="number" id="p-samavas-extra" min="0" step="1">
+                        <div class="hint">Charged for each guest above 2</div>
+                    </div>
+                    <div class="field">
+                        <label>Maximum guests</label>
+                        <input type="number" id="p-samavas-max" min="1" max="50" step="1">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">CHHAYA</div>
+                    <div class="field">
+                        <label>Base price per night (1-2 guests)</label>
+                        <input type="number" id="p-chhaya-base" min="0" step="1">
+                        <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                    </div>
+                    <div class="field">
+                        <label>Extra guest fee (per person per night)</label>
+                        <input type="number" id="p-chhaya-extra" min="0" step="1">
+                        <div class="hint">Charged for each guest above 2</div>
+                    </div>
+                    <div class="field">
+                        <label>Maximum guests</label>
+                        <input type="number" id="p-chhaya-max" min="1" max="50" step="1">
+                    </div>
+                </div>
+            </div>
+
+            <div class="field" style="max-width:200px">
+                <label>Currency</label>
+                <select id="p-currency">
+                    <option value="AUD">AUD (AU$)</option>
+                    <option value="USD">USD (US$)</option>
+                    <option value="EUR">EUR (&euro;)</option>
+                    <option value="GBP">GBP (&pound;)</option>
+                </select>
+            </div>
+
+            <div class="save-bar">
+                <button class="btn btn-primary" onclick="saveConfig()">Save Pricing</button>
+                <span class="save-msg" id="pricing-msg"></span>
+            </div>
+        </div>
+
+        <!-- CONTENT TAB -->
+        <div class="tab-panel" id="panel-content">
+            <div class="panel-title">Site Content</div>
+            <div class="panel-desc">Edit the description and details shown on each campsite card.</div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title">SAMAVAS</div>
+                    <div class="field">
+                        <label>Site type line</label>
+                        <input type="text" id="c-samavas-type">
+                        <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m"</div>
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-samavas-desc" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">CHHAYA</div>
+                    <div class="field">
+                        <label>Site type line</label>
+                        <input type="text" id="c-chhaya-type">
+                        <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m"</div>
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-chhaya-desc" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="save-bar">
+                <button class="btn btn-primary" onclick="saveConfig()">Save Content</button>
+                <span class="save-msg" id="content-msg"></span>
+            </div>
+        </div>
+
+        <!-- PROMO CODES TAB -->
+        <div class="tab-panel" id="panel-promos">
+            <div class="panel-title">Promo Codes</div>
+            <div class="panel-desc">Manage discount codes that guests can use when booking. These are independent of Hipcamp.</div>
+
+            <div id="promo-list"></div>
+
+            <div class="add-row">
+                <input type="text" id="promo-code" placeholder="Code (e.g. WELCOME10)" style="flex:1;min-width:140px;text-transform:uppercase">
+                <select id="promo-type" style="width:120px">
+                    <option value="percent">Percentage %</option>
+                    <option value="fixed">Fixed amount $</option>
+                </select>
+                <input type="number" id="promo-value" placeholder="Value" min="0" step="1" style="width:80px">
+                <button class="btn btn-secondary" onclick="addPromo()" style="padding:0.5rem 1rem">Add</button>
+            </div>
+
+            <div class="save-bar">
+                <button class="btn btn-primary" onclick="saveConfig()">Save Promo Codes</button>
+                <span class="save-msg" id="promos-msg"></span>
+            </div>
+        </div>
+
+        <!-- RULES TAB -->
+        <div class="tab-panel" id="panel-rules">
+            <div class="panel-title">Campground Rules</div>
+            <div class="panel-desc">Edit the rules shown at the bottom of the campsites page.</div>
+
+            <div id="rules-list"></div>
+
+            <div class="add-row">
+                <input type="text" id="rule-text" placeholder="New rule..." style="flex:1">
+                <button class="btn btn-secondary" onclick="addRule()" style="padding:0.5rem 1rem">Add</button>
+            </div>
+
+            <div class="save-bar">
+                <button class="btn btn-primary" onclick="saveConfig()">Save Rules</button>
+                <span class="save-msg" id="rules-msg"></span>
+            </div>
+        </div>
+
+        <!-- SETTINGS TAB -->
+        <div class="tab-panel" id="panel-settings">
+            <div class="panel-title">Settings</div>
+            <div class="panel-desc">Change your admin dashboard password.</div>
+
+            <div class="card" style="max-width:400px">
+                <div class="card-title">Change Password</div>
+                <div class="field">
+                    <label>New password</label>
+                    <input type="password" id="new-password" placeholder="Min. 6 characters" minlength="6">
+                </div>
+                <div class="field">
+                    <label>Confirm new password</label>
+                    <input type="password" id="confirm-password" placeholder="Re-enter password">
+                </div>
+                <div class="save-bar" style="margin-top:1rem">
+                    <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+                    <span class="save-msg" id="settings-msg"></span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+    let authToken = sessionStorage.getItem('ahana-token') || '';
+    let siteConfig = null;
+
+    // --- Auth ---
+    async function handleLogin(e) {
+        e.preventDefault();
+        const password = document.getElementById('login-password').value;
+        const errorEl = document.getElementById('login-error');
+        errorEl.classList.remove('show');
+
+        try {
+            const res = await fetch(WORKER_URL + '/auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                authToken = data.token;
+                sessionStorage.setItem('ahana-token', authToken);
+                showDashboard();
+            } else {
+                errorEl.classList.add('show');
+            }
+        } catch (err) {
+            errorEl.textContent = 'Connection error. Is the worker deployed?';
+            errorEl.classList.add('show');
+        }
+    }
+
+    function handleLogout() {
+        authToken = '';
+        sessionStorage.removeItem('ahana-token');
+        document.getElementById('dashboard').classList.remove('show');
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('login-password').value = '';
+    }
+
+    async function showDashboard() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('dashboard').classList.add('show');
+        await loadConfig();
+    }
+
+    // --- Config ---
+    async function loadConfig() {
+        try {
+            const res = await fetch(WORKER_URL + '/config');
+            siteConfig = await res.json();
+        } catch (err) {
+            siteConfig = null;
+            showMsg('pricing', 'Could not load config from worker', 'error');
+            return;
+        }
+        populateFields();
+    }
+
+    function populateFields() {
+        if (!siteConfig) return;
+        const c = siteConfig;
+
+        // Pricing
+        document.getElementById('p-samavas-base').value = c.samavas?.basePrice ?? 66;
+        document.getElementById('p-samavas-extra').value = c.samavas?.extraGuestFee ?? 15;
+        document.getElementById('p-samavas-max').value = c.samavas?.maxGuests ?? 20;
+        document.getElementById('p-chhaya-base').value = c.chhaya?.basePrice ?? 60;
+        document.getElementById('p-chhaya-extra').value = c.chhaya?.extraGuestFee ?? 10;
+        document.getElementById('p-chhaya-max').value = c.chhaya?.maxGuests ?? 20;
+        document.getElementById('p-currency').value = c.currency || 'AUD';
+
+        // Content
+        document.getElementById('c-samavas-type').value = c.samavas?.type || '';
+        document.getElementById('c-samavas-desc').value = c.samavas?.description || '';
+        document.getElementById('c-chhaya-type').value = c.chhaya?.type || '';
+        document.getElementById('c-chhaya-desc').value = c.chhaya?.description || '';
+
+        // Promo codes
+        renderPromos();
+
+        // Rules
+        renderRules();
+    }
+
+    function gatherConfig() {
+        return {
+            samavas: {
+                name: 'SAMAVAS',
+                type: document.getElementById('c-samavas-type').value,
+                description: document.getElementById('c-samavas-desc').value,
+                basePrice: parseFloat(document.getElementById('p-samavas-base').value) || 0,
+                extraGuestFee: parseFloat(document.getElementById('p-samavas-extra').value) || 0,
+                maxGuests: parseInt(document.getElementById('p-samavas-max').value) || 20,
+            },
+            chhaya: {
+                name: 'CHHAYA',
+                type: document.getElementById('c-chhaya-type').value,
+                description: document.getElementById('c-chhaya-desc').value,
+                basePrice: parseFloat(document.getElementById('p-chhaya-base').value) || 0,
+                extraGuestFee: parseFloat(document.getElementById('p-chhaya-extra').value) || 0,
+                maxGuests: parseInt(document.getElementById('p-chhaya-max').value) || 20,
+            },
+            currency: document.getElementById('p-currency').value,
+            promoCodes: siteConfig.promoCodes || {},
+            rules: siteConfig.rules || [],
+        };
+    }
+
+    async function saveConfig() {
+        siteConfig = gatherConfig();
+        const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
+
+        try {
+            const res = await fetch(WORKER_URL + '/config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken,
+                },
+                body: JSON.stringify(siteConfig),
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMsg(activeTab, 'Saved successfully', 'success');
+            } else if (data.error === 'Unauthorized') {
+                showMsg(activeTab, 'Session expired. Please log in again.', 'error');
+            } else {
+                showMsg(activeTab, 'Error: ' + (data.error || 'Unknown'), 'error');
+            }
+        } catch (err) {
+            showMsg(activeTab, 'Connection error', 'error');
+        }
+    }
+
+    async function changePassword() {
+        const newPwd = document.getElementById('new-password').value;
+        const confirmPwd = document.getElementById('confirm-password').value;
+
+        if (newPwd.length < 6) {
+            showMsg('settings', 'Password must be at least 6 characters', 'error');
+            return;
+        }
+        if (newPwd !== confirmPwd) {
+            showMsg('settings', 'Passwords do not match', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch(WORKER_URL + '/password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken,
+                },
+                body: JSON.stringify({ newPassword: newPwd }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                authToken = newPwd;
+                sessionStorage.setItem('ahana-token', authToken);
+                showMsg('settings', 'Password updated', 'success');
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+            } else {
+                showMsg('settings', data.error || 'Failed to update', 'error');
+            }
+        } catch (err) {
+            showMsg('settings', 'Connection error', 'error');
+        }
+    }
+
+    // --- Promo codes ---
+    function renderPromos() {
+        const container = document.getElementById('promo-list');
+        const codes = siteConfig.promoCodes || {};
+        const keys = Object.keys(codes);
+
+        if (keys.length === 0) {
+            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:0.5rem 0;">No promo codes yet.</div>';
+            return;
+        }
+
+        container.innerHTML = keys.map(code => {
+            const p = codes[code];
+            const label = p.type === 'percent' ? p.value + '% off' : 'AU$' + p.value + ' off';
+            return '<div class="list-item">'
+                + '<div class="item-info"><span class="item-label">' + code + '</span> <span class="item-detail">' + label + '</span></div>'
+                + '<button class="btn btn-danger" onclick="removePromo(\'' + code + '\')">Remove</button>'
+                + '</div>';
+        }).join('');
+    }
+
+    function addPromo() {
+        const codeEl = document.getElementById('promo-code');
+        const typeEl = document.getElementById('promo-type');
+        const valueEl = document.getElementById('promo-value');
+
+        const code = codeEl.value.trim().toUpperCase();
+        const type = typeEl.value;
+        const value = parseFloat(valueEl.value);
+
+        if (!code || !value || value <= 0) return;
+
+        if (!siteConfig.promoCodes) siteConfig.promoCodes = {};
+        siteConfig.promoCodes[code] = { type, value };
+
+        codeEl.value = '';
+        valueEl.value = '';
+        renderPromos();
+    }
+
+    function removePromo(code) {
+        delete siteConfig.promoCodes[code];
+        renderPromos();
+    }
+
+    // --- Rules ---
+    function renderRules() {
+        const container = document.getElementById('rules-list');
+        const rules = siteConfig.rules || [];
+
+        if (rules.length === 0) {
+            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:0.5rem 0;">No rules yet.</div>';
+            return;
+        }
+
+        container.innerHTML = rules.map((rule, i) => {
+            return '<div class="list-item">'
+                + '<div class="item-info">' + rule + '</div>'
+                + '<button class="btn btn-danger" onclick="removeRule(' + i + ')">Remove</button>'
+                + '</div>';
+        }).join('');
+    }
+
+    function addRule() {
+        const input = document.getElementById('rule-text');
+        const text = input.value.trim();
+        if (!text) return;
+
+        if (!siteConfig.rules) siteConfig.rules = [];
+        siteConfig.rules.push(text);
+        input.value = '';
+        renderRules();
+    }
+
+    function removeRule(index) {
+        siteConfig.rules.splice(index, 1);
+        renderRules();
+    }
+
+    // --- UI helpers ---
+    function showMsg(tab, text, type) {
+        const el = document.getElementById(tab + '-msg');
+        if (!el) return;
+        el.textContent = text;
+        el.className = 'save-msg show ' + type;
+        setTimeout(() => el.classList.remove('show'), 3000);
+    }
+
+    // --- Tab switching ---
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // --- Init: auto-login if token exists ---
+    if (authToken) {
+        showDashboard();
+    }
+</script>
+</body>
+</html>
