@@ -1,0 +1,5 @@
+Add your landing page background image here.
+
+Rename it to: hero.jpg
+
+Recommended: landscape photo, at least 1920px wide.
