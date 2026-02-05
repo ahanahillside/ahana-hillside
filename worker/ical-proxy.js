@@ -7,9 +7,9 @@ const ICAL_FEEDS = {
 };
 
 const ALLOWED_ORIGINS = [
+  'https://ahanahillside.com',
+  'https://www.ahanahillside.com',
   'https://ahanahillside.github.io',
-  'https://ahana-hillside.com',
-  'https://www.ahana-hillside.com',
   'http://localhost',
   'http://127.0.0.1',
 ];
