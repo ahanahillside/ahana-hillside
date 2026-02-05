@@ -1,0 +1,8 @@
+Add up to 10 CHHAYA campsite photos here.
+
+Name them: 1.jpg, 2.jpg, 3.jpg ... up to 10.jpg
+
+The first image (1.jpg) will be shown as the main image.
+All images will appear in the carousel and can be clicked to view full size.
+
+Recommended: landscape photos, at least 1200px wide.

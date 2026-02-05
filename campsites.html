@@ -123,34 +123,160 @@
             animation-delay: 0.15s;
         }
 
-        .campsite-image-wrap {
+        /* Carousel */
+        .carousel {
             position: relative;
             overflow: hidden;
             aspect-ratio: 4 / 3;
         }
 
-        .campsite-image {
+        .carousel-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.35s ease;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .carousel-slide img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.4s ease;
         }
 
-        .campsite:hover .campsite-image {
-            transform: scale(1.03);
-        }
-
-        .campsite-image-placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--color-forest) 0%, #4a6b4d 100%);
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.85);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1rem;
+            color: var(--color-charcoal);
+            cursor: pointer;
+            z-index: 2;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,255,255,0.3);
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+            transition: background 0.2s ease;
+        }
+
+        .carousel-btn:hover {
+            background: #fff;
+        }
+
+        .carousel-btn-prev { left: 8px; }
+        .carousel-btn-next { right: 8px; }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .carousel-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.2s ease;
+        }
+
+        .carousel-dot.active {
+            background: #fff;
+        }
+
+        .carousel-counter {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.45);
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            z-index: 2;
+            letter-spacing: 0.05em;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0,0,0,0.92);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.open {
+            display: flex;
+        }
+
+        .lightbox-img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 2px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        .lightbox-close:hover { opacity: 1; }
+
+        .lightbox-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.15);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .lightbox-btn:hover { background: rgba(255,255,255,0.3); }
+
+        .lightbox-prev { left: 1.5rem; }
+        .lightbox-next { right: 1.5rem; }
+
+        .lightbox-counter {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
         }
 
         .campsite-body {
@@ -369,6 +495,15 @@
             .campsite-amenities {
                 grid-template-columns: 1fr;
             }
+
+            .lightbox-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+            }
+
+            .lightbox-prev { left: 0.75rem; }
+            .lightbox-next { right: 0.75rem; }
         }
     </style>
 </head>
@@ -390,9 +525,7 @@
     <div class="campsites">
         <!-- SAMAVAS -->
         <div class="campsite">
-            <div class="campsite-image-wrap">
-                <img src="images/samavas/main.jpg" alt="SAMAVAS campsite at Ahana Hillside" class="campsite-image">
-            </div>
+            <div class="carousel" id="carousel-samavas"></div>
             <div class="campsite-body">
                 <div class="campsite-name">SAMAVAS</div>
                 <div class="campsite-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
@@ -470,9 +603,7 @@
 
         <!-- CHHAYA -->
         <div class="campsite">
-            <div class="campsite-image-wrap">
-                <img src="images/chhaya/main.jpg" alt="CHHAYA campsite at Ahana Hillside" class="campsite-image">
-            </div>
+            <div class="carousel" id="carousel-chhaya"></div>
             <div class="campsite-body">
                 <div class="campsite-name">CHHAYA</div>
                 <div class="campsite-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
@@ -549,9 +680,172 @@
         </div>
     </div>
 
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close">&times;</button>
+        <button class="lightbox-btn lightbox-prev">&#8249;</button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="">
+        <button class="lightbox-btn lightbox-next">&#8250;</button>
+        <div class="lightbox-counter" id="lightbox-counter"></div>
+    </div>
+
     <script>
+        // --- Image carousel & lightbox ---
+        const SITES = {
+            samavas: { folder: 'images/samavas/', maxImages: 10, alt: 'SAMAVAS campsite at Ahana Hillside' },
+            chhaya:  { folder: 'images/chhaya/',  maxImages: 10, alt: 'CHHAYA campsite at Ahana Hillside' },
+        };
+
+        const carousels = {};
+        let lightboxImages = [];
+        let lightboxIndex = 0;
+
+        // Probe which images exist (1.jpg through 10.jpg)
+        async function probeImages(folder, max) {
+            const found = [];
+            for (let i = 1; i <= max; i++) {
+                const src = folder + i + '.jpg';
+                const exists = await new Promise(resolve => {
+                    const img = new Image();
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = src;
+                });
+                if (exists) found.push(src);
+            }
+            return found;
+        }
+
+        function buildCarousel(containerId, images, alt) {
+            const container = document.getElementById(containerId);
+            if (images.length === 0) {
+                container.innerHTML = '<div style="width:100%;height:100%;background:linear-gradient(135deg,#2C3E2D,#4a6b4d);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;aspect-ratio:4/3;">Photos coming soon</div>';
+                return;
+            }
+
+            const site = containerId.replace('carousel-', '');
+            carousels[site] = { images, index: 0 };
+
+            let html = '<div class="carousel-track">';
+            images.forEach((src, i) => {
+                html += '<div class="carousel-slide" data-site="' + site + '" data-index="' + i + '">';
+                html += '<img src="' + src + '" alt="' + alt + ' — photo ' + (i + 1) + '">';
+                html += '</div>';
+            });
+            html += '</div>';
+
+            if (images.length > 1) {
+                html += '<button class="carousel-btn carousel-btn-prev" data-site="' + site + '">&#8249;</button>';
+                html += '<button class="carousel-btn carousel-btn-next" data-site="' + site + '">&#8250;</button>';
+                html += '<div class="carousel-dots">';
+                images.forEach((_, i) => {
+                    html += '<button class="carousel-dot' + (i === 0 ? ' active' : '') + '" data-site="' + site + '" data-dot="' + i + '"></button>';
+                });
+                html += '</div>';
+            }
+
+            html += '<div class="carousel-counter">' + '1 / ' + images.length + '</div>';
+            container.innerHTML = html;
+
+            // Slide click → open lightbox
+            container.querySelectorAll('.carousel-slide').forEach(slide => {
+                slide.addEventListener('click', () => {
+                    openLightbox(carousels[site].images, parseInt(slide.dataset.index));
+                });
+            });
+
+            // Prev/next buttons
+            const prevBtn = container.querySelector('.carousel-btn-prev');
+            const nextBtn = container.querySelector('.carousel-btn-next');
+            if (prevBtn) prevBtn.addEventListener('click', (e) => { e.stopPropagation(); moveCarousel(site, -1); });
+            if (nextBtn) nextBtn.addEventListener('click', (e) => { e.stopPropagation(); moveCarousel(site, 1); });
+
+            // Dot buttons
+            container.querySelectorAll('.carousel-dot').forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    goToSlide(site, parseInt(dot.dataset.dot));
+                });
+            });
+        }
+
+        function moveCarousel(site, dir) {
+            const c = carousels[site];
+            c.index = (c.index + dir + c.images.length) % c.images.length;
+            updateCarousel(site);
+        }
+
+        function goToSlide(site, index) {
+            carousels[site].index = index;
+            updateCarousel(site);
+        }
+
+        function updateCarousel(site) {
+            const c = carousels[site];
+            const container = document.getElementById('carousel-' + site);
+            const track = container.querySelector('.carousel-track');
+            track.style.transform = 'translateX(-' + (c.index * 100) + '%)';
+
+            container.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === c.index);
+            });
+
+            const counter = container.querySelector('.carousel-counter');
+            if (counter) counter.textContent = (c.index + 1) + ' / ' + c.images.length;
+        }
+
+        // --- Lightbox ---
+        function openLightbox(images, index) {
+            lightboxImages = images;
+            lightboxIndex = index;
+            updateLightbox();
+            document.getElementById('lightbox').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function updateLightbox() {
+            document.getElementById('lightbox-img').src = lightboxImages[lightboxIndex];
+            document.getElementById('lightbox-counter').textContent = (lightboxIndex + 1) + ' / ' + lightboxImages.length;
+        }
+
+        document.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+        document.querySelector('.lightbox-prev').addEventListener('click', () => {
+            lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length;
+            updateLightbox();
+        });
+        document.querySelector('.lightbox-next').addEventListener('click', () => {
+            lightboxIndex = (lightboxIndex + 1) % lightboxImages.length;
+            updateLightbox();
+        });
+
+        // Close on background click
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeLightbox();
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') { lightboxIndex = (lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length; updateLightbox(); }
+            if (e.key === 'ArrowRight') { lightboxIndex = (lightboxIndex + 1) % lightboxImages.length; updateLightbox(); }
+        });
+
+        // --- Init carousels ---
+        async function initCarousels() {
+            for (const [site, cfg] of Object.entries(SITES)) {
+                const images = await probeImages(cfg.folder, cfg.maxImages);
+                buildCarousel('carousel-' + site, images, cfg.alt);
+            }
+        }
+        initCarousels();
+
         // --- Configuration ---
-        // Replace this URL with your deployed Cloudflare Worker URL
         const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
 
         // --- State ---
