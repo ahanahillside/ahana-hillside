@@ -1,5 +1,5 @@
 // Cloudflare Worker — Ahana Hillside API
-// Handles: iCal calendar proxy, site configuration, admin authentication, messages, bookings, images
+// Handles: iCal calendar proxy, site configuration, admin authentication, messages, bookings, images, Stripe payments
 // Requires KV Namespace binding: CONFIG
 // Deploy: paste into Cloudflare Workers dashboard
 
@@ -191,6 +191,75 @@ async function sendBookingEmail(env, booking) {
   }
 }
 
+// --- Stripe helpers ---
+async function getStripeSettings(env) {
+  try {
+    const s = await env.CONFIG.get('stripe-settings', 'json');
+    if (s) return s;
+  } catch (e) {}
+  return { enabled: false, secretKey: '', webhookSecret: '' };
+}
+
+async function createCheckoutSession(secretKey, booking, siteUrl) {
+  const currency = (booking.currency || 'AUD').toLowerCase();
+  const amount = Math.round((booking.total || 0) * 100); // Stripe uses cents
+
+  const params = new URLSearchParams();
+  params.append('payment_method_types[]', 'card');
+  params.append('line_items[0][price_data][currency]', currency);
+  params.append('line_items[0][price_data][product_data][name]',
+    (booking.siteName || booking.site) + ' — ' + booking.nights + ' night' + (booking.nights > 1 ? 's' : ''));
+  params.append('line_items[0][price_data][product_data][description]',
+    booking.checkin + ' to ' + booking.checkout + ' · ' + booking.guests + ' guest' + (booking.guests > 1 ? 's' : ''));
+  params.append('line_items[0][price_data][unit_amount]', amount.toString());
+  params.append('line_items[0][quantity]', '1');
+  params.append('mode', 'payment');
+  params.append('success_url', siteUrl + '/booking-confirmed.html');
+  params.append('cancel_url', siteUrl + '/campsites.html');
+  params.append('customer_email', booking.email);
+  params.append('metadata[booking_id]', booking.id);
+
+  const response = await fetch('https://api.stripe.com/v1/checkout/sessions', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Basic ' + btoa(secretKey + ':'),
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: params.toString(),
+  });
+
+  return await response.json();
+}
+
+async function verifyStripeSignature(payload, sigHeader, secret) {
+  try {
+    const elements = {};
+    sigHeader.split(',').forEach(part => {
+      const [key, ...rest] = part.split('=');
+      elements[key.trim()] = rest.join('=');
+    });
+
+    const timestamp = elements.t;
+    const signature = elements.v1;
+    if (!timestamp || !signature) return false;
+
+    const signedPayload = timestamp + '.' + payload;
+    const key = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    const mac = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(signedPayload));
+    const expected = Array.from(new Uint8Array(mac)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+    return expected === signature;
+  } catch (e) {
+    return false;
+  }
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -205,6 +274,8 @@ export default {
     // --- GET /config — public, returns site configuration ---
     if (path === '/config' && request.method === 'GET') {
       const config = await getConfig(env);
+      const stripe = await getStripeSettings(env);
+      config.paymentsEnabled = stripe.enabled && !!stripe.secretKey;
       return jsonResponse(config, 200, origin, 'public, max-age=60');
     }
 
@@ -529,8 +600,23 @@ export default {
 
         await env.CONFIG.put('bookings', JSON.stringify(bookings));
 
-        // Send email notification (non-blocking)
         const newBooking = bookings[0];
+
+        // Check if Stripe payments are enabled
+        const stripe = await getStripeSettings(env);
+        if (stripe.enabled && stripe.secretKey && newBooking.total > 0) {
+          try {
+            const siteUrl = origin || 'https://www.ahanahillside.com';
+            const session = await createCheckoutSession(stripe.secretKey, newBooking, siteUrl);
+            if (session.url) {
+              return jsonResponse({ success: true, checkout_url: session.url }, 200, origin);
+            }
+          } catch (stripeErr) {
+            // Stripe failed — fall through to normal booking flow
+          }
+        }
+
+        // No Stripe (or Stripe failed) — send email notification
         ctx.waitUntil(sendBookingEmail(env, newBooking));
 
         return jsonResponse({ success: true }, 200, origin);
@@ -589,6 +675,82 @@ export default {
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Failed to delete', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- POST /stripe-webhook — Stripe calls this after payment ---
+    if (path === '/stripe-webhook' && request.method === 'POST') {
+      try {
+        const stripe = await getStripeSettings(env);
+        if (!stripe.webhookSecret) {
+          return jsonResponse({ error: 'Webhook not configured' }, 400, origin);
+        }
+
+        const payload = await request.text();
+        const sigHeader = request.headers.get('stripe-signature') || '';
+
+        const valid = await verifyStripeSignature(payload, sigHeader, stripe.webhookSecret);
+        if (!valid) {
+          return jsonResponse({ error: 'Invalid signature' }, 400, origin);
+        }
+
+        const event = JSON.parse(payload);
+
+        if (event.type === 'checkout.session.completed') {
+          const session = event.data.object;
+          const bookingId = session.metadata?.booking_id;
+
+          if (bookingId) {
+            let bookings = await env.CONFIG.get('bookings', 'json') || [];
+            const booking = bookings.find(b => b.id === bookingId);
+            if (booking) {
+              booking.status = 'confirmed';
+              booking.paidAt = new Date().toISOString();
+              booking.stripeSessionId = session.id;
+              booking.stripePaymentAmount = session.amount_total;
+              await env.CONFIG.put('bookings', JSON.stringify(bookings));
+
+              // Send email notification (non-blocking)
+              ctx.waitUntil(sendBookingEmail(env, booking));
+            }
+          }
+        }
+
+        return jsonResponse({ received: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Webhook failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- GET /stripe-settings — admin only, returns Stripe config ---
+    if (path === '/stripe-settings' && request.method === 'GET') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const settings = await getStripeSettings(env);
+        return jsonResponse({ settings }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ settings: { enabled: false, secretKey: '', webhookSecret: '' } }, 200, origin);
+      }
+    }
+
+    // --- POST /stripe-settings — admin only, saves Stripe config ---
+    if (path === '/stripe-settings' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const body = await request.json();
+        const settings = {
+          enabled: !!body.enabled,
+          secretKey: (body.secretKey || '').slice(0, 300),
+          webhookSecret: (body.webhookSecret || '').slice(0, 300),
+        };
+        await env.CONFIG.put('stripe-settings', JSON.stringify(settings));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to save', detail: err.message }, 500, origin);
       }
     }
 
