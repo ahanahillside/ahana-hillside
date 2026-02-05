@@ -44,7 +44,7 @@ const DEFAULT_CONFIG = {
 
 const DEFAULT_PASSWORD = 'ahana2026';
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
-const MAX_IMAGES_PER_SITE = 20;
+const MAX_IMAGES_PER_SITE = 15;
 
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.some(o => origin && origin.startsWith(o));
@@ -438,6 +438,40 @@ export default {
       }
     }
 
+    // --- GET /blocked-dates/:site — public, returns manually blocked dates ---
+    const blockedMatch = path.match(/^\/blocked-dates\/(samavas|chhaya)$/);
+    if (blockedMatch && request.method === 'GET') {
+      const bSite = blockedMatch[1];
+      try {
+        const dates = await env.CONFIG.get(`blocked-dates:${bSite}`, 'json') || [];
+        return jsonResponse({ site: bSite, blockedDates: dates }, 200, origin, 'public, max-age=30');
+      } catch (e) {
+        return jsonResponse({ site: bSite, blockedDates: [] }, 200, origin);
+      }
+    }
+
+    // --- POST /blocked-dates — admin only, updates blocked dates for a site ---
+    if (path === '/blocked-dates' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { site: bSite, dates } = await request.json();
+        if (!bSite || !['samavas', 'chhaya'].includes(bSite)) {
+          return jsonResponse({ error: 'Invalid site' }, 400, origin);
+        }
+        if (!Array.isArray(dates)) {
+          return jsonResponse({ error: 'Dates must be an array of YYYY-MM-DD strings' }, 400, origin);
+        }
+        // Validate and deduplicate dates
+        const validDates = [...new Set(dates.filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)))].sort();
+        await env.CONFIG.put(`blocked-dates:${bSite}`, JSON.stringify(validDates));
+        return jsonResponse({ success: true, count: validDates.length }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to save', detail: err.message }, 500, origin);
+      }
+    }
+
     // --- iCal proxy (existing) ---
     const site = url.searchParams.get('site');
 
@@ -459,7 +493,15 @@ export default {
 
       const icsText = await response.text();
       const events = parseIcal(icsText);
-      const bookedDates = [...new Set(events.flatMap(e => e.dates))].sort();
+      const hipcampDates = [...new Set(events.flatMap(e => e.dates))].sort();
+
+      // Merge with manually blocked dates
+      let manualDates = [];
+      try {
+        manualDates = await env.CONFIG.get(`blocked-dates:${site}`, 'json') || [];
+      } catch (e) {}
+
+      const bookedDates = [...new Set([...hipcampDates, ...manualDates])].sort();
 
       return new Response(
         JSON.stringify({ site, bookedDates, events, updatedAt: new Date().toISOString() }),

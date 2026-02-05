@@ -1251,13 +1251,18 @@
         async function fetchAvailability(site) {
             const statusEl = document.getElementById(site + '-status');
             try {
-                const res = await fetch(WORKER_URL + '?site=' + site);
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                const data = await res.json();
-                bookedDates[site] = data.bookedDates || [];
+                // Fetch Hipcamp calendar + manual blocked dates in parallel
+                const [calRes, blockedRes] = await Promise.all([
+                    fetch(WORKER_URL + '?site=' + site).then(r => r.ok ? r.json() : { bookedDates: [] }).catch(() => ({ bookedDates: [] })),
+                    fetch(WORKER_URL + '/blocked-dates/' + site).then(r => r.ok ? r.json() : { blockedDates: [] }).catch(() => ({ blockedDates: [] })),
+                ]);
+
+                const hipcampDates = calRes.bookedDates || [];
+                const manualDates = blockedRes.blockedDates || [];
+                bookedDates[site] = [...new Set([...hipcampDates, ...manualDates])].sort();
 
                 if (bookedDates[site].length > 0) {
-                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; ' + bookedDates[site].length + ' date(s) booked';
+                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; ' + bookedDates[site].length + ' date(s) unavailable';
                 } else {
                     statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; all dates available';
                 }
