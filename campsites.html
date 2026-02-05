@@ -1053,7 +1053,10 @@
                 }
 
                 // Listen for guest changes to update pricing
-                select.addEventListener('change', () => updatePriceBreakdown(site));
+                select.addEventListener('change', () => {
+                    updatePerNightPrice(site);
+                    updatePriceBreakdown(site);
+                });
             });
 
             // Update rules
@@ -1061,6 +1064,24 @@
                 const rulesList = document.getElementById('rules-list');
                 rulesList.innerHTML = siteConfig.rules.map(r => '<li>' + r + '</li>').join('');
             }
+        }
+
+        // --- Per-night price display (updates with guest count) ---
+        function updatePerNightPrice(site) {
+            const cfg = siteConfig[site];
+            if (!cfg) return;
+            const sym = currencySymbol();
+            const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
+            const extraGuests = Math.max(0, guestCount - 2);
+            const perNight = cfg.basePrice + (extraGuests * cfg.extraGuestFee);
+
+            let html = '<strong>' + sym + perNight + '</strong> / night ';
+            html += '<span class="price-note">for ' + guestCount + ' guest' + (guestCount > 1 ? 's' : '');
+            if (extraGuests > 0) {
+                html += ' &middot; base ' + sym + cfg.basePrice + ' + ' + extraGuests + ' extra x ' + sym + cfg.extraGuestFee;
+            }
+            html += '</span>';
+            document.getElementById(site + '-price').innerHTML = html;
         }
 
         // --- Promo codes ---
@@ -1198,10 +1219,11 @@
             }
         }
 
-        // --- Date picker logic ---
+        // --- Date picker & guest logic ---
         ['samavas', 'chhaya'].forEach(site => {
             const checkin = document.getElementById(site + '-checkin');
             const checkout = document.getElementById(site + '-checkout');
+            const guestSelect = document.getElementById(site + '-guests');
 
             checkin.addEventListener('change', () => {
                 if (checkin.value) {
@@ -1218,6 +1240,12 @@
 
             checkout.addEventListener('change', () => {
                 updateWarning(site);
+                updatePriceBreakdown(site);
+            });
+
+            // Guest change updates both the per-night display and breakdown
+            guestSelect.addEventListener('change', () => {
+                updatePerNightPrice(site);
                 updatePriceBreakdown(site);
             });
         });
