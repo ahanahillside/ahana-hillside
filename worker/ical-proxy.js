@@ -142,8 +142,57 @@ async function saveImageList(env, site, list) {
   await env.CONFIG.put(`images:${site}`, JSON.stringify(list));
 }
 
+// --- Email notification helper ---
+async function sendBookingEmail(env, booking) {
+  try {
+    const settings = await env.CONFIG.get('notification-settings', 'json');
+    if (!settings || !settings.enabled || !settings.email || !settings.apiKey) return;
+
+    const sym = { AUD: 'AU$', USD: 'US$', EUR: '€', GBP: '£' }[booking.currency] || 'AU$';
+
+    const html = `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px">
+        <h2 style="color:#2C3E2D;margin-bottom:4px">New Booking Received</h2>
+        <p style="color:#A69583;font-size:14px;margin-top:0">Ahana Hillside — ${booking.siteName || booking.site}</p>
+        <hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">
+        <table style="width:100%;font-size:14px;border-collapse:collapse">
+          <tr><td style="padding:6px 0;color:#A69583;width:120px">Guest</td><td style="padding:6px 0;color:#3D3D3D"><strong>${booking.name}</strong></td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Email</td><td style="padding:6px 0"><a href="mailto:${booking.email}" style="color:#2C3E2D">${booking.email}</a></td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Phone</td><td style="padding:6px 0"><a href="tel:${booking.phone}" style="color:#2C3E2D">${booking.phone}</a></td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Campsite</td><td style="padding:6px 0;color:#3D3D3D">${booking.siteName || booking.site}</td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Check-in</td><td style="padding:6px 0;color:#3D3D3D">${booking.checkin}</td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Check-out</td><td style="padding:6px 0;color:#3D3D3D">${booking.checkout}</td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Guests</td><td style="padding:6px 0;color:#3D3D3D">${booking.guests}</td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Nights</td><td style="padding:6px 0;color:#3D3D3D">${booking.nights}</td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Total</td><td style="padding:6px 0;color:#2C3E2D"><strong>${sym}${(booking.total || 0).toFixed(2)}</strong>${booking.promoCode ? ' (promo: ' + booking.promoCode + ')' : ''}</td></tr>
+        </table>
+        <hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">
+        <p style="font-size:13px;color:#A69583">View and manage this booking on your <a href="https://www.ahanahillside.com/admin.html" style="color:#2C3E2D">Admin Dashboard</a>.</p>
+      </div>
+    `;
+
+    const fromEmail = settings.fromEmail || 'bookings@notifications.ahanahillside.com';
+
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + settings.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Ahana Hillside <' + fromEmail + '>',
+        to: [settings.email],
+        subject: 'New Booking — ' + (booking.siteName || booking.site) + ' — ' + booking.name,
+        html: html,
+      }),
+    });
+  } catch (e) {
+    // Non-blocking — don't fail the booking if email fails
+  }
+}
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const origin = request.headers.get('Origin') || '';
     const path = url.pathname;
@@ -479,6 +528,11 @@ export default {
         if (bookings.length > 500) bookings = bookings.slice(0, 500);
 
         await env.CONFIG.put('bookings', JSON.stringify(bookings));
+
+        // Send email notification (non-blocking)
+        const newBooking = bookings[0];
+        ctx.waitUntil(sendBookingEmail(env, newBooking));
+
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Failed to save booking', detail: err.message }, 500, origin);
@@ -535,6 +589,41 @@ export default {
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Failed to delete', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- GET /notification-settings — admin only, returns notification config ---
+    if (path === '/notification-settings' && request.method === 'GET') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const settings = await env.CONFIG.get('notification-settings', 'json') || {
+          enabled: false, email: '', apiKey: '', fromEmail: '',
+        };
+        return jsonResponse({ settings }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ settings: { enabled: false, email: '', apiKey: '', fromEmail: '' } }, 200, origin);
+      }
+    }
+
+    // --- POST /notification-settings — admin only, saves notification config ---
+    if (path === '/notification-settings' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const body = await request.json();
+        const settings = {
+          enabled: !!body.enabled,
+          email: (body.email || '').slice(0, 200),
+          apiKey: (body.apiKey || '').slice(0, 200),
+          fromEmail: (body.fromEmail || '').slice(0, 200),
+        };
+        await env.CONFIG.put('notification-settings', JSON.stringify(settings));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to save', detail: err.message }, 500, origin);
       }
     }
 
