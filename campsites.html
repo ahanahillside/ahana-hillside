@@ -535,6 +535,146 @@
             display: block;
         }
 
+        /* Custom date picker */
+        .date-picker-wrapper {
+            position: relative;
+        }
+
+        .dp-input {
+            cursor: pointer !important;
+            background: var(--color-cream) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23A69583' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E") no-repeat right 8px center !important;
+            padding-right: 2rem !important;
+        }
+
+        .dp-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            z-index: 50;
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 0.75rem;
+            width: 260px;
+        }
+
+        .dp-dropdown.open { display: block; }
+
+        .dp-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .dp-arrow {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.2rem 0.5rem;
+            color: var(--color-charcoal);
+            line-height: 1;
+        }
+
+        .dp-arrow:hover { color: var(--color-forest); }
+
+        .dp-month-label {
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--color-forest);
+        }
+
+        .dp-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+        }
+
+        .dp-header {
+            text-align: center;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--color-stone);
+            padding: 0.25rem 0;
+        }
+
+        .dp-day {
+            text-align: center;
+            padding: 0.35rem 0;
+            font-size: 0.78rem;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: background 0.15s;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .dp-day:hover:not(.dp-empty):not(.dp-past):not(.dp-blocked) {
+            background: var(--color-light-stone);
+        }
+
+        .dp-day.dp-empty { cursor: default; }
+
+        .dp-day.dp-past {
+            color: #ccc;
+            cursor: default;
+        }
+
+        .dp-day.dp-today {
+            font-weight: 600;
+            box-shadow: inset 0 0 0 1px var(--color-forest);
+        }
+
+        .dp-day.dp-blocked {
+            color: #c0392b;
+            cursor: not-allowed;
+            background: #fef2f2;
+        }
+
+        .dp-day.dp-blocked::after {
+            content: '\00d7';
+            position: absolute;
+            top: -1px;
+            right: 2px;
+            font-size: 0.55rem;
+            color: #c0392b;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .dp-day.dp-selected {
+            background: var(--color-forest);
+            color: #fff !important;
+        }
+
+        .dp-day.dp-selected.dp-today { box-shadow: none; }
+
+        .dp-day.dp-in-range {
+            background: rgba(44, 62, 45, 0.08);
+        }
+
+        .dp-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            padding-top: 0.4rem;
+            border-top: 1px solid var(--color-light-stone);
+            font-size: 0.75rem;
+        }
+
+        .dp-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .dp-footer a:hover { color: var(--color-forest); }
+
         .availability-status {
             font-size: 0.75rem;
             letter-spacing: 0.05em;
@@ -698,11 +838,11 @@
                     <div class="form-row">
                         <div class="form-field">
                             <label for="samavas-checkin">Check-in</label>
-                            <input type="date" id="samavas-checkin" required>
+                            <input type="text" id="samavas-checkin" readonly placeholder="DD/MM/YYYY" required>
                         </div>
                         <div class="form-field">
                             <label for="samavas-checkout">Check-out</label>
-                            <input type="date" id="samavas-checkout" required>
+                            <input type="text" id="samavas-checkout" readonly placeholder="DD/MM/YYYY" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -782,11 +922,11 @@
                     <div class="form-row">
                         <div class="form-field">
                             <label for="chhaya-checkin">Check-in</label>
-                            <input type="date" id="chhaya-checkin" required>
+                            <input type="text" id="chhaya-checkin" readonly placeholder="DD/MM/YYYY" required>
                         </div>
                         <div class="form-field">
                             <label for="chhaya-checkout">Check-out</label>
-                            <input type="date" id="chhaya-checkout" required>
+                            <input type="text" id="chhaya-checkout" readonly placeholder="DD/MM/YYYY" required>
                         </div>
                     </div>
                     <div class="form-row">
@@ -1165,8 +1305,8 @@
 
         // --- Price breakdown ---
         function updatePriceBreakdown(site) {
-            const checkin = document.getElementById(site + '-checkin').value;
-            const checkout = document.getElementById(site + '-checkout').value;
+            const checkin = getDateValue(site, 'checkin');
+            const checkout = getDateValue(site, 'checkout');
             const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
             const breakdownEl = document.getElementById(site + '-breakdown');
 
@@ -1216,10 +1356,20 @@
         }
 
         // --- Date helpers ---
-        const today = new Date().toISOString().split('T')[0];
-        document.querySelectorAll('input[type="date"]').forEach(input => {
-            input.setAttribute('min', today);
-        });
+        function getDateValue(site, field) {
+            return document.getElementById(site + '-' + field).dataset.date || '';
+        }
+
+        function setDateValue(site, field, isoDate) {
+            const input = document.getElementById(site + '-' + field);
+            input.dataset.date = isoDate || '';
+            if (isoDate) {
+                const [y, m, d] = isoDate.split('-');
+                input.value = d + '/' + m + '/' + y;
+            } else {
+                input.value = '';
+            }
+        }
 
         function getDatesInRange(start, end) {
             const dates = [];
@@ -1239,8 +1389,8 @@
         }
 
         function updateWarning(site) {
-            const checkin = document.getElementById(site + '-checkin').value;
-            const checkout = document.getElementById(site + '-checkout').value;
+            const checkin = getDateValue(site, 'checkin');
+            const checkout = getDateValue(site, 'checkout');
             const warning = document.getElementById(site + '-warning');
             const conflict = hasConflict(site, checkin, checkout);
             warning.classList.toggle('show', conflict);
@@ -1272,36 +1422,186 @@
             }
         }
 
-        // --- Date picker & guest logic ---
+        // --- Guest change listener ---
         ['samavas', 'chhaya'].forEach(site => {
-            const checkin = document.getElementById(site + '-checkin');
-            const checkout = document.getElementById(site + '-checkout');
-            const guestSelect = document.getElementById(site + '-guests');
-
-            checkin.addEventListener('change', () => {
-                if (checkin.value) {
-                    const next = new Date(checkin.value);
-                    next.setDate(next.getDate() + 1);
-                    checkout.setAttribute('min', next.toISOString().split('T')[0]);
-                    if (!checkout.value || checkout.value <= checkin.value) {
-                        checkout.value = next.toISOString().split('T')[0];
-                    }
-                }
-                updateWarning(site);
-                updatePriceBreakdown(site);
-            });
-
-            checkout.addEventListener('change', () => {
-                updateWarning(site);
-                updatePriceBreakdown(site);
-            });
-
-            // Guest change updates both the per-night display and breakdown
-            guestSelect.addEventListener('change', () => {
+            document.getElementById(site + '-guests').addEventListener('change', () => {
                 updatePerNightPrice(site);
                 updatePriceBreakdown(site);
             });
         });
+
+        // --- Custom date picker ---
+        const dpState = {};
+
+        function initDatePickers() {
+            ['samavas', 'chhaya'].forEach(site => {
+                dpState[site] = {
+                    month: new Date().getMonth(),
+                    year: new Date().getFullYear(),
+                };
+
+                ['checkin', 'checkout'].forEach(field => {
+                    const input = document.getElementById(site + '-' + field);
+                    input.dataset.date = '';
+                    input.classList.add('dp-input');
+
+                    // Wrap in position-relative container
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'date-picker-wrapper';
+                    input.parentNode.insertBefore(wrapper, input);
+                    wrapper.appendChild(input);
+
+                    // Create dropdown
+                    const dropdown = document.createElement('div');
+                    dropdown.className = 'dp-dropdown';
+                    dropdown.id = 'dp-' + site + '-' + field;
+                    wrapper.appendChild(dropdown);
+
+                    // Open on click
+                    input.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        openDatePicker(site, field);
+                    });
+                });
+            });
+
+            // Close on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.date-picker-wrapper')) {
+                    closeAllDatePickers();
+                }
+            });
+        }
+
+        function openDatePicker(site, field) {
+            closeAllDatePickers();
+
+            const currentVal = document.getElementById(site + '-' + field).dataset.date;
+            if (currentVal) {
+                const d = new Date(currentVal);
+                dpState[site].month = d.getMonth();
+                dpState[site].year = d.getFullYear();
+            } else {
+                dpState[site].month = new Date().getMonth();
+                dpState[site].year = new Date().getFullYear();
+            }
+
+            renderDatePicker(site, field);
+            document.getElementById('dp-' + site + '-' + field).classList.add('open');
+        }
+
+        function closeAllDatePickers() {
+            document.querySelectorAll('.dp-dropdown').forEach(d => d.classList.remove('open'));
+        }
+
+        function renderDatePicker(site, field) {
+            const state = dpState[site];
+            const dropdown = document.getElementById('dp-' + site + '-' + field);
+            const year = state.year;
+            const month = state.month;
+
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const todayStr = new Date().toISOString().split('T')[0];
+            const checkinVal = getDateValue(site, 'checkin');
+            const checkoutVal = getDateValue(site, 'checkout');
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const startDay = (firstDay + 6) % 7; // Monday-start
+
+            let html = '<div class="dp-nav">';
+            html += '<button type="button" class="dp-arrow" onclick="event.stopPropagation();dpNav(\'' + site + '\',\'' + field + '\',-1)">&lsaquo;</button>';
+            html += '<span class="dp-month-label">' + monthNames[month] + ' ' + year + '</span>';
+            html += '<button type="button" class="dp-arrow" onclick="event.stopPropagation();dpNav(\'' + site + '\',\'' + field + '\',1)">&rsaquo;</button>';
+            html += '</div>';
+
+            html += '<div class="dp-grid">';
+            ['Mo','Tu','We','Th','Fr','Sa','Su'].forEach(d => {
+                html += '<div class="dp-header">' + d + '</div>';
+            });
+
+            for (let i = 0; i < startDay; i++) {
+                html += '<div class="dp-day dp-empty"></div>';
+            }
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                const isPast = dateStr < todayStr;
+                const isBlocked = bookedDates[site].includes(dateStr);
+                const isToday = dateStr === todayStr;
+                const isSelected = dateStr === checkinVal || dateStr === checkoutVal;
+
+                let isDisabled = isPast;
+                if (field === 'checkout' && checkinVal && dateStr <= checkinVal) {
+                    isDisabled = true;
+                }
+
+                const inRange = checkinVal && checkoutVal && dateStr > checkinVal && dateStr < checkoutVal;
+
+                let cls = 'dp-day';
+                if (isDisabled) cls += ' dp-past';
+                if (isBlocked && !isPast) cls += ' dp-blocked';
+                if (isToday && !isDisabled) cls += ' dp-today';
+                if (isSelected) cls += ' dp-selected';
+                if (inRange && !isBlocked) cls += ' dp-in-range';
+
+                const canClick = !isDisabled && !isBlocked;
+                const handler = canClick ? ' onclick="event.stopPropagation();dpSelect(\'' + site + '\',\'' + field + '\',\'' + dateStr + '\')"' : '';
+
+                html += '<div class="' + cls + '"' + handler + '>' + d + '</div>';
+            }
+
+            html += '</div>';
+
+            html += '<div class="dp-footer">';
+            html += '<a onclick="event.stopPropagation();dpClear(\'' + site + '\',\'' + field + '\')">Clear</a>';
+            html += '<a onclick="event.stopPropagation();dpToday(\'' + site + '\',\'' + field + '\')">Today</a>';
+            html += '</div>';
+
+            dropdown.innerHTML = html;
+        }
+
+        function dpNav(site, field, dir) {
+            const state = dpState[site];
+            state.month += dir;
+            if (state.month > 11) { state.month = 0; state.year++; }
+            if (state.month < 0) { state.month = 11; state.year--; }
+            renderDatePicker(site, field);
+        }
+
+        function dpSelect(site, field, dateStr) {
+            setDateValue(site, field, dateStr);
+
+            if (field === 'checkin') {
+                const checkoutVal = getDateValue(site, 'checkout');
+                if (!checkoutVal || checkoutVal <= dateStr) {
+                    const next = new Date(dateStr);
+                    next.setDate(next.getDate() + 1);
+                    setDateValue(site, 'checkout', next.toISOString().split('T')[0]);
+                }
+                closeAllDatePickers();
+                setTimeout(() => openDatePicker(site, 'checkout'), 100);
+            } else {
+                closeAllDatePickers();
+            }
+
+            updateWarning(site);
+            updatePriceBreakdown(site);
+        }
+
+        function dpClear(site, field) {
+            setDateValue(site, field, '');
+            closeAllDatePickers();
+            updateWarning(site);
+            updatePriceBreakdown(site);
+        }
+
+        function dpToday(site, field) {
+            const todayStr = new Date().toISOString().split('T')[0];
+            if (!bookedDates[site].includes(todayStr)) {
+                dpSelect(site, field, todayStr);
+            }
+        }
 
         // --- Booking handler ---
         function handleBooking(event, site) {
@@ -1313,8 +1613,8 @@
             const form = event.target;
             const confirmation = document.getElementById(site + '-confirmation');
 
-            const checkin = document.getElementById(site + '-checkin').value;
-            const checkout = document.getElementById(site + '-checkout').value;
+            const checkin = getDateValue(site, 'checkin');
+            const checkout = getDateValue(site, 'checkout');
             const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
             const name = document.getElementById(site + '-name').value;
             const email = document.getElementById(site + '-email').value;
@@ -1363,6 +1663,7 @@
         }
 
         // --- Init ---
+        initDatePickers();
         fetchConfig();
         fetchAvailability('samavas');
         fetchAvailability('chhaya');
