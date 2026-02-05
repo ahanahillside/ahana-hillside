@@ -121,7 +121,7 @@
 
         .form-field label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: var(--color-stone);
@@ -131,14 +131,20 @@
         .form-field input,
         .form-field textarea {
             width: 100%;
-            padding: 0.6rem 0.75rem;
+            padding: 0.65rem 0.75rem;
             border: 1px solid var(--color-light-stone);
             background: var(--color-cream);
             font-family: var(--font-sans);
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             color: var(--color-charcoal);
             outline: none;
             transition: border-color 0.2s ease;
+        }
+
+        .form-field input::placeholder,
+        .form-field textarea::placeholder {
+            color: var(--color-stone);
+            opacity: 0.7;
         }
 
         .form-field input:focus,
