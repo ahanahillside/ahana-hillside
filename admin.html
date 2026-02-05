@@ -219,6 +219,26 @@
         }
 
         /* Cards */
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--color-light-stone);
+            margin: 2rem 0 1.5rem;
+        }
+
+        .section-heading {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.25rem;
+        }
+
+        .section-desc {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            margin-bottom: 1rem;
+        }
+
         .card-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -873,11 +893,8 @@
     <!-- Sub-tabs for Campsites -->
     <div class="sub-tabs" id="campsites-sub-tabs">
         <button class="sub-tab-btn active" data-subtab="availability">Availability</button>
-        <button class="sub-tab-btn" data-subtab="images">Images</button>
-        <button class="sub-tab-btn" data-subtab="pricing">Pricing</button>
-        <button class="sub-tab-btn" data-subtab="content">Content</button>
-        <button class="sub-tab-btn" data-subtab="promos">Promo Codes</button>
-        <button class="sub-tab-btn" data-subtab="rules">Rules</button>
+        <button class="sub-tab-btn" data-subtab="content">Content &amp; Media</button>
+        <button class="sub-tab-btn" data-subtab="pricing">Pricing &amp; Promos</button>
     </div>
 
     <div class="tab-content">
@@ -950,10 +967,14 @@
                 </div>
             </div>
 
-            <!-- Images sub-panel -->
-            <div class="sub-panel" id="subpanel-images">
-                <div class="panel-title">Campsite Images</div>
-                <div class="panel-desc">Upload, reorder, and manage photos for each campsite. First image is the cover photo. Max 15 images per site, 5MB each (JPEG, PNG, WebP).</div>
+            <!-- Content & Media sub-panel (Images + Content + Rules) -->
+            <div class="sub-panel" id="subpanel-content">
+                <div class="panel-title">Content &amp; Media</div>
+                <div class="panel-desc">Manage campsite photos, descriptions, and campground rules.</div>
+
+                <!-- Images section -->
+                <div class="section-heading">Images</div>
+                <div class="section-desc">Upload, reorder, and manage photos. First image is the cover photo. Max 15 per site, 5MB each (JPEG, PNG, WebP).</div>
 
                 <div class="card-grid">
                     <div class="card">
@@ -978,12 +999,71 @@
                         <div class="image-grid" id="images-chhaya"></div>
                     </div>
                 </div>
+
+                <!-- Site descriptions section -->
+                <hr class="section-divider">
+                <div class="section-heading">Descriptions</div>
+                <div class="section-desc">Edit the description and details shown on each campsite card.</div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">SAMAVAS</div>
+                        <div class="field">
+                            <label>Site type line</label>
+                            <input type="text" id="c-samavas-type">
+                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m"</div>
+                        </div>
+                        <div class="field">
+                            <label>Description</label>
+                            <textarea id="c-samavas-desc" rows="4"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">CHHAYA</div>
+                        <div class="field">
+                            <label>Site type line</label>
+                            <input type="text" id="c-chhaya-type">
+                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m"</div>
+                        </div>
+                        <div class="field">
+                            <label>Description</label>
+                            <textarea id="c-chhaya-desc" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('content')">Save Content</button>
+                    <span class="save-msg" id="content-msg"></span>
+                </div>
+
+                <!-- Rules section -->
+                <hr class="section-divider">
+                <div class="section-heading">Campground Rules</div>
+                <div class="section-desc">Edit the rules shown at the bottom of the campsites page.</div>
+
+                <div id="rules-list"></div>
+
+                <div class="add-row">
+                    <input type="text" id="rule-text" placeholder="New rule..." style="flex:1">
+                    <button class="btn btn-secondary" onclick="addRule()" style="padding:0.5rem 1rem">Add</button>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('rules')">Save Rules</button>
+                    <span class="save-msg" id="rules-msg"></span>
+                </div>
             </div>
 
-            <!-- Pricing sub-panel -->
+            <!-- Pricing & Promos sub-panel -->
             <div class="sub-panel" id="subpanel-pricing">
-                <div class="panel-title">Pricing</div>
-                <div class="panel-desc">Set base prices and extra guest fees for each campsite. Prices are per night in AUD.</div>
+                <div class="panel-title">Pricing &amp; Promos</div>
+                <div class="panel-desc">Set base prices, extra guest fees, and manage discount codes.</div>
+
+                <!-- Pricing section -->
+                <div class="section-heading">Pricing</div>
+                <div class="section-desc">Prices are per night. Base price covers 1-2 guests.</div>
 
                 <div class="card-grid">
                     <div class="card">
@@ -1037,51 +1117,11 @@
                     <button class="btn btn-primary" onclick="saveConfig('pricing')">Save Pricing</button>
                     <span class="save-msg" id="pricing-msg"></span>
                 </div>
-            </div>
 
-            <!-- Content sub-panel -->
-            <div class="sub-panel" id="subpanel-content">
-                <div class="panel-title">Site Content</div>
-                <div class="panel-desc">Edit the description and details shown on each campsite card.</div>
-
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-title">SAMAVAS</div>
-                        <div class="field">
-                            <label>Site type line</label>
-                            <input type="text" id="c-samavas-type">
-                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m"</div>
-                        </div>
-                        <div class="field">
-                            <label>Description</label>
-                            <textarea id="c-samavas-desc" rows="4"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">CHHAYA</div>
-                        <div class="field">
-                            <label>Site type line</label>
-                            <input type="text" id="c-chhaya-type">
-                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m"</div>
-                        </div>
-                        <div class="field">
-                            <label>Description</label>
-                            <textarea id="c-chhaya-desc" rows="4"></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('content')">Save Content</button>
-                    <span class="save-msg" id="content-msg"></span>
-                </div>
-            </div>
-
-            <!-- Promo Codes sub-panel -->
-            <div class="sub-panel" id="subpanel-promos">
-                <div class="panel-title">Promo Codes</div>
-                <div class="panel-desc">Manage discount codes that guests can use when booking. These are independent of Hipcamp.</div>
+                <!-- Promo Codes section -->
+                <hr class="section-divider">
+                <div class="section-heading">Promo Codes</div>
+                <div class="section-desc">Discount codes that guests can use when booking. These are independent of Hipcamp.</div>
 
                 <div id="promo-list"></div>
 
@@ -1098,24 +1138,6 @@
                 <div class="save-bar">
                     <button class="btn btn-primary" onclick="saveConfig('promos')">Save Promo Codes</button>
                     <span class="save-msg" id="promos-msg"></span>
-                </div>
-            </div>
-
-            <!-- Rules sub-panel -->
-            <div class="sub-panel" id="subpanel-rules">
-                <div class="panel-title">Campground Rules</div>
-                <div class="panel-desc">Edit the rules shown at the bottom of the campsites page.</div>
-
-                <div id="rules-list"></div>
-
-                <div class="add-row">
-                    <input type="text" id="rule-text" placeholder="New rule..." style="flex:1">
-                    <button class="btn btn-secondary" onclick="addRule()" style="padding:0.5rem 1rem">Add</button>
-                </div>
-
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('rules')">Save Rules</button>
-                    <span class="save-msg" id="rules-msg"></span>
                 </div>
             </div>
 
