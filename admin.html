@@ -128,7 +128,7 @@
             background: rgba(255,255,255,0.1);
         }
 
-        /* Tabs */
+        /* Main tabs */
         .tabs {
             display: flex;
             border-bottom: 1px solid var(--color-light-stone);
@@ -141,7 +141,7 @@
             background: none;
             border: none;
             border-bottom: 2px solid transparent;
-            padding: 0.85rem 1.25rem;
+            padding: 0.85rem 1.5rem;
             font-family: var(--font-sans);
             font-size: 0.8rem;
             font-weight: 500;
@@ -159,6 +159,38 @@
             border-bottom-color: var(--color-forest);
         }
 
+        /* Sub-tabs (inside Campsites) */
+        .sub-tabs {
+            display: none;
+            padding: 0 2rem;
+            background: #fff;
+            border-bottom: 1px solid var(--color-light-stone);
+            overflow-x: auto;
+        }
+
+        .sub-tabs.show { display: flex; }
+
+        .sub-tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.65rem 1.25rem;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--color-stone);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .sub-tab-btn:hover { color: var(--color-charcoal); }
+        .sub-tab-btn.active {
+            color: var(--color-forest);
+            border-bottom-color: var(--color-forest);
+        }
+
         /* Tab content */
         .tab-content {
             max-width: 900px;
@@ -168,6 +200,9 @@
 
         .tab-panel { display: none; }
         .tab-panel.active { display: block; }
+
+        .sub-panel { display: none; }
+        .sub-panel.active { display: block; }
 
         .panel-title {
             font-family: var(--font-serif);
@@ -447,8 +482,10 @@
         @media (max-width: 700px) {
             .card-grid { grid-template-columns: 1fr; }
             .tabs { padding: 0 1rem; }
+            .sub-tabs { padding: 0 1rem; }
             .tab-content { padding: 1.5rem 1rem; }
-            .tab-btn { padding: 0.75rem 0.85rem; font-size: 0.7rem; }
+            .tab-btn { padding: 0.75rem 1rem; font-size: 0.75rem; }
+            .sub-tab-btn { padding: 0.55rem 0.85rem; font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -474,164 +511,175 @@
         <button class="logout-btn" onclick="handleLogout()">Log out</button>
     </div>
 
+    <!-- Main tabs -->
     <div class="tabs">
         <button class="tab-btn active" data-tab="messages">Messages <span class="msg-badge" id="msg-badge"></span></button>
-        <button class="tab-btn" data-tab="pricing">Pricing</button>
-        <button class="tab-btn" data-tab="content">Content</button>
-        <button class="tab-btn" data-tab="promos">Promo Codes</button>
-        <button class="tab-btn" data-tab="rules">Rules</button>
+        <button class="tab-btn" data-tab="campsites">Campsites</button>
         <button class="tab-btn" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- Sub-tabs for Campsites -->
+    <div class="sub-tabs" id="campsites-sub-tabs">
+        <button class="sub-tab-btn active" data-subtab="pricing">Pricing</button>
+        <button class="sub-tab-btn" data-subtab="content">Content</button>
+        <button class="sub-tab-btn" data-subtab="promos">Promo Codes</button>
+        <button class="sub-tab-btn" data-subtab="rules">Rules</button>
     </div>
 
     <div class="tab-content">
 
-        <!-- MESSAGES TAB -->
+        <!-- MESSAGES PANEL -->
         <div class="tab-panel active" id="panel-messages">
             <div class="panel-title">Messages</div>
             <div class="panel-desc">Messages from visitors via the Contact Us page.</div>
             <div id="messages-list"><div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">Loading messages...</div></div>
         </div>
 
-        <!-- PRICING TAB -->
-        <div class="tab-panel" id="panel-pricing">
-            <div class="panel-title">Pricing</div>
-            <div class="panel-desc">Set base prices and extra guest fees for each campsite. Prices are per night in AUD.</div>
+        <!-- CAMPSITES PANEL (contains sub-panels) -->
+        <div class="tab-panel" id="panel-campsites">
 
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-title">SAMAVAS</div>
-                    <div class="field">
-                        <label>Base price per night (1-2 guests)</label>
-                        <input type="number" id="p-samavas-base" min="0" step="1">
-                        <div class="hint">Shown as "from AU$XX / night" on the site</div>
-                    </div>
-                    <div class="field">
-                        <label>Extra guest fee (per person per night)</label>
-                        <input type="number" id="p-samavas-extra" min="0" step="1">
-                        <div class="hint">Charged for each guest above 2</div>
-                    </div>
-                    <div class="field">
-                        <label>Maximum guests</label>
-                        <input type="number" id="p-samavas-max" min="1" max="50" step="1">
-                    </div>
-                </div>
+            <!-- Pricing sub-panel -->
+            <div class="sub-panel active" id="subpanel-pricing">
+                <div class="panel-title">Pricing</div>
+                <div class="panel-desc">Set base prices and extra guest fees for each campsite. Prices are per night in AUD.</div>
 
-                <div class="card">
-                    <div class="card-title">CHHAYA</div>
-                    <div class="field">
-                        <label>Base price per night (1-2 guests)</label>
-                        <input type="number" id="p-chhaya-base" min="0" step="1">
-                        <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">SAMAVAS</div>
+                        <div class="field">
+                            <label>Base price per night (1-2 guests)</label>
+                            <input type="number" id="p-samavas-base" min="0" step="1">
+                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-samavas-extra" min="0" step="1">
+                            <div class="hint">Charged for each guest above 2</div>
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-samavas-max" min="1" max="50" step="1">
+                        </div>
                     </div>
-                    <div class="field">
-                        <label>Extra guest fee (per person per night)</label>
-                        <input type="number" id="p-chhaya-extra" min="0" step="1">
-                        <div class="hint">Charged for each guest above 2</div>
-                    </div>
-                    <div class="field">
-                        <label>Maximum guests</label>
-                        <input type="number" id="p-chhaya-max" min="1" max="50" step="1">
-                    </div>
-                </div>
-            </div>
 
-            <div class="field" style="max-width:200px">
-                <label>Currency</label>
-                <select id="p-currency">
-                    <option value="AUD">AUD (AU$)</option>
-                    <option value="USD">USD (US$)</option>
-                    <option value="EUR">EUR (&euro;)</option>
-                    <option value="GBP">GBP (&pound;)</option>
-                </select>
-            </div>
-
-            <div class="save-bar">
-                <button class="btn btn-primary" onclick="saveConfig()">Save Pricing</button>
-                <span class="save-msg" id="pricing-msg"></span>
-            </div>
-        </div>
-
-        <!-- CONTENT TAB -->
-        <div class="tab-panel" id="panel-content">
-            <div class="panel-title">Site Content</div>
-            <div class="panel-desc">Edit the description and details shown on each campsite card.</div>
-
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-title">SAMAVAS</div>
-                    <div class="field">
-                        <label>Site type line</label>
-                        <input type="text" id="c-samavas-type">
-                        <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m"</div>
-                    </div>
-                    <div class="field">
-                        <label>Description</label>
-                        <textarea id="c-samavas-desc" rows="4"></textarea>
+                    <div class="card">
+                        <div class="card-title">CHHAYA</div>
+                        <div class="field">
+                            <label>Base price per night (1-2 guests)</label>
+                            <input type="number" id="p-chhaya-base" min="0" step="1">
+                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-chhaya-extra" min="0" step="1">
+                            <div class="hint">Charged for each guest above 2</div>
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-chhaya-max" min="1" max="50" step="1">
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-title">CHHAYA</div>
-                    <div class="field">
-                        <label>Site type line</label>
-                        <input type="text" id="c-chhaya-type">
-                        <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m"</div>
-                    </div>
-                    <div class="field">
-                        <label>Description</label>
-                        <textarea id="c-chhaya-desc" rows="4"></textarea>
-                    </div>
+                <div class="field" style="max-width:200px">
+                    <label>Currency</label>
+                    <select id="p-currency">
+                        <option value="AUD">AUD (AU$)</option>
+                        <option value="USD">USD (US$)</option>
+                        <option value="EUR">EUR (&euro;)</option>
+                        <option value="GBP">GBP (&pound;)</option>
+                    </select>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('pricing')">Save Pricing</button>
+                    <span class="save-msg" id="pricing-msg"></span>
                 </div>
             </div>
 
-            <div class="save-bar">
-                <button class="btn btn-primary" onclick="saveConfig()">Save Content</button>
-                <span class="save-msg" id="content-msg"></span>
+            <!-- Content sub-panel -->
+            <div class="sub-panel" id="subpanel-content">
+                <div class="panel-title">Site Content</div>
+                <div class="panel-desc">Edit the description and details shown on each campsite card.</div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-title">SAMAVAS</div>
+                        <div class="field">
+                            <label>Site type line</label>
+                            <input type="text" id="c-samavas-type">
+                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m"</div>
+                        </div>
+                        <div class="field">
+                            <label>Description</label>
+                            <textarea id="c-samavas-desc" rows="4"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">CHHAYA</div>
+                        <div class="field">
+                            <label>Site type line</label>
+                            <input type="text" id="c-chhaya-type">
+                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m"</div>
+                        </div>
+                        <div class="field">
+                            <label>Description</label>
+                            <textarea id="c-chhaya-desc" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('content')">Save Content</button>
+                    <span class="save-msg" id="content-msg"></span>
+                </div>
             </div>
+
+            <!-- Promo Codes sub-panel -->
+            <div class="sub-panel" id="subpanel-promos">
+                <div class="panel-title">Promo Codes</div>
+                <div class="panel-desc">Manage discount codes that guests can use when booking. These are independent of Hipcamp.</div>
+
+                <div id="promo-list"></div>
+
+                <div class="add-row">
+                    <input type="text" id="promo-code" placeholder="Code (e.g. WELCOME10)" style="flex:1;min-width:140px;text-transform:uppercase">
+                    <select id="promo-type" style="width:120px">
+                        <option value="percent">Percentage %</option>
+                        <option value="fixed">Fixed amount $</option>
+                    </select>
+                    <input type="number" id="promo-value" placeholder="Value" min="0" step="1" style="width:80px">
+                    <button class="btn btn-secondary" onclick="addPromo()" style="padding:0.5rem 1rem">Add</button>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('promos')">Save Promo Codes</button>
+                    <span class="save-msg" id="promos-msg"></span>
+                </div>
+            </div>
+
+            <!-- Rules sub-panel -->
+            <div class="sub-panel" id="subpanel-rules">
+                <div class="panel-title">Campground Rules</div>
+                <div class="panel-desc">Edit the rules shown at the bottom of the campsites page.</div>
+
+                <div id="rules-list"></div>
+
+                <div class="add-row">
+                    <input type="text" id="rule-text" placeholder="New rule..." style="flex:1">
+                    <button class="btn btn-secondary" onclick="addRule()" style="padding:0.5rem 1rem">Add</button>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('rules')">Save Rules</button>
+                    <span class="save-msg" id="rules-msg"></span>
+                </div>
+            </div>
+
         </div>
 
-        <!-- PROMO CODES TAB -->
-        <div class="tab-panel" id="panel-promos">
-            <div class="panel-title">Promo Codes</div>
-            <div class="panel-desc">Manage discount codes that guests can use when booking. These are independent of Hipcamp.</div>
-
-            <div id="promo-list"></div>
-
-            <div class="add-row">
-                <input type="text" id="promo-code" placeholder="Code (e.g. WELCOME10)" style="flex:1;min-width:140px;text-transform:uppercase">
-                <select id="promo-type" style="width:120px">
-                    <option value="percent">Percentage %</option>
-                    <option value="fixed">Fixed amount $</option>
-                </select>
-                <input type="number" id="promo-value" placeholder="Value" min="0" step="1" style="width:80px">
-                <button class="btn btn-secondary" onclick="addPromo()" style="padding:0.5rem 1rem">Add</button>
-            </div>
-
-            <div class="save-bar">
-                <button class="btn btn-primary" onclick="saveConfig()">Save Promo Codes</button>
-                <span class="save-msg" id="promos-msg"></span>
-            </div>
-        </div>
-
-        <!-- RULES TAB -->
-        <div class="tab-panel" id="panel-rules">
-            <div class="panel-title">Campground Rules</div>
-            <div class="panel-desc">Edit the rules shown at the bottom of the campsites page.</div>
-
-            <div id="rules-list"></div>
-
-            <div class="add-row">
-                <input type="text" id="rule-text" placeholder="New rule..." style="flex:1">
-                <button class="btn btn-secondary" onclick="addRule()" style="padding:0.5rem 1rem">Add</button>
-            </div>
-
-            <div class="save-bar">
-                <button class="btn btn-primary" onclick="saveConfig()">Save Rules</button>
-                <span class="save-msg" id="rules-msg"></span>
-            </div>
-        </div>
-
-        <!-- SETTINGS TAB -->
+        <!-- SETTINGS PANEL -->
         <div class="tab-panel" id="panel-settings">
             <div class="panel-title">Settings</div>
             <div class="panel-desc">Change your admin dashboard password.</div>
@@ -766,9 +814,8 @@
         };
     }
 
-    async function saveConfig() {
+    async function saveConfig(source) {
         siteConfig = gatherConfig();
-        const activeTab = document.querySelector('.tab-btn.active').dataset.tab;
 
         try {
             const res = await fetch(WORKER_URL + '/config', {
@@ -781,14 +828,14 @@
             });
             const data = await res.json();
             if (data.success) {
-                showMsg(activeTab, 'Saved successfully', 'success');
+                showMsg(source, 'Saved successfully', 'success');
             } else if (data.error === 'Unauthorized') {
-                showMsg(activeTab, 'Session expired. Please log in again.', 'error');
+                showMsg(source, 'Session expired. Please log in again.', 'error');
             } else {
-                showMsg(activeTab, 'Error: ' + (data.error || 'Unknown'), 'error');
+                showMsg(source, 'Error: ' + (data.error || 'Unknown'), 'error');
             }
         } catch (err) {
-            showMsg(activeTab, 'Connection error', 'error');
+            showMsg(source, 'Connection error', 'error');
         }
     }
 
@@ -1008,13 +1055,37 @@
         setTimeout(() => el.classList.remove('show'), 3000);
     }
 
-    // --- Tab switching ---
+    // --- Main tab switching ---
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
+            // Update main tab buttons
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             btn.classList.add('active');
+
+            // Show/hide main panels
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
             document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+
+            // Show/hide sub-tabs bar for campsites
+            const subTabs = document.getElementById('campsites-sub-tabs');
+            if (btn.dataset.tab === 'campsites') {
+                subTabs.classList.add('show');
+            } else {
+                subTabs.classList.remove('show');
+            }
+        });
+    });
+
+    // --- Sub-tab switching (within Campsites) ---
+    document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update sub-tab buttons
+            document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Show/hide sub-panels
+            document.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('subpanel-' + btn.dataset.subtab).classList.add('active');
         });
     });
 
