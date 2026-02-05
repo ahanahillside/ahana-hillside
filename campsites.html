@@ -587,6 +587,29 @@
             border-bottom: none;
         }
 
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            letter-spacing: 0.05em;
+        }
+
+        .footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover { color: var(--color-forest); }
+
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a { margin: 0 0.75rem; }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -812,6 +835,15 @@
             <li>All dogs must be kept on a leash when on the main campground</li>
         </ul>
     </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="contact.html">Contact Us</a>
+        </div>
+        &copy; 2026 Ahana Hillside
+    </footer>
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
