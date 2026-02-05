@@ -1,5 +1,5 @@
 // Cloudflare Worker — Ahana Hillside API
-// Handles: iCal calendar proxy, site configuration, admin authentication, messages, images
+// Handles: iCal calendar proxy, site configuration, admin authentication, messages, bookings, images
 // Requires KV Namespace binding: CONFIG
 // Deploy: paste into Cloudflare Workers dashboard
 
@@ -435,6 +435,106 @@ export default {
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Reorder failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- POST /bookings — public, creates a new booking ---
+    if (path === '/bookings' && request.method === 'POST') {
+      try {
+        const b = await request.json();
+        if (!b.site || !['samavas', 'chhaya'].includes(b.site)) {
+          return jsonResponse({ error: 'Invalid site' }, 400, origin);
+        }
+        if (!b.name || !b.email || !b.phone || !b.checkin || !b.checkout) {
+          return jsonResponse({ error: 'Name, email, phone, check-in and check-out are required' }, 400, origin);
+        }
+
+        let bookings = [];
+        try {
+          const stored = await env.CONFIG.get('bookings', 'json');
+          if (stored) bookings = stored;
+        } catch (e) {}
+
+        bookings.unshift({
+          id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+          site: b.site,
+          siteName: b.site.toUpperCase(),
+          checkin: b.checkin.slice(0, 10),
+          checkout: b.checkout.slice(0, 10),
+          guests: parseInt(b.guests) || 2,
+          name: b.name.slice(0, 200),
+          email: b.email.slice(0, 200),
+          phone: b.phone.slice(0, 50),
+          nights: parseInt(b.nights) || 1,
+          baseCost: parseFloat(b.baseCost) || 0,
+          extraCost: parseFloat(b.extraCost) || 0,
+          promoCode: (b.promoCode || '').slice(0, 50),
+          discount: parseFloat(b.discount) || 0,
+          total: parseFloat(b.total) || 0,
+          currency: (b.currency || 'AUD').slice(0, 5),
+          status: 'pending',
+          date: new Date().toISOString(),
+        });
+
+        if (bookings.length > 500) bookings = bookings.slice(0, 500);
+
+        await env.CONFIG.put('bookings', JSON.stringify(bookings));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to save booking', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- GET /bookings — admin only, returns all bookings ---
+    if (path === '/bookings' && request.method === 'GET') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const bookings = await env.CONFIG.get('bookings', 'json') || [];
+        return jsonResponse({ bookings }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ bookings: [] }, 200, origin);
+      }
+    }
+
+    // --- POST /bookings/status — admin only, updates booking status ---
+    if (path === '/bookings/status' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { id, status } = await request.json();
+        const validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
+        if (!validStatuses.includes(status)) {
+          return jsonResponse({ error: 'Invalid status' }, 400, origin);
+        }
+        let bookings = await env.CONFIG.get('bookings', 'json') || [];
+        const booking = bookings.find(b => b.id === id);
+        if (booking) {
+          booking.status = status;
+          booking.updatedAt = new Date().toISOString();
+        }
+        await env.CONFIG.put('bookings', JSON.stringify(bookings));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- POST /bookings/delete — admin only, deletes a booking ---
+    if (path === '/bookings/delete' && request.method === 'POST') {
+      if (!(await verifyAuth(request, env))) {
+        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+      }
+      try {
+        const { id } = await request.json();
+        let bookings = await env.CONFIG.get('bookings', 'json') || [];
+        bookings = bookings.filter(b => b.id !== id);
+        await env.CONFIG.put('bookings', JSON.stringify(bookings));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to delete', detail: err.message }, 500, origin);
       }
     }
 

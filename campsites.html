@@ -858,9 +858,15 @@
                             <input type="text" id="samavas-name" placeholder="Full name" required>
                         </div>
                     </div>
-                    <div class="form-field">
-                        <label for="samavas-email">Email</label>
-                        <input type="email" id="samavas-email" placeholder="you@email.com" required>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="samavas-email">Email</label>
+                            <input type="email" id="samavas-email" placeholder="you@email.com" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="samavas-phone">Phone</label>
+                            <input type="tel" id="samavas-phone" placeholder="+61 4XX XXX XXX" required>
+                        </div>
                     </div>
                     <div class="form-field">
                         <label>Promo code</label>
@@ -942,9 +948,15 @@
                             <input type="text" id="chhaya-name" placeholder="Full name" required>
                         </div>
                     </div>
-                    <div class="form-field">
-                        <label for="chhaya-email">Email</label>
-                        <input type="email" id="chhaya-email" placeholder="you@email.com" required>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="chhaya-email">Email</label>
+                            <input type="email" id="chhaya-email" placeholder="you@email.com" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="chhaya-phone">Phone</label>
+                            <input type="tel" id="chhaya-phone" placeholder="+61 4XX XXX XXX" required>
+                        </div>
                     </div>
                     <div class="form-field">
                         <label>Promo code</label>
@@ -1604,7 +1616,7 @@
         }
 
         // --- Booking handler ---
-        function handleBooking(event, site) {
+        async function handleBooking(event, site) {
             event.preventDefault();
 
             // Check for date conflicts
@@ -1612,18 +1624,20 @@
 
             const form = event.target;
             const confirmation = document.getElementById(site + '-confirmation');
+            const submitBtn = form.querySelector('.btn-book');
 
             const checkin = getDateValue(site, 'checkin');
             const checkout = getDateValue(site, 'checkout');
             const guestCount = parseInt(document.getElementById(site + '-guests').value) || 2;
             const name = document.getElementById(site + '-name').value;
             const email = document.getElementById(site + '-email').value;
-            const siteName = site.toUpperCase();
+            const phone = document.getElementById(site + '-phone').value;
 
-            // Calculate pricing for the email
+            if (!checkin || !checkout) return;
+
+            // Calculate pricing
             const cfg = siteConfig[site];
             const nights = Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
-            const sym = currencySymbol();
             const baseCost = cfg.basePrice * nights;
             const extraGuests = Math.max(0, guestCount - 2);
             const extraCost = extraGuests * cfg.extraGuestFee * nights;
@@ -1635,31 +1649,45 @@
             }
             const total = subtotal - discount;
 
-            const subject = 'Booking Request — ' + siteName + ' at Ahana Hillside';
-            let body = 'Name: ' + name + '\n'
-                + 'Email: ' + email + '\n'
-                + 'Campsite: ' + siteName + '\n'
-                + 'Check-in: ' + checkin + '\n'
-                + 'Check-out: ' + checkout + '\n'
-                + 'Guests: ' + guestCount + '\n'
-                + 'Nights: ' + nights + '\n'
-                + '\n--- Pricing ---\n'
-                + 'Base: ' + sym + baseCost.toFixed(2) + ' (' + nights + ' nights x ' + sym + cfg.basePrice + ')\n';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
 
-            if (extraCost > 0) {
-                body += 'Extra guests: ' + sym + extraCost.toFixed(2) + ' (' + extraGuests + ' x ' + sym + cfg.extraGuestFee + ' x ' + nights + ' nights)\n';
+            try {
+                const res = await fetch(WORKER_URL + '/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        site,
+                        checkin,
+                        checkout,
+                        guests: guestCount,
+                        name,
+                        email,
+                        phone,
+                        nights,
+                        baseCost,
+                        extraCost,
+                        promoCode: promo ? promo.code : '',
+                        discount,
+                        total,
+                        currency: siteConfig.currency || 'AUD',
+                    }),
+                });
+
+                const result = await res.json();
+                if (result.success) {
+                    form.style.display = 'none';
+                    confirmation.classList.add('show');
+                } else {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Request Booking';
+                    alert('Could not submit booking: ' + (result.error || 'Please try again.'));
+                }
+            } catch (err) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Request Booking';
+                alert('Connection error. Please try again.');
             }
-            if (promo) {
-                body += 'Promo (' + promo.code + '): -' + sym + discount.toFixed(2) + '\n';
-            }
-            body += 'Total: ' + sym + total.toFixed(2) + '\n';
-
-            window.location.href = 'mailto:ahanahillside@gmail.com?subject='
-                + encodeURIComponent(subject)
-                + '&body=' + encodeURIComponent(body);
-
-            form.style.display = 'none';
-            confirmation.classList.add('show');
         }
 
         // --- Init ---

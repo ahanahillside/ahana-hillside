@@ -418,6 +418,140 @@
 
         .msg-badge.show { display: inline-block; }
 
+        /* Booking cards */
+        .booking-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: none;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.4rem 0.85rem;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--color-stone);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover { border-color: var(--color-forest); color: var(--color-charcoal); }
+        .filter-btn.active { background: var(--color-forest); color: #fff; border-color: var(--color-forest); }
+
+        .filter-btn .filter-count {
+            display: inline-block;
+            font-size: 0.6rem;
+            background: rgba(0,0,0,0.15);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            text-align: center;
+            margin-left: 0.3rem;
+            vertical-align: middle;
+        }
+
+        .filter-btn.active .filter-count {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .booking-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .booking-card.status-pending { border-left: 3px solid #e67e22; }
+        .booking-card.status-confirmed { border-left: 3px solid var(--color-success); }
+        .booking-card.status-cancelled { border-left: 3px solid var(--color-error); }
+        .booking-card.status-completed { border-left: 3px solid var(--color-stone); }
+
+        .booking-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .booking-site {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-forest);
+        }
+
+        .booking-status {
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2px;
+        }
+
+        .booking-status.st-pending { background: #fef3e2; color: #e67e22; }
+        .booking-status.st-confirmed { background: #e8f5e9; color: #4a8c4a; }
+        .booking-status.st-cancelled { background: #fde8e8; color: #b44; }
+        .booking-status.st-completed { background: #f0ece8; color: var(--color-stone); }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .booking-detail-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-stone);
+        }
+
+        .booking-detail-value {
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+        }
+
+        .booking-detail-value a {
+            color: var(--color-forest);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-light-stone);
+        }
+
+        .booking-detail-value a:hover { border-color: var(--color-forest); }
+
+        .booking-pricing {
+            font-size: 0.8rem;
+            color: var(--color-charcoal);
+            padding: 0.5rem 0.75rem;
+            background: var(--color-cream);
+            margin-bottom: 0.75rem;
+        }
+
+        .booking-pricing strong {
+            color: var(--color-forest);
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--color-light-stone);
+            flex-wrap: wrap;
+        }
+
+        .booking-date-submitted {
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            margin-top: 0.3rem;
+        }
+
         /* Message cards */
         .message-card {
             background: #fff;
@@ -731,6 +865,7 @@
     <!-- Main tabs -->
     <div class="tabs">
         <button class="tab-btn active" data-tab="messages">Messages <span class="msg-badge" id="msg-badge"></span></button>
+        <button class="tab-btn" data-tab="bookings">Bookings <span class="msg-badge" id="booking-badge"></span></button>
         <button class="tab-btn" data-tab="campsites">Campsites</button>
         <button class="tab-btn" data-tab="settings">Settings</button>
     </div>
@@ -752,6 +887,22 @@
             <div class="panel-title">Messages</div>
             <div class="panel-desc">Messages from visitors via the Contact Us page.</div>
             <div id="messages-list"><div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">Loading messages...</div></div>
+        </div>
+
+        <!-- BOOKINGS PANEL -->
+        <div class="tab-panel" id="panel-bookings">
+            <div class="panel-title">Bookings</div>
+            <div class="panel-desc">View and manage guest bookings. Update status to keep track of confirmed, cancelled and completed stays.</div>
+
+            <div class="booking-filters">
+                <button class="filter-btn active" data-filter="all" onclick="filterBookings('all')">All</button>
+                <button class="filter-btn" data-filter="pending" onclick="filterBookings('pending')">Pending</button>
+                <button class="filter-btn" data-filter="confirmed" onclick="filterBookings('confirmed')">Confirmed</button>
+                <button class="filter-btn" data-filter="cancelled" onclick="filterBookings('cancelled')">Cancelled</button>
+                <button class="filter-btn" data-filter="completed" onclick="filterBookings('completed')">Completed</button>
+            </div>
+
+            <div id="bookings-list"><div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">Loading bookings...</div></div>
         </div>
 
         <!-- CAMPSITES PANEL (contains sub-panels) -->
@@ -1040,6 +1191,7 @@
         document.getElementById('dashboard').classList.add('show');
         loadConfig();
         loadMessages();
+        loadBookings();
         loadImages();
         loadBlockedDates();
     }
@@ -1337,6 +1489,137 @@
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
+    }
+
+    // --- Bookings ---
+    let bookings = [];
+    let bookingFilter = 'all';
+
+    async function loadBookings() {
+        try {
+            const res = await fetch(WORKER_URL + '/bookings', {
+                headers: { 'Authorization': 'Bearer ' + authToken },
+            });
+            const data = await res.json();
+            bookings = data.bookings || [];
+        } catch (err) {
+            bookings = [];
+        }
+        renderBookings();
+        updateBookingBadge();
+    }
+
+    function filterBookings(filter) {
+        bookingFilter = filter;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.filter-btn[data-filter="' + filter + '"]').classList.add('active');
+        renderBookings();
+    }
+
+    function renderBookings() {
+        const container = document.getElementById('bookings-list');
+        const filtered = bookingFilter === 'all' ? bookings : bookings.filter(b => b.status === bookingFilter);
+
+        // Update filter counts
+        const counts = { all: bookings.length, pending: 0, confirmed: 0, cancelled: 0, completed: 0 };
+        bookings.forEach(b => { if (counts[b.status] !== undefined) counts[b.status]++; });
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            const f = btn.dataset.filter;
+            const countEl = btn.querySelector('.filter-count');
+            if (countEl) countEl.textContent = counts[f] || 0;
+            else if (counts[f] > 0) {
+                const span = document.createElement('span');
+                span.className = 'filter-count';
+                span.textContent = counts[f];
+                btn.appendChild(span);
+            }
+        });
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">No ' + (bookingFilter === 'all' ? '' : bookingFilter + ' ') + 'bookings yet.</div>';
+            return;
+        }
+
+        container.innerHTML = filtered.map(b => {
+            const sym = { AUD: 'AU$', USD: 'US$', EUR: '€', GBP: '£' }[b.currency] || 'AU$';
+            const submitted = b.date ? new Date(b.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+
+            let actions = '';
+            if (b.status === 'pending') {
+                actions += '<button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="updateBookingStatus(\'' + b.id + '\',\'confirmed\')">Confirm</button>';
+                actions += '<button class="btn btn-danger" onclick="updateBookingStatus(\'' + b.id + '\',\'cancelled\')">Cancel</button>';
+            } else if (b.status === 'confirmed') {
+                actions += '<button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="updateBookingStatus(\'' + b.id + '\',\'completed\')">Complete</button>';
+                actions += '<button class="btn btn-danger" onclick="updateBookingStatus(\'' + b.id + '\',\'cancelled\')">Cancel</button>';
+            } else if (b.status === 'cancelled' || b.status === 'completed') {
+                actions += '<button class="btn btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="updateBookingStatus(\'' + b.id + '\',\'pending\')">Reopen</button>';
+            }
+            actions += '<button class="btn btn-danger" onclick="deleteBooking(\'' + b.id + '\')">Delete</button>';
+
+            let pricing = sym + (b.total || 0).toFixed(2) + ' total';
+            if (b.promoCode) pricing += ' (promo: ' + escHtml(b.promoCode) + ')';
+
+            return '<div class="booking-card status-' + b.status + '">'
+                + '<div class="booking-top">'
+                + '<div><span class="booking-site">' + escHtml(b.siteName || b.site) + '</span></div>'
+                + '<span class="booking-status st-' + b.status + '">' + b.status + '</span>'
+                + '</div>'
+                + '<div class="booking-details">'
+                + '<div><div class="booking-detail-label">Guest</div><div class="booking-detail-value">' + escHtml(b.name) + '</div></div>'
+                + '<div><div class="booking-detail-label">Guests</div><div class="booking-detail-value">' + b.guests + '</div></div>'
+                + '<div><div class="booking-detail-label">Email</div><div class="booking-detail-value"><a href="mailto:' + encodeURIComponent(b.email) + '">' + escHtml(b.email) + '</a></div></div>'
+                + '<div><div class="booking-detail-label">Phone</div><div class="booking-detail-value"><a href="tel:' + encodeURIComponent(b.phone || '') + '">' + escHtml(b.phone || 'N/A') + '</a></div></div>'
+                + '<div><div class="booking-detail-label">Check-in</div><div class="booking-detail-value">' + escHtml(b.checkin) + '</div></div>'
+                + '<div><div class="booking-detail-label">Check-out</div><div class="booking-detail-value">' + escHtml(b.checkout) + '</div></div>'
+                + '<div><div class="booking-detail-label">Nights</div><div class="booking-detail-value">' + b.nights + '</div></div>'
+                + '<div><div class="booking-detail-label">Total</div><div class="booking-detail-value"><strong>' + pricing + '</strong></div></div>'
+                + '</div>'
+                + '<div class="booking-date-submitted">Submitted ' + submitted + '</div>'
+                + '<div class="booking-actions">'
+                + '<a href="mailto:' + encodeURIComponent(b.email) + '?subject=Re: Booking at Ahana Hillside — ' + encodeURIComponent(b.siteName || '') + '" class="btn btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem;text-decoration:none">Email Guest</a>'
+                + actions
+                + '</div>'
+                + '</div>';
+        }).join('');
+    }
+
+    function updateBookingBadge() {
+        const pending = bookings.filter(b => b.status === 'pending').length;
+        const badge = document.getElementById('booking-badge');
+        if (pending > 0) {
+            badge.textContent = pending;
+            badge.classList.add('show');
+        } else {
+            badge.classList.remove('show');
+        }
+    }
+
+    async function updateBookingStatus(id, status) {
+        try {
+            await fetch(WORKER_URL + '/bookings/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ id, status }),
+            });
+            const booking = bookings.find(b => b.id === id);
+            if (booking) booking.status = status;
+            renderBookings();
+            updateBookingBadge();
+        } catch (err) {}
+    }
+
+    async function deleteBooking(id) {
+        if (!confirm('Delete this booking permanently?')) return;
+        try {
+            await fetch(WORKER_URL + '/bookings/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ id }),
+            });
+            bookings = bookings.filter(b => b.id !== id);
+            renderBookings();
+            updateBookingBadge();
+        } catch (err) {}
     }
 
     // --- Availability / Blocked Dates ---
