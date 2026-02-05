@@ -1124,7 +1124,7 @@
         <!-- SETTINGS PANEL -->
         <div class="tab-panel" id="panel-settings">
             <div class="panel-title">Settings</div>
-            <div class="panel-desc">Manage dashboard password and email notifications.</div>
+            <div class="panel-desc">Manage payments, email notifications, and dashboard password.</div>
 
             <div class="card" style="max-width:500px;margin-bottom:1.5rem">
                 <div class="card-title">Email Notifications</div>
@@ -1160,6 +1160,41 @@
                 <div class="save-bar" style="margin-top:1rem">
                     <button class="btn btn-primary" onclick="saveNotificationSettings()">Save Notifications</button>
                     <span class="save-msg" id="notif-msg"></span>
+                </div>
+            </div>
+
+            <div class="card" style="max-width:500px;margin-bottom:1.5rem">
+                <div class="card-title">Stripe Payments</div>
+                <p style="font-size:0.8rem;color:var(--color-stone);margin-bottom:1rem;line-height:1.5">
+                    Collect payments when guests book. Uses <a href="https://stripe.com" target="_blank" style="color:var(--color-forest)">Stripe</a> Checkout — guests are redirected to a secure Stripe-hosted payment page.
+                </p>
+
+                <div class="field">
+                    <label style="display:flex;align-items:center;gap:0.5rem;text-transform:none;font-size:0.85rem;letter-spacing:0">
+                        <input type="checkbox" id="stripe-enabled" style="width:auto;margin:0;padding:0">
+                        Enable Stripe payments
+                    </label>
+                </div>
+
+                <div class="field">
+                    <label>Secret key</label>
+                    <input type="password" id="stripe-secret-key" placeholder="sk_live_... or sk_test_...">
+                    <div class="hint">Find this in your <a href="https://dashboard.stripe.com/apikeys" target="_blank" style="color:var(--color-forest)">Stripe Dashboard</a> &rarr; Developers &rarr; API keys</div>
+                </div>
+
+                <div class="field">
+                    <label>Webhook signing secret</label>
+                    <input type="password" id="stripe-webhook-secret" placeholder="whsec_...">
+                    <div class="hint">
+                        Create a webhook in Stripe pointing to:<br>
+                        <code style="font-size:0.7rem;background:var(--color-cream);padding:2px 6px;border:1px solid var(--color-light-stone);word-break:break-all">https://ahana-ical-proxy.ahanahillside.workers.dev/stripe-webhook</code><br>
+                        Listen for the <strong>checkout.session.completed</strong> event.
+                    </div>
+                </div>
+
+                <div class="save-bar" style="margin-top:1rem">
+                    <button class="btn btn-primary" onclick="saveStripeSettings()">Save Stripe Settings</button>
+                    <span class="save-msg" id="stripe-msg"></span>
                 </div>
             </div>
 
@@ -1232,6 +1267,7 @@
         loadImages();
         loadBlockedDates();
         loadNotificationSettings();
+        loadStripeSettings();
     }
 
     // --- Config ---
@@ -1356,6 +1392,52 @@
             }
         } catch (err) {
             showMsg('settings', 'Connection error', 'error');
+        }
+    }
+
+    // --- Stripe Settings ---
+    async function loadStripeSettings() {
+        try {
+            const res = await fetch(WORKER_URL + '/stripe-settings', {
+                headers: { 'Authorization': 'Bearer ' + authToken },
+            });
+            const data = await res.json();
+            const s = data.settings || {};
+            document.getElementById('stripe-enabled').checked = !!s.enabled;
+            document.getElementById('stripe-secret-key').value = s.secretKey || '';
+            document.getElementById('stripe-webhook-secret').value = s.webhookSecret || '';
+        } catch (err) {}
+    }
+
+    async function saveStripeSettings() {
+        const settings = {
+            enabled: document.getElementById('stripe-enabled').checked,
+            secretKey: document.getElementById('stripe-secret-key').value.trim(),
+            webhookSecret: document.getElementById('stripe-webhook-secret').value.trim(),
+        };
+
+        if (settings.enabled && !settings.secretKey) {
+            showMsg('stripe', 'Please enter your Stripe secret key', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch(WORKER_URL + '/stripe-settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken,
+                },
+                body: JSON.stringify(settings),
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMsg('stripe', 'Stripe settings saved', 'success');
+            } else {
+                showMsg('stripe', data.error || 'Failed to save', 'error');
+            }
+        } catch (err) {
+            showMsg('stripe', 'Connection error', 'error');
         }
     }
 
@@ -1664,6 +1746,7 @@
                 + '<div><div class="booking-detail-label">Nights</div><div class="booking-detail-value">' + b.nights + '</div></div>'
                 + '<div><div class="booking-detail-label">Total</div><div class="booking-detail-value"><strong>' + pricing + '</strong></div></div>'
                 + '</div>'
+                + (b.paidAt ? '<div style="font-size:0.7rem;color:#4a8c4a;margin-top:0.3rem;font-weight:500">Paid via Stripe — ' + new Date(b.paidAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + '</div>' : '')
                 + '<div class="booking-date-submitted">Submitted ' + submitted + '</div>'
                 + '<div class="booking-actions">'
                 + '<a href="mailto:' + encodeURIComponent(b.email) + '?subject=Re: Booking at Ahana Hillside — ' + encodeURIComponent(b.siteName || '') + '" class="btn btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem;text-decoration:none">Email Guest</a>'

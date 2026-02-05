@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed — Ahana Hillside</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #FAF8F5;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2.5rem 2rem 1rem;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .header a { text-decoration: none; }
+
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            letter-spacing: 0.02em;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.6s ease-out 0.15s both;
+        }
+
+        .confirm-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 3rem 2.5rem;
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .check-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .check-icon svg {
+            width: 28px;
+            height: 28px;
+            color: #4a8c4a;
+        }
+
+        .confirm-card h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.6rem, 3.5vw, 2rem);
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+
+        .confirm-card p {
+            font-size: 0.9rem;
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .confirm-card .detail {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            line-height: 1.6;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 1.25rem auto;
+        }
+
+        .btn-home {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.7rem 2rem;
+            font-family: var(--font-sans);
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-cream);
+            background-color: var(--color-forest);
+            border: 1px solid var(--color-forest);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-home:hover {
+            background-color: transparent;
+            color: var(--color-forest);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            letter-spacing: 0.05em;
+        }
+
+        .footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer a:hover { color: var(--color-forest); }
+
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a { margin: 0 0.75rem; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .confirm-card { padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="index.html">
+            <div class="header-logo">Ahana Hillside</div>
+        </a>
+    </div>
+
+    <div class="content">
+        <div class="confirm-card">
+            <div class="check-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+
+            <h1>Booking Confirmed</h1>
+            <p>Your payment has been received and your booking is confirmed.</p>
+
+            <div class="divider"></div>
+
+            <p class="detail">
+                You'll receive a confirmation email from Stripe with your payment receipt.
+                If you have any questions about your stay, feel free to get in touch via our
+                <a href="contact.html" style="color:var(--color-forest);border-bottom:1px solid var(--color-light-stone)">contact page</a>.
+            </p>
+
+            <a href="index.html" class="btn-home">Back to Home</a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        &copy; 2026 Ahana Hillside
+    </footer>
+</body>
+</html>
