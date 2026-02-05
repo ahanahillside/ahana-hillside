@@ -101,11 +101,73 @@
             margin: 1.5rem auto 0;
         }
 
+        /* Progress indicator */
+        .progress-bar {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            letter-spacing: 0.05em;
+        }
+
+        .progress-step.active {
+            color: var(--color-forest);
+            font-weight: 500;
+        }
+
+        .progress-step.completed {
+            color: var(--color-forest);
+        }
+
+        .progress-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid var(--color-stone);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .progress-step.active .progress-num {
+            background: var(--color-forest);
+            border-color: var(--color-forest);
+            color: #fff;
+        }
+
+        .progress-step.completed .progress-num {
+            background: var(--color-forest);
+            border-color: var(--color-forest);
+            color: #fff;
+        }
+
+        .progress-line {
+            width: 30px;
+            height: 1px;
+            background: var(--color-light-stone);
+        }
+
+        .progress-line.completed {
+            background: var(--color-forest);
+        }
+
         /* Search bar */
         .search-bar {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 2rem 2rem 0;
+            padding: 1rem 2rem 0;
             animation: fadeIn 0.6s ease-out 0.15s both;
             position: relative;
             z-index: 10;
@@ -156,7 +218,7 @@
             opacity: 0.7;
         }
 
-        .btn-search {
+        .btn-primary {
             padding: 0.7rem 1.5rem;
             font-family: var(--font-sans);
             font-size: 0.85rem;
@@ -171,12 +233,46 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .btn-search:hover {
+        .btn-primary:hover {
             background-color: transparent;
             color: var(--color-forest);
         }
 
-        /* Campsites list */
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            padding: 0.7rem 1.5rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-forest);
+            background-color: transparent;
+            border: 1px solid var(--color-forest);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-forest);
+            color: var(--color-cream);
+        }
+
+        /* Steps container */
+        .wizard-step {
+            display: none;
+        }
+
+        .wizard-step.active {
+            display: block;
+        }
+
+        /* Step 2: Campsites list */
         .campsites {
             max-width: 1100px;
             margin: 0 auto;
@@ -207,23 +303,23 @@
             opacity: 0.4;
         }
 
-        .campsite.guest-exceeded .booking-form {
+        .campsite.guest-exceeded .btn-select {
             display: none !important;
         }
 
-        .campsite.guest-exceeded .price-breakdown {
+        .campsite.guest-exceeded .campsite-price {
             display: none !important;
         }
 
         .guest-message {
             display: none;
             text-align: center;
-            padding: 1.25rem;
+            padding: 1rem;
             background: #fef2f2;
             border: 1px solid #fecaca;
             font-size: 0.85rem;
             color: #b44;
-            margin-top: 0.75rem;
+            margin-top: auto;
         }
 
         .campsite.guest-exceeded .guest-message {
@@ -396,7 +492,6 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            flex: 1;
         }
 
         .campsite-header {
@@ -468,7 +563,7 @@
 
         .campsite-price {
             font-size: 0.9rem;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             padding-top: 1rem;
             border-top: 1px solid var(--color-light-stone);
             margin-top: auto;
@@ -484,52 +579,27 @@
             color: var(--color-stone);
         }
 
-        /* Booking form */
-        .booking-form {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 0.2rem;
-        }
-
-        .form-field label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--color-stone);
-        }
-
-        .form-field input,
-        .form-field select {
-            padding: 0.65rem 0.75rem;
-            border: 1px solid var(--color-light-stone);
+        /* Price breakdown mini */
+        .price-breakdown-mini {
+            font-size: 0.8rem;
             background: var(--color-cream);
-            font-family: var(--font-sans);
-            font-size: 0.95rem;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .price-breakdown-mini .price-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.15rem 0;
             color: var(--color-charcoal);
-            outline: none;
-            transition: border-color 0.2s ease;
         }
 
-        .form-field input::placeholder {
-            color: var(--color-stone);
-            opacity: 0.7;
-        }
-
-        .form-field input:focus,
-        .form-field select:focus {
-            border-color: var(--color-forest);
+        .price-breakdown-mini .price-line.total {
+            font-weight: 500;
+            color: var(--color-forest);
+            border-top: 1px solid var(--color-light-stone);
+            margin-top: 0.3rem;
+            padding-top: 0.4rem;
         }
 
         .availability-status {
@@ -552,43 +622,256 @@
         .dot-loading { background: var(--color-stone); }
         .dot-error { background: #b44; }
 
-        /* Price breakdown */
-        .price-breakdown {
-            display: none;
-            font-size: 0.8rem;
-            background: #fff;
-            border: 1px solid var(--color-light-stone);
+        .btn-select {
+            display: block;
+            width: 100%;
             padding: 0.75rem;
-            margin-bottom: 0.25rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-cream);
+            background-color: var(--color-forest);
+            border: 1px solid var(--color-forest);
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        .price-breakdown.show {
+        .btn-select:hover {
+            background-color: transparent;
+            color: var(--color-forest);
+        }
+
+        .btn-select:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .date-warning {
+            display: none;
+            font-size: 0.8rem;
+            color: #b44;
+            padding: 0.5rem 0.65rem;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-warning.show {
             display: block;
         }
 
-        .price-line {
+        /* Step 3: Add-ons */
+        .step-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .step-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .step-subtitle {
+            font-size: 0.9rem;
+            color: var(--color-stone);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .addon-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .addon-header {
             display: flex;
             justify-content: space-between;
-            padding: 0.2rem 0;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+        }
+
+        .addon-name {
+            font-weight: 500;
+            color: var(--color-forest);
+            font-size: 1rem;
+        }
+
+        .addon-price {
+            font-weight: 500;
+            color: var(--color-forest);
+        }
+
+        .addon-desc {
+            font-size: 0.85rem;
             color: var(--color-charcoal);
+            margin-bottom: 0.75rem;
+        }
+
+        .addon-note {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            font-style: italic;
+            margin-bottom: 0.75rem;
+        }
+
+        .addon-qty {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .addon-qty label {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+        }
+
+        .qty-control {
+            display: flex;
+            align-items: center;
             gap: 0.5rem;
         }
 
-        .price-line span:first-child {
-            min-width: 0;
-            word-break: break-word;
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border-color 0.2s;
         }
 
-        .price-line.discount {
+        .qty-btn:hover {
+            border-color: var(--color-forest);
+        }
+
+        .qty-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .qty-value {
+            width: 40px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Summary box */
+        .summary-box {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem;
+            margin-top: 2rem;
+        }
+
+        .summary-title {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-light-stone);
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            font-size: 0.9rem;
+        }
+
+        .summary-line.total {
+            font-weight: 600;
+            color: var(--color-forest);
+            font-size: 1rem;
+            border-top: 1px solid var(--color-light-stone);
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+        }
+
+        .summary-line.discount {
             color: #5a9a5a;
         }
 
-        .price-line.total {
-            font-weight: 500;
-            color: var(--color-forest);
-            border-top: 1px solid var(--color-light-stone);
-            margin-top: 0.3rem;
-            padding-top: 0.4rem;
+        /* Step navigation */
+        .step-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .step-nav .btn-secondary {
+            flex: 0 0 auto;
+        }
+
+        .step-nav .btn-primary {
+            flex: 1;
+            max-width: 250px;
+        }
+
+        /* Step 4: Details form */
+        .details-form {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .form-field.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-field label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-stone);
+        }
+
+        .form-field input {
+            padding: 0.75rem;
+            border: 1px solid var(--color-light-stone);
+            background: var(--color-cream);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--color-charcoal);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-field input::placeholder {
+            color: var(--color-stone);
+            opacity: 0.7;
+        }
+
+        .form-field input:focus {
+            border-color: var(--color-forest);
         }
 
         .promo-row {
@@ -598,29 +881,13 @@
 
         .promo-row input {
             flex: 1;
-            padding: 0.65rem 0.75rem;
-            border: 1px solid var(--color-light-stone);
-            background: var(--color-cream);
-            font-family: var(--font-sans);
-            font-size: 0.95rem;
-            color: var(--color-charcoal);
-            outline: none;
             text-transform: uppercase;
-            transition: border-color 0.2s ease;
-        }
-
-        .promo-row input:focus { border-color: var(--color-forest); }
-
-        .promo-row input::placeholder {
-            color: var(--color-stone);
-            opacity: 0.7;
-            text-transform: none;
         }
 
         .promo-apply {
-            padding: 0.55rem 0.85rem;
+            padding: 0.75rem 1rem;
             font-family: var(--font-sans);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -638,69 +905,48 @@
 
         .promo-msg {
             font-size: 0.75rem;
-            margin-top: 0.2rem;
+            margin-top: 0.25rem;
         }
 
         .promo-msg.valid { color: #5a9a5a; }
         .promo-msg.invalid { color: #b44; }
 
-        .btn-book {
-            display: block;
-            width: 100%;
-            padding: 0.75rem;
-            font-family: var(--font-sans);
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--color-cream);
-            background-color: var(--color-forest);
-            border: 1px solid var(--color-forest);
-            cursor: pointer;
-            transition: background-color 0.3s ease, color 0.3s ease;
+        /* Step 5: Review */
+        .review-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.5rem;
         }
 
-        .btn-book:hover {
-            background-color: transparent;
-            color: var(--color-forest);
+        .review-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--color-light-stone);
         }
 
-        /* Confirmation message */
-        .booking-confirmation {
-            display: none;
-            text-align: center;
-            padding: 1.5rem 0;
+        .review-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
-        .booking-confirmation.show {
-            display: block;
-        }
-
-        .booking-confirmation p {
+        .review-section-title {
             font-family: var(--font-serif);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            font-weight: 500;
             color: var(--color-forest);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
-        .booking-confirmation .conf-detail {
-            font-family: var(--font-sans);
-            font-size: 0.8rem;
+        .review-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            font-size: 0.9rem;
+        }
+
+        .review-row .label {
             color: var(--color-stone);
-        }
-
-        .date-warning {
-            display: none;
-            font-size: 0.8rem;
-            color: #b44;
-            padding: 0.5rem 0.65rem;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            margin-bottom: 0.5rem;
-        }
-
-        .date-warning.show {
-            display: block;
         }
 
         /* Custom date picker */
@@ -915,6 +1161,14 @@
                 align-items: stretch;
             }
 
+            .progress-bar {
+                padding: 1rem;
+            }
+
+            .progress-step span:not(.progress-num) {
+                display: none;
+            }
+
             .campsites {
                 padding: 2rem 1.25rem 3rem;
             }
@@ -936,10 +1190,8 @@
             }
 
             .form-field input,
-            .form-field select,
             .search-field input,
-            .search-field select,
-            .promo-row input {
+            .search-field select {
                 font-size: 16px;
             }
 
@@ -948,13 +1200,16 @@
                 max-width: 260px;
             }
 
-            .promo-row {
-                flex-wrap: wrap;
+            .step-content {
+                padding: 1.5rem 1.25rem;
             }
 
-            .price-line {
-                font-size: 0.75rem;
-                gap: 0.5rem;
+            .step-nav {
+                flex-direction: column-reverse;
+            }
+
+            .step-nav .btn-primary {
+                max-width: none;
             }
 
             .lightbox-btn {
@@ -983,7 +1238,35 @@
         <div class="divider"></div>
     </div>
 
-    <!-- Search bar -->
+    <!-- Progress indicator -->
+    <div class="progress-bar">
+        <div class="progress-step active" data-step="1">
+            <span class="progress-num">1</span>
+            <span>Search</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="2">
+            <span class="progress-num">2</span>
+            <span>Select</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="3">
+            <span class="progress-num">3</span>
+            <span>Add-ons</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="4">
+            <span class="progress-num">4</span>
+            <span>Details</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="5">
+            <span class="progress-num">5</span>
+            <span>Pay</span>
+        </div>
+    </div>
+
+    <!-- Search bar (Step 1) -->
     <div class="search-bar">
         <div class="search-bar-inner">
             <div class="search-field">
@@ -1001,179 +1284,254 @@
                     <option value="2" selected>2 guests</option>
                 </select>
             </div>
-            <button type="button" class="btn-search" onclick="checkAvailability()">Check Availability</button>
+            <button type="button" class="btn-primary" onclick="checkAvailability()">Check Availability</button>
         </div>
     </div>
 
-    <div class="campsites">
-        <!-- SAMAVAS -->
-        <div class="campsite" id="campsite-samavas">
-            <div class="campsite-media">
-                <div class="carousel" id="carousel-samavas"></div>
-            </div>
-            <div class="campsite-body">
-                <div class="campsite-header">
-                    <div class="campsite-name">SAMAVAS</div>
-                    <span class="max-badge" id="samavas-max-badge">Max 20 guests</span>
+    <!-- Step 2: Select campsite -->
+    <div class="wizard-step active" id="step-select">
+        <div class="campsites">
+            <!-- SAMAVAS -->
+            <div class="campsite" id="campsite-samavas">
+                <div class="campsite-media">
+                    <div class="carousel" id="carousel-samavas"></div>
                 </div>
-                <div class="campsite-type" id="samavas-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
-                <p class="campsite-description" id="samavas-desc">
-                    Our largest site, accommodating up to 15 people. Set furthest from the main house for maximum privacy, SAMAVAS is ideal for groups and families looking for a secluded spot in the rainforest.
-                </p>
-                <div class="campsite-amenities">
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
-                        Campfires allowed
+                <div class="campsite-body">
+                    <div class="campsite-header">
+                        <div class="campsite-name">SAMAVAS</div>
+                        <span class="max-badge" id="samavas-max-badge">Max 20 guests</span>
                     </div>
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
-                        Pets allowed
-                    </div>
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
-                        Toilet
-                    </div>
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
-                        Potable water
-                    </div>
-                </div>
-                <div class="campsite-price" id="samavas-price">
-                    from <strong>AU$66</strong> / night
-                    <span class="price-note">for 2 guests</span>
-                </div>
-
-                <div class="availability-status" id="samavas-status">
-                    <span class="dot dot-loading"></span> Checking availability...
-                </div>
-
-                <div class="guest-message" id="samavas-guest-msg">
-                    This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
-                </div>
-
-                <form class="booking-form" id="samavas-form" onsubmit="handleBooking(event, 'samavas')">
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="samavas-name">Your name</label>
-                            <input type="text" id="samavas-name" placeholder="Full name" required>
+                    <div class="campsite-type" id="samavas-type">RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m</div>
+                    <p class="campsite-description" id="samavas-desc">
+                        Our largest site, accommodating up to 15 people. Set furthest from the main house for maximum privacy, SAMAVAS is ideal for groups and families looking for a secluded spot in the rainforest.
+                    </p>
+                    <div class="campsite-amenities">
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
+                            Campfires allowed
                         </div>
-                        <div class="form-field">
-                            <label for="samavas-email">Email</label>
-                            <input type="email" id="samavas-email" placeholder="you@email.com" required>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
+                            Pets allowed
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                            Toilet
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
+                            Potable water
                         </div>
                     </div>
-                    <div class="form-field">
-                        <label for="samavas-phone">Phone</label>
-                        <input type="tel" id="samavas-phone" placeholder="+61 4XX XXX XXX" required>
+                    <div class="campsite-price" id="samavas-price">
+                        from <strong>AU$66</strong> / night
+                        <span class="price-note">for 2 guests</span>
                     </div>
-                    <div class="form-field">
-                        <label>Promo code</label>
-                        <div class="promo-row">
-                            <input type="text" id="samavas-promo" placeholder="Optional">
-                            <button type="button" class="promo-apply" onclick="applyPromo('samavas')">Apply</button>
-                        </div>
-                        <div class="promo-msg" id="samavas-promo-msg"></div>
+                    <div class="price-breakdown-mini" id="samavas-breakdown" style="display:none;"></div>
+                    <div class="availability-status" id="samavas-status">
+                        <span class="dot dot-loading"></span> Checking availability...
                     </div>
-                    <div class="price-breakdown" id="samavas-breakdown"></div>
                     <div class="date-warning" id="samavas-warning">Selected dates are unavailable for SAMAVAS. Please choose different dates.</div>
-                    <button type="submit" class="btn-book">Request Booking</button>
-                </form>
+                    <div class="guest-message" id="samavas-guest-msg">
+                        This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
+                    </div>
+                    <button type="button" class="btn-select" id="samavas-select-btn" onclick="selectSite('samavas')" disabled>Select dates first</button>
+                </div>
+            </div>
 
-                <div class="booking-confirmation" id="samavas-confirmation">
-                    <p>Booking request sent!</p>
-                    <span class="conf-detail">We'll get back to you shortly to confirm your stay at SAMAVAS.</span>
+            <!-- CHHAYA -->
+            <div class="campsite" id="campsite-chhaya">
+                <div class="campsite-media">
+                    <div class="carousel" id="carousel-chhaya"></div>
+                </div>
+                <div class="campsite-body">
+                    <div class="campsite-header">
+                        <div class="campsite-name">CHHAYA</div>
+                        <span class="max-badge" id="chhaya-max-badge">Max 20 guests</span>
+                    </div>
+                    <div class="campsite-type" id="chhaya-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
+                    <p class="campsite-description" id="chhaya-desc">
+                        A cosy, intimate site perfect for couples and solo campers. CHHAYA is just a few metres from the toilets, offering convenience without sacrificing the peaceful rainforest setting.
+                    </p>
+                    <div class="campsite-amenities">
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
+                            Campfires allowed
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
+                            Pets allowed
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+                            Toilet
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
+                            Potable water
+                        </div>
+                    </div>
+                    <div class="campsite-price" id="chhaya-price">
+                        from <strong>AU$60</strong> / night
+                        <span class="price-note">for 2 guests</span>
+                    </div>
+                    <div class="price-breakdown-mini" id="chhaya-breakdown" style="display:none;"></div>
+                    <div class="availability-status" id="chhaya-status">
+                        <span class="dot dot-loading"></span> Checking availability...
+                    </div>
+                    <div class="date-warning" id="chhaya-warning">Selected dates are unavailable for CHHAYA. Please choose different dates.</div>
+                    <div class="guest-message" id="chhaya-guest-msg">
+                        This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
+                    </div>
+                    <button type="button" class="btn-select" id="chhaya-select-btn" onclick="selectSite('chhaya')" disabled>Select dates first</button>
                 </div>
             </div>
         </div>
 
-        <!-- CHHAYA -->
-        <div class="campsite" id="campsite-chhaya">
-            <div class="campsite-media">
-                <div class="carousel" id="carousel-chhaya"></div>
+        <div class="rules">
+            <h2>Campground Rules</h2>
+            <ul id="rules-list">
+                <li>No parties allowed without prior permission</li>
+                <li>No loud or open music</li>
+                <li>All dogs must be kept on a leash when on the main campground</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Step 3: Add-ons -->
+    <div class="wizard-step" id="step-addons">
+        <div class="step-content">
+            <h2 class="step-title">Add-ons for <span id="addons-site-name">SAMAVAS</span></h2>
+            <p class="step-subtitle">Enhance your camping experience</p>
+
+            <div class="addon-card">
+                <div class="addon-header">
+                    <div class="addon-name">Firewood Bundle</div>
+                    <div class="addon-price" id="firewood-price">AU$20</div>
+                </div>
+                <div class="addon-desc">5kg bundle of quality firewood for your campfire.</div>
+                <div class="addon-note">Note: Locally sourced from the farm</div>
+                <div class="addon-qty">
+                    <label>Quantity:</label>
+                    <div class="qty-control">
+                        <button type="button" class="qty-btn" onclick="updateAddonQty('firewood', -1)">−</button>
+                        <span class="qty-value" id="firewood-qty">0</span>
+                        <button type="button" class="qty-btn" onclick="updateAddonQty('firewood', 1)">+</button>
+                    </div>
+                </div>
             </div>
-            <div class="campsite-body">
-                <div class="campsite-header">
-                    <div class="campsite-name">CHHAYA</div>
-                    <span class="max-badge" id="chhaya-max-badge">Max 20 guests</span>
-                </div>
-                <div class="campsite-type" id="chhaya-type">RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m</div>
-                <p class="campsite-description" id="chhaya-desc">
-                    A cosy, intimate site perfect for couples and solo campers. CHHAYA is just a few metres from the toilets, offering convenience without sacrificing the peaceful rainforest setting.
-                </p>
-                <div class="campsite-amenities">
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
-                        Campfires allowed
-                    </div>
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
-                        Pets allowed
-                    </div>
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
-                        Toilet
-                    </div>
-                    <div class="amenity">
-                        <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
-                        Potable water
-                    </div>
-                </div>
-                <div class="campsite-price" id="chhaya-price">
-                    from <strong>AU$60</strong> / night
-                    <span class="price-note">for 2 guests</span>
-                </div>
 
-                <div class="availability-status" id="chhaya-status">
-                    <span class="dot dot-loading"></span> Checking availability...
-                </div>
+            <div class="summary-box" id="addons-summary">
+                <div class="summary-title">Booking Summary</div>
+                <div id="addons-summary-content"></div>
+            </div>
 
-                <div class="guest-message" id="chhaya-guest-msg">
-                    This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
-                </div>
-
-                <form class="booking-form" id="chhaya-form" onsubmit="handleBooking(event, 'chhaya')">
-                    <div class="form-row">
-                        <div class="form-field">
-                            <label for="chhaya-name">Your name</label>
-                            <input type="text" id="chhaya-name" placeholder="Full name" required>
-                        </div>
-                        <div class="form-field">
-                            <label for="chhaya-email">Email</label>
-                            <input type="email" id="chhaya-email" placeholder="you@email.com" required>
-                        </div>
-                    </div>
-                    <div class="form-field">
-                        <label for="chhaya-phone">Phone</label>
-                        <input type="tel" id="chhaya-phone" placeholder="+61 4XX XXX XXX" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Promo code</label>
-                        <div class="promo-row">
-                            <input type="text" id="chhaya-promo" placeholder="Optional">
-                            <button type="button" class="promo-apply" onclick="applyPromo('chhaya')">Apply</button>
-                        </div>
-                        <div class="promo-msg" id="chhaya-promo-msg"></div>
-                    </div>
-                    <div class="price-breakdown" id="chhaya-breakdown"></div>
-                    <div class="date-warning" id="chhaya-warning">Selected dates are unavailable for CHHAYA. Please choose different dates.</div>
-                    <button type="submit" class="btn-book">Request Booking</button>
-                </form>
-
-                <div class="booking-confirmation" id="chhaya-confirmation">
-                    <p>Booking request sent!</p>
-                    <span class="conf-detail">We'll get back to you shortly to confirm your stay at CHHAYA.</span>
-                </div>
+            <div class="step-nav">
+                <button type="button" class="btn-secondary" onclick="goToStep(2)">&larr; Back</button>
+                <button type="button" class="btn-primary" onclick="goToStep(4)">Continue to Details</button>
             </div>
         </div>
     </div>
 
-    <div class="rules">
-        <h2>Campground Rules</h2>
-        <ul id="rules-list">
-            <li>No parties allowed without prior permission</li>
-            <li>No loud or open music</li>
-            <li>All dogs must be kept on a leash when on the main campground</li>
-        </ul>
+    <!-- Step 4: Your Details -->
+    <div class="wizard-step" id="step-details">
+        <div class="step-content">
+            <h2 class="step-title">Your Details</h2>
+            <p class="step-subtitle">Please provide your contact information</p>
+
+            <div class="details-form">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="guest-name">Full Name</label>
+                        <input type="text" id="guest-name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="guest-email">Email</label>
+                        <input type="email" id="guest-email" placeholder="you@email.com" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="guest-phone">Phone</label>
+                        <input type="tel" id="guest-phone" placeholder="+61 4XX XXX XXX" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="guest-promo">Promo Code</label>
+                        <div class="promo-row">
+                            <input type="text" id="guest-promo" placeholder="Optional">
+                            <button type="button" class="promo-apply" onclick="applyPromo()">Apply</button>
+                        </div>
+                        <div class="promo-msg" id="promo-msg"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-box" id="details-summary">
+                <div class="summary-title">Booking Summary</div>
+                <div id="details-summary-content"></div>
+            </div>
+
+            <div class="step-nav">
+                <button type="button" class="btn-secondary" onclick="goToStep(3)">&larr; Back</button>
+                <button type="button" class="btn-primary" onclick="goToStep(5)">Review Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step 5: Review & Pay -->
+    <div class="wizard-step" id="step-review">
+        <div class="step-content">
+            <h2 class="step-title">Review Your Booking</h2>
+            <p class="step-subtitle">Please confirm your details before proceeding to payment</p>
+
+            <div class="review-card">
+                <div class="review-section">
+                    <div class="review-section-title">Stay Details</div>
+                    <div class="review-row">
+                        <span class="label">Campsite</span>
+                        <span id="review-site"></span>
+                    </div>
+                    <div class="review-row">
+                        <span class="label">Check-in</span>
+                        <span id="review-checkin"></span>
+                    </div>
+                    <div class="review-row">
+                        <span class="label">Check-out</span>
+                        <span id="review-checkout"></span>
+                    </div>
+                    <div class="review-row">
+                        <span class="label">Guests</span>
+                        <span id="review-guests"></span>
+                    </div>
+                </div>
+
+                <div class="review-section">
+                    <div class="review-section-title">Contact Information</div>
+                    <div class="review-row">
+                        <span class="label">Name</span>
+                        <span id="review-name"></span>
+                    </div>
+                    <div class="review-row">
+                        <span class="label">Email</span>
+                        <span id="review-email"></span>
+                    </div>
+                    <div class="review-row">
+                        <span class="label">Phone</span>
+                        <span id="review-phone"></span>
+                    </div>
+                </div>
+
+                <div class="review-section">
+                    <div class="review-section-title">Price Breakdown</div>
+                    <div id="review-breakdown"></div>
+                </div>
+            </div>
+
+            <div class="step-nav">
+                <button type="button" class="btn-secondary" onclick="goToStep(4)">&larr; Back</button>
+                <button type="button" class="btn-primary" id="btn-book" onclick="submitBooking()">Book & Pay</button>
+            </div>
+        </div>
     </div>
 
     <footer class="footer">
@@ -1196,6 +1554,14 @@
 
     <script>
         const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+
+        // --- Wizard state ---
+        let currentStep = 2;
+        let selectedSite = null;
+        let addons = {
+            firewood: { qty: 0, price: 20, unit: '5kg bundle' }
+        };
+        let appliedPromo = null;
 
         // --- Image carousel & lightbox ---
         const SITES = {
@@ -1375,7 +1741,6 @@
 
         // --- State ---
         const bookedDates = { samavas: [], chhaya: [] };
-        const appliedPromos = { samavas: null, chhaya: null };
 
         // --- Search bar helpers ---
         function getSearchDate(field) {
@@ -1408,6 +1773,7 @@
             }
 
             updateAllCards();
+            updateProgress(2);
             document.querySelector('.campsites').scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -1417,8 +1783,28 @@
                 updatePerNightPrice(site);
                 updatePriceBreakdown(site);
                 updateWarning(site);
+                updateSelectButton(site);
             });
             updateGuestAvailability();
+        }
+
+        // --- Update select button state ---
+        function updateSelectButton(site) {
+            const checkin = getSearchDate('checkin');
+            const checkout = getSearchDate('checkout');
+            const btn = document.getElementById(site + '-select-btn');
+            const hasConflict = updateWarning(site);
+
+            if (!checkin || !checkout) {
+                btn.disabled = true;
+                btn.textContent = 'Select dates first';
+            } else if (hasConflict) {
+                btn.disabled = true;
+                btn.textContent = 'Dates unavailable';
+            } else {
+                btn.disabled = false;
+                btn.textContent = 'Select ' + site.toUpperCase();
+            }
         }
 
         // --- Guest availability: grey out sites that exceed max ---
@@ -1430,7 +1816,6 @@
                 if (!cfg) return;
                 const maxG = cfg.maxGuests || 20;
                 const card = document.getElementById('campsite-' + site);
-                const msg = document.getElementById(site + '-guest-msg');
 
                 if (guests > maxG) {
                     card.classList.add('guest-exceeded');
@@ -1480,16 +1865,13 @@
                     + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
                     + '</span>';
 
-                // Update max badge
                 const maxG = cfg.maxGuests || 20;
                 document.getElementById(site + '-max-badge').textContent = 'Max ' + maxG + ' guests';
 
-                // Update guest message
                 const msgEl = document.getElementById(site + '-guest-msg');
                 msgEl.innerHTML = 'This site accommodates up to <strong>' + maxG + ' guests</strong>. Please select fewer guests.';
             });
 
-            // Build shared guest dropdown with max of both sites
             const maxGuests = Math.max(
                 siteConfig.samavas?.maxGuests || 20,
                 siteConfig.chhaya?.maxGuests || 20
@@ -1508,24 +1890,17 @@
                 select.value = '2';
             }
 
-            // Update rules
             if (siteConfig.rules && siteConfig.rules.length > 0) {
                 const rulesList = document.getElementById('rules-list');
                 rulesList.innerHTML = siteConfig.rules.map(r => '<li>' + r + '</li>').join('');
             }
 
-            // Update booking button text if payments enabled
-            if (siteConfig.paymentsEnabled) {
-                document.querySelectorAll('.btn-book').forEach(btn => {
-                    btn.textContent = 'Book & Pay';
-                });
-            }
+            document.getElementById('firewood-price').textContent = currencySymbol() + addons.firewood.price;
 
-            // Initial guest availability check
             updateGuestAvailability();
         }
 
-        // --- Per-night price display (updates with guest count) ---
+        // --- Per-night price display ---
         function updatePerNightPrice(site) {
             const cfg = siteConfig[site];
             if (!cfg) return;
@@ -1543,38 +1918,7 @@
             document.getElementById(site + '-price').innerHTML = html;
         }
 
-        // --- Promo codes ---
-        function applyPromo(site) {
-            const input = document.getElementById(site + '-promo');
-            const msgEl = document.getElementById(site + '-promo-msg');
-            const code = input.value.trim().toUpperCase();
-
-            if (!code) {
-                appliedPromos[site] = null;
-                msgEl.textContent = '';
-                msgEl.className = 'promo-msg';
-                updatePriceBreakdown(site);
-                return;
-            }
-
-            const promos = siteConfig.promoCodes || {};
-            if (promos[code]) {
-                appliedPromos[site] = { code, ...promos[code] };
-                const label = promos[code].type === 'percent'
-                    ? promos[code].value + '% off'
-                    : currencySymbol() + promos[code].value + ' off';
-                msgEl.textContent = 'Code applied: ' + label;
-                msgEl.className = 'promo-msg valid';
-            } else {
-                appliedPromos[site] = null;
-                msgEl.textContent = 'Invalid promo code';
-                msgEl.className = 'promo-msg invalid';
-            }
-
-            updatePriceBreakdown(site);
-        }
-
-        // --- Price breakdown ---
+        // --- Price breakdown (on campsite card) ---
         function updatePriceBreakdown(site) {
             const checkin = getSearchDate('checkin');
             const checkout = getSearchDate('checkout');
@@ -1582,7 +1926,7 @@
             const breakdownEl = document.getElementById(site + '-breakdown');
 
             if (!checkin || !checkout || checkout <= checkin) {
-                breakdownEl.classList.remove('show');
+                breakdownEl.style.display = 'none';
                 return;
             }
 
@@ -1591,7 +1935,7 @@
 
             const nights = Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
             if (nights <= 0) {
-                breakdownEl.classList.remove('show');
+                breakdownEl.style.display = 'none';
                 return;
             }
 
@@ -1599,31 +1943,19 @@
             const baseCost = cfg.basePrice * nights;
             const extraGuests = Math.max(0, guestCount - 2);
             const extraCost = extraGuests * cfg.extraGuestFee * nights;
-            let subtotal = baseCost + extraCost;
+            const total = baseCost + extraCost;
 
             let html = '';
             html += '<div class="price-line"><span>' + nights + ' night' + (nights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + baseCost.toFixed(2) + '</span></div>';
 
             if (extraCost > 0) {
-                html += '<div class="price-line"><span>' + extraGuests + ' extra guest' + (extraGuests > 1 ? 's' : '') + ' x ' + sym + cfg.extraGuestFee + ' x ' + nights + ' night' + (nights > 1 ? 's' : '') + '</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
+                html += '<div class="price-line"><span>' + extraGuests + ' extra guest' + (extraGuests > 1 ? 's' : '') + '</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
             }
 
-            let discount = 0;
-            const promo = appliedPromos[site];
-            if (promo) {
-                if (promo.type === 'percent') {
-                    discount = subtotal * (promo.value / 100);
-                } else {
-                    discount = Math.min(promo.value, subtotal);
-                }
-                html += '<div class="price-line discount"><span>Promo: ' + promo.code + '</span><span>-' + sym + discount.toFixed(2) + '</span></div>';
-            }
-
-            const total = subtotal - discount;
             html += '<div class="price-line total"><span>Total</span><span>' + sym + total.toFixed(2) + '</span></div>';
 
             breakdownEl.innerHTML = html;
-            breakdownEl.classList.add('show');
+            breakdownEl.style.display = 'block';
         }
 
         // --- Date helpers ---
@@ -1677,7 +2009,7 @@
             }
         }
 
-        // --- Custom date picker (shared search bar) ---
+        // --- Custom date picker ---
         const dpState = {
             month: new Date().getMonth(),
             year: new Date().getFullYear(),
@@ -1743,9 +2075,6 @@
             const checkinVal = getSearchDate('checkin');
             const checkoutVal = getSearchDate('checkout');
 
-            // Union of blocked dates from all sites
-            const allBlocked = [...new Set([...bookedDates.samavas, ...bookedDates.chhaya])];
-
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const startDay = (firstDay + 6) % 7;
@@ -1768,7 +2097,6 @@
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
                 const isPast = dateStr < todayStr;
-                // Show blocked if BOTH sites block this date
                 const blockedBoth = bookedDates.samavas.includes(dateStr) && bookedDates.chhaya.includes(dateStr);
                 const isToday = dateStr === todayStr;
                 const isSelected = dateStr === checkinVal || dateStr === checkoutVal;
@@ -1843,62 +2171,295 @@
             }
         }
 
-        // --- Booking handler ---
-        async function handleBooking(event, site) {
-            event.preventDefault();
+        // --- Wizard navigation ---
+        function goToStep(step) {
+            if (step === 5 && currentStep === 4) {
+                const name = document.getElementById('guest-name').value.trim();
+                const email = document.getElementById('guest-email').value.trim();
+                const phone = document.getElementById('guest-phone').value.trim();
 
-            if (updateWarning(site)) return;
+                if (!name || !email || !phone) {
+                    alert('Please fill in all required fields.');
+                    return;
+                }
 
-            const form = event.target;
-            const confirmation = document.getElementById(site + '-confirmation');
-            const submitBtn = form.querySelector('.btn-book');
+                if (!email.includes('@')) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+            }
+
+            currentStep = step;
+            updateProgress(step);
+            updateStepVisibility();
+            updateSummaries();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateProgress(step) {
+            document.querySelectorAll('.progress-step').forEach(el => {
+                const s = parseInt(el.dataset.step);
+                el.classList.remove('active', 'completed');
+                if (s < step) {
+                    el.classList.add('completed');
+                } else if (s === step) {
+                    el.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.progress-line').forEach((line, i) => {
+                line.classList.toggle('completed', i < step - 1);
+            });
+        }
+
+        function updateStepVisibility() {
+            document.querySelectorAll('.wizard-step').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            if (currentStep === 2) {
+                document.getElementById('step-select').classList.add('active');
+            } else if (currentStep === 3) {
+                document.getElementById('step-addons').classList.add('active');
+            } else if (currentStep === 4) {
+                document.getElementById('step-details').classList.add('active');
+            } else if (currentStep === 5) {
+                document.getElementById('step-review').classList.add('active');
+                populateReview();
+            }
+        }
+
+        // --- Select site ---
+        function selectSite(site) {
+            selectedSite = site;
+            addons.firewood.qty = 0;
+            document.getElementById('firewood-qty').textContent = '0';
+
+            document.getElementById('addons-site-name').textContent = site.toUpperCase();
+            goToStep(3);
+        }
+
+        // --- Add-ons ---
+        function updateAddonQty(addon, delta) {
+            const maxQty = 5;
+            const current = addons[addon].qty;
+            const newQty = Math.max(0, Math.min(maxQty, current + delta));
+            addons[addon].qty = newQty;
+            document.getElementById(addon + '-qty').textContent = newQty;
+            updateSummaries();
+        }
+
+        // --- Promo codes ---
+        function applyPromo() {
+            const input = document.getElementById('guest-promo');
+            const msgEl = document.getElementById('promo-msg');
+            const code = input.value.trim().toUpperCase();
+
+            if (!code) {
+                appliedPromo = null;
+                msgEl.textContent = '';
+                msgEl.className = 'promo-msg';
+                updateSummaries();
+                return;
+            }
+
+            const promos = siteConfig.promoCodes || {};
+            if (promos[code]) {
+                appliedPromo = { code, ...promos[code] };
+                const label = promos[code].type === 'percent'
+                    ? promos[code].value + '% off'
+                    : currencySymbol() + promos[code].value + ' off';
+                msgEl.textContent = 'Code applied: ' + label;
+                msgEl.className = 'promo-msg valid';
+            } else {
+                appliedPromo = null;
+                msgEl.textContent = 'Invalid promo code';
+                msgEl.className = 'promo-msg invalid';
+            }
+
+            updateSummaries();
+        }
+
+        // --- Calculate totals ---
+        function calculateTotals() {
+            if (!selectedSite) return null;
 
             const checkin = getSearchDate('checkin');
             const checkout = getSearchDate('checkout');
             const guestCount = getSearchGuests();
-            const name = document.getElementById(site + '-name').value;
-            const email = document.getElementById(site + '-email').value;
-            const phone = document.getElementById(site + '-phone').value;
 
-            if (!checkin || !checkout) {
-                alert('Please select check-in and check-out dates from the search bar above.');
-                return;
-            }
+            if (!checkin || !checkout) return null;
 
-            const cfg = siteConfig[site];
+            const cfg = siteConfig[selectedSite];
+            if (!cfg) return null;
+
             const nights = Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
+            if (nights <= 0) return null;
+
+            const sym = currencySymbol();
             const baseCost = cfg.basePrice * nights;
             const extraGuests = Math.max(0, guestCount - 2);
             const extraCost = extraGuests * cfg.extraGuestFee * nights;
-            let subtotal = baseCost + extraCost;
-            let discount = 0;
-            const promo = appliedPromos[site];
-            if (promo) {
-                discount = promo.type === 'percent' ? subtotal * (promo.value / 100) : Math.min(promo.value, subtotal);
+
+            let addonsCost = 0;
+            for (const [key, addon] of Object.entries(addons)) {
+                addonsCost += addon.qty * addon.price;
             }
+
+            let subtotal = baseCost + extraCost + addonsCost;
+            let discount = 0;
+
+            if (appliedPromo) {
+                if (appliedPromo.type === 'percent') {
+                    discount = subtotal * (appliedPromo.value / 100);
+                } else {
+                    discount = Math.min(appliedPromo.value, subtotal);
+                }
+            }
+
             const total = subtotal - discount;
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
+            return {
+                nights,
+                baseCost,
+                extraGuests,
+                extraCost,
+                addonsCost,
+                subtotal,
+                discount,
+                total,
+                sym
+            };
+        }
+
+        // --- Update summaries ---
+        function updateSummaries() {
+            const totals = calculateTotals();
+            if (!totals) return;
+
+            const { nights, baseCost, extraGuests, extraCost, addonsCost, subtotal, discount, total, sym } = totals;
+            const cfg = siteConfig[selectedSite];
+
+            let addonsHtml = '';
+            addonsHtml += '<div class="summary-line"><span>' + nights + ' night' + (nights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + baseCost.toFixed(2) + '</span></div>';
+
+            if (extraCost > 0) {
+                addonsHtml += '<div class="summary-line"><span>' + extraGuests + ' extra guest' + (extraGuests > 1 ? 's' : '') + ' x ' + sym + cfg.extraGuestFee + ' x ' + nights + ' nights</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
+            }
+
+            if (addons.firewood.qty > 0) {
+                addonsHtml += '<div class="summary-line"><span>Firewood x ' + addons.firewood.qty + '</span><span>' + sym + (addons.firewood.qty * addons.firewood.price).toFixed(2) + '</span></div>';
+            }
+
+            addonsHtml += '<div class="summary-line total"><span>Total</span><span>' + sym + (baseCost + extraCost + addonsCost).toFixed(2) + '</span></div>';
+
+            document.getElementById('addons-summary-content').innerHTML = addonsHtml;
+
+            let detailsHtml = '';
+            detailsHtml += '<div class="summary-line"><span>' + selectedSite.toUpperCase() + ' - ' + nights + ' night' + (nights > 1 ? 's' : '') + '</span><span>' + sym + baseCost.toFixed(2) + '</span></div>';
+
+            if (extraCost > 0) {
+                detailsHtml += '<div class="summary-line"><span>Extra guests (' + extraGuests + ')</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
+            }
+
+            if (addons.firewood.qty > 0) {
+                detailsHtml += '<div class="summary-line"><span>Firewood x ' + addons.firewood.qty + '</span><span>' + sym + (addons.firewood.qty * addons.firewood.price).toFixed(2) + '</span></div>';
+            }
+
+            if (discount > 0) {
+                detailsHtml += '<div class="summary-line discount"><span>Promo: ' + appliedPromo.code + '</span><span>-' + sym + discount.toFixed(2) + '</span></div>';
+            }
+
+            detailsHtml += '<div class="summary-line total"><span>Total</span><span>' + sym + total.toFixed(2) + '</span></div>';
+
+            document.getElementById('details-summary-content').innerHTML = detailsHtml;
+        }
+
+        // --- Populate review page ---
+        function populateReview() {
+            const checkin = getSearchDate('checkin');
+            const checkout = getSearchDate('checkout');
+            const guestCount = getSearchGuests();
+
+            function formatDate(isoDate) {
+                const [y, m, d] = isoDate.split('-');
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return d + ' ' + months[parseInt(m) - 1] + ' ' + y;
+            }
+
+            document.getElementById('review-site').textContent = selectedSite.toUpperCase();
+            document.getElementById('review-checkin').textContent = formatDate(checkin);
+            document.getElementById('review-checkout').textContent = formatDate(checkout);
+            document.getElementById('review-guests').textContent = guestCount + ' guest' + (guestCount > 1 ? 's' : '');
+
+            document.getElementById('review-name').textContent = document.getElementById('guest-name').value;
+            document.getElementById('review-email').textContent = document.getElementById('guest-email').value;
+            document.getElementById('review-phone').textContent = document.getElementById('guest-phone').value;
+
+            const totals = calculateTotals();
+            if (!totals) return;
+
+            const { nights, baseCost, extraGuests, extraCost, discount, total, sym } = totals;
+            const cfg = siteConfig[selectedSite];
+
+            let breakdownHtml = '';
+            breakdownHtml += '<div class="summary-line"><span>' + nights + ' night' + (nights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + baseCost.toFixed(2) + '</span></div>';
+
+            if (extraCost > 0) {
+                breakdownHtml += '<div class="summary-line"><span>Extra guests (' + extraGuests + ')</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
+            }
+
+            if (addons.firewood.qty > 0) {
+                breakdownHtml += '<div class="summary-line"><span>Firewood x ' + addons.firewood.qty + '</span><span>' + sym + (addons.firewood.qty * addons.firewood.price).toFixed(2) + '</span></div>';
+            }
+
+            if (discount > 0) {
+                breakdownHtml += '<div class="summary-line discount"><span>Promo: ' + appliedPromo.code + '</span><span>-' + sym + discount.toFixed(2) + '</span></div>';
+            }
+
+            breakdownHtml += '<div class="summary-line total"><span>Total</span><span>' + sym + total.toFixed(2) + '</span></div>';
+
+            document.getElementById('review-breakdown').innerHTML = breakdownHtml;
+        }
+
+        // --- Submit booking ---
+        async function submitBooking() {
+            const btn = document.getElementById('btn-book');
+            const checkin = getSearchDate('checkin');
+            const checkout = getSearchDate('checkout');
+            const guestCount = getSearchGuests();
+
+            const totals = calculateTotals();
+            if (!totals) {
+                alert('Error calculating totals. Please try again.');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
 
             try {
                 const res = await fetch(WORKER_URL + '/bookings', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        site,
+                        site: selectedSite,
                         checkin,
                         checkout,
                         guests: guestCount,
-                        name,
-                        email,
-                        phone,
-                        nights,
-                        baseCost,
-                        extraCost,
-                        promoCode: promo ? promo.code : '',
-                        discount,
-                        total,
+                        name: document.getElementById('guest-name').value,
+                        email: document.getElementById('guest-email').value,
+                        phone: document.getElementById('guest-phone').value,
+                        nights: totals.nights,
+                        baseCost: totals.baseCost,
+                        extraCost: totals.extraCost,
+                        addons: {
+                            firewood: addons.firewood.qty
+                        },
+                        addonsCost: totals.addonsCost,
+                        promoCode: appliedPromo ? appliedPromo.code : '',
+                        discount: totals.discount,
+                        total: totals.total,
                         currency: siteConfig.currency || 'AUD',
                     }),
                 });
@@ -1906,20 +2467,20 @@
                 const result = await res.json();
                 if (result.success) {
                     if (result.checkout_url) {
-                        submitBtn.textContent = 'Redirecting to payment...';
+                        btn.textContent = 'Redirecting to payment...';
                         window.location.href = result.checkout_url;
                     } else {
-                        form.style.display = 'none';
-                        confirmation.classList.add('show');
+                        alert('Booking request submitted! We\'ll be in touch shortly.');
+                        window.location.reload();
                     }
                 } else {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = siteConfig.paymentsEnabled ? 'Book & Pay' : 'Request Booking';
+                    btn.disabled = false;
+                    btn.textContent = 'Book & Pay';
                     alert('Could not submit booking: ' + (result.error || 'Please try again.'));
                 }
             } catch (err) {
-                submitBtn.disabled = false;
-                submitBtn.textContent = siteConfig.paymentsEnabled ? 'Book & Pay' : 'Request Booking';
+                btn.disabled = false;
+                btn.textContent = 'Book & Pay';
                 alert('Connection error. Please try again.');
             }
         }
