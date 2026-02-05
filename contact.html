@@ -94,21 +94,14 @@
             margin: 1.5rem auto 0;
         }
 
-        /* Two-column contact layout */
-        .contact-wrapper {
-            max-width: 960px;
+        /* Contact form section */
+        .form-section {
+            max-width: 600px;
             margin: 0 auto;
-            padding: 2.5rem 2rem 4rem;
+            padding: 2.5rem 2rem 3rem;
             flex: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            align-items: start;
             animation: fadeIn 0.6s ease-out 0.2s both;
         }
-
-        /* Left: Form */
-        .contact-form-col {}
 
         .contact-form {
             background: #fff;
@@ -205,14 +198,18 @@
             color: var(--color-stone);
         }
 
-        /* Right: Map & info */
-        .contact-info-col {}
+        /* Full-width map + info section */
+        .location-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out 0.3s both;
+        }
 
         .map-container {
             width: 100%;
-            height: 450px;
-            border: 1px solid var(--color-light-stone);
-            margin-bottom: 1.5rem;
+            height: 100%;
+            min-height: 400px;
             position: relative;
             overflow: hidden;
         }
@@ -228,17 +225,19 @@
         }
 
         .info-card {
-            background: #fff;
-            border: 1px solid var(--color-light-stone);
-            padding: 1.5rem 2rem;
+            background: var(--color-forest);
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .info-card h3 {
             font-family: var(--font-serif);
             font-size: 1.3rem;
             font-weight: 500;
-            color: var(--color-forest);
-            margin-bottom: 1rem;
+            color: var(--color-cream);
+            margin-bottom: 1.5rem;
         }
 
         .info-item {
@@ -268,18 +267,18 @@
 
         .info-text {
             font-size: 0.9rem;
-            color: var(--color-charcoal);
+            color: var(--color-cream);
             line-height: 1.5;
         }
 
         .info-text a {
-            color: var(--color-forest);
+            color: var(--color-cream);
             text-decoration: none;
-            border-bottom: 1px solid var(--color-light-stone);
+            border-bottom: 1px solid var(--color-stone);
             transition: border-color 0.2s;
         }
 
-        .info-text a:hover { border-color: var(--color-forest); }
+        .info-text a:hover { border-color: var(--color-cream); }
 
         /* Footer */
         .footer {
@@ -310,17 +309,19 @@
         }
 
         @media (max-width: 768px) {
-            .contact-wrapper {
-                grid-template-columns: 1fr;
-                padding: 2rem 1.25rem 3rem;
-                gap: 2rem;
+            .form-section {
+                padding: 2rem 1.25rem 2.5rem;
             }
 
-            .contact-info-col { order: -1; }
-
-            .map-container { height: 320px; }
-
             .contact-form { padding: 1.5rem; }
+
+            .location-section {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container { min-height: 300px; }
+
+            .info-card { padding: 2rem 1.5rem; }
         }
     </style>
 </head>
@@ -339,89 +340,87 @@
         <div class="divider"></div>
     </div>
 
-    <div class="contact-wrapper">
-        <!-- Left: Form -->
-        <div class="contact-form-col">
-            <form class="contact-form" id="contact-form" onsubmit="handleSubmit(event)">
-                <div class="form-field">
-                    <label for="contact-name">Your name</label>
-                    <input type="text" id="contact-name" placeholder="Full name" required>
-                </div>
-                <div class="form-field">
-                    <label for="contact-email">Email</label>
-                    <input type="email" id="contact-email" placeholder="you@email.com" required>
-                </div>
-                <div class="form-field">
-                    <label for="contact-subject">Subject</label>
-                    <input type="text" id="contact-subject" placeholder="What is this about?">
-                </div>
-                <div class="form-field">
-                    <label for="contact-message">Message</label>
-                    <textarea id="contact-message" placeholder="Your message..." required></textarea>
-                </div>
-                <button type="submit" class="btn-send" id="btn-send">Send Message</button>
-            </form>
-
-            <div class="form-msg" id="form-success">
-                <p>Message sent!</p>
-                <span class="detail">Thank you for reaching out. We'll get back to you soon.</span>
+    <!-- Contact Form -->
+    <div class="form-section">
+        <form class="contact-form" id="contact-form" onsubmit="handleSubmit(event)">
+            <div class="form-field">
+                <label for="contact-name">Your name</label>
+                <input type="text" id="contact-name" placeholder="Full name" required>
             </div>
-
-            <div class="form-msg" id="form-error">
-                <span class="detail" id="error-text" style="color:#b44">Something went wrong. Please try again.</span>
+            <div class="form-field">
+                <label for="contact-email">Email</label>
+                <input type="email" id="contact-email" placeholder="you@email.com" required>
             </div>
+            <div class="form-field">
+                <label for="contact-subject">Subject</label>
+                <input type="text" id="contact-subject" placeholder="What is this about?">
+            </div>
+            <div class="form-field">
+                <label for="contact-message">Message</label>
+                <textarea id="contact-message" placeholder="Your message..." required></textarea>
+            </div>
+            <button type="submit" class="btn-send" id="btn-send">Send Message</button>
+        </form>
+
+        <div class="form-msg" id="form-success">
+            <p>Message sent!</p>
+            <span class="detail">Thank you for reaching out. We'll get back to you soon.</span>
         </div>
 
-        <!-- Right: Map & Info -->
-        <div class="contact-info-col">
-            <div class="map-container">
-                <iframe
-                    src="https://maps.google.com/maps?q=Ahana+Hillside,+Cairns,+Queensland,+Australia&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                    title="Ahana Hillside Location">
-                </iframe>
+        <div class="form-msg" id="form-error">
+            <span class="detail" id="error-text" style="color:#b44">Something went wrong. Please try again.</span>
+        </div>
+    </div>
+
+    <!-- Full-width Map & Info -->
+    <div class="location-section">
+        <div class="map-container">
+            <iframe
+                src="https://maps.google.com/maps?q=Ahana+Hillside,+Cairns,+Queensland,+Australia&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Ahana Hillside Location">
+            </iframe>
+        </div>
+
+        <div class="info-card">
+            <h3>Find Us</h3>
+
+            <div class="info-item">
+                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <div>
+                    <div class="info-label">Location</div>
+                    <div class="info-text">Cairns, Queensland, Australia</div>
+                </div>
             </div>
 
-            <div class="info-card">
-                <h3>Find Us</h3>
-
-                <div class="info-item">
-                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                    <div>
-                        <div class="info-label">Location</div>
-                        <div class="info-text">Cairns, Queensland, Australia</div>
+            <div class="info-item">
+                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <div>
+                    <div class="info-label">Bookings</div>
+                    <div class="info-text">
+                        <a href="campsites.html">View campsites &amp; availability</a>
                     </div>
                 </div>
+            </div>
 
-                <div class="info-item">
-                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="16" y1="2" x2="16" y2="6"></line>
-                        <line x1="8" y1="2" x2="8" y2="6"></line>
-                        <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <div>
-                        <div class="info-label">Bookings</div>
-                        <div class="info-text">
-                            <a href="campsites.html">View campsites &amp; availability</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="info-item">
-                    <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                    <div>
-                        <div class="info-label">Response time</div>
-                        <div class="info-text">We typically respond within 24 hours</div>
-                    </div>
+            <div class="info-item">
+                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <div>
+                    <div class="info-label">Response time</div>
+                    <div class="info-text">We typically respond within 24 hours</div>
                 </div>
             </div>
         </div>
