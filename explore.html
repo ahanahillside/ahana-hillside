@@ -104,6 +104,29 @@
             color: var(--color-charcoal);
         }
 
+        /* --- Section Jump Nav --- */
+        .section-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 2rem 2.5rem;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .section-nav a {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            padding-bottom: 4px;
+            border-bottom: 1.5px solid var(--color-light-stone);
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .section-nav a:hover {
+            border-color: var(--color-forest);
+        }
+
         /* --- Getting Here Banner --- */
         .getting-here-banner {
             padding: 3.5rem 2rem;
@@ -453,6 +476,12 @@
             .essentials {
                 padding: 0 1.25rem;
             }
+            .section-nav {
+                gap: 1.25rem;
+            }
+            .section-nav a {
+                font-size: 0.9rem;
+            }
             .getting-here-inner {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -503,6 +532,12 @@
         <p>Ahana Hillside sits in the green hills just outside Cairns, the gateway to Tropical North Queensland. From here, two UNESCO World Heritage sites are at your doorstep &mdash; the Great Barrier Reef and the Daintree Rainforest &mdash; along with hidden waterfalls, volcanic crater lakes, and some of Australia's most scenic drives.</p>
         <p>Whether you're here for adventure or simply to soak in the surroundings, there's something remarkable in every direction.</p>
     </div>
+
+    <div class="section-nav">
+        <a href="#whats-nearby">What's Nearby</a>
+        <a href="#local-essentials">Local Essentials</a>
+        <a href="#quick-guide">Quick Guide</a>
+    </div>
     </div>
 
     <!-- Getting Here Banner -->
@@ -522,7 +557,7 @@
         </div>
     </div>
 
-    <div class="section-warm highlights-wrapper">
+    <div class="section-warm highlights-wrapper" id="whats-nearby">
     <div class="highlights">
         <h2 class="highlights-section-title">What's Nearby</h2>
         <p class="highlights-section-sub">Explore the best of Tropical North Queensland, all within easy reach of Ahana Hillside</p>
@@ -598,7 +633,7 @@
                 <p class="highlight-label">The City</p>
                 <h2 class="highlight-title"><em>Cairns</em> City</h2>
                 <p class="highlight-desc">Cairns is a relaxed, tropical city with a vibrant waterfront. The Esplanade Lagoon offers free saltwater swimming in the heart of the city, surrounded by barbecue areas and parklands. Explore Rusty's Markets for tropical fruit and local produce on weekends, dine at the waterfront restaurants, or take a stroll along the Boardwalk through mangroves and mudflats where you can spot crocodiles and birdlife.</p>
-                <p class="highlight-distance">~20 min drive from Ahana Hillside</p>
+                <p class="highlight-distance">~35 min drive from Ahana Hillside</p>
             </div>
             <div>
                 <img id="img-cairns" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/cairns" alt="Cairns waterfront at dusk" class="highlight-image">
@@ -609,35 +644,35 @@
     </div>
 
     <!-- Local Essentials -->
-    <div class="section-cream essentials-wrapper">
+    <div class="section-cream essentials-wrapper" id="local-essentials">
         <div class="essentials">
             <h2 class="essentials-title">Local Essentials</h2>
             <p class="essentials-sub">Everything you need is just a short drive away</p>
             <div class="essentials-grid">
                 <div class="essential-card">
                     <div class="essential-icon">&#128722;</div>
-                    <h3>Smithfield Shopping Centre</h3>
-                    <p>Your nearest major shopping hub with Woolworths, specialty shops, cafes, and essential services. A convenient one-stop for groceries and supplies.</p>
-                    <p class="distance-note">~15 min drive from Ahana Hillside</p>
+                    <h3>IGA Supermarket</h3>
+                    <p>Your closest supermarket for groceries, fresh produce, and everyday essentials. Conveniently open late until midnight &mdash; perfect for last-minute supplies after a long day exploring.</p>
+                    <p class="distance-note">Closest supermarket to Ahana Hillside</p>
                 </div>
                 <div class="essential-card">
                     <div class="essential-icon">&#127822;</div>
-                    <h3>Freshwater &amp; Redlynch</h3>
-                    <p>Closer to Ahana, these suburbs offer a Coles supermarket, bakeries, takeaway options, and local convenience stores for quick essentials.</p>
-                    <p class="distance-note">~10 min drive from Ahana Hillside</p>
+                    <h3>Woolworths Gordonvale</h3>
+                    <p>A full-range Woolworths supermarket in nearby Gordonvale for a bigger shop. Stock up on everything you need for your stay, just a short drive up the Bruce Highway.</p>
+                    <p class="distance-note">Short drive north on the Bruce Highway</p>
                 </div>
                 <div class="essential-card">
-                    <div class="essential-icon">&#127963;</div>
-                    <h3>Cairns Central</h3>
-                    <p>The main shopping centre in the Cairns CBD with Woolworths, Coles, Kmart, Target, and a wide range of retail, dining, and services.</p>
-                    <p class="distance-note">~20 min drive from Ahana Hillside</p>
+                    <div class="essential-icon">&#127828;</div>
+                    <h3>Fast Food &amp; Dining</h3>
+                    <p>KFC and McDonald's are both available nearby for a quick and easy meal. Plus plenty of local cafes and dining options in Gordonvale and along the highway.</p>
+                    <p class="distance-note">KFC &amp; McDonald's within easy reach</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Quick Guide -->
-    <div class="section-white quick-guide-wrapper">
+    <div class="section-white quick-guide-wrapper" id="quick-guide">
     <div class="quick-guide">
         <h2 class="quick-guide-title">Quick Guide</h2>
         <div class="guide-grid">
@@ -699,6 +734,15 @@
         document.querySelector('.menu-overlay').classList.toggle('open');
         document.querySelector('.menu-panel').classList.toggle('open');
     }
+
+    // Smooth scroll for section nav links
+    document.querySelectorAll('.section-nav a').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var target = document.querySelector(this.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
 
     // Load custom explore images from worker (falls back to local defaults)
     (async function() {
