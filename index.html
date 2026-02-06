@@ -288,26 +288,146 @@
             border-color: var(--color-forest);
         }
 
-        .footer {
+        /* --- Scroll Arrow --- */
+        .scroll-arrow {
             position: absolute;
-            bottom: 1.5rem;
-            left: 0;
-            right: 0;
-            text-align: center;
-            font-size: 0.7rem;
-            color: var(--color-stone);
-            letter-spacing: 0.05em;
-            animation: fadeIn 1s ease-out 1.1s both;
+            bottom: 2.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            text-decoration: none;
+            animation: fadeIn 1s ease-out 1.2s both;
+            z-index: 2;
         }
 
-        .footer a {
+        .scroll-arrow-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+        }
+
+        .scroll-arrow svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--color-stone);
+            animation: bounceArrow 2s ease-in-out infinite;
+        }
+
+        @keyframes bounceArrow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        /* --- Neighbourhood Section --- */
+        .neighbourhood {
+            padding: 5rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .neighbourhood-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .neighbourhood-text {
+            padding-right: 1rem;
+        }
+
+        .neighbourhood-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .neighbourhood-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 400;
+            color: var(--color-forest);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .neighbourhood-title em {
+            font-style: italic;
+        }
+
+        .neighbourhood-divider {
+            width: 50px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin-bottom: 1.5rem;
+        }
+
+        .neighbourhood-desc {
+            font-size: 0.88rem;
+            line-height: 1.85;
+            color: var(--color-charcoal);
+            margin-bottom: 1.5rem;
+        }
+
+        .neighbourhood-link {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-forest);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .neighbourhood-link:hover {
+            color: var(--color-stone);
+            border-color: var(--color-stone);
+        }
+
+        .neighbourhood-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .neighbourhood-image-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, #d4e4d7 0%, #a8c5ae 50%, #7ba689 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        /* --- Site Footer (outside hero) --- */
+        .site-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            border-top: 1px solid var(--color-light-stone);
+        }
+
+        .site-footer a {
             color: var(--color-stone);
             text-decoration: none;
             margin: 0 0.5rem;
             transition: color 0.2s;
         }
 
-        .footer a:hover { color: var(--color-forest); }
+        .site-footer a:hover { color: var(--color-forest); }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -329,6 +449,19 @@
                 max-width: 280px;
                 text-align: center;
             }
+            .neighbourhood-inner {
+                grid-template-columns: 1fr;
+            }
+            .neighbourhood-text {
+                padding-right: 0;
+            }
+            .neighbourhood-image,
+            .neighbourhood-image-placeholder {
+                height: 280px;
+            }
+            .neighbourhood {
+                padding: 3rem 1.25rem;
+            }
         }
     </style>
 </head>
@@ -345,6 +478,7 @@
             <a href="index.html">Home</a>
             <a href="campsites.html">Campsites</a>
             <a href="gallery.html">Gallery</a>
+            <a href="explore.html">Explore</a>
             <a href="about.html">About Us</a>
             <a href="contact.html">Contact</a>
         </nav>
@@ -383,14 +517,46 @@
                 <a href="contact.html" class="contact-link">Have a question? Contact Us &rarr;</a>
             </div>
         </div>
-        <div class="footer">
-            <a href="about.html">About</a>
-            <a href="gallery.html">Gallery</a>
-            <a href="campsites.html">Campsites</a>
-            <a href="contact.html">Contact</a>
-            <a href="disclaimer.html">Disclaimer</a>
+
+        <a href="#neighbourhood" class="scroll-arrow" aria-label="Scroll to explore">
+            <span class="scroll-arrow-label">Explore</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </a>
+    </section>
+
+    <!-- Neighbourhood / Explore Section -->
+    <section class="neighbourhood" id="neighbourhood">
+        <div class="neighbourhood-inner">
+            <div class="neighbourhood-text">
+                <p class="neighbourhood-label">The Neighbourhood</p>
+                <h2 class="neighbourhood-title"><em>Explore</em> Cairns &amp; Surroundings</h2>
+                <div class="neighbourhood-divider"></div>
+                <p class="neighbourhood-desc">
+                    Nestled in the hills above Cairns, Ahana Hillside places you at the doorstep of Tropical North Queensland's most extraordinary natural wonders. From ancient rainforests and cascading waterfalls to the Great Barrier Reef, this corner of Australia offers experiences found nowhere else on Earth.
+                </p>
+                <p class="neighbourhood-desc">
+                    Spend your mornings chasing waterfalls at Crystal Cascades or Josephine Falls, your afternoons snorkelling the reef, and your evenings watching the sunset from your hillside retreat.
+                </p>
+                <a href="explore.html" class="neighbourhood-link">More info</a>
+            </div>
+            <div>
+                <div class="neighbourhood-image-placeholder">Tropical North Queensland</div>
+            </div>
         </div>
     </section>
+
+    <footer class="site-footer">
+        <a href="about.html">About</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="explore.html">Explore</a>
+        <a href="campsites.html">Campsites</a>
+        <a href="contact.html">Contact</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <br><br>
+        &copy; 2026 Ahana Hillside
+    </footer>
 
     <script>
     function toggleMenu() {
@@ -398,6 +564,12 @@
         document.querySelector('.menu-overlay').classList.toggle('open');
         document.querySelector('.menu-panel').classList.toggle('open');
     }
+
+    // Smooth scroll for arrow
+    document.querySelector('.scroll-arrow').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('neighbourhood').scrollIntoView({ behavior: 'smooth' });
+    });
 
     // Load custom homepage background if set
     (async function() {
