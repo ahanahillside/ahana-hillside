@@ -722,6 +722,87 @@ export default {
       }
     }
 
+    // --- Homepage background endpoints ---
+
+    // GET /homepage-bg/info — public, returns background metadata
+    if (path === '/homepage-bg/info' && request.method === 'GET') {
+      try {
+        const meta = await env.CONFIG.get('homepage-bg-meta', 'json');
+        if (meta) return jsonResponse({ exists: true, mediaType: meta.mediaType, contentType: meta.contentType }, 200, origin, 'public, max-age=60');
+        return jsonResponse({ exists: false }, 200, origin, 'public, max-age=60');
+      } catch (e) {
+        return jsonResponse({ exists: false }, 200, origin);
+      }
+    }
+
+    // GET /homepage-bg — public, serves the background file
+    if (path === '/homepage-bg' && request.method === 'GET') {
+      try {
+        const { value, metadata } = await env.CONFIG.getWithMetadata('homepage-bg-file', 'arrayBuffer');
+        if (!value) return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+        return new Response(value, {
+          status: 200,
+          headers: {
+            'Content-Type': metadata?.contentType || 'image/jpeg',
+            'Cache-Control': 'public, max-age=86400',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      }
+    }
+
+    // POST /homepage-bg/upload — admin only, upload a new homepage background
+    if (path === '/homepage-bg/upload' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const formData = await request.formData();
+        const file = formData.get('file');
+
+        if (!file || !(file instanceof File)) {
+          return jsonResponse({ error: 'No file provided' }, 400, origin);
+        }
+
+        const isImage = GALLERY_IMAGE_TYPES.includes(file.type);
+        const isVideo = GALLERY_VIDEO_TYPES.includes(file.type);
+        if (!isImage && !isVideo) {
+          return jsonResponse({ error: 'Only JPEG, PNG, WebP images and MP4, WebM, MOV videos are allowed' }, 400, origin);
+        }
+
+        const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        if (file.size > maxSize) {
+          return jsonResponse({ error: isVideo ? 'Video must be under 50MB' : 'Image must be under 5MB' }, 400, origin);
+        }
+
+        const arrayBuffer = await file.arrayBuffer();
+        const mediaType = isVideo ? 'video' : 'image';
+
+        await env.CONFIG.put('homepage-bg-file', arrayBuffer, {
+          metadata: { contentType: file.type, mediaType, name: file.name },
+        });
+        await env.CONFIG.put('homepage-bg-meta', JSON.stringify({
+          mediaType, contentType: file.type, name: file.name, size: file.size, uploadedAt: new Date().toISOString(),
+        }));
+
+        return jsonResponse({ success: true, mediaType }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Upload failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // POST /homepage-bg/delete — admin only, remove custom background
+    if (path === '/homepage-bg/delete' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        await env.CONFIG.delete('homepage-bg-file');
+        await env.CONFIG.delete('homepage-bg-meta');
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);
+      }
+    }
+
     // --- POST /bookings — public, creates a new booking ---
     if (path === '/bookings' && request.method === 'POST') {
       try {

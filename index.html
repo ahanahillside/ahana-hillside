@@ -169,7 +169,8 @@
             z-index: -1;
         }
 
-        .hero-image {
+        .hero-image,
+        .hero-video {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -354,8 +355,9 @@
     </div>
 
     <section class="hero">
-        <div class="hero-background">
+        <div class="hero-background" id="hero-bg">
             <img
+                id="hero-image"
                 src="images/homepage/hero.jpg"
                 alt="Lush tropical rainforest hillside in Cairns, Australia"
                 class="hero-image"
@@ -396,6 +398,33 @@
         document.querySelector('.menu-overlay').classList.toggle('open');
         document.querySelector('.menu-panel').classList.toggle('open');
     }
+
+    // Load custom homepage background if set
+    (async function() {
+        try {
+            const res = await fetch('https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg/info');
+            const data = await res.json();
+            if (!data.exists) return;
+
+            const bgContainer = document.getElementById('hero-bg');
+            const heroImg = document.getElementById('hero-image');
+            const bgUrl = 'https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg';
+
+            if (data.mediaType === 'video') {
+                const video = document.createElement('video');
+                video.className = 'hero-video';
+                video.src = bgUrl;
+                video.autoplay = true;
+                video.muted = true;
+                video.loop = true;
+                video.playsInline = true;
+                video.setAttribute('playsinline', '');
+                heroImg.replaceWith(video);
+            } else {
+                heroImg.src = bgUrl;
+            }
+        } catch (e) {}
+    })();
     </script>
 </body>
 </html>
