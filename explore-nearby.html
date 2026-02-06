@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>What's Nearby — Ahana Hillside</title>
-    <meta name="description" content="Explore what's near Ahana Hillside — the Great Barrier Reef, Daintree Rainforest, waterfalls, beaches, and more in Tropical North Queensland.">
+    <meta name="description" content="Explore what's near Ahana Hillside — from Babinda Boulders minutes away to the Great Barrier Reef and Daintree Rainforest in Tropical North Queensland.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@
 
         body {
             font-family: var(--font-sans);
-            background-color: var(--color-cream);
+            background-color: #fff;
             color: var(--color-charcoal);
             line-height: 1.7;
             overflow-x: hidden;
@@ -64,7 +64,7 @@
         /* --- Page Intro --- */
         .page-intro {
             text-align: center;
-            padding: 1rem 2rem 2rem;
+            padding: 1rem 2rem 0.5rem;
         }
         .page-intro h1 {
             font-family: var(--font-serif);
@@ -88,64 +88,239 @@
             margin: 1rem auto 0;
         }
 
-        /* --- Highlight Cards --- */
-        .highlights {
-            max-width: 900px;
-            margin: 0 auto;
+        /* --- Journey Intro --- */
+        .journey-intro {
+            text-align: center;
             padding: 2rem 2rem 1rem;
+            max-width: 640px;
+            margin: 0 auto;
         }
-        .highlight-card {
+        .journey-intro p {
+            font-size: 0.88rem;
+            line-height: 1.85;
+            color: var(--color-charcoal);
+        }
+
+        /* --- Journey Timeline --- */
+        .journey {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem 2rem 2rem;
+            position: relative;
+        }
+
+        /* Vertical connecting line */
+        .journey::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                var(--color-light-stone) 3%,
+                var(--color-light-stone) 97%,
+                transparent 100%
+            );
+            z-index: 0;
+        }
+
+        /* --- Journey Stop --- */
+        .journey-stop {
+            position: relative;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .journey-stop.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .journey-stop:last-child {
+            margin-bottom: 1rem;
+        }
+
+        /* Distance marker on timeline */
+        .journey-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        .journey-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--color-forest);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.45rem 1rem;
+            border-radius: 20px;
+        }
+        .journey-badge svg {
+            width: 14px;
+            height: 14px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
+        /* Card layout */
+        .journey-card {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            align-items: center;
-            margin-bottom: 3.5rem;
-            padding-bottom: 3.5rem;
-            border-bottom: 1px solid var(--color-light-stone);
+            gap: 0;
+            background: var(--color-cream);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
         }
-        .highlight-card:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        .highlight-card.reverse {
+        .journey-stop:nth-child(even) .journey-card {
             direction: rtl;
         }
-        .highlight-card.reverse > * {
+        .journey-stop:nth-child(even) .journey-card > * {
             direction: ltr;
         }
-        .highlight-image, .highlight-video {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 6px;
+
+        .journey-image-wrap {
+            position: relative;
+            overflow: hidden;
         }
-        .highlight-label {
-            font-size: 0.7rem;
+        .journey-image, .journey-video {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .journey-card:hover .journey-image,
+        .journey-card:hover .journey-video {
+            transform: scale(1.03);
+        }
+
+        /* Step number overlay on image */
+        .journey-step {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            width: 36px;
+            height: 36px;
+            background: var(--color-forest);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        .journey-stop:nth-child(even) .journey-step {
+            left: auto;
+            right: 1rem;
+        }
+
+        .journey-content {
+            padding: 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .journey-label {
+            font-size: 0.68rem;
             font-weight: 500;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--color-stone);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
-        .highlight-content h2 {
+        .journey-content h2 {
             font-family: var(--font-serif);
             font-size: clamp(1.4rem, 3vw, 1.8rem);
             font-weight: 500;
             color: var(--color-forest);
             margin-bottom: 0.75rem;
+            line-height: 1.2;
         }
-        .highlight-content p {
-            font-size: 0.88rem;
-            line-height: 1.8;
+        .journey-content p {
+            font-size: 0.86rem;
+            line-height: 1.85;
             color: var(--color-charcoal);
             margin-bottom: 1rem;
         }
-        .highlight-distance {
-            font-size: 0.78rem;
-            color: var(--color-stone);
+        .journey-detail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .journey-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.72rem;
+            color: var(--color-forest);
+            background: rgba(44, 62, 45, 0.08);
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .journey-tag svg {
+            width: 12px;
+            height: 12px;
+            stroke: var(--color-forest);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* --- End of Journey --- */
+        .journey-end {
+            text-align: center;
+            padding: 2rem 2rem 3rem;
+            position: relative;
+            z-index: 2;
+        }
+        .journey-end-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--color-stone);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+        }
+        .journey-end p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
             font-style: italic;
-            line-height: 1.6;
+            color: var(--color-stone);
+            max-width: 400px;
+            margin: 0 auto 1.5rem;
+        }
+        .journey-cta {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-forest);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .journey-cta:hover {
+            color: var(--color-stone);
+            border-color: var(--color-stone);
         }
 
         /* --- Footer --- */
@@ -183,15 +358,32 @@
         .menu-footer-nav a { color: var(--color-stone); text-decoration: none; transition: color 0.2s; }
         .menu-footer-nav a:hover { color: var(--color-forest); }
 
+        /* --- Responsive --- */
         @media (max-width: 768px) {
-            .highlight-card {
+            .journey::before { display: none; }
+            .journey-card {
                 grid-template-columns: 1fr;
             }
-            .highlight-card.reverse {
+            .journey-stop:nth-child(even) .journey-card {
                 direction: ltr;
             }
-            .highlight-image, .highlight-video {
+            .journey-image, .journey-video {
+                min-height: 220px;
                 height: 220px;
+            }
+            .journey-step {
+                top: 0.75rem;
+                left: 0.75rem;
+            }
+            .journey-stop:nth-child(even) .journey-step {
+                left: 0.75rem;
+                right: auto;
+            }
+            .journey-content {
+                padding: 1.5rem;
+            }
+            .journey-stop {
+                margin-bottom: 2.5rem;
             }
         }
     </style>
@@ -224,90 +416,213 @@
 
     <div class="page-intro">
         <h1>What's Nearby</h1>
-        <p>Explore the best of Tropical North Queensland</p>
+        <p>Your journey through Tropical North Queensland</p>
         <div class="divider"></div>
     </div>
 
-    <div class="highlights">
+    <div class="journey-intro">
+        <p>From ancient swimming holes just minutes down the road to the world-famous Great Barrier Reef and the oldest rainforest on Earth, here's what awaits &mdash; starting from your doorstep and radiating outward.</p>
+    </div>
 
-        <!-- 1. Great Barrier Reef -->
-        <div class="highlight-card">
-            <div class="highlight-content">
-                <div class="highlight-label">World Heritage</div>
-                <h2><em>Great Barrier</em> Reef</h2>
-                <p>Just off the coast lies the world's largest coral reef system &mdash; a kaleidoscope of marine life, vibrant coral gardens, and crystal-clear waters. Whether you snorkel, dive, or explore by glass-bottom boat, the reef is an unforgettable experience and one of the main reasons visitors come to Tropical North Queensland.</p>
-                <div class="highlight-distance">Day trips depart daily from Cairns Marina &middot; ~45 min by boat</div>
+    <div class="journey">
+
+        <!-- Stop 1: Waterfalls & Swimming Holes -->
+        <div class="journey-stop">
+            <div class="journey-marker">
+                <div class="journey-badge">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-10-10h4m12 0h4"/></svg>
+                    Closest to You
+                </div>
             </div>
-            <div>
-                <img id="img-reef" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/reef" alt="Great Barrier Reef" class="highlight-image" loading="lazy">
+            <div class="journey-card">
+                <div class="journey-image-wrap">
+                    <span class="journey-step">1</span>
+                    <img id="img-waterfall" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/waterfall" alt="Waterfalls and swimming holes" class="journey-image" loading="lazy">
+                </div>
+                <div class="journey-content">
+                    <div class="journey-label">Natural Wonders</div>
+                    <h2>Waterfalls &amp; Swimming Holes</h2>
+                    <p>Some of Australia's most spectacular waterfalls and swimming holes are right on your doorstep. The ancient Babinda Boulders are just a short drive south &mdash; a sacred place of mossy granite and crystal-clear pools. A little further, Josephine Falls cascades down natural granite slides surrounded by lush rainforest. Head north towards Cairns for Crystal Cascades, a local favourite hidden in the hills.</p>
+                    <div class="journey-detail">
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Babinda Boulders ~15 min
+                        </span>
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Josephine Falls ~30 min
+                        </span>
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Crystal Cascades ~40 min
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 2. Daintree Rainforest (reverse) -->
-        <div class="highlight-card reverse">
-            <div class="highlight-content">
-                <div class="highlight-label">Ancient Rainforest</div>
-                <h2>Daintree Rainforest</h2>
-                <p>The Daintree is the oldest continuously surviving tropical rainforest on Earth &mdash; over 180 million years old. Drive north through lush canopy, cross the Daintree River by ferry, and discover Cape Tribulation where the rainforest meets the reef. Walking trails, wildlife spotting, and pristine beaches await.</p>
-                <div class="highlight-distance">~2 hours drive north of Ahana Hillside</div>
+        <!-- Stop 2: Cairns City -->
+        <div class="journey-stop">
+            <div class="journey-marker">
+                <div class="journey-badge">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    ~35 min drive
+                </div>
             </div>
-            <div>
-                <img id="img-rainforest" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/rainforest" alt="Daintree Rainforest" class="highlight-image" loading="lazy">
-            </div>
-        </div>
-
-        <!-- 3. Waterfalls & Swimming Holes -->
-        <div class="highlight-card">
-            <div class="highlight-content">
-                <div class="highlight-label">Natural Wonders</div>
-                <h2>Waterfalls &amp; Swimming Holes</h2>
-                <p>Tropical North Queensland is home to some of Australia's most beautiful waterfalls and natural swimming holes. Cool off at Crystal Cascades, marvel at the tiered Josephine Falls, swim among the ancient Babinda Boulders, or photograph the iconic curtain of Millaa Millaa Falls surrounded by lush rainforest.</p>
-                <div class="highlight-distance">Crystal Cascades ~20 min &middot; Josephine Falls ~1 hr &middot; Babinda Boulders ~50 min</div>
-            </div>
-            <div>
-                <img id="img-waterfall" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/waterfall" alt="Waterfalls and swimming holes" class="highlight-image" loading="lazy">
-            </div>
-        </div>
-
-        <!-- 4. Atherton Tablelands (reverse) -->
-        <div class="highlight-card reverse">
-            <div class="highlight-content">
-                <div class="highlight-label">Highlands</div>
-                <h2>Atherton Tablelands</h2>
-                <p>Rise above the coast to the cool, green highlands of the Atherton Tablelands. Discover volcanic crater lakes like Lake Barrine and Lake Eacham, walk through the curtain of the famous Cathedral Fig Tree, spot wild platypus at dawn, and wander the charming village of Yungaburra with its heritage markets and relaxed pace.</p>
-                <div class="highlight-distance">~1 hour drive from Ahana Hillside via Gillies Highway</div>
-            </div>
-            <div>
-                <img id="img-tablelands" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/tablelands" alt="Atherton Tablelands" class="highlight-image" loading="lazy">
+            <div class="journey-card">
+                <div class="journey-image-wrap">
+                    <span class="journey-step">2</span>
+                    <img id="img-cairns" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/cairns" alt="Cairns City" class="journey-image" loading="lazy">
+                </div>
+                <div class="journey-content">
+                    <div class="journey-label">The City</div>
+                    <h2>Cairns City</h2>
+                    <p>The vibrant gateway to Tropical North Queensland. A straight drive north along the Bruce Highway brings you to the Cairns Esplanade and its famous free public Lagoon, the bustling Rusty's Markets overflowing with tropical fruit and local crafts, and waterfront dining along the Boardwalk. With a laid-back tropical atmosphere, excellent restaurants, and the departure point for reef and island tours, the city makes for a great day out.</p>
+                    <div class="journey-detail">
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            ~35 min via Bruce Hwy
+                        </span>
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                            Rusty's Markets &middot; Esplanade Lagoon
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 5. Beaches & Islands -->
-        <div class="highlight-card">
-            <div class="highlight-content">
-                <div class="highlight-label">Coastal</div>
-                <h2>Beaches &amp; Islands</h2>
-                <p>From the palm-lined shores of Palm Cove and the family-friendly sands of Trinity Beach to the coral-fringed Fitzroy Island and the tropical paradise of Green Island, the coastline near Cairns offers something for every beach lover. Swim, kayak, snorkel, or simply relax with views across the Coral Sea.</p>
-                <div class="highlight-distance">Palm Cove ~25 min &middot; Fitzroy Island ~45 min by ferry</div>
+        <!-- Stop 3: Atherton Tablelands -->
+        <div class="journey-stop">
+            <div class="journey-marker">
+                <div class="journey-badge">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    ~1 hour drive
+                </div>
             </div>
-            <div>
-                <img id="img-beach" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/beach" alt="Beaches and islands" class="highlight-image" loading="lazy">
+            <div class="journey-card">
+                <div class="journey-image-wrap">
+                    <span class="journey-step">3</span>
+                    <img id="img-tablelands" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/tablelands" alt="Atherton Tablelands" class="journey-image" loading="lazy">
+                </div>
+                <div class="journey-content">
+                    <div class="journey-label">Highlands</div>
+                    <h2>Atherton Tablelands</h2>
+                    <p>Rise above the coast via the scenic Gillies Highway &mdash; which begins just 10 minutes north at Gordonvale &mdash; and climb into the cool, green highlands. Discover volcanic crater lakes like Lake Barrine and Lake Eacham, walk beneath the colossal Cathedral Fig Tree, spot wild platypus at dawn in the streams around Yungaburra, and explore charming highland villages with heritage markets and local produce.</p>
+                    <div class="journey-detail">
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            ~1 hr via Gillies Hwy
+                        </span>
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                            Crater Lakes &middot; Cathedral Fig
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- 6. Cairns City (reverse) -->
-        <div class="highlight-card reverse">
-            <div class="highlight-content">
-                <div class="highlight-label">The City</div>
-                <h2>Cairns City</h2>
-                <p>Cairns is the vibrant gateway to Tropical North Queensland. Stroll along the Esplanade and take a dip in the free public Lagoon, browse the fresh produce and local crafts at Rusty's Markets, or enjoy waterfront dining along the Boardwalk. With a laid-back tropical atmosphere and plenty to see and do, the city makes for a great day out.</p>
-                <div class="highlight-distance">~35 min drive from Ahana Hillside</div>
+        <!-- Stop 4: Beaches & Islands -->
+        <div class="journey-stop">
+            <div class="journey-marker">
+                <div class="journey-badge">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    ~55 min – 1.5 hrs
+                </div>
             </div>
-            <div>
-                <img id="img-cairns" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/cairns" alt="Cairns City" class="highlight-image" loading="lazy">
+            <div class="journey-card">
+                <div class="journey-image-wrap">
+                    <span class="journey-step">4</span>
+                    <img id="img-beach" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/beach" alt="Beaches and islands" class="journey-image" loading="lazy">
+                </div>
+                <div class="journey-content">
+                    <div class="journey-label">Coastal</div>
+                    <h2>Beaches &amp; Islands</h2>
+                    <p>From the palm-lined shores of Palm Cove and the family-friendly sands of Trinity Beach to the coral-fringed Fitzroy Island and tropical paradise of Green Island, the coastline north of Cairns offers something for every beach lover. Swim, kayak, snorkel straight off the beach, or simply relax with views across the Coral Sea.</p>
+                    <div class="journey-detail">
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Palm Cove ~55 min
+                        </span>
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            Fitzroy Island ~45 min ferry from Cairns
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
+        <!-- Stop 5: Great Barrier Reef -->
+        <div class="journey-stop">
+            <div class="journey-marker">
+                <div class="journey-badge">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Day Trip from Cairns
+                </div>
+            </div>
+            <div class="journey-card">
+                <div class="journey-image-wrap">
+                    <span class="journey-step">5</span>
+                    <img id="img-reef" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/reef" alt="Great Barrier Reef" class="journey-image" loading="lazy">
+                </div>
+                <div class="journey-content">
+                    <div class="journey-label">World Heritage</div>
+                    <h2><em>Great Barrier</em> Reef</h2>
+                    <p>Just off the coast lies the world's largest coral reef system &mdash; a kaleidoscope of marine life, vibrant coral gardens, and crystal-clear waters. Day trips depart daily from the Cairns Reef Fleet Terminal. Whether you snorkel, dive, or explore by glass-bottom boat, the reef is an unforgettable experience and one of the main reasons visitors come to Tropical North Queensland.</p>
+                    <div class="journey-detail">
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            ~35 min drive to Cairns + ~45 min boat
+                        </span>
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                            Snorkelling &middot; Diving &middot; Glass-bottom boats
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stop 6: Daintree Rainforest -->
+        <div class="journey-stop">
+            <div class="journey-marker">
+                <div class="journey-badge">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    ~2.5 hours drive
+                </div>
+            </div>
+            <div class="journey-card">
+                <div class="journey-image-wrap">
+                    <span class="journey-step">6</span>
+                    <img id="img-rainforest" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/rainforest" alt="Daintree Rainforest" class="journey-image" loading="lazy">
+                </div>
+                <div class="journey-content">
+                    <div class="journey-label">Ancient Rainforest</div>
+                    <h2>Daintree Rainforest</h2>
+                    <p>The Daintree is the oldest continuously surviving tropical rainforest on Earth &mdash; over 180 million years old. Drive north through Cairns and along the coast, cross the Daintree River by cable ferry, and discover Cape Tribulation where the rainforest meets the reef. Walking trails wind through the canopy, crocodiles cruise the river, and pristine beaches stretch between the jungle and the sea.</p>
+                    <div class="journey-detail">
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            ~2.5 hrs north via Captain Cook Hwy
+                        </span>
+                        <span class="journey-tag">
+                            <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                            Cape Tribulation &middot; Daintree River
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- End of journey -->
+    <div class="journey-end">
+        <div class="journey-end-dot"></div>
+        <p>Every adventure begins at Ahana Hillside</p>
+        <a href="explore.html" class="journey-cta">Back to Explore &rarr;</a>
     </div>
 
     <footer class="site-footer">
@@ -328,6 +643,24 @@
         document.querySelector('.menu-panel').classList.toggle('open');
     }
 
+    // Scroll-reveal: animate journey stops as they enter viewport
+    (function() {
+        const stops = document.querySelectorAll('.journey-stop');
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        stops.forEach(function(stop, i) {
+            stop.style.transitionDelay = '0.1s';
+            observer.observe(stop);
+        });
+    })();
+
     // Load custom explore images from worker; swap img to video if mediaType is video
     (async function() {
         try {
@@ -337,12 +670,12 @@
             const slots = data.slots || {};
 
             const slotMap = {
-                reef: 'img-reef',
-                rainforest: 'img-rainforest',
                 waterfall: 'img-waterfall',
+                cairns: 'img-cairns',
                 tablelands: 'img-tablelands',
                 beach: 'img-beach',
-                cairns: 'img-cairns'
+                reef: 'img-reef',
+                rainforest: 'img-rainforest'
             };
 
             for (const [slot, elId] of Object.entries(slotMap)) {
@@ -354,7 +687,7 @@
 
                 if (slots[slot].mediaType === 'video') {
                     const video = document.createElement('video');
-                    video.className = 'highlight-video';
+                    video.className = 'journey-video';
                     video.src = url;
                     video.autoplay = true;
                     video.muted = true;
