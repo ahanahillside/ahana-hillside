@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery — Ahana Hillside</title>
+    <meta name="description" content="Photos of Ahana Hillside — campsites, rainforest views, and the Cairns tropical landscape.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #F5F2EE;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2.5rem 2rem 1rem;
+        }
+        .header a { text-decoration: none; }
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            letter-spacing: 0.02em;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--color-forest); }
+
+        .page-intro {
+            text-align: center;
+            padding: 1rem 2rem 2rem;
+        }
+        .page-intro h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+        .page-intro p {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--color-stone);
+        }
+        .divider {
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 1rem auto 0;
+        }
+
+        .gallery-content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem 2rem 4rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .gallery-item {
+            aspect-ratio: 4 / 3;
+            overflow: hidden;
+            background: var(--color-light-stone);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-stone);
+        }
+
+        .gallery-empty p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-empty span {
+            font-size: 0.8rem;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lightbox-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+
+        .lightbox-btn:hover { background: rgba(255,255,255,0.3); }
+        .lightbox-prev { left: 1rem; }
+        .lightbox-next { right: 1rem; }
+
+        .site-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            border-top: 1px solid var(--color-light-stone);
+        }
+        .site-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: color 0.2s;
+        }
+        .site-footer a:hover { color: var(--color-forest); }
+
+        /* --- Hamburger Menu --- */
+        .menu-btn { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; width: 44px; height: 44px; background: rgba(255,255,255,0.9); border: 1px solid var(--color-light-stone); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; transition: background 0.3s; backdrop-filter: blur(4px); }
+        .menu-btn:hover { background: #fff; }
+        .menu-btn span { display: block; width: 18px; height: 2px; background: var(--color-forest); transition: transform 0.3s, opacity 0.3s; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .menu-overlay.open { opacity: 1; visibility: visible; }
+        .menu-panel { position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100%; background: #fff; z-index: 999; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 5rem 2rem 2rem; }
+        .menu-panel.open { right: 0; }
+        .menu-panel nav a { display: block; font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; color: var(--color-forest); text-decoration: none; padding: 0.75rem 0; border-bottom: 1px solid var(--color-light-stone); transition: color 0.2s, padding-left 0.2s; }
+        .menu-panel nav a:hover { padding-left: 0.5rem; color: var(--color-stone); }
+        .menu-panel nav a:last-child { border-bottom: none; }
+        .menu-footer-nav { margin-top: auto; font-size: 0.75rem; color: var(--color-stone); line-height: 1.8; }
+        .menu-footer-nav a { color: var(--color-stone); text-decoration: none; transition: color 0.2s; }
+        .menu-footer-nav a:hover { color: var(--color-forest); }
+
+        @media (max-width: 768px) {
+            .gallery-grid { grid-template-columns: 1fr 1fr; }
+            .gallery-content { padding: 1rem 1rem 3rem; }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <div class="menu-panel">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="menu-footer-nav">
+            <a href="disclaimer.html">Disclaimer</a> &middot; <a href="contact.html">Get in Touch</a><br>
+            &copy; 2026 Ahana Hillside
+        </div>
+    </div>
+
+    <div class="header">
+        <a href="index.html">
+            <div class="header-logo">Ahana Hillside</div>
+        </a>
+        <br>
+        <a href="index.html" class="back-link">&larr; Back to home</a>
+    </div>
+
+    <div class="page-intro">
+        <h1>Gallery</h1>
+        <p>Snapshots from the hillside</p>
+        <div class="divider"></div>
+    </div>
+
+    <div class="gallery-content">
+        <div class="gallery-grid" id="gallery-grid">
+            <!-- Images loaded dynamically from worker -->
+        </div>
+        <div class="gallery-empty" id="gallery-empty" style="display:none">
+            <p>Photos coming soon</p>
+            <span>We're preparing our gallery. Check back shortly.</span>
+        </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-btn lightbox-prev" onclick="navLightbox(-1)">&lsaquo;</button>
+        <img id="lightbox-img" src="" alt="">
+        <button class="lightbox-btn lightbox-next" onclick="navLightbox(1)">&rsaquo;</button>
+    </div>
+
+    <footer class="site-footer">
+        <a href="about.html">About</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="campsites.html">Campsites</a>
+        <a href="contact.html">Contact</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <br><br>
+        &copy; 2026 Ahana Hillside
+    </footer>
+
+    <script>
+    const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+    let galleryImages = [];
+    let currentIndex = 0;
+
+    async function loadGallery() {
+        const grid = document.getElementById('gallery-grid');
+        const empty = document.getElementById('gallery-empty');
+
+        try {
+            // Load images from both sites
+            const res = await fetch(WORKER_URL + '/config');
+            const config = await res.json();
+
+            // Try loading images for both campsites
+            const sites = ['samavas', 'chhaya'];
+            for (const site of sites) {
+                try {
+                    const imgRes = await fetch(WORKER_URL + '/images/' + site);
+                    const data = await imgRes.json();
+                    if (data.images && data.images.length > 0) {
+                        data.images.forEach(img => {
+                            galleryImages.push({ url: img.url, alt: site + ' campsite' });
+                        });
+                    }
+                } catch (e) {}
+            }
+
+            if (galleryImages.length === 0) {
+                empty.style.display = 'block';
+                return;
+            }
+
+            grid.innerHTML = galleryImages.map((img, i) =>
+                '<div class="gallery-item" onclick="openLightbox(' + i + ')">' +
+                '<img src="' + img.url + '" alt="' + img.alt + '" loading="lazy">' +
+                '</div>'
+            ).join('');
+        } catch (err) {
+            empty.style.display = 'block';
+        }
+    }
+
+    function openLightbox(index) {
+        currentIndex = index;
+        document.getElementById('lightbox-img').src = galleryImages[index].url;
+        document.getElementById('lightbox').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    function navLightbox(dir) {
+        currentIndex = (currentIndex + dir + galleryImages.length) % galleryImages.length;
+        document.getElementById('lightbox-img').src = galleryImages[currentIndex].url;
+    }
+
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('lightbox').classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navLightbox(-1);
+        if (e.key === 'ArrowRight') navLightbox(1);
+    });
+
+    function toggleMenu() {
+        document.querySelector('.menu-btn').classList.toggle('open');
+        document.querySelector('.menu-overlay').classList.toggle('open');
+        document.querySelector('.menu-panel').classList.toggle('open');
+    }
+
+    loadGallery();
+    </script>
+</body>
+</html>

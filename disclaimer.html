@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disclaimer — Ahana Hillside</title>
+    <meta name="description" content="Disclaimer and terms for Ahana Hillside.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #F5F2EE;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2.5rem 2rem 1rem;
+        }
+        .header a { text-decoration: none; }
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            letter-spacing: 0.02em;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--color-forest); }
+
+        .page-intro {
+            text-align: center;
+            padding: 1rem 2rem 2rem;
+        }
+        .page-intro h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+        .page-intro p {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--color-stone);
+        }
+        .divider {
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 1rem auto 0;
+        }
+
+        .disclaimer-content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 1rem 2rem 4rem;
+        }
+
+        .disclaimer-section {
+            margin-bottom: 2rem;
+        }
+
+        .disclaimer-section h2 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+
+        .disclaimer-section p {
+            font-size: 0.85rem;
+            line-height: 1.8;
+            margin-bottom: 0.75rem;
+            color: var(--color-charcoal);
+        }
+
+        .disclaimer-section ul {
+            font-size: 0.85rem;
+            line-height: 1.8;
+            margin-left: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--color-charcoal);
+        }
+
+        .last-updated {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            font-style: italic;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .site-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            border-top: 1px solid var(--color-light-stone);
+        }
+        .site-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: color 0.2s;
+        }
+        .site-footer a:hover { color: var(--color-forest); }
+
+        /* --- Hamburger Menu --- */
+        .menu-btn { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; width: 44px; height: 44px; background: rgba(255,255,255,0.9); border: 1px solid var(--color-light-stone); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; transition: background 0.3s; backdrop-filter: blur(4px); }
+        .menu-btn:hover { background: #fff; }
+        .menu-btn span { display: block; width: 18px; height: 2px; background: var(--color-forest); transition: transform 0.3s, opacity 0.3s; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .menu-overlay.open { opacity: 1; visibility: visible; }
+        .menu-panel { position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100%; background: #fff; z-index: 999; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 5rem 2rem 2rem; }
+        .menu-panel.open { right: 0; }
+        .menu-panel nav a { display: block; font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; color: var(--color-forest); text-decoration: none; padding: 0.75rem 0; border-bottom: 1px solid var(--color-light-stone); transition: color 0.2s, padding-left 0.2s; }
+        .menu-panel nav a:hover { padding-left: 0.5rem; color: var(--color-stone); }
+        .menu-panel nav a:last-child { border-bottom: none; }
+        .menu-footer-nav { margin-top: auto; font-size: 0.75rem; color: var(--color-stone); line-height: 1.8; }
+        .menu-footer-nav a { color: var(--color-stone); text-decoration: none; transition: color 0.2s; }
+        .menu-footer-nav a:hover { color: var(--color-forest); }
+
+        @media (max-width: 768px) {
+            .disclaimer-content { padding: 1rem 1.25rem 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <div class="menu-panel">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="menu-footer-nav">
+            <a href="disclaimer.html">Disclaimer</a> &middot; <a href="contact.html">Get in Touch</a><br>
+            &copy; 2026 Ahana Hillside
+        </div>
+    </div>
+
+    <div class="header">
+        <a href="index.html">
+            <div class="header-logo">Ahana Hillside</div>
+        </a>
+        <br>
+        <a href="index.html" class="back-link">&larr; Back to home</a>
+    </div>
+
+    <div class="page-intro">
+        <h1>Disclaimer</h1>
+        <p>Terms and conditions of use</p>
+        <div class="divider"></div>
+    </div>
+
+    <div class="disclaimer-content">
+        <div class="disclaimer-section">
+            <h2>General Information</h2>
+            <p>The information provided on the Ahana Hillside website is for general informational purposes only. While we strive to keep the information accurate and up to date, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the website or the information, products, services, or related graphics contained on the website.</p>
+        </div>
+
+        <div class="disclaimer-section">
+            <h2>Booking &amp; Payments</h2>
+            <p>All bookings are subject to availability. Prices displayed on the website are in Australian Dollars (AUD) unless otherwise stated and may change without notice. Payment processing is handled securely through Stripe. Ahana Hillside does not store your payment card details.</p>
+            <p>Cancellation policies and refund terms will be communicated at the time of booking. Please review these carefully before confirming your reservation.</p>
+        </div>
+
+        <div class="disclaimer-section">
+            <h2>Property &amp; Safety</h2>
+            <p>Ahana Hillside is a rural property in a tropical rainforest setting. Guests should be aware that:</p>
+            <ul>
+                <li>The property is located on a hillside with uneven terrain</li>
+                <li>Native wildlife, including insects and reptiles, may be present</li>
+                <li>Mobile phone reception may be limited in some areas</li>
+                <li>Guests are responsible for their own safety and the safety of their belongings</li>
+                <li>Campfires must only be lit in designated fire pits and in accordance with local fire regulations</li>
+            </ul>
+        </div>
+
+        <div class="disclaimer-section">
+            <h2>Limitation of Liability</h2>
+            <p>To the fullest extent permitted by law, Ahana Hillside shall not be liable for any loss, injury, or damage arising from your use of the property or this website. This includes, but is not limited to, direct, indirect, incidental, or consequential damages.</p>
+        </div>
+
+        <div class="disclaimer-section">
+            <h2>External Links</h2>
+            <p>This website may contain links to external websites (such as Booking.com, Stripe, and others). Ahana Hillside has no control over the content or availability of these sites and accepts no responsibility for them.</p>
+        </div>
+
+        <div class="disclaimer-section">
+            <h2>Privacy</h2>
+            <p>Personal information collected through bookings and contact forms (such as name, email, and phone number) is used solely for the purpose of managing your stay and communicating with you. We do not sell or share your personal information with third parties except as required to process your booking.</p>
+        </div>
+
+        <div class="disclaimer-section">
+            <h2>Changes to This Disclaimer</h2>
+            <p>Ahana Hillside reserves the right to update or modify this disclaimer at any time without prior notice. Continued use of the website constitutes acceptance of any changes.</p>
+        </div>
+
+        <div class="disclaimer-section">
+            <h2>Contact</h2>
+            <p>If you have any questions about this disclaimer, please <a href="contact.html" style="color:var(--color-forest);border-bottom:1px solid var(--color-light-stone);text-decoration:none">contact us</a>.</p>
+        </div>
+
+        <div class="last-updated">Last updated: February 2026</div>
+    </div>
+
+    <footer class="site-footer">
+        <a href="about.html">About</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="campsites.html">Campsites</a>
+        <a href="contact.html">Contact</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <br><br>
+        &copy; 2026 Ahana Hillside
+    </footer>
+
+    <script>
+    function toggleMenu() {
+        document.querySelector('.menu-btn').classList.toggle('open');
+        document.querySelector('.menu-overlay').classList.toggle('open');
+        document.querySelector('.menu-panel').classList.toggle('open');
+    }
+    </script>
+</body>
+</html>

@@ -3,43 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahana Hillside — Coming Soon</title>
-    <meta name="description" content="A peaceful, private hillside retreat. Website coming soon.">
-    
+    <title>Ahana Hillside — A Private Retreat in the Hills</title>
+    <meta name="description" content="Ahana Hillside — a peaceful, private hillside retreat nestled in the Cairns tropical rainforest. Book your campsite or stay today.">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --color-stone: #A69583;
             --color-forest: #2C3E2D;
             --color-cream: #F5F2EE;
             --color-charcoal: #3D3D3D;
-            
+            --color-light-stone: #e8e0d8;
+
             --font-serif: 'Cormorant Garamond', Georgia, serif;
             --font-sans: 'DM Sans', -apple-system, sans-serif;
         }
-        
+
         *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         html, body {
             height: 100%;
         }
-        
+
         body {
             font-family: var(--font-sans);
             background-color: var(--color-cream);
             color: var(--color-charcoal);
             line-height: 1.7;
-            overflow: hidden;
+            overflow-x: hidden;
         }
-        
+
+        /* --- Hamburger Menu --- */
+        .menu-btn {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 1000;
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid var(--color-light-stone);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 5px;
+            transition: background 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .menu-btn:hover { background: #fff; }
+
+        .menu-btn span {
+            display: block;
+            width: 18px;
+            height: 2px;
+            background: var(--color-forest);
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .menu-btn.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .menu-btn.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-btn.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .menu-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            max-width: 85vw;
+            height: 100%;
+            background: #fff;
+            z-index: 999;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 5rem 2rem 2rem;
+        }
+
+        .menu-panel.open {
+            right: 0;
+        }
+
+        .menu-panel nav a {
+            display: block;
+            font-family: var(--font-serif);
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--color-light-stone);
+            transition: color 0.2s, padding-left 0.2s;
+        }
+
+        .menu-panel nav a:hover {
+            padding-left: 0.5rem;
+            color: var(--color-stone);
+        }
+
+        .menu-panel nav a:last-child {
+            border-bottom: none;
+        }
+
+        .menu-footer {
+            margin-top: auto;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            line-height: 1.8;
+        }
+
+        .menu-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .menu-footer a:hover { color: var(--color-forest); }
+
+        /* --- Hero --- */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -49,35 +162,35 @@
             text-align: center;
             padding: 2rem;
         }
-        
+
         .hero-background {
             position: absolute;
             inset: 0;
             z-index: -1;
         }
-        
+
         .hero-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
             filter: brightness(0.8);
         }
-        
+
         .hero-overlay {
             position: absolute;
             inset: 0;
             background: radial-gradient(
                 ellipse at center,
-                rgba(250, 248, 245, 0.85) 0%,
-                rgba(250, 248, 245, 0.7) 50%,
-                rgba(250, 248, 245, 0.5) 100%
+                rgba(245, 242, 238, 0.85) 0%,
+                rgba(245, 242, 238, 0.7) 50%,
+                rgba(245, 242, 238, 0.5) 100%
             );
         }
-        
+
         .hero-content {
             max-width: 600px;
         }
-        
+
         .logo {
             font-family: var(--font-serif);
             font-size: clamp(2.2rem, 6vw, 3.5rem);
@@ -87,7 +200,7 @@
             margin-bottom: 1rem;
             animation: fadeIn 1s ease-out;
         }
-        
+
         .tagline {
             font-family: var(--font-serif);
             font-size: clamp(1.1rem, 2.5vw, 1.4rem);
@@ -96,7 +209,7 @@
             margin-bottom: 3rem;
             animation: fadeIn 1s ease-out 0.2s both;
         }
-        
+
         .divider {
             width: 60px;
             height: 1px;
@@ -104,18 +217,27 @@
             margin: 0 auto 2rem;
             animation: expandWidth 0.8s ease-out 0.4s both;
         }
-        
-        .coming-soon {
+
+        .hero-subtitle {
             font-size: 0.85rem;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--color-stone);
             animation: fadeIn 1s ease-out 0.5s both;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-row {
+            margin-top: 2rem;
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 1s ease-out 0.7s both;
         }
 
         .book-btn {
             display: inline-block;
-            margin-top: 2rem;
             padding: 0.85rem 2.5rem;
             font-family: var(--font-sans);
             font-size: 0.9rem;
@@ -127,7 +249,6 @@
             background-color: var(--color-forest);
             border: 1px solid var(--color-forest);
             transition: background-color 0.3s ease, color 0.3s ease;
-            animation: fadeIn 1s ease-out 0.7s both;
         }
 
         .book-btn:hover {
@@ -138,8 +259,6 @@
         .book-btn-outline {
             background-color: transparent;
             color: var(--color-forest);
-            margin-left: 0.75rem;
-            animation-delay: 0.9s;
         }
 
         .book-btn-outline:hover {
@@ -188,29 +307,52 @@
         }
 
         .footer a:hover { color: var(--color-forest); }
-        
+
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         @keyframes expandWidth {
-            from {
-                width: 0;
+            from { width: 0; }
+            to { width: 60px; }
+        }
+
+        @media (max-width: 768px) {
+            .btn-row {
+                flex-direction: column;
+                align-items: center;
             }
-            to {
-                width: 60px;
+            .book-btn {
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Hamburger Menu -->
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <div class="menu-panel">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="menu-footer">
+            <a href="disclaimer.html">Disclaimer</a> &middot; <a href="contact.html">Get in Touch</a><br>
+            &copy; 2026 Ahana Hillside
+        </div>
+    </div>
+
     <section class="hero">
         <div class="hero-background">
             <img
@@ -220,30 +362,40 @@
             >
             <div class="hero-overlay"></div>
         </div>
-        
+
         <div class="hero-content">
             <h1 class="logo">Ahana Hillside</h1>
             <p class="tagline">A private retreat in the hills</p>
             <div class="divider"></div>
-            <p class="coming-soon">Website coming soon</p>
-            <a
-                href="https://www.booking.com/hotel/au/ahana-budget-stay-near-cairns.en-gb.html?label=gen173nr-10CAEoggI46AdIM1gEaA-IAQGYATO4ARfIAQzYAQPoAQH4AQGIAgGoAgG4Aqui7csGwAIB0gIkNmJkMDJjOWQtM2NiMC00YzFjLTkzMzAtZjRhOTY0OTE3MTgx2AIB4AIB&aid=304142&ucfs=1&arphpl=1&checkin=2026-02-18&checkout=2026-02-19"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="book-btn"
-            >Book on Booking.com</a>
-            <a
-                href="campsites.html"
-                class="book-btn book-btn-outline"
-            >Book Campsite</a>
+            <p class="hero-subtitle">Cairns, Tropical North Queensland</p>
+            <div class="btn-row">
+                <a href="campsites.html" class="book-btn">Book a Campsite</a>
+                <a
+                    href="https://www.booking.com/hotel/au/ahana-budget-stay-near-cairns.en-gb.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="book-btn book-btn-outline"
+                >Book on Booking.com</a>
+            </div>
             <div class="contact-link-row">
                 <a href="contact.html" class="contact-link">Have a question? Contact Us &rarr;</a>
             </div>
         </div>
         <div class="footer">
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
             <a href="campsites.html">Campsites</a>
-            <a href="contact.html">Contact Us</a>
+            <a href="contact.html">Contact</a>
+            <a href="disclaimer.html">Disclaimer</a>
         </div>
     </section>
+
+    <script>
+    function toggleMenu() {
+        document.querySelector('.menu-btn').classList.toggle('open');
+        document.querySelector('.menu-overlay').classList.toggle('open');
+        document.querySelector('.menu-panel').classList.toggle('open');
+    }
+    </script>
 </body>
 </html>

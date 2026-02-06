@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Confirmed — Ahana Hillside</title>
-    <meta name="robots" content="noindex, nofollow">
+    <title>About Us — Ahana Hillside</title>
+    <meta name="description" content="Learn about Ahana Hillside — a peaceful hillside retreat in the Cairns tropical rainforest.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,6 @@
             --color-cream: #F5F2EE;
             --color-charcoal: #3D3D3D;
             --color-light-stone: #e8e0d8;
-
             --font-serif: 'Cormorant Garamond', Georgia, serif;
             --font-sans: 'DM Sans', -apple-system, sans-serif;
         }
@@ -29,19 +28,14 @@
             background-color: var(--color-cream);
             color: var(--color-charcoal);
             line-height: 1.7;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            overflow-x: hidden;
         }
 
         .header {
             text-align: center;
             padding: 2.5rem 2rem 1rem;
-            animation: fadeIn 0.6s ease-out;
         }
-
         .header a { text-decoration: none; }
-
         .header-logo {
             font-family: var(--font-serif);
             font-size: 1.6rem;
@@ -49,76 +43,104 @@
             color: var(--color-forest);
             letter-spacing: 0.02em;
         }
-
-        .content {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            animation: fadeIn 0.6s ease-out 0.15s both;
+        .back-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
         }
+        .back-link:hover { color: var(--color-forest); }
 
-        .confirm-card {
-            background: #fff;
-            border: 1px solid var(--color-light-stone);
-            padding: 3rem 2.5rem;
-            max-width: 520px;
-            width: 100%;
+        .page-intro {
             text-align: center;
+            padding: 1rem 2rem 2rem;
         }
-
-        .check-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #e8f5e9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.25rem;
-        }
-
-        .check-icon svg {
-            width: 28px;
-            height: 28px;
-            color: #4a8c4a;
-        }
-
-        .confirm-card h1 {
+        .page-intro h1 {
             font-family: var(--font-serif);
-            font-size: clamp(1.6rem, 3.5vw, 2rem);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             font-weight: 500;
             color: var(--color-forest);
             margin-bottom: 0.5rem;
         }
-
-        .confirm-card p {
-            font-size: 0.9rem;
-            color: var(--color-charcoal);
-            line-height: 1.7;
-            margin-bottom: 0.5rem;
-        }
-
-        .confirm-card .detail {
-            font-size: 0.8rem;
+        .page-intro p {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-style: italic;
             color: var(--color-stone);
-            line-height: 1.6;
         }
-
         .divider {
             width: 60px;
             height: 1px;
             background-color: var(--color-stone);
-            margin: 1.25rem auto;
+            margin: 1rem auto 0;
         }
 
-        .btn-home {
-            display: inline-block;
-            margin-top: 1.5rem;
-            padding: 0.7rem 2rem;
-            font-family: var(--font-sans);
+        .about-content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 1rem 2rem 4rem;
+        }
+
+        .about-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .about-section h2 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.75rem;
+        }
+
+        .about-section p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            color: var(--color-charcoal);
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .value-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem;
+        }
+
+        .value-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.4rem;
+        }
+
+        .value-card p {
             font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--color-stone);
+            margin: 0;
+        }
+
+        .cta-row {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .cta-row a {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
             font-weight: 500;
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -126,44 +148,29 @@
             color: var(--color-cream);
             background-color: var(--color-forest);
             border: 1px solid var(--color-forest);
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .btn-home:hover {
-            background-color: transparent;
+        .cta-row a:hover {
+            background: transparent;
             color: var(--color-forest);
         }
 
-        .footer {
+        .site-footer {
             text-align: center;
             padding: 2rem;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--color-stone);
-            letter-spacing: 0.05em;
+            border-top: 1px solid var(--color-light-stone);
         }
-
-        .footer a {
+        .site-footer a {
             color: var(--color-stone);
             text-decoration: none;
+            margin: 0 0.5rem;
             transition: color 0.2s;
         }
+        .site-footer a:hover { color: var(--color-forest); }
 
-        .footer a:hover { color: var(--color-forest); }
-
-        .footer-links {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a { margin: 0 0.75rem; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @media (max-width: 768px) {
-            .confirm-card { padding: 2rem 1.5rem; }
-        }
         /* --- Hamburger Menu --- */
         .menu-btn { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; width: 44px; height: 44px; background: rgba(255,255,255,0.9); border: 1px solid var(--color-light-stone); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; transition: background 0.3s; backdrop-filter: blur(4px); }
         .menu-btn:hover { background: #fff; }
@@ -182,6 +189,10 @@
         .menu-footer-nav a { color: var(--color-stone); text-decoration: none; transition: color 0.2s; }
         .menu-footer-nav a:hover { color: var(--color-forest); }
 
+        @media (max-width: 768px) {
+            .values-grid { grid-template-columns: 1fr; }
+            .about-content { padding: 1rem 1.25rem 3rem; }
+        }
     </style>
 </head>
 <body>
@@ -205,39 +216,66 @@
         <a href="index.html">
             <div class="header-logo">Ahana Hillside</div>
         </a>
+        <br>
+        <a href="index.html" class="back-link">&larr; Back to home</a>
     </div>
 
-    <div class="content">
-        <div class="confirm-card">
-            <div class="check-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
+    <div class="page-intro">
+        <h1>About Us</h1>
+        <p>Our story and what makes Ahana special</p>
+        <div class="divider"></div>
+    </div>
+
+    <div class="about-content">
+        <div class="about-section">
+            <h2>Our Story</h2>
+            <p>Ahana Hillside is a private retreat nestled in the lush tropical rainforest hills just outside Cairns, in Tropical North Queensland. What began as a love for the land has grown into a welcoming space where travellers can disconnect from the everyday and reconnect with nature.</p>
+            <p>Set on a quiet hillside surrounded by native bushland, our property offers a peaceful escape with sweeping views and the sounds of the rainforest. Whether you're looking for a budget-friendly stay or a unique camping experience, Ahana Hillside is your base to explore everything the region has to offer.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>The Experience</h2>
+            <p>Wake up to birdsong and morning mist rolling through the hills. Spend your days exploring the Great Barrier Reef, Daintree Rainforest, or the Atherton Tablelands, and return to the tranquillity of your hillside retreat.</p>
+            <p>Our eco-friendly campsites are designed to sit gently on the land, offering a genuine connection to the tropical environment while providing the essentials for a comfortable stay.</p>
+        </div>
+
+        <div class="about-section">
+            <h2>What We Value</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <h3>Simplicity</h3>
+                    <p>No frills, no fuss. Just nature, fresh air, and a good night's rest under the stars.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Sustainability</h3>
+                    <p>We tread lightly on the land, using locally sourced materials and eco-friendly practices.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Community</h3>
+                    <p>Travellers from all over the world share stories around the campfire here.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Privacy</h3>
+                    <p>Spacious, well-separated sites so you can enjoy your own slice of the hillside.</p>
+                </div>
             </div>
+        </div>
 
-            <h1>Booking Confirmed</h1>
-            <p>Your payment has been received and your booking is confirmed.</p>
-
-            <div class="divider"></div>
-
-            <p class="detail">
-                You'll receive a confirmation email from Stripe with your payment receipt.
-                If you have any questions about your stay, feel free to get in touch via our
-                <a href="contact.html" style="color:var(--color-forest);border-bottom:1px solid var(--color-light-stone)">contact page</a>.
-            </p>
-
-            <a href="index.html" class="btn-home">Back to Home</a>
+        <div class="cta-row">
+            <a href="campsites.html">Book Your Stay</a>
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="footer-links">
-            <a href="index.html">Home</a>
-            <a href="campsites.html">Campsites</a>
-            <a href="contact.html">Contact</a>
-        </div>
+    <footer class="site-footer">
+        <a href="about.html">About</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="campsites.html">Campsites</a>
+        <a href="contact.html">Contact</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <br><br>
         &copy; 2026 Ahana Hillside
     </footer>
+
     <script>
     function toggleMenu() {
         document.querySelector('.menu-btn').classList.toggle('open');
