@@ -1264,6 +1264,9 @@
                 sessionStorage.setItem('ahana-token', authToken);
                 showDashboard();
             } else {
+                errorEl.textContent = res.status === 429
+                    ? 'Too many failed attempts. Try again in 15 minutes.'
+                    : 'Invalid password';
                 errorEl.classList.add('show');
             }
         } catch (err) {
@@ -1426,22 +1429,36 @@
             const data = await res.json();
             const s = data.settings || {};
             document.getElementById('stripe-enabled').checked = !!s.enabled;
-            document.getElementById('stripe-secret-key').value = s.secretKey || '';
-            document.getElementById('stripe-webhook-secret').value = s.webhookSecret || '';
+            // Show masked keys as placeholders — never populate the actual value
+            const skInput = document.getElementById('stripe-secret-key');
+            const whInput = document.getElementById('stripe-webhook-secret');
+            skInput.value = '';
+            whInput.value = '';
+            skInput.placeholder = s.maskedSecretKey || 'sk_live_... or sk_test_...';
+            whInput.placeholder = s.maskedWebhookSecret || 'whsec_...';
+            // Store whether keys exist so we can validate on save
+            skInput.dataset.hasKey = s.hasSecretKey ? '1' : '';
+            whInput.dataset.hasKey = s.hasWebhookSecret ? '1' : '';
         } catch (err) {}
     }
 
     async function saveStripeSettings() {
-        const settings = {
-            enabled: document.getElementById('stripe-enabled').checked,
-            secretKey: document.getElementById('stripe-secret-key').value.trim(),
-            webhookSecret: document.getElementById('stripe-webhook-secret').value.trim(),
-        };
+        const skInput = document.getElementById('stripe-secret-key');
+        const whInput = document.getElementById('stripe-webhook-secret');
+        const newSecretKey = skInput.value.trim();
+        const newWebhookSecret = whInput.value.trim();
+        const hasExistingKey = skInput.dataset.hasKey === '1';
+        const enabled = document.getElementById('stripe-enabled').checked;
 
-        if (settings.enabled && !settings.secretKey) {
+        if (enabled && !newSecretKey && !hasExistingKey) {
             showMsg('stripe', 'Please enter your Stripe secret key', 'error');
             return;
         }
+
+        // Only send keys if user entered new ones
+        const settings = { enabled };
+        if (newSecretKey) settings.secretKey = newSecretKey;
+        if (newWebhookSecret) settings.webhookSecret = newWebhookSecret;
 
         try {
             const res = await fetch(WORKER_URL + '/stripe-settings', {
@@ -1455,6 +1472,7 @@
             const data = await res.json();
             if (data.success) {
                 showMsg('stripe', 'Stripe settings saved', 'success');
+                loadStripeSettings(); // Reload to show updated masked keys
             } else {
                 showMsg('stripe', data.error || 'Failed to save', 'error');
             }
@@ -1473,24 +1491,34 @@
             const s = data.settings || {};
             document.getElementById('notif-enabled').checked = !!s.enabled;
             document.getElementById('notif-email').value = s.email || '';
-            document.getElementById('notif-api-key').value = s.apiKey || '';
             document.getElementById('notif-from-email').value = s.fromEmail || '';
+            // Show masked API key as placeholder — never populate the actual value
+            const akInput = document.getElementById('notif-api-key');
+            akInput.value = '';
+            akInput.placeholder = s.maskedApiKey || 're_xxxxxxxxx...';
+            akInput.dataset.hasKey = s.hasApiKey ? '1' : '';
         } catch (err) {}
     }
 
     async function saveNotificationSettings() {
+        const akInput = document.getElementById('notif-api-key');
+        const newApiKey = akInput.value.trim();
+        const hasExistingKey = akInput.dataset.hasKey === '1';
+        const enabled = document.getElementById('notif-enabled').checked;
+
         const settings = {
-            enabled: document.getElementById('notif-enabled').checked,
+            enabled,
             email: document.getElementById('notif-email').value.trim(),
-            apiKey: document.getElementById('notif-api-key').value.trim(),
             fromEmail: document.getElementById('notif-from-email').value.trim(),
         };
+        // Only send API key if user entered a new one
+        if (newApiKey) settings.apiKey = newApiKey;
 
         if (settings.enabled && !settings.email) {
             showMsg('notif', 'Please enter a notification email address', 'error');
             return;
         }
-        if (settings.enabled && !settings.apiKey) {
+        if (settings.enabled && !newApiKey && !hasExistingKey) {
             showMsg('notif', 'Please enter a Resend API key', 'error');
             return;
         }
@@ -1507,6 +1535,7 @@
             const data = await res.json();
             if (data.success) {
                 showMsg('notif', 'Notification settings saved', 'success');
+                loadNotificationSettings(); // Reload to show updated masked key
             } else {
                 showMsg('notif', data.error || 'Failed to save', 'error');
             }

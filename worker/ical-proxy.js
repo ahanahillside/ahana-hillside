@@ -122,11 +122,58 @@ async function getPassword(env) {
   return DEFAULT_PASSWORD;
 }
 
+const RATE_LIMIT_MAX = 5;        // max failed attempts
+const RATE_LIMIT_WINDOW = 900;   // 15-minute lockout (seconds)
+
+async function checkRateLimit(ip, env) {
+  try {
+    const key = 'ratelimit:' + ip;
+    const data = await env.CONFIG.get(key, 'json');
+    if (!data) return { blocked: false };
+    if (data.count >= RATE_LIMIT_MAX) {
+      const elapsed = (Date.now() - data.firstAttempt) / 1000;
+      if (elapsed < RATE_LIMIT_WINDOW) return { blocked: true };
+    }
+    return { blocked: false };
+  } catch (e) { return { blocked: false }; }
+}
+
+async function recordFailedAttempt(ip, env) {
+  try {
+    const key = 'ratelimit:' + ip;
+    const data = await env.CONFIG.get(key, 'json') || { count: 0, firstAttempt: Date.now() };
+    const elapsed = (Date.now() - data.firstAttempt) / 1000;
+    if (elapsed >= RATE_LIMIT_WINDOW) {
+      // Window expired, start fresh
+      await env.CONFIG.put(key, JSON.stringify({ count: 1, firstAttempt: Date.now() }), { expirationTtl: RATE_LIMIT_WINDOW });
+    } else {
+      data.count++;
+      await env.CONFIG.put(key, JSON.stringify(data), { expirationTtl: RATE_LIMIT_WINDOW });
+    }
+  } catch (e) {}
+}
+
+async function clearRateLimit(ip, env) {
+  try { await env.CONFIG.delete('ratelimit:' + ip); } catch (e) {}
+}
+
 async function verifyAuth(request, env) {
   const authHeader = request.headers.get('Authorization') || '';
   const token = authHeader.replace('Bearer ', '');
   const password = await getPassword(env);
-  return token === password;
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+
+  // Check rate limit before verifying
+  const { blocked } = await checkRateLimit(ip, env);
+  if (blocked) return { ok: false, rateLimited: true };
+
+  if (token === password) {
+    clearRateLimit(ip, env); // Reset on success
+    return { ok: true, rateLimited: false };
+  }
+
+  await recordFailedAttempt(ip, env);
+  return { ok: false, rateLimited: false };
 }
 
 // --- Image helpers ---
@@ -136,6 +183,14 @@ async function getImageList(env, site) {
     if (list) return list;
   } catch (e) {}
   return [];
+}
+
+// Helper: returns an error Response if auth fails, or null if OK
+async function requireAuth(request, env, origin) {
+  const auth = await verifyAuth(request, env);
+  if (auth.rateLimited) return jsonResponse({ error: 'Too many failed attempts. Try again in 15 minutes.' }, 429, origin);
+  if (!auth.ok) return jsonResponse({ error: 'Unauthorized' }, 401, origin);
+  return null;
 }
 
 async function saveImageList(env, site, list) {
@@ -281,9 +336,7 @@ export default {
 
     // --- POST /config — admin only, updates site configuration ---
     if (path === '/config' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const newConfig = await request.json();
         await env.CONFIG.put('site-config', JSON.stringify(newConfig));
@@ -295,12 +348,19 @@ export default {
 
     // --- POST /auth — login, returns token on success ---
     if (path === '/auth' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const { blocked } = await checkRateLimit(ip, env);
+      if (blocked) {
+        return jsonResponse({ error: 'Too many failed attempts. Try again in 15 minutes.' }, 429, origin);
+      }
       try {
         const { password } = await request.json();
         const stored = await getPassword(env);
         if (password === stored) {
+          await clearRateLimit(ip, env);
           return jsonResponse({ success: true, token: stored }, 200, origin);
         }
+        await recordFailedAttempt(ip, env);
         return jsonResponse({ error: 'Invalid password' }, 401, origin);
       } catch (err) {
         return jsonResponse({ error: 'Invalid request' }, 400, origin);
@@ -309,9 +369,7 @@ export default {
 
     // --- POST /password — admin only, changes admin password ---
     if (path === '/password' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { newPassword } = await request.json();
         if (!newPassword || newPassword.length < 6) {
@@ -362,9 +420,7 @@ export default {
 
     // --- GET /messages — admin only, returns all messages ---
     if (path === '/messages' && request.method === 'GET') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const messages = await env.CONFIG.get('messages', 'json') || [];
         return jsonResponse({ messages }, 200, origin);
@@ -375,9 +431,7 @@ export default {
 
     // --- POST /messages/delete — admin only, deletes a message ---
     if (path === '/messages/delete' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { id } = await request.json();
         let messages = await env.CONFIG.get('messages', 'json') || [];
@@ -391,9 +445,7 @@ export default {
 
     // --- POST /messages/read — admin only, marks a message as read ---
     if (path === '/messages/read' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { id } = await request.json();
         let messages = await env.CONFIG.get('messages', 'json') || [];
@@ -408,9 +460,7 @@ export default {
 
     // --- POST /images/upload — admin only, uploads an image for a site ---
     if (path === '/images/upload' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const formData = await request.formData();
         const site = formData.get('site');
@@ -500,9 +550,7 @@ export default {
 
     // --- POST /images/delete — admin only, deletes an image ---
     if (path === '/images/delete' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { site, id } = await request.json();
         if (!site || !['samavas', 'chhaya'].includes(site)) {
@@ -525,9 +573,7 @@ export default {
 
     // --- POST /images/reorder — admin only, reorders images for a site ---
     if (path === '/images/reorder' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { site, order } = await request.json();
         if (!site || !['samavas', 'chhaya'].includes(site)) {
@@ -627,9 +673,7 @@ export default {
 
     // --- GET /bookings — admin only, returns all bookings ---
     if (path === '/bookings' && request.method === 'GET') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const bookings = await env.CONFIG.get('bookings', 'json') || [];
         return jsonResponse({ bookings }, 200, origin);
@@ -640,9 +684,7 @@ export default {
 
     // --- POST /bookings/status — admin only, updates booking status ---
     if (path === '/bookings/status' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { id, status } = await request.json();
         const validStatuses = ['pending', 'confirmed', 'cancelled', 'completed'];
@@ -664,9 +706,7 @@ export default {
 
     // --- POST /bookings/delete — admin only, deletes a booking ---
     if (path === '/bookings/delete' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { id } = await request.json();
         let bookings = await env.CONFIG.get('bookings', 'json') || [];
@@ -722,30 +762,35 @@ export default {
       }
     }
 
-    // --- GET /stripe-settings — admin only, returns Stripe config ---
+    // --- GET /stripe-settings — admin only, returns masked Stripe config ---
     if (path === '/stripe-settings' && request.method === 'GET') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const settings = await getStripeSettings(env);
-        return jsonResponse({ settings }, 200, origin);
+        // Never send full secret keys to the browser
+        return jsonResponse({ settings: {
+          enabled: settings.enabled,
+          hasSecretKey: !!settings.secretKey,
+          maskedSecretKey: settings.secretKey ? settings.secretKey.slice(0, 7) + '...' + settings.secretKey.slice(-4) : '',
+          hasWebhookSecret: !!settings.webhookSecret,
+          maskedWebhookSecret: settings.webhookSecret ? settings.webhookSecret.slice(0, 7) + '...' + settings.webhookSecret.slice(-4) : '',
+        } }, 200, origin);
       } catch (err) {
-        return jsonResponse({ settings: { enabled: false, secretKey: '', webhookSecret: '' } }, 200, origin);
+        return jsonResponse({ settings: { enabled: false, hasSecretKey: false, maskedSecretKey: '', hasWebhookSecret: false, maskedWebhookSecret: '' } }, 200, origin);
       }
     }
 
     // --- POST /stripe-settings — admin only, saves Stripe config ---
     if (path === '/stripe-settings' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const body = await request.json();
+        const existing = await getStripeSettings(env);
         const settings = {
           enabled: !!body.enabled,
-          secretKey: (body.secretKey || '').slice(0, 300),
-          webhookSecret: (body.webhookSecret || '').slice(0, 300),
+          // Preserve existing key if no new one provided
+          secretKey: body.secretKey ? (body.secretKey).slice(0, 300) : existing.secretKey,
+          webhookSecret: body.webhookSecret ? (body.webhookSecret).slice(0, 300) : existing.webhookSecret,
         };
         await env.CONFIG.put('stripe-settings', JSON.stringify(settings));
         return jsonResponse({ success: true }, 200, origin);
@@ -754,32 +799,39 @@ export default {
       }
     }
 
-    // --- GET /notification-settings — admin only, returns notification config ---
+    // --- GET /notification-settings — admin only, returns masked notification config ---
     if (path === '/notification-settings' && request.method === 'GET') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const settings = await env.CONFIG.get('notification-settings', 'json') || {
           enabled: false, email: '', apiKey: '', fromEmail: '',
         };
-        return jsonResponse({ settings }, 200, origin);
+        // Never send full API key to the browser
+        return jsonResponse({ settings: {
+          enabled: settings.enabled,
+          email: settings.email,
+          hasApiKey: !!settings.apiKey,
+          maskedApiKey: settings.apiKey ? settings.apiKey.slice(0, 5) + '...' + settings.apiKey.slice(-4) : '',
+          fromEmail: settings.fromEmail,
+        } }, 200, origin);
       } catch (err) {
-        return jsonResponse({ settings: { enabled: false, email: '', apiKey: '', fromEmail: '' } }, 200, origin);
+        return jsonResponse({ settings: { enabled: false, email: '', hasApiKey: false, maskedApiKey: '', fromEmail: '' } }, 200, origin);
       }
     }
 
     // --- POST /notification-settings — admin only, saves notification config ---
     if (path === '/notification-settings' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const body = await request.json();
+        const existing = await env.CONFIG.get('notification-settings', 'json') || {
+          enabled: false, email: '', apiKey: '', fromEmail: '',
+        };
         const settings = {
           enabled: !!body.enabled,
           email: (body.email || '').slice(0, 200),
-          apiKey: (body.apiKey || '').slice(0, 200),
+          // Preserve existing API key if no new one provided
+          apiKey: body.apiKey ? (body.apiKey).slice(0, 200) : existing.apiKey,
           fromEmail: (body.fromEmail || '').slice(0, 200),
         };
         await env.CONFIG.put('notification-settings', JSON.stringify(settings));
@@ -894,9 +946,7 @@ export default {
 
     // --- POST /blocked-dates — admin only, updates blocked dates for a site ---
     if (path === '/blocked-dates' && request.method === 'POST') {
-      if (!(await verifyAuth(request, env))) {
-        return jsonResponse({ error: 'Unauthorized' }, 401, origin);
-      }
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { site: bSite, dates } = await request.json();
         if (!bSite || !['samavas', 'chhaya'].includes(bSite)) {
