@@ -105,8 +105,38 @@
             transition: transform 0.4s ease;
         }
 
-        .gallery-item:hover img {
+        .gallery-item:hover img,
+        .gallery-item:hover video {
             transform: scale(1.05);
+        }
+
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.25);
+            pointer-events: none;
+        }
+
+        .video-overlay span {
+            width: 48px;
+            height: 48px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--color-forest);
         }
 
         .gallery-empty {
@@ -273,7 +303,8 @@
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
         <button class="lightbox-btn lightbox-prev" onclick="navLightbox(-1)">&lsaquo;</button>
-        <img id="lightbox-img" src="" alt="">
+        <img id="lightbox-img" src="" alt="" style="display:none">
+        <video id="lightbox-video" controls style="display:none;max-width:90vw;max-height:85vh"></video>
         <button class="lightbox-btn lightbox-next" onclick="navLightbox(1)">&rsaquo;</button>
     </div>
 
@@ -289,7 +320,7 @@
 
     <script>
     const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
-    let galleryImages = [];
+    let galleryItems = [];
     let currentIndex = 0;
 
     async function loadGallery() {
@@ -297,34 +328,29 @@
         const empty = document.getElementById('gallery-empty');
 
         try {
-            // Load images from both sites
-            const res = await fetch(WORKER_URL + '/config');
-            const config = await res.json();
+            const res = await fetch(WORKER_URL + '/gallery/list');
+            const data = await res.json();
+            galleryItems = data.items || [];
 
-            // Try loading images for both campsites
-            const sites = ['samavas', 'chhaya'];
-            for (const site of sites) {
-                try {
-                    const imgRes = await fetch(WORKER_URL + '/images/' + site);
-                    const data = await imgRes.json();
-                    if (data.images && data.images.length > 0) {
-                        data.images.forEach(img => {
-                            galleryImages.push({ url: img.url, alt: site + ' campsite' });
-                        });
-                    }
-                } catch (e) {}
-            }
-
-            if (galleryImages.length === 0) {
+            if (galleryItems.length === 0) {
                 empty.style.display = 'block';
                 return;
             }
 
-            grid.innerHTML = galleryImages.map((img, i) =>
-                '<div class="gallery-item" onclick="openLightbox(' + i + ')">' +
-                '<img src="' + img.url + '" alt="' + img.alt + '" loading="lazy">' +
-                '</div>'
-            ).join('');
+            grid.innerHTML = galleryItems.map((item, i) => {
+                const url = WORKER_URL + '/gallery/' + item.id;
+                const isVideo = item.mediaType === 'video';
+                if (isVideo) {
+                    return '<div class="gallery-item" onclick="openLightbox(' + i + ')">'
+                        + '<video src="' + url + '" preload="metadata" muted></video>'
+                        + '<div class="video-overlay"><span>&#9654;</span></div>'
+                        + '</div>';
+                } else {
+                    return '<div class="gallery-item" onclick="openLightbox(' + i + ')">'
+                        + '<img src="' + url + '" alt="Gallery photo" loading="lazy">'
+                        + '</div>';
+                }
+            }).join('');
         } catch (err) {
             empty.style.display = 'block';
         }
@@ -332,19 +358,42 @@
 
     function openLightbox(index) {
         currentIndex = index;
-        document.getElementById('lightbox-img').src = galleryImages[index].url;
+        showLightboxItem(index);
         document.getElementById('lightbox').classList.add('active');
         document.body.style.overflow = 'hidden';
+    }
+
+    function showLightboxItem(index) {
+        const item = galleryItems[index];
+        const url = WORKER_URL + '/gallery/' + item.id;
+        const imgEl = document.getElementById('lightbox-img');
+        const vidEl = document.getElementById('lightbox-video');
+
+        if (item.mediaType === 'video') {
+            imgEl.style.display = 'none';
+            vidEl.style.display = 'block';
+            vidEl.src = url;
+            vidEl.play().catch(() => {});
+        } else {
+            vidEl.style.display = 'none';
+            vidEl.pause();
+            vidEl.src = '';
+            imgEl.style.display = 'block';
+            imgEl.src = url;
+        }
     }
 
     function closeLightbox() {
         document.getElementById('lightbox').classList.remove('active');
         document.body.style.overflow = '';
+        const vidEl = document.getElementById('lightbox-video');
+        vidEl.pause();
+        vidEl.src = '';
     }
 
     function navLightbox(dir) {
-        currentIndex = (currentIndex + dir + galleryImages.length) % galleryImages.length;
-        document.getElementById('lightbox-img').src = galleryImages[currentIndex].url;
+        currentIndex = (currentIndex + dir + galleryItems.length) % galleryItems.length;
+        showLightboxItem(currentIndex);
     }
 
     document.getElementById('lightbox').addEventListener('click', function(e) {

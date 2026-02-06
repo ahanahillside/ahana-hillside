@@ -45,6 +45,10 @@ const DEFAULT_CONFIG = {
 const DEFAULT_PASSWORD = 'ahana2026';
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
 const MAX_IMAGES_PER_SITE = 15;
+const MAX_GALLERY_ITEMS = 50;
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB per video
+const GALLERY_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const GALLERY_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.some(o => origin && origin.startsWith(o));
@@ -598,6 +602,120 @@ export default {
         });
 
         await saveImageList(env, site, newList);
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Reorder failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- Gallery endpoints ---
+
+    // POST /gallery/upload — admin only, upload image or video to gallery
+    if (path === '/gallery/upload' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const formData = await request.formData();
+        const file = formData.get('file');
+
+        if (!file || !(file instanceof File)) {
+          return jsonResponse({ error: 'No file provided' }, 400, origin);
+        }
+
+        const isImage = GALLERY_IMAGE_TYPES.includes(file.type);
+        const isVideo = GALLERY_VIDEO_TYPES.includes(file.type);
+        if (!isImage && !isVideo) {
+          return jsonResponse({ error: 'Only JPEG, PNG, WebP images and MP4, WebM, MOV videos are allowed' }, 400, origin);
+        }
+
+        const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        if (file.size > maxSize) {
+          return jsonResponse({ error: isVideo ? 'Video must be under 50MB' : 'Image must be under 5MB' }, 400, origin);
+        }
+
+        const galleryList = await env.CONFIG.get('gallery-items', 'json') || [];
+        if (galleryList.length >= MAX_GALLERY_ITEMS) {
+          return jsonResponse({ error: 'Maximum ' + MAX_GALLERY_ITEMS + ' gallery items' }, 400, origin);
+        }
+
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        const arrayBuffer = await file.arrayBuffer();
+        await env.CONFIG.put('gallery:' + id, arrayBuffer, {
+          metadata: { contentType: file.type, name: file.name, type: isVideo ? 'video' : 'image' },
+        });
+
+        galleryList.push({
+          id,
+          name: file.name,
+          contentType: file.type,
+          mediaType: isVideo ? 'video' : 'image',
+          size: file.size,
+          uploadedAt: new Date().toISOString(),
+        });
+        await env.CONFIG.put('gallery-items', JSON.stringify(galleryList));
+
+        return jsonResponse({ success: true, id, mediaType: isVideo ? 'video' : 'image' }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Upload failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // GET /gallery/list — public, returns gallery items
+    if (path === '/gallery/list' && request.method === 'GET') {
+      const galleryList = await env.CONFIG.get('gallery-items', 'json') || [];
+      return jsonResponse({ items: galleryList }, 200, origin, 'public, max-age=60');
+    }
+
+    // GET /gallery/:id — public, serves a gallery file
+    const galleryMatch = path.match(/^\/gallery\/([a-z0-9]+)$/);
+    if (galleryMatch && request.method === 'GET') {
+      const gId = galleryMatch[1];
+      try {
+        const { value, metadata } = await env.CONFIG.getWithMetadata('gallery:' + gId, 'arrayBuffer');
+        if (!value) {
+          return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+        }
+        return new Response(value, {
+          status: 200,
+          headers: {
+            'Content-Type': metadata?.contentType || 'application/octet-stream',
+            'Cache-Control': 'public, max-age=86400',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      }
+    }
+
+    // POST /gallery/delete — admin only, deletes a gallery item
+    if (path === '/gallery/delete' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const { id } = await request.json();
+        let galleryList = await env.CONFIG.get('gallery-items', 'json') || [];
+        galleryList = galleryList.filter(item => item.id !== id);
+        await env.CONFIG.put('gallery-items', JSON.stringify(galleryList));
+        await env.CONFIG.delete('gallery:' + id);
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // POST /gallery/reorder — admin only, reorders gallery items
+    if (path === '/gallery/reorder' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const { order } = await request.json();
+        if (!Array.isArray(order)) {
+          return jsonResponse({ error: 'Order must be an array of IDs' }, 400, origin);
+        }
+        const galleryList = await env.CONFIG.get('gallery-items', 'json') || [];
+        const byId = {};
+        galleryList.forEach(item => { byId[item.id] = item; });
+        const newList = order.filter(id => byId[id]).map(id => byId[id]);
+        galleryList.forEach(item => { if (!order.includes(item.id)) newList.push(item); });
+        await env.CONFIG.put('gallery-items', JSON.stringify(newList));
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Reorder failed', detail: err.message }, 500, origin);

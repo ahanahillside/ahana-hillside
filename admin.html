@@ -916,6 +916,7 @@
         <button class="tab-btn active" data-tab="messages">Messages <span class="msg-badge" id="msg-badge"></span></button>
         <button class="tab-btn" data-tab="bookings">Bookings <span class="msg-badge" id="booking-badge"></span></button>
         <button class="tab-btn" data-tab="campsites">Campsites</button>
+        <button class="tab-btn" data-tab="gallery">Gallery</button>
         <button class="tab-btn" data-tab="settings">Settings</button>
     </div>
 
@@ -1172,6 +1173,27 @@
 
         </div>
 
+        <!-- GALLERY PANEL -->
+        <div class="tab-panel" id="panel-gallery">
+            <div class="panel-title">Gallery</div>
+            <div class="section-desc">Upload images and videos to your public gallery page. Max 50 items. Images: 5MB (JPEG, PNG, WebP). Videos: 50MB (MP4, WebM, MOV).</div>
+
+            <div class="card" style="max-width:700px">
+                <div class="card-title">Upload Media</div>
+                <div class="upload-zone" id="upload-zone-gallery" onclick="document.getElementById('file-gallery').click()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span>Click to upload images or videos (or drag &amp; drop)</span>
+                    <input type="file" id="file-gallery" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleGalleryUpload(this.files)">
+                </div>
+                <div class="upload-progress" id="progress-gallery"></div>
+            </div>
+
+            <div class="card" style="max-width:700px">
+                <div class="card-title">Gallery Items <span id="gallery-count" style="font-weight:400;color:var(--color-stone);font-size:0.8rem"></span></div>
+                <div class="image-grid" id="gallery-grid" style="grid-template-columns:repeat(3,1fr)"></div>
+            </div>
+        </div>
+
         <!-- SETTINGS PANEL -->
         <div class="tab-panel" id="panel-settings">
             <div class="panel-title">Settings</div>
@@ -1322,6 +1344,7 @@
         loadBlockedDates();
         loadNotificationSettings();
         loadStripeSettings();
+        loadGalleryItems();
     }
 
     // --- Config ---
@@ -2098,6 +2121,132 @@
     }
 
     // Drag & drop support
+    // --- Gallery ---
+    let galleryItems = [];
+
+    async function loadGalleryItems() {
+        try {
+            const res = await fetch(WORKER_URL + '/gallery/list');
+            const data = await res.json();
+            galleryItems = data.items || [];
+        } catch (err) {
+            galleryItems = [];
+        }
+        renderGallery();
+    }
+
+    function renderGallery() {
+        const container = document.getElementById('gallery-grid');
+        const countEl = document.getElementById('gallery-count');
+        countEl.textContent = '(' + galleryItems.length + '/50)';
+
+        if (galleryItems.length === 0) {
+            container.innerHTML = '<div class="img-empty">No gallery items yet. Upload images or videos above.</div>';
+            return;
+        }
+
+        container.innerHTML = galleryItems.map((item, i) => {
+            const url = WORKER_URL + '/gallery/' + item.id;
+            const isVideo = item.mediaType === 'video';
+            const thumb = isVideo
+                ? '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#222;color:#fff;font-size:1.5rem">&#9654;<br><span style="font-size:0.55rem;display:block;margin-top:0.25rem;color:#ccc">' + escHtml(item.name || 'video') + '</span></div>'
+                : '<img src="' + url + '" alt="' + escHtml(item.name || '') + '" loading="lazy">';
+            return '<div class="img-thumb">'
+                + thumb
+                + '<span class="img-order">' + (i + 1) + (isVideo ? ' vid' : '') + '</span>'
+                + '<div class="img-actions">'
+                + (i > 0 ? '<button class="img-action-btn move-btn" onclick="moveGalleryItem(' + i + ',-1)" title="Move left">&larr;</button>' : '')
+                + (i < galleryItems.length - 1 ? '<button class="img-action-btn move-btn" onclick="moveGalleryItem(' + i + ',1)" title="Move right">&rarr;</button>' : '')
+                + '<button class="img-action-btn delete-btn" onclick="deleteGalleryItem(\'' + item.id + '\')" title="Delete">DEL</button>'
+                + '</div>'
+                + '</div>';
+        }).join('');
+    }
+
+    async function handleGalleryUpload(files) {
+        if (!files || files.length === 0) return;
+        const progressEl = document.getElementById('progress-gallery');
+        const total = files.length;
+        let uploaded = 0;
+
+        for (const file of files) {
+            progressEl.textContent = 'Uploading ' + (uploaded + 1) + ' of ' + total + '... (' + file.name + ')';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(WORKER_URL + '/gallery/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + authToken },
+                    body: formData,
+                });
+                const data = await res.json();
+                if (data.success) {
+                    galleryItems.push({
+                        id: data.id,
+                        name: file.name,
+                        contentType: file.type,
+                        mediaType: data.mediaType,
+                        size: file.size,
+                    });
+                    uploaded++;
+                } else {
+                    progressEl.textContent = 'Error: ' + (data.error || 'Upload failed');
+                    break;
+                }
+            } catch (err) {
+                progressEl.textContent = 'Upload failed — connection error';
+                break;
+            }
+        }
+
+        if (uploaded === total) {
+            progressEl.textContent = uploaded + ' file(s) uploaded successfully';
+            setTimeout(() => { progressEl.textContent = ''; }, 3000);
+        }
+
+        renderGallery();
+        document.getElementById('file-gallery').value = '';
+    }
+
+    async function deleteGalleryItem(id) {
+        if (!confirm('Delete this gallery item?')) return;
+        try {
+            await fetch(WORKER_URL + '/gallery/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ id }),
+            });
+            galleryItems = galleryItems.filter(item => item.id !== id);
+            renderGallery();
+        } catch (err) {}
+    }
+
+    async function moveGalleryItem(index, direction) {
+        const newIndex = index + direction;
+        if (newIndex < 0 || newIndex >= galleryItems.length) return;
+        [galleryItems[index], galleryItems[newIndex]] = [galleryItems[newIndex], galleryItems[index]];
+        renderGallery();
+        const order = galleryItems.map(item => item.id);
+        try {
+            await fetch(WORKER_URL + '/gallery/reorder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ order }),
+            });
+        } catch (err) {}
+    }
+
+    // Gallery drag & drop
+    (function() {
+        const zone = document.getElementById('upload-zone-gallery');
+        if (!zone) return;
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+        zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
+        zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); handleGalleryUpload(e.dataTransfer.files); });
+    })();
+
     ['samavas', 'chhaya'].forEach(site => {
         const zone = document.getElementById('upload-zone-' + site);
         if (!zone) return;
