@@ -1224,62 +1224,57 @@
 
         /* --- Camping Experience Section --- */
         .camp-experience {
-            background: #fff;
-            padding: 3.5rem 2rem;
+            position: relative;
             margin: 1.5rem 0 0;
+            overflow: hidden;
+            min-height: 580px;
         }
-        .camp-experience-inner {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        /* SVG illustration side */
-        .camp-illustration {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .camp-illustration svg {
+        .camp-scene {
+            position: absolute;
+            inset: 0;
             width: 100%;
-            max-width: 420px;
-            height: auto;
+            height: 100%;
+        }
+        .camp-scene svg {
+            width: 100%;
+            height: 100%;
+            display: block;
         }
 
-        /* Text side */
-        .camp-text {
-            padding: 0.5rem 0;
+        /* Text overlay */
+        .camp-overlay {
+            position: relative;
+            z-index: 2;
+            max-width: 520px;
+            padding: 4rem 3rem 4rem 5%;
         }
         .camp-text-label {
             font-size: 0.66rem;
             font-weight: 500;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--color-stone);
+            color: rgba(255,255,255,0.7);
             margin-bottom: 0.5rem;
         }
-        .camp-text h2 {
+        .camp-overlay h2 {
             font-family: var(--font-serif);
-            font-size: clamp(1.5rem, 3.5vw, 2rem);
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
             font-weight: 500;
-            color: var(--color-forest);
-            line-height: 1.2;
+            color: #fff;
+            line-height: 1.25;
             margin-bottom: 1rem;
         }
-        .camp-text p {
+        .camp-overlay p {
             font-size: 0.86rem;
             line-height: 1.9;
-            color: var(--color-charcoal);
+            color: rgba(255,255,255,0.85);
             margin-bottom: 1.25rem;
         }
         .camp-benefits {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 0.6rem;
+            margin-bottom: 1.75rem;
         }
         .camp-benefit {
             display: flex;
@@ -1287,29 +1282,29 @@
             gap: 0.5rem;
         }
         .camp-benefit-icon {
-            width: 32px;
-            height: 32px;
-            min-width: 32px;
-            background: rgba(44,62,45,0.07);
-            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            min-width: 30px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         .camp-benefit-icon svg {
-            width: 16px;
-            height: 16px;
-            stroke: var(--color-forest);
+            width: 14px;
+            height: 14px;
+            stroke: rgba(255,255,255,0.8);
             fill: none;
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
         .camp-benefit span {
-            font-size: 0.78rem;
-            color: var(--color-charcoal);
+            font-size: 0.76rem;
+            color: rgba(255,255,255,0.85);
             line-height: 1.4;
-            padding-top: 0.35rem;
+            padding-top: 0.3rem;
         }
         .camp-cta-btn {
             display: inline-flex;
@@ -1320,9 +1315,9 @@
             font-size: 0.85rem;
             font-weight: 500;
             letter-spacing: 0.08em;
-            color: #fff;
-            background: var(--color-forest);
-            border: 2px solid var(--color-forest);
+            color: var(--color-forest);
+            background: #fff;
+            border: 2px solid #fff;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1330,7 +1325,7 @@
         }
         .camp-cta-btn:hover {
             background: transparent;
-            color: var(--color-forest);
+            color: #fff;
         }
         .camp-cta-btn svg {
             width: 16px;
@@ -1348,12 +1343,12 @@
 
         /* Camping section responsive */
         @media (max-width: 768px) {
-            .camp-experience-inner {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+            .camp-experience {
+                min-height: 520px;
             }
-            .camp-illustration svg {
-                max-width: 300px;
+            .camp-overlay {
+                padding: 3rem 2rem;
+                max-width: 100%;
             }
             .camp-benefits {
                 grid-template-columns: 1fr;
@@ -1453,144 +1448,205 @@
 
     <!-- Camping Experience Section -->
     <div class="camp-experience">
-        <div class="camp-experience-inner">
-            <div class="camp-illustration">
-                <svg viewBox="0 0 420 320" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Sky gradient -->
-                    <defs>
-                        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#d4cfc7"/>
-                            <stop offset="100%" stop-color="#F3F1EC"/>
-                        </linearGradient>
-                        <linearGradient id="fireGlow" cx="50%" cy="50%" r="50%" fx="50%" fy="50%" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stop-color="#A69583" stop-opacity="0.15"/>
-                            <stop offset="100%" stop-color="#A69583" stop-opacity="0"/>
-                        </linearGradient>
-                    </defs>
+        <div class="camp-scene">
+            <svg viewBox="0 0 1200 580" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#1a2a1c"/>
+                        <stop offset="50%" stop-color="#2C3E2D"/>
+                        <stop offset="100%" stop-color="#3a5040"/>
+                    </linearGradient>
+                    <radialGradient id="fireGlow" cx="770" cy="400" r="160" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#d4874e" stop-opacity="0.3"/>
+                        <stop offset="40%" stop-color="#c47a3a" stop-opacity="0.1"/>
+                        <stop offset="100%" stop-color="#c47a3a" stop-opacity="0"/>
+                    </radialGradient>
+                    <radialGradient id="fireCore" cx="770" cy="410" r="50" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#e8a44a" stop-opacity="0.25"/>
+                        <stop offset="100%" stop-color="#e8a44a" stop-opacity="0"/>
+                    </radialGradient>
+                    <linearGradient id="textFade" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#1a2a1c" stop-opacity="0.92"/>
+                        <stop offset="60%" stop-color="#1a2a1c" stop-opacity="0.7"/>
+                        <stop offset="100%" stop-color="#1a2a1c" stop-opacity="0"/>
+                    </linearGradient>
+                </defs>
 
-                    <!-- Background -->
-                    <rect width="420" height="320" fill="url(#sky)" rx="12"/>
+                <!-- Sky -->
+                <rect width="1200" height="580" fill="url(#nightSky)"/>
 
-                    <!-- Stars -->
-                    <circle cx="50" cy="30" r="1.2" fill="#A69583" opacity="0.5"/>
-                    <circle cx="120" cy="18" r="1" fill="#A69583" opacity="0.4"/>
-                    <circle cx="200" cy="25" r="1.5" fill="#A69583" opacity="0.45"/>
-                    <circle cx="280" cy="15" r="1" fill="#A69583" opacity="0.5"/>
-                    <circle cx="350" cy="35" r="1.3" fill="#A69583" opacity="0.4"/>
-                    <circle cx="380" cy="20" r="0.8" fill="#A69583" opacity="0.35"/>
-                    <circle cx="90" cy="45" r="0.9" fill="#A69583" opacity="0.3"/>
+                <!-- Stars -->
+                <circle cx="150" cy="45" r="1.5" fill="#e8e0d8" opacity="0.6"/>
+                <circle cx="320" cy="28" r="1" fill="#e8e0d8" opacity="0.4"/>
+                <circle cx="500" cy="55" r="1.8" fill="#e8e0d8" opacity="0.55"/>
+                <circle cx="680" cy="22" r="1.2" fill="#e8e0d8" opacity="0.5"/>
+                <circle cx="820" cy="60" r="1" fill="#e8e0d8" opacity="0.35"/>
+                <circle cx="950" cy="35" r="1.5" fill="#e8e0d8" opacity="0.45"/>
+                <circle cx="1050" cy="65" r="1" fill="#e8e0d8" opacity="0.3"/>
+                <circle cx="1130" cy="30" r="1.3" fill="#e8e0d8" opacity="0.4"/>
+                <circle cx="250" cy="80" r="0.8" fill="#e8e0d8" opacity="0.3"/>
+                <circle cx="600" cy="75" r="1.2" fill="#e8e0d8" opacity="0.35"/>
+                <circle cx="880" cy="45" r="0.9" fill="#e8e0d8" opacity="0.3"/>
+                <circle cx="430" cy="40" r="1.1" fill="#e8e0d8" opacity="0.4"/>
+                <circle cx="770" cy="48" r="0.7" fill="#e8e0d8" opacity="0.25"/>
+                <circle cx="1000" cy="78" r="1" fill="#e8e0d8" opacity="0.3"/>
 
-                    <!-- Moon -->
-                    <circle cx="340" cy="55" r="16" fill="#e8e0d8" opacity="0.6"/>
-                    <circle cx="346" cy="50" r="14" fill="url(#sky)"/>
+                <!-- Moon -->
+                <circle cx="980" cy="85" r="28" fill="#e8e0d8" opacity="0.5"/>
+                <circle cx="990" cy="78" r="25" fill="url(#nightSky)"/>
 
-                    <!-- Far hills -->
-                    <path d="M0 160 Q60 110 120 140 Q180 115 240 135 Q310 105 380 130 L420 145 L420 200 L0 200 Z" fill="#3d4f3e" opacity="0.35"/>
-                    <path d="M0 175 Q80 140 160 165 Q240 135 320 160 Q370 145 420 165 L420 210 L0 210 Z" fill="#3d4f3e" opacity="0.25"/>
+                <!-- Far mountain range -->
+                <path d="M0 260 Q100 190 200 230 Q300 180 420 220 Q520 175 650 210 Q750 170 850 200 Q950 165 1050 195 Q1120 180 1200 210 L1200 320 L0 320Z" fill="#243428" opacity="0.6"/>
+                <path d="M0 285 Q150 230 300 265 Q450 220 600 255 Q750 215 900 248 Q1020 225 1200 250 L1200 340 L0 340Z" fill="#2d4031" opacity="0.5"/>
 
-                    <!-- Tree line (silhouettes) -->
-                    <!-- Left cluster -->
-                    <path d="M20 200 L30 155 L40 200Z" fill="#2C3E2D" opacity="0.7"/>
-                    <path d="M35 200 L48 148 L61 200Z" fill="#2C3E2D" opacity="0.8"/>
-                    <path d="M55 200 L65 160 L75 200Z" fill="#2C3E2D" opacity="0.65"/>
+                <!-- Tree line -->
+                <path d="M520 300 L535 245 L550 300Z" fill="#1f2f21" opacity="0.9"/>
+                <path d="M545 300 L565 235 L585 300Z" fill="#1f2f21"/>
+                <path d="M575 300 L590 255 L605 300Z" fill="#1f2f21" opacity="0.85"/>
+                <path d="M900 305 L918 240 L936 305Z" fill="#1f2f21" opacity="0.9"/>
+                <path d="M930 305 L955 225 L980 305Z" fill="#1f2f21"/>
+                <path d="M968 305 L985 250 L1002 305Z" fill="#1f2f21" opacity="0.85"/>
+                <path d="M1010 310 L1025 260 L1040 310Z" fill="#1f2f21" opacity="0.75"/>
+                <path d="M1060 310 L1080 245 L1100 310Z" fill="#1f2f21" opacity="0.8"/>
+                <path d="M1100 315 L1115 270 L1130 315Z" fill="#1f2f21" opacity="0.7"/>
+                <path d="M1140 315 L1160 255 L1180 315Z" fill="#1f2f21" opacity="0.85"/>
 
-                    <!-- Right cluster -->
-                    <path d="M340 200 L352 150 L364 200Z" fill="#2C3E2D" opacity="0.7"/>
-                    <path d="M355 200 L370 142 L385 200Z" fill="#2C3E2D" opacity="0.8"/>
-                    <path d="M380 200 L392 158 L404 200Z" fill="#2C3E2D" opacity="0.65"/>
+                <!-- Ground -->
+                <path d="M0 320 Q300 295 600 310 Q900 295 1200 315 L1200 580 L0 580Z" fill="#2a3e2c"/>
+                <path d="M0 330 Q300 310 600 325 Q900 310 1200 330 L1200 580 L0 580Z" fill="#314435"/>
 
-                    <!-- Ground -->
-                    <ellipse cx="210" cy="260" rx="200" ry="60" fill="#2C3E2D" opacity="0.12"/>
-                    <path d="M20 210 Q210 195 400 210 L420 320 L0 320 Z" fill="#F3F1EC"/>
-                    <path d="M40 215 Q210 200 380 215 L385 220 Q210 206 35 220 Z" fill="#e8e0d8" opacity="0.5"/>
+                <!-- Fire glow on ground -->
+                <circle cx="770" cy="400" r="160" fill="url(#fireGlow)"/>
+                <circle cx="770" cy="410" r="50" fill="url(#fireCore)"/>
 
-                    <!-- Tent (left) -->
-                    <path d="M100 245 L140 180 L180 245 Z" fill="none" stroke="#2C3E2D" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M126 245 L140 215 L154 245" fill="none" stroke="#2C3E2D" stroke-width="1.2" opacity="0.5"/>
-                    <line x1="140" y1="180" x2="140" y2="245" stroke="#2C3E2D" stroke-width="1" stroke-dasharray="3 3" opacity="0.3"/>
+                <!-- Tent (larger, right of campfire) -->
+                <path d="M870 430 L920 350 L970 430Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.5" opacity="0.9"/>
+                <path d="M895 430 L920 385 L945 430" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
 
-                    <!-- Tent (right) -->
-                    <path d="M250 250 L285 190 L320 250 Z" fill="none" stroke="#2C3E2D" stroke-width="2" stroke-linejoin="round"/>
-                    <path d="M270 250 L285 222 L300 250" fill="none" stroke="#2C3E2D" stroke-width="1.2" opacity="0.5"/>
-                    <line x1="285" y1="190" x2="285" y2="250" stroke="#2C3E2D" stroke-width="1" stroke-dasharray="3 3" opacity="0.3"/>
+                <!-- Small tent (far right) -->
+                <path d="M1020 440 L1048 380 L1076 440Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.2" opacity="0.75"/>
+                <path d="M1036 440 L1048 408 L1060 440" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.6" opacity="0.4"/>
 
-                    <!-- Campfire glow -->
-                    <circle cx="210" cy="255" r="30" fill="url(#fireGlow)"/>
+                <!-- Campfire logs -->
+                <line x1="752" y1="432" x2="788" y2="432" stroke="#5a3a20" stroke-width="4" stroke-linecap="round"/>
+                <line x1="756" y1="436" x2="784" y2="436" stroke="#4a2e18" stroke-width="3.5" stroke-linecap="round"/>
+                <line x1="760" y1="428" x2="780" y2="435" stroke="#5a3a20" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
 
-                    <!-- Campfire -->
-                    <path d="M200 262 L205 258 L210 265 L215 258 L220 262" fill="none" stroke="#A69583" stroke-width="2" stroke-linecap="round"/>
-                    <!-- Fire flames -->
-                    <path d="M207 258 Q210 245 210 248 Q210 243 213 258" fill="none" stroke="#A69583" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
-                    <path d="M205 256 Q208 240 210 244 Q212 240 215 256" fill="none" stroke="#A69583" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
-                    <!-- Fire sparks -->
-                    <circle cx="208" cy="238" r="1" fill="#A69583" opacity="0.4"/>
-                    <circle cx="213" cy="234" r="0.8" fill="#A69583" opacity="0.3"/>
-                    <circle cx="205" cy="232" r="0.6" fill="#A69583" opacity="0.25"/>
-                    <!-- Logs -->
-                    <line x1="198" y1="265" x2="222" y2="265" stroke="#2C3E2D" stroke-width="2.5" stroke-linecap="round"/>
-                    <line x1="200" y1="268" x2="220" y2="268" stroke="#2C3E2D" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+                <!-- Campfire flames -->
+                <path d="M765 430 Q767 414 770 408 Q773 414 775 430" fill="#e8a44a" opacity="0.8"/>
+                <path d="M760 430 Q765 410 770 400 Q775 410 780 430" fill="#d4874e" opacity="0.6"/>
+                <path d="M763 430 Q768 418 770 412 Q772 418 777 430" fill="#e8c06a" opacity="0.5"/>
+                <path d="M768 430 Q770 416 770 406 Q770 416 772 430" fill="#f0d488" opacity="0.4"/>
 
-                    <!-- People sitting (simplified) -->
-                    <!-- Person left -->
-                    <circle cx="185" cy="248" r="4" fill="none" stroke="#2C3E2D" stroke-width="1.5"/>
-                    <path d="M185 252 L185 264" stroke="#2C3E2D" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M185 256 L180 261" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M185 256 L189 260" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M185 264 L181 272" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M185 264 L189 272" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
+                <!-- Fire sparks -->
+                <circle cx="766" cy="395" r="1.5" fill="#e8a44a" opacity="0.5"/>
+                <circle cx="774" cy="390" r="1" fill="#e8c06a" opacity="0.4"/>
+                <circle cx="770" cy="385" r="0.8" fill="#e8a44a" opacity="0.3"/>
+                <circle cx="762" cy="388" r="1" fill="#d4874e" opacity="0.35"/>
+                <circle cx="778" cy="393" r="0.7" fill="#e8c06a" opacity="0.25"/>
 
-                    <!-- Person right -->
-                    <circle cx="235" cy="248" r="4" fill="none" stroke="#2C3E2D" stroke-width="1.5"/>
-                    <path d="M235 252 L235 264" stroke="#2C3E2D" stroke-width="1.5" stroke-linecap="round"/>
-                    <path d="M235 256 L230 261" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M235 256 L240 260" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M235 264 L231 272" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
-                    <path d="M235 264 L239 272" stroke="#2C3E2D" stroke-width="1.2" stroke-linecap="round"/>
+                <!-- Smoke -->
+                <path d="M770 395 Q774 375 768 358" fill="none" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round" opacity="0.15"/>
+                <path d="M772 390 Q776 365 770 342" fill="none" stroke="#e8e0d8" stroke-width="0.8" stroke-linecap="round" opacity="0.1"/>
+                <path d="M768 392 Q764 370 770 348" fill="none" stroke="#e8e0d8" stroke-width="0.7" stroke-linecap="round" opacity="0.08"/>
 
-                    <!-- Smoke wisps -->
-                    <path d="M210 235 Q213 225 208 218" fill="none" stroke="#A69583" stroke-width="0.8" stroke-linecap="round" opacity="0.3"/>
-                    <path d="M212 232 Q215 220 210 210" fill="none" stroke="#A69583" stroke-width="0.7" stroke-linecap="round" opacity="0.2"/>
-                    <path d="M208 230 Q205 218 210 208" fill="none" stroke="#A69583" stroke-width="0.6" stroke-linecap="round" opacity="0.15"/>
+                <!-- Dad sitting by fire (left side) -->
+                <circle cx="730" cy="404" r="7" fill="none" stroke="#e8e0d8" stroke-width="1.8"/>
+                <path d="M730 411 L730 430" stroke="#e8e0d8" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M730 417 L722 425" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M730 417 L738 422" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M730 430 L724 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M730 430 L736 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <!-- Warm light on dad -->
+                <circle cx="730" cy="418" r="12" fill="#e8a44a" opacity="0.06"/>
 
-                    <!-- Small details -->
-                    <!-- Grass tufts -->
-                    <path d="M80 250 Q82 244 84 250" fill="none" stroke="#2C3E2D" stroke-width="0.8" opacity="0.3"/>
-                    <path d="M330 248 Q332 242 334 248" fill="none" stroke="#2C3E2D" stroke-width="0.8" opacity="0.3"/>
-                    <path d="M160 258 Q162 253 164 258" fill="none" stroke="#2C3E2D" stroke-width="0.8" opacity="0.25"/>
-                    <path d="M260 260 Q262 255 264 260" fill="none" stroke="#2C3E2D" stroke-width="0.8" opacity="0.25"/>
+                <!-- Mum sitting (right side of fire) -->
+                <circle cx="810" cy="405" r="7" fill="none" stroke="#e8e0d8" stroke-width="1.8"/>
+                <!-- Hair detail -->
+                <path d="M804 402 Q803 396 807 393" fill="none" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+                <path d="M810 411 L810 430" stroke="#e8e0d8" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M810 417 L802 424" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M810 417 L818 423" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M810 430 L804 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M810 430 L816 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <!-- Warm light on mum -->
+                <circle cx="810" cy="418" r="12" fill="#e8a44a" opacity="0.06"/>
 
-                    <!-- Path/trail marks -->
-                    <path d="M140 280 Q175 275 210 278 Q245 275 280 282" fill="none" stroke="#e8e0d8" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
-                </svg>
-            </div>
-            <div class="camp-text">
-                <div class="camp-text-label">The Camping Experience</div>
-                <h2>Slow Down. <em>Breathe.</em> Reconnect.</h2>
-                <p>There's something quietly powerful about sleeping under the stars, waking to birdsong, and gathering around a campfire as the sun goes down. Camping strips away the noise of everyday life and brings you back to what matters &mdash; connection, stillness, and the simple joy of being outdoors.</p>
-                <p>At Ahana Hillside, you camp in the embrace of ancient rainforest. The air is clean, the nights are deep, and the rhythm of nature gently resets your pace.</p>
-                <div class="camp-benefits">
-                    <div class="camp-benefit">
-                        <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-                        <span>Reduces stress &amp; anxiety</span>
-                    </div>
-                    <div class="camp-benefit">
-                        <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
-                        <span>Better sleep &amp; fresh air</span>
-                    </div>
-                    <div class="camp-benefit">
-                        <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-                        <span>Quality time together</span>
-                    </div>
-                    <div class="camp-benefit">
-                        <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
-                        <span>Digital detox &amp; mindfulness</span>
-                    </div>
+                <!-- Child 1 running (between tents and fire) -->
+                <circle cx="848" cy="410" r="5.5" fill="none" stroke="#e8e0d8" stroke-width="1.5"/>
+                <path d="M848 415 L848 428" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M848 420 L842 426" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M848 420 L855 416" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <!-- Running legs - mid stride -->
+                <path d="M848 428 L841 438" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M848 428 L856 436" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+
+                <!-- Child 2 running (closer, slightly ahead) -->
+                <circle cx="870" cy="414" r="5" fill="none" stroke="#e8e0d8" stroke-width="1.4"/>
+                <path d="M870 419 L870 430" stroke="#e8e0d8" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M870 423 L864 428" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M870 423 L877 419" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <!-- Running legs -->
+                <path d="M870 430 L863 440" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M870 430 L878 438" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+
+                <!-- Camp chair hints -->
+                <path d="M725 432 L720 442 M725 432 L730 442 M720 440 L730 440" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.35"/>
+                <path d="M808 432 L803 442 M808 432 L813 442 M803 440 L813 440" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.35"/>
+
+                <!-- String lights between trees and tent -->
+                <path d="M580 278 Q680 265 770 280 Q850 270 920 354" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.2"/>
+                <circle cx="620" cy="273" r="2" fill="#e8c06a" opacity="0.3"/>
+                <circle cx="670" cy="269" r="2" fill="#e8c06a" opacity="0.25"/>
+                <circle cx="720" cy="273" r="2" fill="#e8c06a" opacity="0.3"/>
+                <circle cx="770" cy="278" r="2" fill="#e8c06a" opacity="0.25"/>
+                <circle cx="820" cy="273" r="2" fill="#e8c06a" opacity="0.2"/>
+
+                <!-- Grass tufts -->
+                <path d="M650 445 Q653 437 656 445" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.4"/>
+                <path d="M700 450 Q703 443 706 450" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.35"/>
+                <path d="M840 448 Q843 441 846 448" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.4"/>
+                <path d="M900 455 Q903 448 906 455" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
+                <path d="M980 452 Q983 445 986 452" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.35"/>
+                <path d="M1050 460 Q1053 453 1056 460" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
+
+                <!-- Dog near the fire -->
+                <ellipse cx="750" cy="438" rx="8" ry="4" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.5"/>
+                <circle cx="758" cy="435" r="3" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.5"/>
+                <path d="M760 433 L763 430" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.4"/>
+
+                <!-- Text readability overlay -->
+                <rect x="0" y="0" width="560" height="580" fill="url(#textFade)"/>
+            </svg>
+        </div>
+
+        <div class="camp-overlay">
+            <div class="camp-text-label">The Camping Experience</div>
+            <h2>Slow Down. <em>Breathe.</em> Reconnect.</h2>
+            <p>There's something quietly powerful about sleeping under the stars, waking to birdsong, and gathering around a campfire as the sun goes down. Camping strips away the noise of everyday life and brings you back to what matters &mdash; connection, stillness, and the simple joy of being outdoors.</p>
+            <p>At Ahana Hillside, you camp in the embrace of ancient rainforest. The air is clean, the nights are deep, and the rhythm of nature gently resets your pace.</p>
+            <div class="camp-benefits">
+                <div class="camp-benefit">
+                    <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+                    <span>Reduces stress &amp; anxiety</span>
                 </div>
-                <button class="camp-cta-btn" onclick="scrollToBooking()">
-                    Ready to camp?
-                    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-                </button>
+                <div class="camp-benefit">
+                    <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg></div>
+                    <span>Better sleep &amp; fresh air</span>
+                </div>
+                <div class="camp-benefit">
+                    <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                    <span>Quality time together</span>
+                </div>
+                <div class="camp-benefit">
+                    <div class="camp-benefit-icon"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+                    <span>Digital detox &amp; mindfulness</span>
+                </div>
             </div>
+            <button class="camp-cta-btn" onclick="scrollToBooking()">
+                Ready to camp?
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+            </button>
         </div>
     </div>
 
