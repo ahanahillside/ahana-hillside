@@ -50,7 +50,7 @@ const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB per video
 const GALLERY_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const GALLERY_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
-const EXPLORE_SLOTS = ['neighbourhood', 'reef', 'rainforest', 'waterfall', 'tablelands', 'beach', 'cairns'];
+const EXPLORE_SLOTS = ['neighbourhood', 'reef', 'rainforest', 'waterfall', 'tablelands', 'beach', 'cairns', 'kitchen'];
 
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.some(o => origin && origin.startsWith(o));
@@ -818,7 +818,7 @@ export default {
     }
 
     // GET /explore/:slot — public, serves the image/video for a slot
-    const exploreMatch = path.match(/^\/explore\/(neighbourhood|reef|rainforest|waterfall|tablelands|beach|cairns)$/);
+    const exploreMatch = path.match(/^\/explore\/(neighbourhood|reef|rainforest|waterfall|tablelands|beach|cairns|kitchen)$/);
     if (exploreMatch && request.method === 'GET') {
       const slot = exploreMatch[1];
       try {
