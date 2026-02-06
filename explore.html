@@ -17,6 +17,7 @@
             --color-cream: #F5F2EE;
             --color-charcoal: #3D3D3D;
             --color-light-stone: #e8e0d8;
+            --color-warm-white: #FDFCFA;
             --font-serif: 'Cormorant Garamond', Georgia, serif;
             --font-sans: 'DM Sans', -apple-system, sans-serif;
         }
@@ -29,6 +30,15 @@
             color: var(--color-charcoal);
             line-height: 1.7;
             overflow-x: hidden;
+        }
+
+        /* --- Section wrappers for alternating backgrounds --- */
+        .section-white { background-color: #fff; }
+        .section-cream { background-color: var(--color-cream); }
+        .section-warm  { background-color: var(--color-warm-white); }
+        .section-forest {
+            background-color: var(--color-forest);
+            color: #fff;
         }
 
         .header {
@@ -94,11 +104,67 @@
             color: var(--color-charcoal);
         }
 
+        /* --- Getting Here Banner --- */
+        .getting-here-banner {
+            padding: 3.5rem 2rem;
+        }
+        .getting-here-inner {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1px 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+        .getting-here-divider {
+            width: 1px;
+            height: 80px;
+            background-color: rgba(255,255,255,0.25);
+        }
+        .getting-here-item {
+            text-align: center;
+        }
+        .getting-here-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .getting-here-stat {
+            font-family: var(--font-serif);
+            font-size: clamp(1.6rem, 3vw, 2rem);
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.35rem;
+        }
+        .getting-here-label {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 0.04em;
+            line-height: 1.5;
+        }
+
         /* --- Highlight Cards --- */
+        .highlights-wrapper {
+            padding: 3rem 0 0;
+        }
         .highlights {
             max-width: 1000px;
             margin: 0 auto;
             padding: 0 2rem 4rem;
+        }
+
+        .highlights-section-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .highlights-section-sub {
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--color-stone);
+            margin-bottom: 2.5rem;
         }
 
         .highlight-card {
@@ -165,14 +231,78 @@
             width: 100%;
             height: 300px;
             object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* --- Local Essentials --- */
+        .essentials-wrapper {
+            padding: 3.5rem 0;
+        }
+        .essentials {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        .essentials-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .essentials-sub {
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--color-stone);
+            margin-bottom: 2.5rem;
+        }
+        .essentials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .essential-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: box-shadow 0.3s ease;
+        }
+        .essential-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .essential-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .essential-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.4rem;
+        }
+        .essential-card p {
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--color-charcoal);
+        }
+        .essential-card .distance-note {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            font-style: italic;
+            margin-top: 0.5rem;
         }
 
         /* --- Quick Guide --- */
+        .quick-guide-wrapper {
+            padding: 3.5rem 0;
+        }
         .quick-guide {
             max-width: 1000px;
             margin: 0 auto;
-            padding: 3rem 2rem 4rem;
-            border-top: 1px solid var(--color-light-stone);
+            padding: 0 2rem;
         }
 
         .quick-guide-title {
@@ -191,9 +321,19 @@
         }
 
         .guide-item {
-            background: #fff;
+            background: var(--color-cream);
             border: 1px solid var(--color-light-stone);
-            padding: 1.25rem;
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: box-shadow 0.3s ease;
+        }
+        .guide-item:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .guide-item-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
         }
 
         .guide-item h3 {
@@ -211,9 +351,12 @@
         }
 
         /* CTA */
+        .cta-wrapper {
+            padding: 3rem 0 4rem;
+        }
         .cta-section {
             text-align: center;
-            padding: 2rem 2rem 4rem;
+            padding: 0 2rem;
         }
 
         .cta-section p {
@@ -236,6 +379,7 @@
             color: var(--color-cream);
             background-color: var(--color-forest);
             border: 1px solid var(--color-forest);
+            border-radius: 4px;
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -251,6 +395,7 @@
             font-size: 0.7rem;
             color: var(--color-stone);
             border-top: 1px solid var(--color-light-stone);
+            background-color: #fff;
         }
         .site-footer a {
             color: var(--color-stone);
@@ -293,6 +438,9 @@
             .guide-grid {
                 grid-template-columns: 1fr;
             }
+            .essentials-grid {
+                grid-template-columns: 1fr;
+            }
             .highlights {
                 padding: 0 1.25rem 3rem;
             }
@@ -300,7 +448,20 @@
                 padding: 1rem 1.25rem 2rem;
             }
             .quick-guide {
-                padding: 2rem 1.25rem 3rem;
+                padding: 0 1.25rem;
+            }
+            .essentials {
+                padding: 0 1.25rem;
+            }
+            .getting-here-inner {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            .getting-here-divider {
+                width: 60px;
+                height: 1px;
+                margin: 0 auto;
             }
         }
     </style>
@@ -323,6 +484,7 @@
         </div>
     </div>
 
+    <div class="section-cream">
     <div class="header">
         <a href="index.html">
             <div class="header-logo">Ahana Hillside</div>
@@ -341,8 +503,29 @@
         <p>Ahana Hillside sits in the green hills just outside Cairns, the gateway to Tropical North Queensland. From here, two UNESCO World Heritage sites are at your doorstep &mdash; the Great Barrier Reef and the Daintree Rainforest &mdash; along with hidden waterfalls, volcanic crater lakes, and some of Australia's most scenic drives.</p>
         <p>Whether you're here for adventure or simply to soak in the surroundings, there's something remarkable in every direction.</p>
     </div>
+    </div>
 
+    <!-- Getting Here Banner -->
+    <div class="section-forest getting-here-banner">
+        <div class="getting-here-inner">
+            <div class="getting-here-item">
+                <div class="getting-here-icon">&#9992;</div>
+                <div class="getting-here-stat">35 Minutes</div>
+                <div class="getting-here-label">From Cairns Airport to Ahana Hillside<br>an easy, scenic drive through the tropics</div>
+            </div>
+            <div class="getting-here-divider"></div>
+            <div class="getting-here-item">
+                <div class="getting-here-icon">&#9968;</div>
+                <div class="getting-here-stat">A World Away</div>
+                <div class="getting-here-label">Nestled in the rainforest hills &mdash; yet close to<br>everything Cairns and Tropical North QLD offer</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-warm highlights-wrapper">
     <div class="highlights">
+        <h2 class="highlights-section-title">What's Nearby</h2>
+        <p class="highlights-section-sub">Explore the best of Tropical North Queensland, all within easy reach of Ahana Hillside</p>
 
         <!-- Great Barrier Reef -->
         <div class="highlight-card">
@@ -423,41 +606,80 @@
         </div>
 
     </div>
+    </div>
+
+    <!-- Local Essentials -->
+    <div class="section-cream essentials-wrapper">
+        <div class="essentials">
+            <h2 class="essentials-title">Local Essentials</h2>
+            <p class="essentials-sub">Everything you need is just a short drive away</p>
+            <div class="essentials-grid">
+                <div class="essential-card">
+                    <div class="essential-icon">&#128722;</div>
+                    <h3>Smithfield Shopping Centre</h3>
+                    <p>Your nearest major shopping hub with Woolworths, specialty shops, cafes, and essential services. A convenient one-stop for groceries and supplies.</p>
+                    <p class="distance-note">~15 min drive from Ahana Hillside</p>
+                </div>
+                <div class="essential-card">
+                    <div class="essential-icon">&#127822;</div>
+                    <h3>Freshwater &amp; Redlynch</h3>
+                    <p>Closer to Ahana, these suburbs offer a Coles supermarket, bakeries, takeaway options, and local convenience stores for quick essentials.</p>
+                    <p class="distance-note">~10 min drive from Ahana Hillside</p>
+                </div>
+                <div class="essential-card">
+                    <div class="essential-icon">&#127963;</div>
+                    <h3>Cairns Central</h3>
+                    <p>The main shopping centre in the Cairns CBD with Woolworths, Coles, Kmart, Target, and a wide range of retail, dining, and services.</p>
+                    <p class="distance-note">~20 min drive from Ahana Hillside</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Quick Guide -->
+    <div class="section-white quick-guide-wrapper">
     <div class="quick-guide">
         <h2 class="quick-guide-title">Quick Guide</h2>
         <div class="guide-grid">
             <div class="guide-item">
-                <h3>Getting Around</h3>
-                <p>A car is recommended to explore the region. Cairns Airport is the closest hub with domestic and international flights. Most attractions are within a 1&ndash;2 hour drive.</p>
+                <div class="guide-item-icon">&#128663;</div>
+                <h3>Getting Here</h3>
+                <p>Cairns Airport is just 35 minutes away by car, with domestic and international flights. A rental car is recommended to explore the region freely &mdash; most attractions are within a 1&ndash;2 hour drive.</p>
             </div>
             <div class="guide-item">
+                <div class="guide-item-icon">&#9728;</div>
                 <h3>Best Time to Visit</h3>
                 <p>The dry season (May&ndash;October) offers warm days and cool evenings. The wet season (November&ndash;April) is hotter and more humid with tropical downpours, but the landscape is at its most lush.</p>
             </div>
             <div class="guide-item">
+                <div class="guide-item-icon">&#129433;</div>
                 <h3>Wildlife</h3>
                 <p>Keep an eye out for cassowaries, tree kangaroos, platypus, and an incredible variety of tropical birds. Estuarine crocodiles inhabit local waterways &mdash; always swim in designated areas.</p>
             </div>
             <div class="guide-item">
+                <div class="guide-item-icon">&#127754;</div>
                 <h3>Stinger Season</h3>
                 <p>Marine stingers (jellyfish) are present in coastal waters from November to May. Swim within stinger nets at beaches, or wear a stinger suit when on reef trips.</p>
             </div>
             <div class="guide-item">
+                <div class="guide-item-icon">&#127821;</div>
                 <h3>Local Produce</h3>
                 <p>The region is known for tropical fruits, coffee, chocolate, and macadamias. Visit Rusty's Markets, Gallo Dairyland, and the many farm gates along the Tablelands.</p>
             </div>
             <div class="guide-item">
+                <div class="guide-item-icon">&#127940;</div>
                 <h3>Adventure Activities</h3>
                 <p>Beyond reef and rainforest: bungee jumping, white-water rafting on the Tully and Barron rivers, hot air ballooning over the Tablelands, and the Skyrail Rainforest Cableway.</p>
             </div>
         </div>
     </div>
+    </div>
 
+    <div class="section-cream cta-wrapper">
     <div class="cta-section">
         <p>Ready to make Ahana your base camp?</p>
         <a href="campsites.html" class="cta-btn">Book Your Stay</a>
+    </div>
     </div>
 
     <footer class="site-footer">
