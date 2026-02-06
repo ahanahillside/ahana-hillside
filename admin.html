@@ -1247,8 +1247,29 @@
             </div>
 
             <div class="card" style="max-width:700px;margin-top:1.5rem">
-                <div class="card-title">Explore Page &mdash; Section Images</div>
-                <div class="section-desc" style="margin-bottom:1rem">Upload images or videos for each section on the Explore page and the homepage neighbourhood panel. Accepts images (5MB) or videos (50MB).</div>
+                <div class="card-title">Kitchen Image</div>
+                <div class="section-desc" style="margin-bottom:0.75rem">Upload a photo of your on-site kitchen for the Local Essentials page. Accepts images (5MB) or videos (50MB).</div>
+                <div class="explore-slot-card" data-slot="kitchen">
+                    <div class="explore-slot-header">
+                        <strong>Essentials &mdash; On-site Kitchen</strong>
+                        <span class="explore-slot-status" id="explore-status-kitchen"></span>
+                    </div>
+                    <div class="explore-slot-preview" id="explore-preview-kitchen"></div>
+                    <div class="explore-slot-actions">
+                        <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-kitchen').click()">Upload</button>
+                        <input type="file" id="file-explore-kitchen" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('kitchen', this.files[0])">
+                        <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-kitchen" onclick="deleteExploreSlot('kitchen')">Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="max-width:700px;margin-top:1.5rem">
+                <div class="card-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="toggleExploreSection()">
+                    Explore Page &mdash; Section Images
+                    <svg id="explore-collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s ease;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div id="explore-section-body" style="overflow:hidden;transition:max-height 0.4s ease,opacity 0.3s ease;max-height:0;opacity:0">
+                <div class="section-desc" style="margin-bottom:1rem;margin-top:0.5rem">Upload images or videos for each section on the Explore page and the homepage neighbourhood panel. Accepts images (5MB) or videos (50MB).</div>
 
                 <div id="explore-slots-grid" style="display:grid;grid-template-columns:1fr;gap:1rem">
 
@@ -1343,6 +1364,7 @@
                         </div>
                     </div>
 
+                </div>
                 </div>
             </div>
         </div>
@@ -2483,6 +2505,20 @@
     // --- Explore Section Images ---
     let exploreSlots = {};
 
+    function toggleExploreSection() {
+        var body = document.getElementById('explore-section-body');
+        var icon = document.getElementById('explore-collapse-icon');
+        if (body.style.maxHeight === '0px' || body.style.maxHeight === '0') {
+            body.style.maxHeight = body.scrollHeight + 200 + 'px';
+            body.style.opacity = '1';
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            body.style.maxHeight = '0';
+            body.style.opacity = '0';
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
+
     async function loadExploreSlots() {
         try {
             const res = await fetch(WORKER_URL + '/explore/list');
@@ -2495,7 +2531,7 @@
     }
 
     function renderExploreSlots() {
-        const slotNames = ['neighbourhood', 'reef', 'rainforest', 'waterfall', 'tablelands', 'beach', 'cairns'];
+        const slotNames = ['neighbourhood', 'reef', 'rainforest', 'waterfall', 'tablelands', 'beach', 'cairns', 'kitchen'];
         slotNames.forEach(slot => {
             const preview = document.getElementById('explore-preview-' + slot);
             const status = document.getElementById('explore-status-' + slot);
