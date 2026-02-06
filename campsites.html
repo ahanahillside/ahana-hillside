@@ -602,25 +602,6 @@
             padding-top: 0.4rem;
         }
 
-        .availability-status {
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            color: var(--color-stone);
-            margin-bottom: 0.75rem;
-        }
-
-        .availability-status .dot {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            margin-right: 0.3rem;
-            vertical-align: middle;
-        }
-
-        .dot-live { background: #5a9a5a; }
-        .dot-loading { background: var(--color-stone); }
-        .dot-error { background: #b44; }
 
         .btn-select {
             display: block;
@@ -1431,7 +1412,7 @@
         </nav>
         <div class="menu-footer-nav">
             <a href="disclaimer.html">Disclaimer</a> &middot; <a href="contact.html">Get in Touch</a><br>
-            &copy; 2026 Ahana Hillside
+            &copy; 2026 Ahana Hillside &middot; ABN: 731 5158 2872
         </div>
     </div>
 
@@ -1813,9 +1794,6 @@
                         <span class="price-note">for 2 guests</span>
                     </div>
                     <div class="price-breakdown-mini" id="samavas-breakdown" style="display:none;"></div>
-                    <div class="availability-status" id="samavas-status">
-                        <span class="dot dot-loading"></span> Checking availability...
-                    </div>
                     <div class="date-warning" id="samavas-warning">Selected dates are unavailable for SAMAVAS. Please choose different dates.</div>
                     <div class="guest-message" id="samavas-guest-msg">
                         This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
@@ -1861,9 +1839,6 @@
                         <span class="price-note">for 2 guests</span>
                     </div>
                     <div class="price-breakdown-mini" id="chhaya-breakdown" style="display:none;"></div>
-                    <div class="availability-status" id="chhaya-status">
-                        <span class="dot dot-loading"></span> Checking availability...
-                    </div>
                     <div class="date-warning" id="chhaya-warning">Selected dates are unavailable for CHHAYA. Please choose different dates.</div>
                     <div class="guest-message" id="chhaya-guest-msg">
                         This site accommodates up to <strong><span>20</span> guests</strong>. Please select fewer guests.
@@ -2025,7 +2000,7 @@
             <a href="campsites.html">Campsites</a>
             <a href="contact.html">Contact Us</a>
         </div>
-        &copy; 2026 Ahana Hillside
+        &copy; 2026 Ahana Hillside &middot; ABN: 731 5158 2872
     </footer>
 
     <!-- Lightbox -->
@@ -2472,7 +2447,6 @@
 
         // --- Fetch availability from Cloudflare Worker ---
         async function fetchAvailability(site) {
-            const statusEl = document.getElementById(site + '-status');
             try {
                 const [calRes, blockedRes] = await Promise.all([
                     fetch(WORKER_URL + '?site=' + site).then(r => r.ok ? r.json() : { bookedDates: [] }).catch(() => ({ bookedDates: [] })),
@@ -2482,14 +2456,7 @@
                 const hipcampDates = calRes.bookedDates || [];
                 const manualDates = blockedRes.blockedDates || [];
                 bookedDates[site] = [...new Set([...hipcampDates, ...manualDates])].sort();
-
-                if (bookedDates[site].length > 0) {
-                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; ' + bookedDates[site].length + ' date(s) unavailable';
-                } else {
-                    statusEl.innerHTML = '<span class="dot dot-live"></span> Calendar synced &mdash; all dates available';
-                }
             } catch (err) {
-                statusEl.innerHTML = '<span class="dot dot-error"></span> Could not load availability';
                 console.warn('Availability fetch failed for ' + site + ':', err);
             }
         }
