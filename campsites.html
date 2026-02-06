@@ -1499,6 +1499,26 @@
 
                 <!-- === LEFT SIDE: SAMAVAS === -->
 
+                <!-- Caravan behind Samavas tent -->
+                <rect x="310" y="370" width="76" height="36" rx="5" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.2"/>
+                <path d="M310 370 Q312 360 319 360 L378 360 Q386 360 386 370" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.2"/>
+                <!-- Caravan window -->
+                <rect x="334" y="375" width="14" height="10" rx="2" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.7"/>
+                <!-- Caravan door -->
+                <rect x="354" y="376" width="10" height="20" rx="1.5" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.6"/>
+                <circle cx="361" cy="386" r="1" fill="#e8e0d8" opacity="0.4"/>
+                <!-- Caravan stripe -->
+                <line x1="314" y1="392" x2="384" y2="392" stroke="#e8e0d8" stroke-width="0.5" opacity="0.2"/>
+                <!-- Caravan wheels -->
+                <circle cx="328" cy="410" r="5" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="1.2"/>
+                <circle cx="328" cy="410" r="2" fill="#e8e0d8" opacity="0.2"/>
+                <circle cx="372" cy="410" r="5" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="1.2"/>
+                <circle cx="372" cy="410" r="2" fill="#e8e0d8" opacity="0.2"/>
+                <!-- A-frame hitch -->
+                <path d="M310 397 L298 408 M310 401 L298 408" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+                <!-- Caravan awning light -->
+                <circle cx="350" cy="362" r="1.5" fill="#e8c06a" opacity="0.25"/>
+
                 <!-- Samavas tent -->
                 <path d="M200 420 L260 330 L320 420Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.8" stroke-linejoin="round"/>
                 <path d="M230 420 L260 370 L290 420" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
@@ -1529,33 +1549,43 @@
 
                 <!-- === RIGHT SIDE: CHHAYA === -->
 
-                <!-- Chhaya tent -->
-                <path d="M880 420 L940 330 L1000 420Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.8" stroke-linejoin="round"/>
-                <path d="M910 420 L940 370 L970 420" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
-                <line x1="940" y1="330" x2="940" y2="420" stroke="#e8e0d8" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.2"/>
+                <!-- Small car behind Chhaya tent -->
+                <rect x="870" y="392" width="52" height="16" rx="3.5" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.1"/>
+                <path d="M879 392 L884 381 L910 381 L915 392" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.1"/>
+                <!-- Car windows -->
+                <path d="M886 383 L882 390 L896 390 L896 383Z" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.6" opacity="0.6"/>
+                <path d="M898 383 L898 390 L911 390 L908 383Z" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.6" opacity="0.6"/>
+                <!-- Car wheels -->
+                <circle cx="882" cy="410" r="4" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="1.1"/>
+                <circle cx="882" cy="410" r="1.5" fill="#e8e0d8" opacity="0.2"/>
+                <circle cx="912" cy="410" r="4" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="1.1"/>
+                <circle cx="912" cy="410" r="1.5" fill="#e8e0d8" opacity="0.2"/>
+                <!-- Headlight -->
+                <circle cx="922" cy="398" r="1.5" fill="#e8c06a" opacity="0.2"/>
+
+                <!-- Chhaya tent (smaller) -->
+                <path d="M910 420 L950 355 L990 420Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M928 420 L950 385 L972 420" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.7" opacity="0.5"/>
+                <line x1="950" y1="355" x2="950" y2="420" stroke="#e8e0d8" stroke-width="0.5" stroke-dasharray="3 4" opacity="0.2"/>
                 <!-- Tent flag -->
-                <path d="M940 330 L928 335 L940 340" fill="#e8a44a" opacity="0.4"/>
+                <path d="M950 355 L938 360 L950 365" fill="#e8a44a" opacity="0.4"/>
 
                 <!-- Chhaya wooden sign post -->
-                <line x1="1045" y1="350" x2="1045" y2="420" stroke="#6b4a2e" stroke-width="4" stroke-linecap="round"/>
+                <line x1="1030" y1="360" x2="1030" y2="420" stroke="#6b4a2e" stroke-width="4" stroke-linecap="round"/>
                 <!-- Sign board -->
-                <rect x="1020" y="352" width="62" height="22" rx="3" fill="#7a5533" stroke="#5a3a20" stroke-width="1"/>
-                <rect x="1022" y="354" width="58" height="18" rx="2" fill="#8a6340"/>
-                <text x="1051" y="367" font-family="'Cormorant Garamond', serif" font-size="11" font-weight="500" fill="#f0e8de" text-anchor="middle" letter-spacing="1">Chhaya</text>
+                <rect x="1005" y="362" width="62" height="22" rx="3" fill="#7a5533" stroke="#5a3a20" stroke-width="1"/>
+                <rect x="1007" y="364" width="58" height="18" rx="2" fill="#8a6340"/>
+                <text x="1036" y="377" font-family="'Cormorant Garamond', serif" font-size="11" font-weight="500" fill="#f0e8de" text-anchor="middle" letter-spacing="1">Chhaya</text>
                 <!-- Sign nail dots -->
-                <circle cx="1027" cy="363" r="1.2" fill="#5a3a20" opacity="0.6"/>
-                <circle cx="1075" cy="363" r="1.2" fill="#5a3a20" opacity="0.6"/>
+                <circle cx="1012" cy="373" r="1.2" fill="#5a3a20" opacity="0.6"/>
+                <circle cx="1060" cy="373" r="1.2" fill="#5a3a20" opacity="0.6"/>
                 <!-- Arrow on post -->
-                <path d="M1057 378 L1045 385 L1057 392" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.3"/>
+                <path d="M1042 388 L1030 395 L1042 402" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.3"/>
 
                 <!-- Chhaya lantern -->
-                <rect x="998" y="405" width="5" height="8" rx="1" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
-                <circle cx="1000.5" cy="409" r="1.5" fill="#e8c06a" opacity="0.4"/>
-                <line x1="1000.5" y1="405" x2="1000.5" y2="401" stroke="#e8e0d8" stroke-width="0.6" opacity="0.4"/>
-
-                <!-- Cooler box near Chhaya -->
-                <rect x="860" y="412" width="14" height="10" rx="2" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.35"/>
-                <line x1="860" y1="415" x2="874" y2="415" stroke="#e8e0d8" stroke-width="0.6" opacity="0.25"/>
+                <rect x="996" y="408" width="5" height="8" rx="1" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
+                <circle cx="998.5" cy="412" r="1.5" fill="#e8c06a" opacity="0.4"/>
+                <line x1="998.5" y1="408" x2="998.5" y2="404" stroke="#e8e0d8" stroke-width="0.6" opacity="0.4"/>
 
                 <!-- === SAMAVAS FAMILY (left camp) === -->
 
@@ -1608,56 +1638,43 @@
                 <circle cx="347" cy="469" r="2.5" fill="none" stroke="#e8e0d8" stroke-width="0.9" opacity="0.4"/>
                 <path d="M349 467 L351 464" fill="none" stroke="#e8e0d8" stroke-width="0.7" opacity="0.3"/>
 
-                <!-- === CHHAYA FAMILY (right camp) === -->
+                <!-- === CHHAYA COUPLE (right camp) === -->
 
-                <!-- Chhaya campfire -->
-                <radialGradient id="fireGlowR" cx="920" cy="455" r="60" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stop-color="#d4874e" stop-opacity="0.25"/>
+                <!-- Chhaya campfire (smaller) -->
+                <radialGradient id="fireGlowR" cx="950" cy="458" r="45" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stop-color="#d4874e" stop-opacity="0.2"/>
                     <stop offset="100%" stop-color="#d4874e" stop-opacity="0"/>
                 </radialGradient>
-                <circle cx="920" cy="455" r="60" fill="url(#fireGlowR)"/>
-                <ellipse cx="920" cy="466" rx="12" ry="3.5" fill="none" stroke="#8a7a6a" stroke-width="1.2" opacity="0.3"/>
-                <line x1="910" y1="467" x2="930" y2="467" stroke="#5a3a20" stroke-width="3" stroke-linecap="round"/>
-                <line x1="912" y1="470" x2="928" y2="470" stroke="#4a2e18" stroke-width="2.5" stroke-linecap="round"/>
-                <path d="M916 467 Q918 456 920 451 Q922 456 924 467" fill="#e8a44a" opacity="0.8"/>
-                <path d="M914 467 Q918 453 920 447 Q922 453 926 467" fill="#d4874e" opacity="0.55"/>
-                <path d="M917 467 Q919 458 920 454 Q921 458 923 467" fill="#e8c06a" opacity="0.5"/>
-                <circle cx="918" cy="444" r="1" fill="#e8a44a" opacity="0.4"/>
-                <circle cx="923" cy="442" r="0.8" fill="#e8c06a" opacity="0.3"/>
+                <circle cx="950" cy="458" r="45" fill="url(#fireGlowR)"/>
+                <ellipse cx="950" cy="468" rx="10" ry="3" fill="none" stroke="#8a7a6a" stroke-width="1" opacity="0.3"/>
+                <line x1="942" y1="469" x2="958" y2="469" stroke="#5a3a20" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="944" y1="472" x2="956" y2="472" stroke="#4a2e18" stroke-width="2" stroke-linecap="round"/>
+                <path d="M947 469 Q949 460 950 456 Q951 460 953 469" fill="#e8a44a" opacity="0.75"/>
+                <path d="M945 469 Q948 457 950 452 Q952 457 955 469" fill="#d4874e" opacity="0.5"/>
+                <path d="M948 469 Q949 462 950 458 Q951 462 952 469" fill="#e8c06a" opacity="0.45"/>
+                <circle cx="948" cy="449" r="0.8" fill="#e8a44a" opacity="0.35"/>
+                <circle cx="953" cy="447" r="0.6" fill="#e8c06a" opacity="0.25"/>
 
-                <!-- Chhaya dad sitting (right of fire) -->
-                <circle cx="945" cy="448" r="6" fill="none" stroke="#e8e0d8" stroke-width="1.6"/>
-                <path d="M945 454 L945 468" stroke="#e8e0d8" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M945 459 L939 465" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M945 459 L952 464" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M945 468 L940 478" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M945 468 L950 478" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <!-- Person 1 sitting (left of fire) -->
+                <circle cx="932" cy="452" r="5.5" fill="none" stroke="#e8e0d8" stroke-width="1.4"/>
+                <path d="M932 457 L932 470" stroke="#e8e0d8" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M932 462 L926 467" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M932 462 L939 466" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M932 470 L927 479" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M932 470 L937 479" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
                 <!-- Chair -->
-                <path d="M942 470 L938 479 M942 470 L946 479 M938 477 L946 477" fill="none" stroke="#e8e0d8" stroke-width="0.7" opacity="0.3"/>
+                <path d="M929 472 L925 480 M929 472 L933 480 M925 478 L933 478" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.3"/>
 
-                <!-- Chhaya mum sitting (left of fire) -->
-                <circle cx="895" cy="449" r="6" fill="none" stroke="#e8e0d8" stroke-width="1.6"/>
-                <path d="M900 447 Q901 442 898 439" fill="none" stroke="#e8e0d8" stroke-width="0.8" stroke-linecap="round" opacity="0.5"/>
-                <path d="M895 455 L895 468" stroke="#e8e0d8" stroke-width="1.5" stroke-linecap="round"/>
-                <path d="M895 460 L889 465" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M895 460 L902 464" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M895 468 L890 478" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M895 468 L900 478" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <!-- Person 2 sitting (right of fire) -->
+                <circle cx="968" cy="453" r="5.5" fill="none" stroke="#e8e0d8" stroke-width="1.4"/>
+                <path d="M963 451 Q962 446 965 443" fill="none" stroke="#e8e0d8" stroke-width="0.7" stroke-linecap="round" opacity="0.5"/>
+                <path d="M968 458 L968 470" stroke="#e8e0d8" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M968 463 L962 467" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M968 463 L975 466" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M968 470 L963 479" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M968 470 L973 479" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
                 <!-- Chair -->
-                <path d="M892 470 L888 479 M892 470 L896 479 M888 477 L896 477" fill="none" stroke="#e8e0d8" stroke-width="0.7" opacity="0.3"/>
-
-                <!-- Chhaya kid playing near tent -->
-                <circle cx="970" cy="435" r="4.5" fill="none" stroke="#e8e0d8" stroke-width="1.3"/>
-                <path d="M970 439 L970 450" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M970 444 L964 449" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round"/>
-                <path d="M970 444 L977 441" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round"/>
-                <path d="M970 450 L965 459" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round"/>
-                <path d="M970 450 L976 458" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round"/>
-
-                <!-- Chhaya dog -->
-                <ellipse cx="870" cy="472" rx="7" ry="3.5" fill="none" stroke="#e8e0d8" stroke-width="0.9" opacity="0.4"/>
-                <circle cx="863" cy="469" r="2.5" fill="none" stroke="#e8e0d8" stroke-width="0.9" opacity="0.4"/>
-                <path d="M861 467 L859 464" fill="none" stroke="#e8e0d8" stroke-width="0.7" opacity="0.3"/>
+                <path d="M965 472 L961 480 M965 472 L969 480 M961 478 L969 478" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.3"/>
 
                 <!-- String lights (left side, Samavas) -->
                 <path d="M145 365 Q200 355 260 332" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.2"/>
@@ -1666,10 +1683,10 @@
                 <circle cx="230" cy="346" r="1.8" fill="#e8c06a" opacity="0.3"/>
 
                 <!-- String lights (right side, Chhaya) -->
-                <path d="M1045 365 Q1000 355 940 332" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.2"/>
-                <circle cx="1020" cy="362" r="1.8" fill="#e8c06a" opacity="0.3"/>
-                <circle cx="995" cy="356" r="1.8" fill="#e8c06a" opacity="0.25"/>
-                <circle cx="968" cy="346" r="1.8" fill="#e8c06a" opacity="0.3"/>
+                <path d="M1030 375 Q990 367 950 357" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.2"/>
+                <circle cx="1008" cy="373" r="1.8" fill="#e8c06a" opacity="0.3"/>
+                <circle cx="985" cy="368" r="1.8" fill="#e8c06a" opacity="0.25"/>
+                <circle cx="965" cy="362" r="1.8" fill="#e8c06a" opacity="0.3"/>
 
                 <!-- Grass tufts scattered -->
                 <path d="M350 450 Q353 442 356 450" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.4"/>
