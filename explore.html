@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Cairns &amp; Surroundings — Ahana Hillside</title>
+    <meta name="description" content="Discover what's around Ahana Hillside — waterfalls, rainforest, the Great Barrier Reef, and more in Tropical North Queensland.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #F5F2EE;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2.5rem 2rem 1rem;
+        }
+        .header a { text-decoration: none; }
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            letter-spacing: 0.02em;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--color-forest); }
+
+        .page-intro {
+            text-align: center;
+            padding: 1rem 2rem 2rem;
+        }
+        .page-intro h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+        .page-intro p {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--color-stone);
+            max-width: 550px;
+            margin: 0 auto;
+        }
+        .divider {
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 1rem auto 0;
+        }
+
+        /* --- About Cairns Intro --- */
+        .explore-intro {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 1rem 2rem 2.5rem;
+        }
+
+        .explore-intro p {
+            font-size: 0.9rem;
+            line-height: 1.85;
+            margin-bottom: 1rem;
+            color: var(--color-charcoal);
+        }
+
+        /* --- Highlight Cards --- */
+        .highlights {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .highlight-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            align-items: center;
+            margin-bottom: 3.5rem;
+            padding-bottom: 3.5rem;
+            border-bottom: 1px solid var(--color-light-stone);
+        }
+
+        .highlight-card:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .highlight-card.reverse {
+            direction: rtl;
+        }
+
+        .highlight-card.reverse > * {
+            direction: ltr;
+        }
+
+        .highlight-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 400;
+            color: var(--color-forest);
+            line-height: 1.25;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-title em {
+            font-style: italic;
+        }
+
+        .highlight-desc {
+            font-size: 0.85rem;
+            line-height: 1.8;
+            color: var(--color-charcoal);
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-distance {
+            font-size: 0.78rem;
+            color: var(--color-stone);
+            font-style: italic;
+            margin-top: 0.75rem;
+        }
+
+        .highlight-image-placeholder {
+            width: 100%;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-style: italic;
+            color: #fff;
+        }
+
+        .highlight-image-placeholder.reef { background: linear-gradient(135deg, #3a9dbb 0%, #1a6e8a 50%, #0f4c5c 100%); }
+        .highlight-image-placeholder.rainforest { background: linear-gradient(135deg, #5a8a5c 0%, #3a6b3c 50%, #1f4f22 100%); }
+        .highlight-image-placeholder.waterfalls { background: linear-gradient(135deg, #7ab8c9 0%, #4a9aaa 50%, #2a7a8a 100%); }
+        .highlight-image-placeholder.tablelands { background: linear-gradient(135deg, #8ab05a 0%, #6a904a 50%, #4a703a 100%); }
+        .highlight-image-placeholder.beaches { background: linear-gradient(135deg, #d4c5a0 0%, #b4a580 50%, #948565 100%); }
+        .highlight-image-placeholder.cairns-city { background: linear-gradient(135deg, #c4a98a 0%, #a4896a 50%, #84694a 100%); }
+
+        /* --- Quick Guide --- */
+        .quick-guide {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+            border-top: 1px solid var(--color-light-stone);
+        }
+
+        .quick-guide-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .guide-item {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem;
+        }
+
+        .guide-item h3 {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.4rem;
+        }
+
+        .guide-item p {
+            font-size: 0.78rem;
+            line-height: 1.65;
+            color: var(--color-stone);
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 2rem 2rem 4rem;
+        }
+
+        .cta-section p {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-style: italic;
+            color: var(--color-charcoal);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--color-cream);
+            background-color: var(--color-forest);
+            border: 1px solid var(--color-forest);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .cta-btn:hover {
+            background: transparent;
+            color: var(--color-forest);
+        }
+
+        /* Footer */
+        .site-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            border-top: 1px solid var(--color-light-stone);
+        }
+        .site-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: color 0.2s;
+        }
+        .site-footer a:hover { color: var(--color-forest); }
+
+        /* --- Hamburger Menu --- */
+        .menu-btn { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; width: 44px; height: 44px; background: rgba(255,255,255,0.9); border: 1px solid var(--color-light-stone); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; transition: background 0.3s; backdrop-filter: blur(4px); }
+        .menu-btn:hover { background: #fff; }
+        .menu-btn span { display: block; width: 18px; height: 2px; background: var(--color-forest); transition: transform 0.3s, opacity 0.3s; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .menu-overlay.open { opacity: 1; visibility: visible; }
+        .menu-panel { position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100%; background: #fff; z-index: 999; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 5rem 2rem 2rem; }
+        .menu-panel.open { right: 0; }
+        .menu-panel nav a { display: block; font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; color: var(--color-forest); text-decoration: none; padding: 0.75rem 0; border-bottom: 1px solid var(--color-light-stone); transition: color 0.2s, padding-left 0.2s; }
+        .menu-panel nav a:hover { padding-left: 0.5rem; color: var(--color-stone); }
+        .menu-panel nav a:last-child { border-bottom: none; }
+        .menu-footer-nav { margin-top: auto; font-size: 0.75rem; color: var(--color-stone); line-height: 1.8; }
+        .menu-footer-nav a { color: var(--color-stone); text-decoration: none; transition: color 0.2s; }
+        .menu-footer-nav a:hover { color: var(--color-forest); }
+
+        @media (max-width: 768px) {
+            .highlight-card {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .highlight-card.reverse {
+                direction: ltr;
+            }
+            .highlight-image-placeholder {
+                height: 220px;
+            }
+            .guide-grid {
+                grid-template-columns: 1fr;
+            }
+            .highlights {
+                padding: 0 1.25rem 3rem;
+            }
+            .explore-intro {
+                padding: 1rem 1.25rem 2rem;
+            }
+            .quick-guide {
+                padding: 2rem 1.25rem 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <div class="menu-panel">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="explore.html">Explore</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="menu-footer-nav">
+            <a href="disclaimer.html">Disclaimer</a> &middot; <a href="contact.html">Get in Touch</a><br>
+            &copy; 2026 Ahana Hillside
+        </div>
+    </div>
+
+    <div class="header">
+        <a href="index.html">
+            <div class="header-logo">Ahana Hillside</div>
+        </a>
+        <br>
+        <a href="index.html" class="back-link">&larr; Back to home</a>
+    </div>
+
+    <div class="page-intro">
+        <h1>Explore the Neighbourhood</h1>
+        <p>Discover what awaits beyond the hillside</p>
+        <div class="divider"></div>
+    </div>
+
+    <div class="explore-intro">
+        <p>Ahana Hillside sits in the green hills just outside Cairns, the gateway to Tropical North Queensland. From here, two UNESCO World Heritage sites are at your doorstep &mdash; the Great Barrier Reef and the Daintree Rainforest &mdash; along with hidden waterfalls, volcanic crater lakes, and some of Australia's most scenic drives.</p>
+        <p>Whether you're here for adventure or simply to soak in the surroundings, there's something remarkable in every direction.</p>
+    </div>
+
+    <div class="highlights">
+
+        <!-- Great Barrier Reef -->
+        <div class="highlight-card">
+            <div>
+                <p class="highlight-label">World Heritage</p>
+                <h2 class="highlight-title"><em>Great Barrier</em> Reef</h2>
+                <p class="highlight-desc">The world's largest coral reef system stretches over 2,300 kilometres along the Queensland coast. From Cairns, day trips take you to the outer reef for snorkelling, diving, and glass-bottom boat tours among vibrant coral gardens and marine life. Whether it's your first time or your fiftieth, the reef never fails to amaze.</p>
+                <p class="highlight-distance">Day trips depart daily from Cairns Marina &middot; ~45 min by boat</p>
+            </div>
+            <div>
+                <div class="highlight-image-placeholder reef">Great Barrier Reef</div>
+            </div>
+        </div>
+
+        <!-- Daintree Rainforest -->
+        <div class="highlight-card reverse">
+            <div>
+                <p class="highlight-label">Ancient Rainforest</p>
+                <h2 class="highlight-title"><em>Daintree</em> Rainforest</h2>
+                <p class="highlight-desc">At over 180 million years old, the Daintree is the oldest continuously surviving tropical rainforest on Earth. Drive north from Cairns along one of the world's great coastal roads, cross the river by cable ferry, and step into a primeval world of towering fan palms, crystal-clear swimming holes, and dense canopy walks. Cape Tribulation, where the rainforest meets the reef, is unforgettable.</p>
+                <p class="highlight-distance">~2 hours drive north of Ahana Hillside</p>
+            </div>
+            <div>
+                <div class="highlight-image-placeholder rainforest">Daintree Rainforest</div>
+            </div>
+        </div>
+
+        <!-- Waterfalls -->
+        <div class="highlight-card">
+            <div>
+                <p class="highlight-label">Natural Wonders</p>
+                <h2 class="highlight-title"><em>Waterfalls</em> &amp; Swimming Holes</h2>
+                <p class="highlight-desc">Tropical North Queensland is home to some of the most beautiful waterfalls in Australia. Crystal Cascades is a local favourite just minutes from the city &mdash; a series of pristine pools surrounded by lush rainforest. Further afield, Josephine Falls tumbles over enormous granite boulders (with natural rock slides), Babinda Boulders offers dramatic rainforest swimming, and Millaa Millaa Falls is the picture-perfect curtain waterfall you've seen on postcards.</p>
+                <p class="highlight-distance">Crystal Cascades ~20 min &middot; Josephine Falls ~1 hr &middot; Babinda Boulders ~50 min</p>
+            </div>
+            <div>
+                <div class="highlight-image-placeholder waterfalls">Waterfalls &amp; Swimming Holes</div>
+            </div>
+        </div>
+
+        <!-- Atherton Tablelands -->
+        <div class="highlight-card reverse">
+            <div>
+                <p class="highlight-label">Highlands</p>
+                <h2 class="highlight-title"><em>Atherton</em> Tablelands</h2>
+                <p class="highlight-desc">Rising behind Cairns, the Atherton Tablelands are a patchwork of rolling green hills, volcanic crater lakes, and rainforest pockets. Visit Lake Eacham and Lake Barrine for tranquil swims in volcanic lakes, explore the giant curtain fig tree, spot platypus at Yungaburra, or visit the Herberton Historic Village. The cooler highland climate makes it a refreshing day out.</p>
+                <p class="highlight-distance">~1 hour drive from Ahana Hillside via Gillies Highway</p>
+            </div>
+            <div>
+                <div class="highlight-image-placeholder tablelands">Atherton Tablelands</div>
+            </div>
+        </div>
+
+        <!-- Beaches -->
+        <div class="highlight-card">
+            <div>
+                <p class="highlight-label">Coastal</p>
+                <h2 class="highlight-title"><em>Beaches</em> &amp; Islands</h2>
+                <p class="highlight-desc">While Cairns itself sits on a mud-flat estuary, stunning beaches are just a short drive away. Palm Cove offers a palm-lined esplanade with calm waters, Trinity Beach is a family favourite, and the northern beaches stretch all the way to Port Douglas. For a true tropical island experience, take a boat to Fitzroy Island or Green Island &mdash; both offer snorkelling right off the beach.</p>
+                <p class="highlight-distance">Palm Cove ~25 min &middot; Fitzroy Island ~45 min by ferry</p>
+            </div>
+            <div>
+                <div class="highlight-image-placeholder beaches">Beaches &amp; Islands</div>
+            </div>
+        </div>
+
+        <!-- Cairns City -->
+        <div class="highlight-card reverse">
+            <div>
+                <p class="highlight-label">The City</p>
+                <h2 class="highlight-title"><em>Cairns</em> City</h2>
+                <p class="highlight-desc">Cairns is a relaxed, tropical city with a vibrant waterfront. The Esplanade Lagoon offers free saltwater swimming in the heart of the city, surrounded by barbecue areas and parklands. Explore Rusty's Markets for tropical fruit and local produce on weekends, dine at the waterfront restaurants, or take a stroll along the Boardwalk through mangroves and mudflats where you can spot crocodiles and birdlife.</p>
+                <p class="highlight-distance">~20 min drive from Ahana Hillside</p>
+            </div>
+            <div>
+                <div class="highlight-image-placeholder cairns-city">Cairns City</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quick Guide -->
+    <div class="quick-guide">
+        <h2 class="quick-guide-title">Quick Guide</h2>
+        <div class="guide-grid">
+            <div class="guide-item">
+                <h3>Getting Around</h3>
+                <p>A car is recommended to explore the region. Cairns Airport is the closest hub with domestic and international flights. Most attractions are within a 1&ndash;2 hour drive.</p>
+            </div>
+            <div class="guide-item">
+                <h3>Best Time to Visit</h3>
+                <p>The dry season (May&ndash;October) offers warm days and cool evenings. The wet season (November&ndash;April) is hotter and more humid with tropical downpours, but the landscape is at its most lush.</p>
+            </div>
+            <div class="guide-item">
+                <h3>Wildlife</h3>
+                <p>Keep an eye out for cassowaries, tree kangaroos, platypus, and an incredible variety of tropical birds. Estuarine crocodiles inhabit local waterways &mdash; always swim in designated areas.</p>
+            </div>
+            <div class="guide-item">
+                <h3>Stinger Season</h3>
+                <p>Marine stingers (jellyfish) are present in coastal waters from November to May. Swim within stinger nets at beaches, or wear a stinger suit when on reef trips.</p>
+            </div>
+            <div class="guide-item">
+                <h3>Local Produce</h3>
+                <p>The region is known for tropical fruits, coffee, chocolate, and macadamias. Visit Rusty's Markets, Gallo Dairyland, and the many farm gates along the Tablelands.</p>
+            </div>
+            <div class="guide-item">
+                <h3>Adventure Activities</h3>
+                <p>Beyond reef and rainforest: bungee jumping, white-water rafting on the Tully and Barron rivers, hot air ballooning over the Tablelands, and the Skyrail Rainforest Cableway.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cta-section">
+        <p>Ready to make Ahana your base camp?</p>
+        <a href="campsites.html" class="cta-btn">Book Your Stay</a>
+    </div>
+
+    <footer class="site-footer">
+        <a href="about.html">About</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="explore.html">Explore</a>
+        <a href="campsites.html">Campsites</a>
+        <a href="contact.html">Contact</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <br><br>
+        &copy; 2026 Ahana Hillside
+    </footer>
+
+    <script>
+    function toggleMenu() {
+        document.querySelector('.menu-btn').classList.toggle('open');
+        document.querySelector('.menu-overlay').classList.toggle('open');
+        document.querySelector('.menu-panel').classList.toggle('open');
+    }
+    </script>
+</body>
+</html>
