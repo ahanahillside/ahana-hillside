@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Guide &mdash; Ahana Hillside</title>
-    <meta name="description" content="Tips and essentials for your visit to Ahana Hillside — getting here, best time to visit, wildlife, and adventure activities in Tropical North Queensland.">
+    <title>Quick Guide — Ahana Hillside</title>
+    <meta name="description" content="Tips and essentials for your visit to Ahana Hillside — getting here, best time to visit, wildlife, stinger season, local produce, and adventure activities.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,7 +64,7 @@
         /* --- Page Intro --- */
         .page-intro {
             text-align: center;
-            padding: 1rem 2rem 2rem;
+            padding: 1rem 2rem 0.5rem;
         }
         .page-intro h1 {
             font-family: var(--font-serif);
@@ -88,40 +88,206 @@
             margin: 1rem auto 0;
         }
 
-        /* --- Guide Grid --- */
-        .guide-grid {
-            max-width: 1000px;
+        .guide-intro {
+            text-align: center;
+            padding: 2rem 2rem 1rem;
+            max-width: 640px;
             margin: 0 auto;
-            padding: 2rem;
+        }
+        .guide-intro p {
+            font-size: 0.88rem;
+            line-height: 1.85;
+            color: var(--color-charcoal);
+        }
+
+        /* --- Guide Tiles --- */
+        .guide-tiles {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem 2rem 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .guide-tile {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
+            grid-template-columns: 1fr 1.6fr;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 260px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
         }
-        .guide-item {
+        .guide-tile.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Dark tiles (forest green bg) --- */
+        .guide-tile.dark {
+            background: var(--color-forest);
+        }
+        .guide-tile.dark .tile-icon-wrap {
+            background: rgba(255,255,255,0.06);
+        }
+        .guide-tile.dark .tile-icon-wrap svg {
+            stroke: rgba(255,255,255,0.85);
+        }
+        .guide-tile.dark .tile-label {
+            color: var(--color-stone);
+        }
+        .guide-tile.dark .tile-content h2 {
+            color: #fff;
+        }
+        .guide-tile.dark .tile-content p {
+            color: rgba(255,255,255,0.8);
+        }
+        .guide-tile.dark .tile-tip {
+            background: rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.9);
+        }
+        .guide-tile.dark .tile-tip svg {
+            stroke: rgba(255,255,255,0.6);
+        }
+
+        /* --- Light tiles (cream bg) --- */
+        .guide-tile.light {
             background: var(--color-cream);
-            border: 1px solid var(--color-light-stone);
-            border-radius: 6px;
-            padding: 1.5rem;
-            transition: box-shadow 0.3s ease;
         }
-        .guide-item:hover {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        .guide-tile.light .tile-icon-wrap {
+            background: rgba(44,62,45,0.06);
         }
-        .guide-item-icon {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
+        .guide-tile.light .tile-icon-wrap svg {
+            stroke: var(--color-forest);
         }
-        .guide-item h3 {
-            font-family: var(--font-serif);
-            font-size: 1.1rem;
-            font-weight: 500;
+        .guide-tile.light .tile-label {
+            color: var(--color-stone);
+        }
+        .guide-tile.light .tile-content h2 {
             color: var(--color-forest);
+        }
+        .guide-tile.light .tile-content p {
+            color: var(--color-charcoal);
+        }
+        .guide-tile.light .tile-tip {
+            background: rgba(44,62,45,0.07);
+            color: var(--color-forest);
+        }
+        .guide-tile.light .tile-tip svg {
+            stroke: var(--color-stone);
+        }
+
+        /* Flip layout on alternating tiles */
+        .guide-tile.flip {
+            grid-template-columns: 1.6fr 1fr;
+        }
+        .guide-tile.flip .tile-icon-wrap {
+            order: 2;
+        }
+        .guide-tile.flip .tile-content {
+            order: 1;
+        }
+
+        /* --- Icon side --- */
+        .tile-icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .tile-icon-wrap svg {
+            width: 80px;
+            height: 80px;
+            fill: none;
+            stroke-width: 1.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* --- Content side --- */
+        .tile-content {
+            padding: 2.25rem 2.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .tile-label {
+            font-size: 0.66rem;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
             margin-bottom: 0.4rem;
         }
-        .guide-item p {
-            font-size: 0.78rem;
-            line-height: 1.65;
+        .tile-content h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 3vw, 1.75rem);
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+        }
+        .tile-content p {
+            font-size: 0.86rem;
+            line-height: 1.85;
+            margin-bottom: 1rem;
+        }
+
+        /* Tip pills */
+        .tile-tips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .tile-tip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.28rem 0.65rem;
+            border-radius: 4px;
+        }
+        .tile-tip svg {
+            width: 12px;
+            height: 12px;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* --- End section --- */
+        .guide-end {
+            text-align: center;
+            padding: 2.5rem 2rem 3rem;
+        }
+        .guide-end-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--color-stone);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+        }
+        .guide-end p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-style: italic;
             color: var(--color-stone);
+            max-width: 420px;
+            margin: 0 auto 1.5rem;
+        }
+        .guide-cta {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-forest);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .guide-cta:hover {
+            color: var(--color-stone);
+            border-color: var(--color-stone);
         }
 
         /* --- Footer --- */
@@ -161,9 +327,24 @@
 
         /* --- Responsive --- */
         @media (max-width: 768px) {
-            .guide-grid {
+            .guide-tile {
                 grid-template-columns: 1fr;
-                max-width: 400px;
+                min-height: auto;
+            }
+            .guide-tile.flip {
+                grid-template-columns: 1fr;
+            }
+            .guide-tile.flip .tile-icon-wrap { order: 0; }
+            .guide-tile.flip .tile-content { order: 0; }
+            .tile-icon-wrap {
+                padding: 2rem 2rem 1rem;
+            }
+            .tile-icon-wrap svg {
+                width: 56px;
+                height: 56px;
+            }
+            .tile-content {
+                padding: 1rem 1.75rem 2rem;
             }
         }
     </style>
@@ -196,41 +377,229 @@
 
     <div class="page-intro">
         <h1>Quick Guide</h1>
-        <p>Tips and essentials for your visit</p>
+        <p>Everything you need to know before you arrive</p>
         <div class="divider"></div>
     </div>
 
-    <div class="guide-grid">
-        <div class="guide-item">
-            <div class="guide-item-icon">&#128663;</div>
-            <h3>Getting Here</h3>
-            <p>Cairns Airport is just 35 minutes away by car, with domestic and international flights. A rental car is recommended to explore the region freely &mdash; most attractions are within a 1&ndash;2 hour drive.</p>
+    <div class="guide-intro">
+        <p>A few handy tips and local knowledge to help you make the most of your stay at Ahana Hillside and your time in Tropical North Queensland.</p>
+    </div>
+
+    <div class="guide-tiles">
+
+        <!-- 1. Getting Here — DARK -->
+        <div class="guide-tile dark">
+            <div class="tile-icon-wrap">
+                <svg viewBox="0 0 80 80">
+                    <path d="M55 20L40 10 25 20"/>
+                    <path d="M40 10v45"/>
+                    <path d="M20 60c5-6 12-10 20-10s15 4 20 10"/>
+                    <circle cx="40" cy="55" r="3"/>
+                    <path d="M28 35l-8 5m32-5l8 5"/>
+                    <path d="M15 68h50"/>
+                </svg>
+            </div>
+            <div class="tile-content">
+                <div class="tile-label">Travel</div>
+                <h2>Getting Here</h2>
+                <p>Ahana Hillside is at 69863 Bruce Highway, Aloomba &mdash; a straight 35-minute drive south from Cairns Airport. The airport handles domestic flights from all major Australian cities plus international routes from Asia and the Pacific. A rental car is highly recommended to explore the region freely.</p>
+                <div class="tile-tips">
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        ~35 min from Cairns Airport
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Direct via Bruce Highway
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Rental car recommended
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="guide-item">
-            <div class="guide-item-icon">&#9728;</div>
-            <h3>Best Time to Visit</h3>
-            <p>The dry season (May&ndash;October) offers warm days and cool evenings. The wet season (November&ndash;April) is hotter and more humid with tropical downpours, but the landscape is at its most lush.</p>
+
+        <!-- 2. Best Time to Visit — LIGHT, FLIP -->
+        <div class="guide-tile light flip">
+            <div class="tile-icon-wrap">
+                <svg viewBox="0 0 80 80">
+                    <circle cx="40" cy="38" r="14"/>
+                    <line x1="40" y1="12" x2="40" y2="18"/>
+                    <line x1="40" y1="58" x2="40" y2="64"/>
+                    <line x1="14" y1="38" x2="20" y2="38"/>
+                    <line x1="60" y1="38" x2="66" y2="38"/>
+                    <line x1="21.6" y1="19.6" x2="25.8" y2="23.8"/>
+                    <line x1="54.2" y1="52.2" x2="58.4" y2="56.4"/>
+                    <line x1="58.4" y1="19.6" x2="54.2" y2="23.8"/>
+                    <line x1="25.8" y1="52.2" x2="21.6" y2="56.4"/>
+                    <path d="M22 72h36" stroke-dasharray="2 3"/>
+                </svg>
+            </div>
+            <div class="tile-content">
+                <div class="tile-label">Seasons</div>
+                <h2>Best Time to Visit</h2>
+                <p>The dry season from May to October offers warm days around 26&deg;C and cooler evenings &mdash; perfect for hiking and outdoor adventures. The wet season from November to April is hotter and more humid with dramatic tropical downpours, but the landscape is at its most lush, the waterfalls are thundering, and visitor numbers drop.</p>
+                <div class="tile-tips">
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/></svg>
+                        Dry Season: May &ndash; Oct
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/><line x1="8" y1="16" x2="8" y2="20"/><line x1="12" y1="18" x2="12" y2="22"/></svg>
+                        Wet Season: Nov &ndash; Apr
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Both seasons are beautiful
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="guide-item">
-            <div class="guide-item-icon">&#129433;</div>
-            <h3>Wildlife</h3>
-            <p>Keep an eye out for cassowaries, tree kangaroos, platypus, and an incredible variety of tropical birds. Estuarine crocodiles inhabit local waterways &mdash; always swim in designated areas.</p>
+
+        <!-- 3. Wildlife — DARK -->
+        <div class="guide-tile dark">
+            <div class="tile-icon-wrap">
+                <svg viewBox="0 0 80 80">
+                    <path d="M40 16c-3-6-10-6-12 0s2 14 12 22c10-8 14-16 12-22s-9-6-12 0z"/>
+                    <path d="M25 48c0-6 6-10 15-10s15 4 15 10"/>
+                    <path d="M30 48v12c0 3 4 6 10 6s10-3 10-6V48"/>
+                    <circle cx="35" cy="42" r="2"/>
+                    <circle cx="45" cy="42" r="2"/>
+                    <path d="M20 30c-4-2-8 0-8 4s4 6 8 4"/>
+                    <path d="M60 30c4-2 8 0 8 4s-4 6-8 4"/>
+                </svg>
+            </div>
+            <div class="tile-content">
+                <div class="tile-label">Nature</div>
+                <h2>Wildlife</h2>
+                <p>Tropical North Queensland is one of the most biodiverse regions on the planet. Keep an eye out for endangered southern cassowaries near Aloomba, tree kangaroos in the highlands, platypus at dawn in Tablelands streams, and an incredible array of tropical birds. Estuarine crocodiles inhabit local waterways &mdash; always observe warning signs and swim only in designated areas.</p>
+                <div class="tile-tips">
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/></svg>
+                        Cassowaries near Aloomba
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Platypus &middot; Tree Kangaroos
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Croc-aware waterways
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="guide-item">
-            <div class="guide-item-icon">&#127754;</div>
-            <h3>Stinger Season</h3>
-            <p>Marine stingers (jellyfish) are present in coastal waters from November to May. Swim within stinger nets at beaches, or wear a stinger suit when on reef trips.</p>
+
+        <!-- 4. Stinger Season — LIGHT, FLIP -->
+        <div class="guide-tile light flip">
+            <div class="tile-icon-wrap">
+                <svg viewBox="0 0 80 80">
+                    <ellipse cx="40" cy="32" rx="14" ry="18"/>
+                    <path d="M30 50c-2 8-6 18-4 20"/>
+                    <path d="M36 50c0 10 2 20 0 22"/>
+                    <path d="M44 50c0 10-2 20 0 22"/>
+                    <path d="M50 50c2 8 6 18 4 20"/>
+                    <circle cx="35" cy="28" r="2"/>
+                    <circle cx="45" cy="28" r="2"/>
+                    <path d="M34 36c3 2 9 2 12 0"/>
+                </svg>
+            </div>
+            <div class="tile-content">
+                <div class="tile-label">Safety</div>
+                <h2>Stinger Season</h2>
+                <p>Marine stingers (box jellyfish and Irukandji) are present in coastal waters from November to May. Beaches like Palm Cove and Trinity Beach have stinger nets during this period. When on reef trips, wear a stinger suit &mdash; most tour operators provide them. Freshwater swimming holes like Babinda Boulders and Crystal Cascades are stinger-free year-round.</p>
+                <div class="tile-tips">
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Nov &ndash; May in coastal waters
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Swim within stinger nets
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Freshwater holes are stinger-free
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="guide-item">
-            <div class="guide-item-icon">&#127821;</div>
-            <h3>Local Produce</h3>
-            <p>The region is known for tropical fruits, coffee, chocolate, and macadamias. Visit Rusty&rsquo;s Markets, Gallo Dairyland, and the many farm gates along the Tablelands.</p>
+
+        <!-- 5. Local Produce — DARK -->
+        <div class="guide-tile dark">
+            <div class="tile-icon-wrap">
+                <svg viewBox="0 0 80 80">
+                    <path d="M40 14c-4-4-12-2-14 6 0 0 8 4 14-6z"/>
+                    <path d="M40 14c4-4 12-2 14 6 0 0-8 4-14-6z"/>
+                    <line x1="40" y1="14" x2="40" y2="30"/>
+                    <ellipse cx="40" cy="48" rx="22" ry="14"/>
+                    <path d="M22 42c6 2 12 3 18 3s12-1 18-3"/>
+                    <path d="M30 48v4m10-6v6m10-6v4"/>
+                    <circle cx="32" cy="52" r="2"/>
+                    <circle cx="48" cy="52" r="2"/>
+                </svg>
+            </div>
+            <div class="tile-content">
+                <div class="tile-label">Food &amp; Markets</div>
+                <h2>Local Produce</h2>
+                <p>Tropical North Queensland is a food lover's paradise. The region produces world-class coffee, chocolate, macadamias, tropical fruits like mangoes and rambutans, and fresh seafood. Visit Rusty's Markets in Cairns on a Saturday morning for the full experience, or explore the Tablelands' farm gates, cheese makers, and the famous Gallo Dairyland.</p>
+                <div class="tile-tips">
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                        Rusty's Markets (Fri &ndash; Sun)
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Coffee &middot; Chocolate &middot; Macadamias
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Tablelands farm gates
+                    </span>
+                </div>
+            </div>
         </div>
-        <div class="guide-item">
-            <div class="guide-item-icon">&#127940;</div>
-            <h3>Adventure Activities</h3>
-            <p>Beyond reef and rainforest: bungee jumping, white-water rafting on the Tully and Barron rivers, hot air ballooning over the Tablelands, and the Skyrail Rainforest Cableway.</p>
+
+        <!-- 6. Adventure Activities — LIGHT, FLIP -->
+        <div class="guide-tile light flip">
+            <div class="tile-icon-wrap">
+                <svg viewBox="0 0 80 80">
+                    <path d="M10 65l20-40 10 16 10-24 20 48"/>
+                    <path d="M10 65h60"/>
+                    <circle cx="58" cy="20" r="6"/>
+                    <path d="M25 44l5-3 5 3"/>
+                    <path d="M38 50c4-8 10-12 14-10"/>
+                </svg>
+            </div>
+            <div class="tile-content">
+                <div class="tile-label">Thrills</div>
+                <h2>Adventure Activities</h2>
+                <p>Beyond the reef and rainforest, TNQ is an adventure playground. Take on white-water rafting on the Tully or Barron rivers, bungee jump at AJ Hackett in Smithfield, float above the Tablelands in a hot air balloon at dawn, or glide through the canopy on the Skyrail Rainforest Cableway. The Kuranda Scenic Railway is another must-do for breathtaking gorge views.</p>
+                <div class="tile-tips">
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        White-water rafting
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Bungee &middot; Skyrail &middot; Scenic Railway
+                    </span>
+                    <span class="tile-tip">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Hot air ballooning
+                    </span>
+                </div>
+            </div>
         </div>
+
+    </div>
+
+    <!-- End -->
+    <div class="guide-end">
+        <div class="guide-end-dot"></div>
+        <p>Now you're ready &mdash; we can't wait to welcome you</p>
+        <a href="explore.html" class="guide-cta">Back to Explore &rarr;</a>
     </div>
 
     <footer class="site-footer">
@@ -250,6 +619,24 @@
         document.querySelector('.menu-overlay').classList.toggle('open');
         document.querySelector('.menu-panel').classList.toggle('open');
     }
+
+    // Scroll-reveal
+    (function() {
+        var tiles = document.querySelectorAll('.guide-tile');
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        tiles.forEach(function(tile) {
+            tile.style.transitionDelay = '0.1s';
+            observer.observe(tile);
+        });
+    })();
     </script>
 </body>
 </html>
