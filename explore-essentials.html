@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Essentials | Ahana Hillside</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #F3F1EC;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+        }
+
+        @keyframes pageIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--color-cream);
+            color: var(--color-charcoal);
+            animation: pageIn 0.6s ease-out both;
+        }
+
+        /* ── Hamburger Menu ── */
+        .hamburger-btn {
+            position: fixed;
+            top: 1.2rem;
+            right: 1.2rem;
+            z-index: 1002;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 28px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .hamburger-btn span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--color-forest);
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .hamburger-btn.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+        .hamburger-btn.active span:nth-child(2) { opacity: 0; }
+        .hamburger-btn.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--color-cream);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .menu-overlay nav {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .menu-overlay nav a {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--color-forest);
+            text-decoration: none;
+            letter-spacing: 0.01em;
+            transition: color 0.3s ease;
+        }
+
+        .menu-overlay nav a:hover { color: var(--color-stone); }
+
+        .menu-footer {
+            position: absolute;
+            bottom: 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            letter-spacing: 0.02em;
+        }
+
+        .menu-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+        }
+
+        .menu-footer a:hover { text-decoration: underline; }
+
+        .menu-footer .menu-footer-links { margin-bottom: 0.5rem; }
+
+        .menu-footer .menu-footer-links a { margin: 0 0.3rem; }
+
+        .menu-footer .menu-footer-links span { margin: 0 0.2rem; }
+
+        /* ── Header ── */
+        .site-header {
+            padding: 1.2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-header .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--color-forest);
+            text-decoration: none;
+            letter-spacing: 0.01em;
+        }
+
+        .back-link {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover { color: var(--color-forest); }
+
+        /* ── Page Content ── */
+        .page-content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .page-title h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--color-forest);
+            letter-spacing: 0.01em;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title p {
+            font-size: 0.85rem;
+            color: var(--color-stone);
+            letter-spacing: 0.02em;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: var(--color-stone);
+            margin: 0 auto 2.5rem;
+        }
+
+        /* ── Essential Cards Grid ── */
+        .essentials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .essential-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .essential-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .essential-card .card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .essential-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+
+        .essential-card p {
+            font-size: 0.8rem;
+            line-height: 1.7;
+            color: var(--color-charcoal);
+        }
+
+        .essential-card .distance-note {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* ── Footer ── */
+        .site-footer {
+            background: #fff;
+            border-top: 1px solid var(--color-light-stone);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.03em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover { color: var(--color-forest); }
+
+        .footer-copy {
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            letter-spacing: 0.02em;
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 768px) {
+            .essentials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title h1 { font-size: 1.7rem; }
+
+            .site-header { padding: 1rem 1.2rem; }
+
+            .page-content { padding: 1.5rem 1.2rem 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hamburger Button -->
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="explore.html">Explore</a>
+            <a href="about.html">About Us</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <div class="menu-footer">
+            <div class="menu-footer-links">
+                <a href="disclaimer.html">Disclaimer</a>
+                <span>&middot;</span>
+                <a href="contact.html">Get in Touch</a>
+            </div>
+            <p>&copy; 2026 Ahana Hillside</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <a href="index.html" class="logo">Ahana Hillside</a>
+        <a href="explore.html" class="back-link">&larr; Back to explore</a>
+    </header>
+
+    <!-- Page Content -->
+    <main class="page-content">
+        <div class="page-title">
+            <h1>Local Essentials</h1>
+            <p>Everything you need is just a short drive away</p>
+        </div>
+        <div class="divider"></div>
+
+        <div class="essentials-grid">
+
+            <!-- Card 1: IGA Supermarket -->
+            <div class="essential-card">
+                <div class="card-icon">&#128722;</div>
+                <h3>IGA Supermarket</h3>
+                <p>Your closest supermarket for all everyday essentials. Well-stocked with fresh produce, pantry staples, and camping supplies, open until midnight for those late-night needs.</p>
+                <p class="distance-note">Closest supermarket to Ahana Hillside</p>
+            </div>
+
+            <!-- Card 2: Woolworths Gordonvale -->
+            <div class="essential-card">
+                <div class="card-icon">&#127822;</div>
+                <h3>Woolworths Gordonvale</h3>
+                <p>A full-range Woolworths supermarket located on the Bruce Highway in Gordonvale, offering everything from fresh groceries and bakery items to household goods and pharmacy essentials.</p>
+                <p class="distance-note">Short drive north on the Bruce Highway</p>
+            </div>
+
+            <!-- Card 3: Fast Food & Dining -->
+            <div class="essential-card">
+                <div class="card-icon">&#127828;</div>
+                <h3>Fast Food &amp; Dining</h3>
+                <p>Craving a quick bite? KFC and McDonald's are both within easy reach in Gordonvale, along with a selection of local cafes and eateries perfect for a relaxed meal out.</p>
+                <p class="distance-note">KFC &amp; McDonald's within easy reach</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="explore.html">Explore</a>
+            <a href="campsites.html">Campsites</a>
+            <a href="contact.html">Contact</a>
+            <a href="disclaimer.html">Disclaimer</a>
+        </div>
+        <p class="footer-copy">&copy; 2026 Ahana Hillside</p>
+    </footer>
+
+    <script>
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const menuOverlay = document.getElementById('menuOverlay');
+
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked
+        menuOverlay.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburgerBtn.classList.remove('active');
+                menuOverlay.classList.remove('active');
+            });
+        });
+    </script>
+
+</body>
+</html>
