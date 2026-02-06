@@ -160,7 +160,8 @@
             margin-top: 0.75rem;
         }
 
-        .highlight-image {
+        .highlight-image,
+        .highlight-video {
             width: 100%;
             height: 300px;
             object-fit: cover;
@@ -285,7 +286,8 @@
             .highlight-card.reverse {
                 direction: ltr;
             }
-            .highlight-image {
+            .highlight-image,
+            .highlight-video {
                 height: 220px;
             }
             .guide-grid {
@@ -351,7 +353,7 @@
                 <p class="highlight-distance">Day trips depart daily from Cairns Marina &middot; ~45 min by boat</p>
             </div>
             <div>
-                <img src="images/explore/reef.jpg" alt="Great Barrier Reef coral and marine life" class="highlight-image">
+                <img id="img-reef" src="images/explore/reef.jpg" alt="Great Barrier Reef coral and marine life" class="highlight-image">
             </div>
         </div>
 
@@ -364,7 +366,7 @@
                 <p class="highlight-distance">~2 hours drive north of Ahana Hillside</p>
             </div>
             <div>
-                <img src="images/explore/rainforest.jpg" alt="Daintree Rainforest tropical canopy" class="highlight-image">
+                <img id="img-rainforest" src="images/explore/rainforest.jpg" alt="Daintree Rainforest tropical canopy" class="highlight-image">
             </div>
         </div>
 
@@ -377,7 +379,7 @@
                 <p class="highlight-distance">Crystal Cascades ~20 min &middot; Josephine Falls ~1 hr &middot; Babinda Boulders ~50 min</p>
             </div>
             <div>
-                <img src="images/explore/waterfall.jpg" alt="Tropical waterfall surrounded by rainforest" class="highlight-image">
+                <img id="img-waterfall" src="images/explore/waterfall.jpg" alt="Tropical waterfall surrounded by rainforest" class="highlight-image">
             </div>
         </div>
 
@@ -390,7 +392,7 @@
                 <p class="highlight-distance">~1 hour drive from Ahana Hillside via Gillies Highway</p>
             </div>
             <div>
-                <img src="images/explore/tablelands.jpg" alt="Rolling green hills of the Atherton Tablelands" class="highlight-image">
+                <img id="img-tablelands" src="images/explore/tablelands.jpg" alt="Rolling green hills of the Atherton Tablelands" class="highlight-image">
             </div>
         </div>
 
@@ -403,7 +405,7 @@
                 <p class="highlight-distance">Palm Cove ~25 min &middot; Fitzroy Island ~45 min by ferry</p>
             </div>
             <div>
-                <img src="images/explore/beach.jpg" alt="Tropical beach with palm trees in North Queensland" class="highlight-image">
+                <img id="img-beach" src="images/explore/beach.jpg" alt="Tropical beach with palm trees in North Queensland" class="highlight-image">
             </div>
         </div>
 
@@ -416,7 +418,7 @@
                 <p class="highlight-distance">~20 min drive from Ahana Hillside</p>
             </div>
             <div>
-                <img src="images/explore/cairns.jpg" alt="Cairns waterfront at dusk" class="highlight-image">
+                <img id="img-cairns" src="images/explore/cairns.jpg" alt="Cairns waterfront at dusk" class="highlight-image">
             </div>
         </div>
 
@@ -475,6 +477,37 @@
         document.querySelector('.menu-overlay').classList.toggle('open');
         document.querySelector('.menu-panel').classList.toggle('open');
     }
+
+    // Load custom explore images from worker (falls back to local defaults)
+    (async function() {
+        try {
+            const res = await fetch('https://ahana-ical-proxy.ahanahillside.workers.dev/explore/list');
+            const data = await res.json();
+            const slots = data.slots || {};
+            const WORKER = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+
+            ['reef', 'rainforest', 'waterfall', 'tablelands', 'beach', 'cairns'].forEach(function(slot) {
+                if (!slots[slot]) return;
+                var el = document.getElementById('img-' + slot);
+                if (!el) return;
+                var url = WORKER + '/explore/' + slot;
+
+                if (slots[slot].mediaType === 'video') {
+                    var video = document.createElement('video');
+                    video.className = 'highlight-video';
+                    video.src = url;
+                    video.autoplay = true;
+                    video.muted = true;
+                    video.loop = true;
+                    video.playsInline = true;
+                    video.setAttribute('playsinline', '');
+                    el.replaceWith(video);
+                } else {
+                    el.src = url;
+                }
+            });
+        } catch (e) {}
+    })();
     </script>
 </body>
 </html>

@@ -50,6 +50,8 @@ const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB per video
 const GALLERY_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 const GALLERY_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 
+const EXPLORE_SLOTS = ['neighbourhood', 'reef', 'rainforest', 'waterfall', 'tablelands', 'beach', 'cairns'];
+
 function corsHeaders(origin) {
   const allowed = ALLOWED_ORIGINS.some(o => origin && origin.startsWith(o));
   return {
@@ -797,6 +799,100 @@ export default {
       try {
         await env.CONFIG.delete('homepage-bg-file');
         await env.CONFIG.delete('homepage-bg-meta');
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // --- Explore section image endpoints ---
+
+    // GET /explore/list — public, returns metadata for all explore slots
+    if (path === '/explore/list' && request.method === 'GET') {
+      try {
+        const data = await env.CONFIG.get('explore-images', 'json') || {};
+        return jsonResponse({ slots: data }, 200, origin, 'public, max-age=60');
+      } catch (e) {
+        return jsonResponse({ slots: {} }, 200, origin);
+      }
+    }
+
+    // GET /explore/:slot — public, serves the image/video for a slot
+    const exploreMatch = path.match(/^\/explore\/(neighbourhood|reef|rainforest|waterfall|tablelands|beach|cairns)$/);
+    if (exploreMatch && request.method === 'GET') {
+      const slot = exploreMatch[1];
+      try {
+        const { value, metadata } = await env.CONFIG.getWithMetadata('explore:' + slot, 'arrayBuffer');
+        if (!value) return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+        return new Response(value, {
+          status: 200,
+          headers: {
+            'Content-Type': metadata?.contentType || 'image/jpeg',
+            'Cache-Control': 'public, max-age=86400',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      }
+    }
+
+    // POST /explore/upload — admin only, upload image/video for a specific slot
+    if (path === '/explore/upload' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const formData = await request.formData();
+        const file = formData.get('file');
+        const slot = formData.get('slot');
+
+        if (!slot || !EXPLORE_SLOTS.includes(slot)) {
+          return jsonResponse({ error: 'Invalid slot. Use: ' + EXPLORE_SLOTS.join(', ') }, 400, origin);
+        }
+        if (!file || !(file instanceof File)) {
+          return jsonResponse({ error: 'No file provided' }, 400, origin);
+        }
+
+        const isImage = GALLERY_IMAGE_TYPES.includes(file.type);
+        const isVideo = GALLERY_VIDEO_TYPES.includes(file.type);
+        if (!isImage && !isVideo) {
+          return jsonResponse({ error: 'Only JPEG, PNG, WebP images and MP4, WebM, MOV videos are allowed' }, 400, origin);
+        }
+
+        const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        if (file.size > maxSize) {
+          return jsonResponse({ error: isVideo ? 'Video must be under 50MB' : 'Image must be under 5MB' }, 400, origin);
+        }
+
+        const arrayBuffer = await file.arrayBuffer();
+        const mediaType = isVideo ? 'video' : 'image';
+
+        await env.CONFIG.put('explore:' + slot, arrayBuffer, {
+          metadata: { contentType: file.type, mediaType, name: file.name },
+        });
+
+        // Update slot metadata
+        const data = await env.CONFIG.get('explore-images', 'json') || {};
+        data[slot] = { mediaType, contentType: file.type, name: file.name, size: file.size, uploadedAt: new Date().toISOString() };
+        await env.CONFIG.put('explore-images', JSON.stringify(data));
+
+        return jsonResponse({ success: true, slot, mediaType }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Upload failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // POST /explore/delete — admin only, remove an explore slot image
+    if (path === '/explore/delete' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const { slot } = await request.json();
+        if (!slot || !EXPLORE_SLOTS.includes(slot)) {
+          return jsonResponse({ error: 'Invalid slot' }, 400, origin);
+        }
+        await env.CONFIG.delete('explore:' + slot);
+        const data = await env.CONFIG.get('explore-images', 'json') || {};
+        delete data[slot];
+        await env.CONFIG.put('explore-images', JSON.stringify(data));
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);

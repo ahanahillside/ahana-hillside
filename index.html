@@ -452,7 +452,8 @@
             border-color: var(--color-stone);
         }
 
-        .neighbourhood-image {
+        .neighbourhood-image,
+        .neighbourhood-video {
             width: 100%;
             height: 400px;
             object-fit: cover;
@@ -502,7 +503,8 @@
             .neighbourhood-text {
                 padding-right: 0;
             }
-            .neighbourhood-image {
+            .neighbourhood-image,
+            .neighbourhood-video {
                 height: 280px;
             }
             .neighbourhood {
@@ -605,7 +607,7 @@
                 <a href="explore.html" class="neighbourhood-link">More info</a>
             </div>
             <div>
-                <img src="images/explore/neighbourhood.jpg" alt="Tropical North Queensland landscape" class="neighbourhood-image">
+                <img id="img-neighbourhood" src="images/explore/neighbourhood.jpg" alt="Tropical North Queensland landscape" class="neighbourhood-image">
             </div>
         </div>
     </section>
@@ -657,6 +659,34 @@
                 heroImg.replaceWith(video);
             } else {
                 heroImg.src = bgUrl;
+            }
+        } catch (e) {}
+    })();
+
+    // Load custom neighbourhood image if uploaded
+    (async function() {
+        try {
+            const res = await fetch('https://ahana-ical-proxy.ahanahillside.workers.dev/explore/list');
+            const data = await res.json();
+            const slots = data.slots || {};
+            if (!slots.neighbourhood) return;
+
+            const el = document.getElementById('img-neighbourhood');
+            if (!el) return;
+            const url = 'https://ahana-ical-proxy.ahanahillside.workers.dev/explore/neighbourhood';
+
+            if (slots.neighbourhood.mediaType === 'video') {
+                const video = document.createElement('video');
+                video.className = 'neighbourhood-video';
+                video.src = url;
+                video.autoplay = true;
+                video.muted = true;
+                video.loop = true;
+                video.playsInline = true;
+                video.setAttribute('playsinline', '');
+                el.replaceWith(video);
+            } else {
+                el.src = url;
             }
         } catch (e) {}
     })();
