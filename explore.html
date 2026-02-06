@@ -38,6 +38,7 @@
         }
 
         .section-cream { background-color: var(--color-cream); }
+        .section-white { background-color: #fff; }
         .section-forest {
             background-color: var(--color-forest);
             color: #fff;
@@ -68,7 +69,7 @@
 
         .page-intro {
             text-align: center;
-            padding: 1rem 2rem 2rem;
+            padding: 1rem 2rem 2.5rem;
         }
         .page-intro h1 {
             font-family: var(--font-serif);
@@ -90,18 +91,6 @@
             height: 1px;
             background-color: var(--color-stone);
             margin: 1rem auto 0;
-        }
-
-        .explore-intro {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 1rem 2rem 2.5rem;
-        }
-        .explore-intro p {
-            font-size: 0.9rem;
-            line-height: 1.85;
-            margin-bottom: 1rem;
-            color: var(--color-charcoal);
         }
 
         /* --- Section Nav Cards --- */
@@ -175,13 +164,8 @@
             height: 80px;
             background-color: rgba(255,255,255,0.25);
         }
-        .getting-here-item {
-            text-align: center;
-        }
-        .getting-here-icon {
-            font-size: 1.6rem;
-            margin-bottom: 0.5rem;
-        }
+        .getting-here-item { text-align: center; }
+        .getting-here-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
         .getting-here-stat {
             font-family: var(--font-serif);
             font-size: clamp(1.6rem, 3vw, 2rem);
@@ -196,14 +180,62 @@
             line-height: 1.5;
         }
 
-        /* CTA */
-        .cta-wrapper {
-            padding: 3rem 0 4rem;
+        /* --- About Cairns Section --- */
+        .about-cairns-wrapper {
+            padding: 4rem 0;
         }
-        .cta-section {
-            text-align: center;
+        .about-cairns {
+            max-width: 1100px;
+            margin: 0 auto;
             padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3.5rem;
+            align-items: start;
         }
+        .about-cairns-text {}
+        .about-cairns-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            margin-bottom: 0.75rem;
+        }
+        .about-cairns-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 400;
+            color: var(--color-forest);
+            line-height: 1.25;
+            margin-bottom: 1.5rem;
+        }
+        .about-cairns-title em { font-style: italic; }
+        .about-cairns-divider {
+            width: 50px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin-bottom: 1.5rem;
+        }
+        .about-cairns-desc {
+            font-size: 0.88rem;
+            line-height: 1.85;
+            color: var(--color-charcoal);
+            margin-bottom: 1rem;
+        }
+        .about-cairns-map {
+            background: var(--color-cream);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--color-light-stone);
+        }
+        .about-cairns-map svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* CTA */
+        .cta-wrapper { padding: 3rem 0 4rem; }
+        .cta-section { text-align: center; padding: 0 2rem; }
         .cta-section p {
             font-family: var(--font-serif);
             font-size: 1.15rem;
@@ -226,10 +258,7 @@
             border-radius: 4px;
             transition: background-color 0.3s, color 0.3s;
         }
-        .cta-btn:hover {
-            background: transparent;
-            color: var(--color-forest);
-        }
+        .cta-btn:hover { background: transparent; color: var(--color-forest); }
 
         /* Footer */
         .site-footer {
@@ -240,12 +269,7 @@
             border-top: 1px solid var(--color-light-stone);
             background-color: #fff;
         }
-        .site-footer a {
-            color: var(--color-stone);
-            text-decoration: none;
-            margin: 0 0.5rem;
-            transition: color 0.2s;
-        }
+        .site-footer a { color: var(--color-stone); text-decoration: none; margin: 0 0.5rem; transition: color 0.2s; }
         .site-footer a:hover { color: var(--color-forest); }
 
         /* --- Hamburger Menu --- */
@@ -271,9 +295,6 @@
                 grid-template-columns: 1fr;
                 max-width: 400px;
             }
-            .explore-intro {
-                padding: 1rem 1.25rem 2rem;
-            }
             .getting-here-inner {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -283,6 +304,11 @@
                 width: 60px;
                 height: 1px;
                 margin: 0 auto;
+            }
+            .about-cairns {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 0 1.25rem;
             }
         }
     </style>
@@ -305,6 +331,7 @@
         </div>
     </div>
 
+    <!-- Header + Title + Nav Cards -->
     <div class="section-cream">
     <div class="header">
         <a href="index.html">
@@ -318,11 +345,6 @@
         <h1>Explore the Neighbourhood</h1>
         <p>Discover what awaits beyond the hillside</p>
         <div class="divider"></div>
-    </div>
-
-    <div class="explore-intro">
-        <p>Ahana Hillside sits in the green hills just outside Cairns, the gateway to Tropical North Queensland. From here, two UNESCO World Heritage sites are at your doorstep &mdash; the Great Barrier Reef and the Daintree Rainforest &mdash; along with hidden waterfalls, volcanic crater lakes, and some of Australia's most scenic drives.</p>
-        <p>Whether you're here for adventure or simply to soak in the surroundings, there's something remarkable in every direction.</p>
     </div>
 
     <div class="section-nav">
@@ -360,6 +382,104 @@
                 <div class="getting-here-icon">&#9968;</div>
                 <div class="getting-here-stat">A World Away</div>
                 <div class="getting-here-label">Nestled in the rainforest hills &mdash; yet close to<br>everything Cairns and Tropical North QLD offer</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Cairns Section -->
+    <div class="section-white about-cairns-wrapper">
+        <div class="about-cairns">
+            <div class="about-cairns-text">
+                <p class="about-cairns-label">Tropical North Queensland</p>
+                <h2 class="about-cairns-title"><em>Gateway to</em> Cairns &amp; Beyond</h2>
+                <div class="about-cairns-divider"></div>
+                <p class="about-cairns-desc">Ahana Hillside sits along the Bruce Highway at Aloomba, just 35 minutes south of Cairns &mdash; the gateway to Tropical North Queensland. From here, two UNESCO World Heritage sites are at your doorstep: the Great Barrier Reef and the Daintree Rainforest, along with hidden waterfalls, volcanic crater lakes, and some of Australia's most scenic drives.</p>
+                <p class="about-cairns-desc">Cairns itself is a relaxed, tropical city with a vibrant waterfront, free saltwater lagoon, weekend markets, and world-class dining. Whether you're chasing waterfalls at Josephine Falls, snorkelling the outer reef, exploring the ancient Daintree, or simply browsing Rusty's Markets for tropical fruit &mdash; everything is within easy reach.</p>
+                <p class="about-cairns-desc">Whether you're here for adventure or simply to soak in the surroundings, there's something remarkable in every direction. Ahana Hillside is your base to experience it all.</p>
+            </div>
+            <div class="about-cairns-map">
+                <!-- Custom illustrated SVG map -->
+                <svg viewBox="0 0 400 520" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Ocean background -->
+                    <rect x="260" y="0" width="140" height="520" fill="#e8f0f0" rx="0"/>
+
+                    <!-- Coastline -->
+                    <path d="M260 0 C258 40, 270 80, 265 120 C260 160, 275 200, 268 240 C261 280, 272 320, 265 360 C258 400, 270 440, 262 480 L262 520" fill="none" stroke="#c4d4d4" stroke-width="1.5"/>
+
+                    <!-- Reef area offshore -->
+                    <ellipse cx="340" cy="180" rx="35" ry="60" fill="none" stroke="#7fb5b0" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7"/>
+                    <text x="340" y="175" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="10" fill="#5a9994" font-style="italic">Great Barrier</text>
+                    <text x="340" y="188" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="10" fill="#5a9994" font-style="italic">Reef</text>
+
+                    <!-- Daintree area (north) -->
+                    <rect x="60" y="15" width="140" height="55" rx="6" fill="#dce8dc" opacity="0.6"/>
+                    <text x="130" y="38" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="11" fill="#2C3E2D" font-weight="500">Daintree Rainforest</text>
+                    <text x="130" y="52" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" fill="#A69583">~2 hrs north</text>
+
+                    <!-- Palm Cove -->
+                    <circle cx="248" cy="115" r="4" fill="#A69583"/>
+                    <text x="236" y="112" text-anchor="end" font-family="DM Sans, sans-serif" font-size="8.5" fill="#3D3D3D">Palm Cove</text>
+
+                    <!-- Cairns City -->
+                    <rect x="155" y="155" width="90" height="36" rx="5" fill="#2C3E2D"/>
+                    <text x="200" y="172" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="12" fill="#fff" font-weight="500">Cairns City</text>
+                    <text x="200" y="184" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="7.5" fill="rgba(255,255,255,0.7)">Esplanade &middot; Rusty's Markets</text>
+
+                    <!-- Cairns Airport -->
+                    <rect x="160" y="210" width="80" height="24" rx="4" fill="#fff" stroke="#e8e0d8" stroke-width="1"/>
+                    <text x="170" y="225" font-family="DM Sans, sans-serif" font-size="9" fill="#3D3D3D">&#9992; Cairns Airport</text>
+
+                    <!-- Bruce Highway (main route) -->
+                    <path d="M200 235 L195 265 L190 295 L185 325 L178 355 L172 385 L168 415 L165 440" fill="none" stroke="#A69583" stroke-width="2.5" stroke-linecap="round"/>
+
+                    <!-- Route dashes overlay -->
+                    <path d="M200 235 L195 265 L190 295 L185 325 L178 355 L172 385 L168 415 L165 440" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="6,8" stroke-linecap="round"/>
+
+                    <!-- Gordonvale -->
+                    <circle cx="183" cy="340" r="4" fill="#A69583"/>
+                    <text x="171" y="337" text-anchor="end" font-family="DM Sans, sans-serif" font-size="8.5" fill="#3D3D3D">Gordonvale</text>
+                    <text x="171" y="348" text-anchor="end" font-family="DM Sans, sans-serif" font-size="7" fill="#A69583">Woolworths &middot; KFC</text>
+
+                    <!-- Crystal Cascades -->
+                    <circle cx="120" cy="255" r="3.5" fill="#7fb5b0"/>
+                    <text x="108" y="252" text-anchor="end" font-family="DM Sans, sans-serif" font-size="8" fill="#5a9994">Crystal Cascades</text>
+
+                    <!-- Atherton Tablelands label (west) -->
+                    <rect x="12" y="290" width="105" height="45" rx="6" fill="#dce8dc" opacity="0.5"/>
+                    <text x="64" y="310" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="10" fill="#2C3E2D" font-style="italic">Atherton</text>
+                    <text x="64" y="323" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="10" fill="#2C3E2D" font-style="italic">Tablelands</text>
+
+                    <!-- Gillies Highway indicator -->
+                    <path d="M170 330 L130 310 L90 305" fill="none" stroke="#c4c4b8" stroke-width="1" stroke-dasharray="3,3"/>
+
+                    <!-- Babinda Boulders -->
+                    <circle cx="140" cy="410" r="3.5" fill="#7fb5b0"/>
+                    <text x="128" y="407" text-anchor="end" font-family="DM Sans, sans-serif" font-size="8" fill="#5a9994">Babinda Boulders</text>
+
+                    <!-- AHANA HILLSIDE (destination) -->
+                    <rect x="100" y="430" width="130" height="42" rx="6" fill="#2C3E2D"/>
+                    <circle cx="165" cy="443" r="10" fill="rgba(255,255,255,0.15)"/>
+                    <circle cx="165" cy="443" r="5" fill="#E8C87A"/>
+                    <text x="165" y="462" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="11" fill="#fff" font-weight="600">Ahana Hillside</text>
+
+                    <!-- Aloomba label -->
+                    <text x="165" y="485" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" fill="#A69583">Aloomba, Bruce Highway</text>
+
+                    <!-- Bruce Highway label -->
+                    <text x="210" y="298" font-family="DM Sans, sans-serif" font-size="7.5" fill="#A69583" transform="rotate(-80, 210, 298)">Bruce Highway</text>
+
+                    <!-- Fitzroy Island -->
+                    <ellipse cx="310" cy="310" rx="16" ry="10" fill="#dce8dc" stroke="#c4d4d4" stroke-width="0.75"/>
+                    <text x="310" y="313" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="7" fill="#3D3D3D">Fitzroy Is.</text>
+
+                    <!-- Distance marker -->
+                    <line x1="220" y1="228" x2="220" y2="445" stroke="#e8e0d8" stroke-width="0.75" stroke-dasharray="2,4"/>
+                    <text x="232" y="340" font-family="DM Sans, sans-serif" font-size="7.5" fill="#A69583" transform="rotate(-90, 232, 340)">~35 min drive</text>
+
+                    <!-- North arrow -->
+                    <polygon points="35,105 30,120 35,115 40,120" fill="#A69583"/>
+                    <text x="35" y="100" text-anchor="middle" font-family="DM Sans, sans-serif" font-size="8" fill="#A69583" font-weight="500">N</text>
+                </svg>
             </div>
         </div>
     </div>
