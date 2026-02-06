@@ -160,24 +160,11 @@
             margin-top: 0.75rem;
         }
 
-        .highlight-image-placeholder {
+        .highlight-image {
             width: 100%;
             height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-serif);
-            font-size: 1rem;
-            font-style: italic;
-            color: #fff;
+            object-fit: cover;
         }
-
-        .highlight-image-placeholder.reef { background: linear-gradient(135deg, #3a9dbb 0%, #1a6e8a 50%, #0f4c5c 100%); }
-        .highlight-image-placeholder.rainforest { background: linear-gradient(135deg, #5a8a5c 0%, #3a6b3c 50%, #1f4f22 100%); }
-        .highlight-image-placeholder.waterfalls { background: linear-gradient(135deg, #7ab8c9 0%, #4a9aaa 50%, #2a7a8a 100%); }
-        .highlight-image-placeholder.tablelands { background: linear-gradient(135deg, #8ab05a 0%, #6a904a 50%, #4a703a 100%); }
-        .highlight-image-placeholder.beaches { background: linear-gradient(135deg, #d4c5a0 0%, #b4a580 50%, #948565 100%); }
-        .highlight-image-placeholder.cairns-city { background: linear-gradient(135deg, #c4a98a 0%, #a4896a 50%, #84694a 100%); }
 
         /* --- Quick Guide --- */
         .quick-guide {
@@ -298,7 +285,7 @@
             .highlight-card.reverse {
                 direction: ltr;
             }
-            .highlight-image-placeholder {
+            .highlight-image {
                 height: 220px;
             }
             .guide-grid {
@@ -364,7 +351,7 @@
                 <p class="highlight-distance">Day trips depart daily from Cairns Marina &middot; ~45 min by boat</p>
             </div>
             <div>
-                <div class="highlight-image-placeholder reef">Great Barrier Reef</div>
+                <img src="images/explore/reef.jpg" alt="Great Barrier Reef coral and marine life" class="highlight-image">
             </div>
         </div>
 
@@ -377,7 +364,7 @@
                 <p class="highlight-distance">~2 hours drive north of Ahana Hillside</p>
             </div>
             <div>
-                <div class="highlight-image-placeholder rainforest">Daintree Rainforest</div>
+                <img src="images/explore/rainforest.jpg" alt="Daintree Rainforest tropical canopy" class="highlight-image">
             </div>
         </div>
 
@@ -390,7 +377,7 @@
                 <p class="highlight-distance">Crystal Cascades ~20 min &middot; Josephine Falls ~1 hr &middot; Babinda Boulders ~50 min</p>
             </div>
             <div>
-                <div class="highlight-image-placeholder waterfalls">Waterfalls &amp; Swimming Holes</div>
+                <img src="images/explore/waterfall.jpg" alt="Tropical waterfall surrounded by rainforest" class="highlight-image">
             </div>
         </div>
 
@@ -403,7 +390,7 @@
                 <p class="highlight-distance">~1 hour drive from Ahana Hillside via Gillies Highway</p>
             </div>
             <div>
-                <div class="highlight-image-placeholder tablelands">Atherton Tablelands</div>
+                <img src="images/explore/tablelands.jpg" alt="Rolling green hills of the Atherton Tablelands" class="highlight-image">
             </div>
         </div>
 
@@ -416,7 +403,7 @@
                 <p class="highlight-distance">Palm Cove ~25 min &middot; Fitzroy Island ~45 min by ferry</p>
             </div>
             <div>
-                <div class="highlight-image-placeholder beaches">Beaches &amp; Islands</div>
+                <img src="images/explore/beach.jpg" alt="Tropical beach with palm trees in North Queensland" class="highlight-image">
             </div>
         </div>
 
@@ -429,7 +416,7 @@
                 <p class="highlight-distance">~20 min drive from Ahana Hillside</p>
             </div>
             <div>
-                <div class="highlight-image-placeholder cairns-city">Cairns City</div>
+                <img src="images/explore/cairns.jpg" alt="Cairns waterfront at dusk" class="highlight-image">
             </div>
         </div>
 
