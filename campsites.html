@@ -1245,8 +1245,10 @@
         .camp-overlay {
             position: relative;
             z-index: 2;
-            max-width: 520px;
-            padding: 4rem 3rem 4rem 5%;
+            max-width: 580px;
+            margin: 0 auto;
+            padding: 3.5rem 2rem 3rem;
+            text-align: center;
         }
         .camp-text-label {
             font-size: 0.66rem;
@@ -1275,6 +1277,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 0.6rem;
             margin-bottom: 1.75rem;
+            text-align: left;
         }
         .camp-benefit {
             display: flex;
@@ -1456,167 +1459,237 @@
                         <stop offset="50%" stop-color="#2C3E2D"/>
                         <stop offset="100%" stop-color="#3a5040"/>
                     </linearGradient>
-                    <radialGradient id="fireGlow" cx="770" cy="400" r="160" gradientUnits="userSpaceOnUse">
+                    <radialGradient id="fireGlow" cx="600" cy="420" r="140" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stop-color="#d4874e" stop-opacity="0.3"/>
-                        <stop offset="40%" stop-color="#c47a3a" stop-opacity="0.1"/>
+                        <stop offset="40%" stop-color="#c47a3a" stop-opacity="0.12"/>
                         <stop offset="100%" stop-color="#c47a3a" stop-opacity="0"/>
                     </radialGradient>
-                    <radialGradient id="fireCore" cx="770" cy="410" r="50" gradientUnits="userSpaceOnUse">
+                    <radialGradient id="fireCore" cx="600" cy="430" r="45" gradientUnits="userSpaceOnUse">
                         <stop offset="0%" stop-color="#e8a44a" stop-opacity="0.25"/>
                         <stop offset="100%" stop-color="#e8a44a" stop-opacity="0"/>
                     </radialGradient>
-                    <linearGradient id="textFade" x1="0" y1="0" x2="1" y2="0">
-                        <stop offset="0%" stop-color="#1a2a1c" stop-opacity="0.92"/>
-                        <stop offset="60%" stop-color="#1a2a1c" stop-opacity="0.7"/>
+                    <radialGradient id="textDim" cx="600" cy="250" r="350" gradientUnits="userSpaceOnUse">
+                        <stop offset="0%" stop-color="#1a2a1c" stop-opacity="0.75"/>
+                        <stop offset="70%" stop-color="#1a2a1c" stop-opacity="0.35"/>
                         <stop offset="100%" stop-color="#1a2a1c" stop-opacity="0"/>
-                    </linearGradient>
+                    </radialGradient>
                 </defs>
 
                 <!-- Sky -->
                 <rect width="1200" height="580" fill="url(#nightSky)"/>
 
                 <!-- Stars -->
-                <circle cx="150" cy="45" r="1.5" fill="#e8e0d8" opacity="0.6"/>
-                <circle cx="320" cy="28" r="1" fill="#e8e0d8" opacity="0.4"/>
-                <circle cx="500" cy="55" r="1.8" fill="#e8e0d8" opacity="0.55"/>
-                <circle cx="680" cy="22" r="1.2" fill="#e8e0d8" opacity="0.5"/>
-                <circle cx="820" cy="60" r="1" fill="#e8e0d8" opacity="0.35"/>
-                <circle cx="950" cy="35" r="1.5" fill="#e8e0d8" opacity="0.45"/>
-                <circle cx="1050" cy="65" r="1" fill="#e8e0d8" opacity="0.3"/>
-                <circle cx="1130" cy="30" r="1.3" fill="#e8e0d8" opacity="0.4"/>
-                <circle cx="250" cy="80" r="0.8" fill="#e8e0d8" opacity="0.3"/>
-                <circle cx="600" cy="75" r="1.2" fill="#e8e0d8" opacity="0.35"/>
-                <circle cx="880" cy="45" r="0.9" fill="#e8e0d8" opacity="0.3"/>
-                <circle cx="430" cy="40" r="1.1" fill="#e8e0d8" opacity="0.4"/>
-                <circle cx="770" cy="48" r="0.7" fill="#e8e0d8" opacity="0.25"/>
-                <circle cx="1000" cy="78" r="1" fill="#e8e0d8" opacity="0.3"/>
+                <circle cx="80" cy="35" r="1.5" fill="#e8e0d8" opacity="0.55"/>
+                <circle cx="200" cy="22" r="1" fill="#e8e0d8" opacity="0.4"/>
+                <circle cx="340" cy="50" r="1.8" fill="#e8e0d8" opacity="0.5"/>
+                <circle cx="480" cy="18" r="1.2" fill="#e8e0d8" opacity="0.45"/>
+                <circle cx="600" cy="42" r="1.5" fill="#e8e0d8" opacity="0.35"/>
+                <circle cx="720" cy="25" r="1" fill="#e8e0d8" opacity="0.5"/>
+                <circle cx="860" cy="55" r="1.8" fill="#e8e0d8" opacity="0.45"/>
+                <circle cx="1000" cy="30" r="1.3" fill="#e8e0d8" opacity="0.5"/>
+                <circle cx="1120" cy="48" r="1" fill="#e8e0d8" opacity="0.35"/>
+                <circle cx="150" cy="70" r="0.8" fill="#e8e0d8" opacity="0.3"/>
+                <circle cx="420" cy="68" r="1.1" fill="#e8e0d8" opacity="0.35"/>
+                <circle cx="780" cy="60" r="0.9" fill="#e8e0d8" opacity="0.3"/>
+                <circle cx="950" cy="72" r="1" fill="#e8e0d8" opacity="0.25"/>
+                <circle cx="540" cy="32" r="0.7" fill="#e8e0d8" opacity="0.3"/>
+                <circle cx="660" cy="15" r="1.2" fill="#e8e0d8" opacity="0.4"/>
 
                 <!-- Moon -->
-                <circle cx="980" cy="85" r="28" fill="#e8e0d8" opacity="0.5"/>
-                <circle cx="990" cy="78" r="25" fill="url(#nightSky)"/>
+                <circle cx="600" cy="75" r="26" fill="#e8e0d8" opacity="0.45"/>
+                <circle cx="609" cy="69" r="23" fill="url(#nightSky)"/>
 
-                <!-- Far mountain range -->
-                <path d="M0 260 Q100 190 200 230 Q300 180 420 220 Q520 175 650 210 Q750 170 850 200 Q950 165 1050 195 Q1120 180 1200 210 L1200 320 L0 320Z" fill="#243428" opacity="0.6"/>
-                <path d="M0 285 Q150 230 300 265 Q450 220 600 255 Q750 215 900 248 Q1020 225 1200 250 L1200 340 L0 340Z" fill="#2d4031" opacity="0.5"/>
+                <!-- Far mountains -->
+                <path d="M0 250 Q100 190 220 230 Q340 180 450 215 Q560 175 680 210 Q780 170 900 205 Q1020 175 1120 200 L1200 220 L1200 320 L0 320Z" fill="#243428" opacity="0.55"/>
+                <path d="M0 275 Q150 230 300 260 Q450 215 600 250 Q750 210 900 245 Q1050 220 1200 248 L1200 340 L0 340Z" fill="#2d4031" opacity="0.45"/>
 
-                <!-- Tree line -->
-                <path d="M520 300 L535 245 L550 300Z" fill="#1f2f21" opacity="0.9"/>
-                <path d="M545 300 L565 235 L585 300Z" fill="#1f2f21"/>
-                <path d="M575 300 L590 255 L605 300Z" fill="#1f2f21" opacity="0.85"/>
-                <path d="M900 305 L918 240 L936 305Z" fill="#1f2f21" opacity="0.9"/>
-                <path d="M930 305 L955 225 L980 305Z" fill="#1f2f21"/>
-                <path d="M968 305 L985 250 L1002 305Z" fill="#1f2f21" opacity="0.85"/>
-                <path d="M1010 310 L1025 260 L1040 310Z" fill="#1f2f21" opacity="0.75"/>
-                <path d="M1060 310 L1080 245 L1100 310Z" fill="#1f2f21" opacity="0.8"/>
-                <path d="M1100 315 L1115 270 L1130 315Z" fill="#1f2f21" opacity="0.7"/>
-                <path d="M1140 315 L1160 255 L1180 315Z" fill="#1f2f21" opacity="0.85"/>
+                <!-- Tree line left -->
+                <path d="M40 310 L55 248 L70 310Z" fill="#1f2f21" opacity="0.85"/>
+                <path d="M65 310 L85 230 L105 310Z" fill="#1f2f21" opacity="0.95"/>
+                <path d="M95 310 L112 252 L129 310Z" fill="#1f2f21" opacity="0.8"/>
+                <path d="M125 310 L145 240 L165 310Z" fill="#1f2f21" opacity="0.9"/>
+
+                <!-- Tree line right -->
+                <path d="M1035 310 L1055 245 L1075 310Z" fill="#1f2f21" opacity="0.85"/>
+                <path d="M1065 310 L1088 228 L1111 310Z" fill="#1f2f21" opacity="0.95"/>
+                <path d="M1100 310 L1118 250 L1136 310Z" fill="#1f2f21" opacity="0.8"/>
+                <path d="M1130 310 L1150 238 L1170 310Z" fill="#1f2f21" opacity="0.9"/>
 
                 <!-- Ground -->
-                <path d="M0 320 Q300 295 600 310 Q900 295 1200 315 L1200 580 L0 580Z" fill="#2a3e2c"/>
-                <path d="M0 330 Q300 310 600 325 Q900 310 1200 330 L1200 580 L0 580Z" fill="#314435"/>
+                <path d="M0 310 Q300 290 600 305 Q900 290 1200 310 L1200 580 L0 580Z" fill="#2a3e2c"/>
+                <path d="M0 325 Q300 305 600 320 Q900 305 1200 325 L1200 580 L0 580Z" fill="#314435"/>
 
-                <!-- Fire glow on ground -->
-                <circle cx="770" cy="400" r="160" fill="url(#fireGlow)"/>
-                <circle cx="770" cy="410" r="50" fill="url(#fireCore)"/>
+                <!-- Dirt path from left to right through camp -->
+                <path d="M0 440 Q150 430 300 425 Q450 418 600 430 Q750 418 900 425 Q1050 430 1200 440" fill="none" stroke="#3e5442" stroke-width="18" stroke-linecap="round" opacity="0.4"/>
+                <path d="M0 440 Q150 430 300 425 Q450 418 600 430 Q750 418 900 425 Q1050 430 1200 440" fill="none" stroke="#4a6248" stroke-width="8" stroke-linecap="round" opacity="0.2" stroke-dasharray="2 6"/>
 
-                <!-- Tent (larger, right of campfire) -->
-                <path d="M870 430 L920 350 L970 430Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.5" opacity="0.9"/>
-                <path d="M895 430 L920 385 L945 430" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
+                <!-- === LEFT SIDE: SAMAVAS === -->
 
-                <!-- Small tent (far right) -->
-                <path d="M1020 440 L1048 380 L1076 440Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.2" opacity="0.75"/>
-                <path d="M1036 440 L1048 408 L1060 440" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.6" opacity="0.4"/>
+                <!-- Samavas tent -->
+                <path d="M200 420 L260 330 L320 420Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M230 420 L260 370 L290 420" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
+                <line x1="260" y1="330" x2="260" y2="420" stroke="#e8e0d8" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.2"/>
+                <!-- Tent flag -->
+                <path d="M260 330 L272 335 L260 340" fill="#e8a44a" opacity="0.4"/>
+
+                <!-- Samavas wooden sign post -->
+                <line x1="155" y1="350" x2="155" y2="420" stroke="#6b4a2e" stroke-width="4" stroke-linecap="round"/>
+                <!-- Sign board -->
+                <rect x="130" y="352" width="62" height="22" rx="3" fill="#7a5533" stroke="#5a3a20" stroke-width="1"/>
+                <rect x="132" y="354" width="58" height="18" rx="2" fill="#8a6340"/>
+                <text x="161" y="367" font-family="'Cormorant Garamond', serif" font-size="11" font-weight="500" fill="#f0e8de" text-anchor="middle" letter-spacing="1">Samavas</text>
+                <!-- Sign nail dots -->
+                <circle cx="137" cy="363" r="1.2" fill="#5a3a20" opacity="0.6"/>
+                <circle cx="185" cy="363" r="1.2" fill="#5a3a20" opacity="0.6"/>
+                <!-- Arrow on post -->
+                <path d="M143 378 L155 385 L143 392" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.3"/>
+
+                <!-- Samavas lantern -->
+                <rect x="196" y="405" width="5" height="8" rx="1" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
+                <circle cx="198.5" cy="409" r="1.5" fill="#e8c06a" opacity="0.4"/>
+                <line x1="198.5" y1="405" x2="198.5" y2="401" stroke="#e8e0d8" stroke-width="0.6" opacity="0.4"/>
+
+                <!-- Backpack near Samavas -->
+                <rect x="325" y="408" width="10" height="14" rx="3" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.35"/>
+                <line x1="325" y1="412" x2="335" y2="412" stroke="#e8e0d8" stroke-width="0.6" opacity="0.25"/>
+
+                <!-- === RIGHT SIDE: CHHAYA === -->
+
+                <!-- Chhaya tent -->
+                <path d="M880 420 L940 330 L1000 420Z" fill="#3a5040" stroke="#e8e0d8" stroke-width="1.8" stroke-linejoin="round"/>
+                <path d="M910 420 L940 370 L970 420" fill="#2a3e2c" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
+                <line x1="940" y1="330" x2="940" y2="420" stroke="#e8e0d8" stroke-width="0.6" stroke-dasharray="3 4" opacity="0.2"/>
+                <!-- Tent flag -->
+                <path d="M940 330 L928 335 L940 340" fill="#e8a44a" opacity="0.4"/>
+
+                <!-- Chhaya wooden sign post -->
+                <line x1="1045" y1="350" x2="1045" y2="420" stroke="#6b4a2e" stroke-width="4" stroke-linecap="round"/>
+                <!-- Sign board -->
+                <rect x="1020" y="352" width="62" height="22" rx="3" fill="#7a5533" stroke="#5a3a20" stroke-width="1"/>
+                <rect x="1022" y="354" width="58" height="18" rx="2" fill="#8a6340"/>
+                <text x="1051" y="367" font-family="'Cormorant Garamond', serif" font-size="11" font-weight="500" fill="#f0e8de" text-anchor="middle" letter-spacing="1">Chhaya</text>
+                <!-- Sign nail dots -->
+                <circle cx="1027" cy="363" r="1.2" fill="#5a3a20" opacity="0.6"/>
+                <circle cx="1075" cy="363" r="1.2" fill="#5a3a20" opacity="0.6"/>
+                <!-- Arrow on post -->
+                <path d="M1057 378 L1045 385 L1057 392" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.3"/>
+
+                <!-- Chhaya lantern -->
+                <rect x="998" y="405" width="5" height="8" rx="1" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.5"/>
+                <circle cx="1000.5" cy="409" r="1.5" fill="#e8c06a" opacity="0.4"/>
+                <line x1="1000.5" y1="405" x2="1000.5" y2="401" stroke="#e8e0d8" stroke-width="0.6" opacity="0.4"/>
+
+                <!-- Cooler box near Chhaya -->
+                <rect x="860" y="412" width="14" height="10" rx="2" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.35"/>
+                <line x1="860" y1="415" x2="874" y2="415" stroke="#e8e0d8" stroke-width="0.6" opacity="0.25"/>
+
+                <!-- === CENTRE: CAMPFIRE & FAMILY === -->
+
+                <!-- Fire glow -->
+                <circle cx="600" cy="420" r="140" fill="url(#fireGlow)"/>
+                <circle cx="600" cy="430" r="45" fill="url(#fireCore)"/>
+
+                <!-- Stone fire ring -->
+                <ellipse cx="600" cy="443" rx="22" ry="6" fill="none" stroke="#8a7a6a" stroke-width="1.5" opacity="0.35"/>
 
                 <!-- Campfire logs -->
-                <line x1="752" y1="432" x2="788" y2="432" stroke="#5a3a20" stroke-width="4" stroke-linecap="round"/>
-                <line x1="756" y1="436" x2="784" y2="436" stroke="#4a2e18" stroke-width="3.5" stroke-linecap="round"/>
-                <line x1="760" y1="428" x2="780" y2="435" stroke="#5a3a20" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+                <line x1="583" y1="445" x2="617" y2="445" stroke="#5a3a20" stroke-width="4" stroke-linecap="round"/>
+                <line x1="586" y1="449" x2="614" y2="449" stroke="#4a2e18" stroke-width="3.5" stroke-linecap="round"/>
+                <line x1="590" y1="441" x2="610" y2="448" stroke="#5a3a20" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
 
                 <!-- Campfire flames -->
-                <path d="M765 430 Q767 414 770 408 Q773 414 775 430" fill="#e8a44a" opacity="0.8"/>
-                <path d="M760 430 Q765 410 770 400 Q775 410 780 430" fill="#d4874e" opacity="0.6"/>
-                <path d="M763 430 Q768 418 770 412 Q772 418 777 430" fill="#e8c06a" opacity="0.5"/>
-                <path d="M768 430 Q770 416 770 406 Q770 416 772 430" fill="#f0d488" opacity="0.4"/>
+                <path d="M593 444 Q596 426 600 418 Q604 426 607 444" fill="#e8a44a" opacity="0.85"/>
+                <path d="M589 444 Q595 422 600 412 Q605 422 611 444" fill="#d4874e" opacity="0.6"/>
+                <path d="M594 444 Q598 430 600 424 Q602 430 606 444" fill="#e8c06a" opacity="0.55"/>
+                <path d="M598 444 Q600 428 600 418 Q600 428 602 444" fill="#f0d488" opacity="0.4"/>
 
                 <!-- Fire sparks -->
-                <circle cx="766" cy="395" r="1.5" fill="#e8a44a" opacity="0.5"/>
-                <circle cx="774" cy="390" r="1" fill="#e8c06a" opacity="0.4"/>
-                <circle cx="770" cy="385" r="0.8" fill="#e8a44a" opacity="0.3"/>
-                <circle cx="762" cy="388" r="1" fill="#d4874e" opacity="0.35"/>
-                <circle cx="778" cy="393" r="0.7" fill="#e8c06a" opacity="0.25"/>
+                <circle cx="596" cy="406" r="1.5" fill="#e8a44a" opacity="0.5"/>
+                <circle cx="604" cy="402" r="1" fill="#e8c06a" opacity="0.4"/>
+                <circle cx="600" cy="397" r="0.8" fill="#e8a44a" opacity="0.3"/>
+                <circle cx="592" cy="400" r="1" fill="#d4874e" opacity="0.35"/>
+                <circle cx="608" cy="405" r="0.7" fill="#e8c06a" opacity="0.25"/>
+                <circle cx="598" cy="393" r="0.6" fill="#f0d488" opacity="0.2"/>
 
-                <!-- Smoke -->
-                <path d="M770 395 Q774 375 768 358" fill="none" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round" opacity="0.15"/>
-                <path d="M772 390 Q776 365 770 342" fill="none" stroke="#e8e0d8" stroke-width="0.8" stroke-linecap="round" opacity="0.1"/>
-                <path d="M768 392 Q764 370 770 348" fill="none" stroke="#e8e0d8" stroke-width="0.7" stroke-linecap="round" opacity="0.08"/>
+                <!-- Smoke wisps -->
+                <path d="M600 408 Q604 388 598 370" fill="none" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round" opacity="0.12"/>
+                <path d="M602 402 Q606 378 600 355" fill="none" stroke="#e8e0d8" stroke-width="0.8" stroke-linecap="round" opacity="0.08"/>
+                <path d="M598 405 Q594 382 600 360" fill="none" stroke="#e8e0d8" stroke-width="0.7" stroke-linecap="round" opacity="0.06"/>
 
-                <!-- Dad sitting by fire (left side) -->
-                <circle cx="730" cy="404" r="7" fill="none" stroke="#e8e0d8" stroke-width="1.8"/>
-                <path d="M730 411 L730 430" stroke="#e8e0d8" stroke-width="1.8" stroke-linecap="round"/>
-                <path d="M730 417 L722 425" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M730 417 L738 422" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M730 430 L724 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M730 430 L736 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <!-- Warm light on dad -->
-                <circle cx="730" cy="418" r="12" fill="#e8a44a" opacity="0.06"/>
+                <!-- Dad sitting (left of fire) -->
+                <circle cx="560" cy="418" r="7" fill="none" stroke="#e8e0d8" stroke-width="1.8"/>
+                <path d="M560 425 L560 444" stroke="#e8e0d8" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M560 431 L552 438" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M560 431 L568 436" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M560 444 L554 456" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M560 444 L566 456" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="560" cy="432" r="12" fill="#e8a44a" opacity="0.06"/>
 
-                <!-- Mum sitting (right side of fire) -->
-                <circle cx="810" cy="405" r="7" fill="none" stroke="#e8e0d8" stroke-width="1.8"/>
-                <!-- Hair detail -->
-                <path d="M804 402 Q803 396 807 393" fill="none" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-                <path d="M810 411 L810 430" stroke="#e8e0d8" stroke-width="1.8" stroke-linecap="round"/>
-                <path d="M810 417 L802 424" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M810 417 L818 423" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M810 430 L804 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M810 430 L816 442" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <!-- Warm light on mum -->
-                <circle cx="810" cy="418" r="12" fill="#e8a44a" opacity="0.06"/>
+                <!-- Mum sitting (right of fire) -->
+                <circle cx="640" cy="419" r="7" fill="none" stroke="#e8e0d8" stroke-width="1.8"/>
+                <path d="M634 416 Q633 410 637 407" fill="none" stroke="#e8e0d8" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+                <path d="M640 426 L640 444" stroke="#e8e0d8" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M640 432 L632 438" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M640 432 L648 437" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M640 444 L634 456" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M640 444 L646 456" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <circle cx="640" cy="432" r="12" fill="#e8a44a" opacity="0.06"/>
 
-                <!-- Child 1 running (between tents and fire) -->
-                <circle cx="848" cy="410" r="5.5" fill="none" stroke="#e8e0d8" stroke-width="1.5"/>
-                <path d="M848 415 L848 428" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
-                <path d="M848 420 L842 426" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M848 420 L855 416" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <!-- Running legs - mid stride -->
-                <path d="M848 428 L841 438" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
-                <path d="M848 428 L856 436" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <!-- Camp chairs -->
+                <path d="M555 446 L550 456 M555 446 L560 456 M550 454 L560 454" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.35"/>
+                <path d="M638 446 L633 456 M638 446 L643 456 M633 454 L643 454" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.35"/>
 
-                <!-- Child 2 running (closer, slightly ahead) -->
-                <circle cx="870" cy="414" r="5" fill="none" stroke="#e8e0d8" stroke-width="1.4"/>
-                <path d="M870 419 L870 430" stroke="#e8e0d8" stroke-width="1.3" stroke-linecap="round"/>
-                <path d="M870 423 L864 428" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
-                <path d="M870 423 L877 419" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
-                <!-- Running legs -->
-                <path d="M870 430 L863 440" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
-                <path d="M870 430 L878 438" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <!-- Child 1 running left toward Samavas -->
+                <circle cx="470" cy="422" r="5.5" fill="none" stroke="#e8e0d8" stroke-width="1.5"/>
+                <path d="M470 427 L470 440" stroke="#e8e0d8" stroke-width="1.4" stroke-linecap="round"/>
+                <path d="M470 432 L463 438" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M470 432 L478 428" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M470 440 L463 451" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
+                <path d="M470 440 L478 449" stroke="#e8e0d8" stroke-width="1.2" stroke-linecap="round"/>
 
-                <!-- Camp chair hints -->
-                <path d="M725 432 L720 442 M725 432 L730 442 M720 440 L730 440" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.35"/>
-                <path d="M808 432 L803 442 M808 432 L813 442 M803 440 L813 440" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.35"/>
+                <!-- Child 2 running right toward Chhaya -->
+                <circle cx="730" cy="425" r="5" fill="none" stroke="#e8e0d8" stroke-width="1.4"/>
+                <path d="M730 430 L730 442" stroke="#e8e0d8" stroke-width="1.3" stroke-linecap="round"/>
+                <path d="M730 435 L723 440" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M730 435 L738 431" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M730 442 L723 452" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
+                <path d="M730 442 L738 450" stroke="#e8e0d8" stroke-width="1.1" stroke-linecap="round"/>
 
-                <!-- String lights between trees and tent -->
-                <path d="M580 278 Q680 265 770 280 Q850 270 920 354" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.2"/>
-                <circle cx="620" cy="273" r="2" fill="#e8c06a" opacity="0.3"/>
-                <circle cx="670" cy="269" r="2" fill="#e8c06a" opacity="0.25"/>
-                <circle cx="720" cy="273" r="2" fill="#e8c06a" opacity="0.3"/>
-                <circle cx="770" cy="278" r="2" fill="#e8c06a" opacity="0.25"/>
-                <circle cx="820" cy="273" r="2" fill="#e8c06a" opacity="0.2"/>
+                <!-- Dog curled up near fire -->
+                <ellipse cx="580" cy="452" rx="8" ry="4" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.45"/>
+                <circle cx="588" cy="449" r="3" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.45"/>
+                <path d="M590 447 L593 444" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.35"/>
 
-                <!-- Grass tufts -->
-                <path d="M650 445 Q653 437 656 445" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.4"/>
-                <path d="M700 450 Q703 443 706 450" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.35"/>
-                <path d="M840 448 Q843 441 846 448" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.4"/>
-                <path d="M900 455 Q903 448 906 455" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
-                <path d="M980 452 Q983 445 986 452" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.35"/>
-                <path d="M1050 460 Q1053 453 1056 460" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
+                <!-- String lights (left side, Samavas) -->
+                <path d="M145 365 Q200 355 260 332" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.2"/>
+                <circle cx="170" cy="362" r="1.8" fill="#e8c06a" opacity="0.3"/>
+                <circle cx="200" cy="356" r="1.8" fill="#e8c06a" opacity="0.25"/>
+                <circle cx="230" cy="346" r="1.8" fill="#e8c06a" opacity="0.3"/>
 
-                <!-- Dog near the fire -->
-                <ellipse cx="750" cy="438" rx="8" ry="4" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.5"/>
-                <circle cx="758" cy="435" r="3" fill="none" stroke="#e8e0d8" stroke-width="1" opacity="0.5"/>
-                <path d="M760 433 L763 430" fill="none" stroke="#e8e0d8" stroke-width="0.8" opacity="0.4"/>
+                <!-- String lights (right side, Chhaya) -->
+                <path d="M1045 365 Q1000 355 940 332" fill="none" stroke="#e8e0d8" stroke-width="0.6" opacity="0.2"/>
+                <circle cx="1020" cy="362" r="1.8" fill="#e8c06a" opacity="0.3"/>
+                <circle cx="995" cy="356" r="1.8" fill="#e8c06a" opacity="0.25"/>
+                <circle cx="968" cy="346" r="1.8" fill="#e8c06a" opacity="0.3"/>
 
-                <!-- Text readability overlay -->
-                <rect x="0" y="0" width="560" height="580" fill="url(#textFade)"/>
+                <!-- Grass tufts scattered -->
+                <path d="M350 450 Q353 442 356 450" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.4"/>
+                <path d="M500 458 Q503 451 506 458" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.35"/>
+                <path d="M700 455 Q703 448 706 455" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.35"/>
+                <path d="M850 450 Q853 443 856 450" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.4"/>
+                <path d="M420 465 Q423 458 426 465" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
+                <path d="M780 460 Q783 453 786 460" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
+                <path d="M240 455 Q243 448 246 455" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
+                <path d="M960 458 Q963 451 966 458" fill="none" stroke="#4a6a4e" stroke-width="1" opacity="0.3"/>
+
+                <!-- Stepping stones on path -->
+                <ellipse cx="400" cy="432" rx="5" ry="2.5" fill="#4a6248" opacity="0.3"/>
+                <ellipse cx="500" cy="428" rx="4.5" ry="2" fill="#4a6248" opacity="0.25"/>
+                <ellipse cx="700" cy="428" rx="4.5" ry="2" fill="#4a6248" opacity="0.25"/>
+                <ellipse cx="800" cy="432" rx="5" ry="2.5" fill="#4a6248" opacity="0.3"/>
+
+                <!-- Centre text readability overlay -->
+                <ellipse cx="600" cy="240" rx="380" ry="220" fill="url(#textDim)"/>
             </svg>
         </div>
 
