@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local Essentials | Ahana Hillside</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <title>Local Essentials — Ahana Hillside</title>
+    <meta name="description" content="Local essentials near Ahana Hillside — fully equipped on-site kitchen, IGA supermarket, Woolworths Gordonvale, KFC and McDonald's nearby.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --color-stone: #A69583;
@@ -12,6 +17,19 @@
             --color-cream: #F3F1EC;
             --color-charcoal: #3D3D3D;
             --color-light-stone: #e8e0d8;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: #fff;
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+            animation: pageIn 0.6s ease-out both;
         }
 
         @keyframes pageIn {
@@ -19,267 +37,453 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--color-cream);
-            color: var(--color-charcoal);
-            animation: pageIn 0.6s ease-out both;
-        }
-
-        /* ── Hamburger Menu ── */
-        .hamburger-btn {
-            position: fixed;
-            top: 1.2rem;
-            right: 1.2rem;
-            z-index: 1002;
-            background: none;
-            border: none;
-            cursor: pointer;
-            width: 28px;
-            height: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .hamburger-btn span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            background: var(--color-forest);
-            border-radius: 2px;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-
-        .hamburger-btn.active span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
-        .hamburger-btn.active span:nth-child(2) { opacity: 0; }
-        .hamburger-btn.active span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
-
-        .menu-overlay {
-            position: fixed;
-            inset: 0;
-            background: var(--color-cream);
-            z-index: 1001;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-
-        .menu-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .menu-overlay nav {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .menu-overlay nav a {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
-            font-weight: 400;
-            color: var(--color-forest);
-            text-decoration: none;
-            letter-spacing: 0.01em;
-            transition: color 0.3s ease;
-        }
-
-        .menu-overlay nav a:hover { color: var(--color-stone); }
-
-        .menu-footer {
-            position: absolute;
-            bottom: 2rem;
+        /* --- Header --- */
+        .header {
             text-align: center;
-            font-size: 0.75rem;
-            color: var(--color-stone);
+            padding: 2.5rem 2rem 1rem;
+        }
+        .header a { text-decoration: none; }
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--color-forest);
             letter-spacing: 0.02em;
         }
-
-        .menu-footer a {
-            color: var(--color-stone);
-            text-decoration: none;
-        }
-
-        .menu-footer a:hover { text-decoration: underline; }
-
-        .menu-footer .menu-footer-links { margin-bottom: 0.5rem; }
-
-        .menu-footer .menu-footer-links a { margin: 0 0.3rem; }
-
-        .menu-footer .menu-footer-links span { margin: 0 0.2rem; }
-
-        /* ── Header ── */
-        .site-header {
-            padding: 1.2rem 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .site-header .logo {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            color: var(--color-forest);
-            text-decoration: none;
-            letter-spacing: 0.01em;
-        }
-
         .back-link {
+            display: inline-block;
+            margin-top: 0.5rem;
             font-size: 0.8rem;
             color: var(--color-stone);
             text-decoration: none;
-            letter-spacing: 0.02em;
-            transition: color 0.3s ease;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
         }
-
         .back-link:hover { color: var(--color-forest); }
 
-        /* ── Page Content ── */
-        .page-content {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 2rem 2rem 4rem;
-        }
-
-        .page-title {
+        /* --- Page Intro --- */
+        .page-intro {
             text-align: center;
-            margin-bottom: 2.5rem;
+            padding: 1rem 2rem 0.5rem;
         }
-
-        .page-title h1 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            font-weight: 300;
-            color: var(--color-forest);
-            letter-spacing: 0.01em;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-title p {
-            font-size: 0.85rem;
-            color: var(--color-stone);
-            letter-spacing: 0.02em;
-        }
-
-        .divider {
-            width: 60px;
-            height: 1px;
-            background: var(--color-stone);
-            margin: 0 auto 2.5rem;
-        }
-
-        /* ── Essential Cards Grid ── */
-        .essentials-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        .essential-card {
-            background: #fff;
-            border: 1px solid var(--color-light-stone);
-            border-radius: 6px;
-            padding: 1.5rem;
-            transition: box-shadow 0.3s ease;
-        }
-
-        .essential-card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-        }
-
-        .essential-card .card-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .essential-card h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
+        .page-intro h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             font-weight: 500;
             color: var(--color-forest);
             margin-bottom: 0.5rem;
         }
+        .page-intro p {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--color-stone);
+            max-width: 550px;
+            margin: 0 auto;
+        }
+        .divider {
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 1rem auto 0;
+        }
 
-        .essential-card p {
-            font-size: 0.8rem;
-            line-height: 1.7;
+        /* --- Kitchen Feature --- */
+        .kitchen-feature {
+            max-width: 900px;
+            margin: 2.5rem auto 0;
+            padding: 0 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .kitchen-feature.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .kitchen-card {
+            background: var(--color-forest);
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 340px;
+        }
+        .kitchen-visual {
+            background: var(--color-cream);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+            position: relative;
+        }
+        .kitchen-icon-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            max-width: 220px;
+        }
+        .kitchen-icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .kitchen-icon-item svg {
+            width: 36px;
+            height: 36px;
+            stroke: var(--color-forest);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .kitchen-icon-item span {
+            font-size: 0.65rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--color-forest);
+            font-weight: 500;
+            text-align: center;
+        }
+        .kitchen-content {
+            padding: 2.5rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: #fff;
+        }
+        .kitchen-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            width: fit-content;
+            margin-bottom: 1rem;
+        }
+        .kitchen-badge svg {
+            width: 13px;
+            height: 13px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+        .kitchen-content h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+        .kitchen-content p {
+            font-size: 0.86rem;
+            line-height: 1.85;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 1rem;
+        }
+        .kitchen-features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .kitchen-feat {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            color: #fff;
+            background: rgba(255,255,255,0.12);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .kitchen-feat svg {
+            width: 11px;
+            height: 11px;
+            stroke: rgba(255,255,255,0.7);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* --- Essentials Journey --- */
+        .essentials-intro {
+            text-align: center;
+            padding: 3rem 2rem 1rem;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .essentials-intro-label {
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            margin-bottom: 0.5rem;
+        }
+        .essentials-intro h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.75rem;
+        }
+        .essentials-intro p {
+            font-size: 0.86rem;
+            line-height: 1.85;
             color: var(--color-charcoal);
         }
 
-        .essential-card .distance-note {
-            font-size: 0.75rem;
-            color: var(--color-stone);
-            font-style: italic;
-            margin-top: 0.5rem;
+        .essentials-journey {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem 2rem 1rem;
+            position: relative;
         }
 
-        /* ── Footer ── */
-        .site-footer {
-            background: #fff;
-            border-top: 1px solid var(--color-light-stone);
-            padding: 2rem;
-            text-align: center;
+        /* Vertical line */
+        .essentials-journey::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 40px;
+            width: 1px;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                var(--color-light-stone) 5%,
+                var(--color-light-stone) 95%,
+                transparent 100%
+            );
+            z-index: 0;
         }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+        /* --- Essential Stop --- */
+        .essential-stop {
+            position: relative;
+            padding-left: 80px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .essential-stop.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .essential-stop:last-child {
             margin-bottom: 1rem;
         }
 
-        .footer-links a {
-            font-size: 0.75rem;
-            color: var(--color-stone);
-            text-decoration: none;
-            letter-spacing: 0.03em;
-            transition: color 0.3s ease;
+        /* Timeline dot */
+        .essential-dot {
+            position: absolute;
+            left: 30px;
+            top: 0.3rem;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 2px solid var(--color-forest);
+            border-radius: 50%;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .essential-dot::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-forest);
+            border-radius: 50%;
         }
 
-        .footer-links a:hover { color: var(--color-forest); }
+        .essential-card {
+            background: var(--color-cream);
+            border-radius: 10px;
+            padding: 1.75rem 2rem;
+            position: relative;
+        }
+        .essential-card-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .essential-icon {
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            background: var(--color-forest);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .essential-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .essential-card-header h3 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            line-height: 1.2;
+        }
+        .essential-card-header .distance-badge {
+            font-size: 0.68rem;
+            color: var(--color-stone);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+        .essential-card p {
+            font-size: 0.86rem;
+            line-height: 1.85;
+            color: var(--color-charcoal);
+            margin-bottom: 0.75rem;
+        }
+        .essential-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+        .essential-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            color: var(--color-forest);
+            background: rgba(44, 62, 45, 0.08);
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .essential-tag svg {
+            width: 11px;
+            height: 11px;
+            stroke: var(--color-forest);
+            fill: none;
+            stroke-width: 2;
+        }
 
-        .footer-copy {
+        /* --- End of journey --- */
+        .journey-end {
+            text-align: center;
+            padding: 2rem 2rem 3rem;
+        }
+        .journey-end-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--color-stone);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+        }
+        .journey-end p {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--color-stone);
+            max-width: 420px;
+            margin: 0 auto 1.5rem;
+        }
+        .journey-cta {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-forest);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .journey-cta:hover {
+            color: var(--color-stone);
+            border-color: var(--color-stone);
+        }
+
+        /* --- Footer --- */
+        .site-footer {
+            text-align: center;
+            padding: 2rem;
             font-size: 0.7rem;
             color: var(--color-stone);
-            letter-spacing: 0.02em;
+            border-top: 1px solid var(--color-light-stone);
+            background-color: #fff;
         }
+        .site-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: color 0.2s;
+        }
+        .site-footer a:hover { color: var(--color-forest); }
 
-        /* ── Mobile ── */
+        /* --- Hamburger Menu --- */
+        .menu-btn { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; width: 44px; height: 44px; background: rgba(255,255,255,0.9); border: 1px solid var(--color-light-stone); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; transition: background 0.3s; backdrop-filter: blur(4px); }
+        .menu-btn:hover { background: #fff; }
+        .menu-btn span { display: block; width: 18px; height: 2px; background: var(--color-forest); transition: transform 0.3s, opacity 0.3s; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .menu-overlay.open { opacity: 1; visibility: visible; }
+        .menu-panel { position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100%; background: #fff; z-index: 999; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 5rem 2rem 2rem; }
+        .menu-panel.open { right: 0; }
+        .menu-panel nav a { display: block; font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; color: var(--color-forest); text-decoration: none; padding: 0.75rem 0; border-bottom: 1px solid var(--color-light-stone); transition: color 0.2s, padding-left 0.2s; }
+        .menu-panel nav a:hover { padding-left: 0.5rem; color: var(--color-stone); }
+        .menu-panel nav a:last-child { border-bottom: none; }
+        .menu-footer-nav { margin-top: auto; font-size: 0.75rem; color: var(--color-stone); line-height: 1.8; }
+        .menu-footer-nav a { color: var(--color-stone); text-decoration: none; transition: color 0.2s; }
+        .menu-footer-nav a:hover { color: var(--color-forest); }
+
+        /* --- Responsive --- */
         @media (max-width: 768px) {
-            .essentials-grid {
+            .kitchen-card {
                 grid-template-columns: 1fr;
             }
-
-            .page-title h1 { font-size: 1.7rem; }
-
-            .site-header { padding: 1rem 1.2rem; }
-
-            .page-content { padding: 1.5rem 1.2rem 3rem; }
+            .kitchen-visual {
+                padding: 2rem;
+            }
+            .kitchen-content {
+                padding: 2rem;
+            }
+            .essentials-journey::before {
+                left: 24px;
+            }
+            .essential-stop {
+                padding-left: 56px;
+            }
+            .essential-dot {
+                left: 14px;
+            }
+            .essential-card {
+                padding: 1.5rem;
+            }
+            .essential-card-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
-
-    <!-- Hamburger Button -->
-    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-
-    <!-- Menu Overlay -->
-    <div class="menu-overlay" id="menuOverlay">
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <div class="menu-panel">
         <nav>
             <a href="index.html">Home</a>
             <a href="campsites.html">Campsites</a>
@@ -288,89 +492,220 @@
             <a href="about.html">About Us</a>
             <a href="contact.html">Contact</a>
         </nav>
-        <div class="menu-footer">
-            <div class="menu-footer-links">
-                <a href="disclaimer.html">Disclaimer</a>
-                <span>&middot;</span>
-                <a href="contact.html">Get in Touch</a>
-            </div>
-            <p>&copy; 2026 Ahana Hillside</p>
+        <div class="menu-footer-nav">
+            <a href="disclaimer.html">Disclaimer</a> &middot; <a href="contact.html">Get in Touch</a><br>
+            &copy; 2026 Ahana Hillside
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="site-header">
-        <a href="index.html" class="logo">Ahana Hillside</a>
+    <div class="header">
+        <a href="index.html">
+            <div class="header-logo">Ahana Hillside</div>
+        </a>
+        <br>
         <a href="explore.html" class="back-link">&larr; Back to explore</a>
-    </header>
+    </div>
 
-    <!-- Page Content -->
-    <main class="page-content">
-        <div class="page-title">
-            <h1>Local Essentials</h1>
-            <p>Everything you need is just a short drive away</p>
-        </div>
+    <div class="page-intro">
+        <h1>Local Essentials</h1>
+        <p>Everything you need, from on-site to a short drive away</p>
         <div class="divider"></div>
+    </div>
 
-        <div class="essentials-grid">
-
-            <!-- Card 1: IGA Supermarket -->
-            <div class="essential-card">
-                <div class="card-icon">&#128722;</div>
-                <h3>IGA Supermarket</h3>
-                <p>Your closest supermarket for all everyday essentials. Well-stocked with fresh produce, pantry staples, and camping supplies, open until midnight for those late-night needs.</p>
-                <p class="distance-note">Closest supermarket to Ahana Hillside</p>
+    <!-- Kitchen Feature (Hero) -->
+    <div class="kitchen-feature">
+        <div class="kitchen-card">
+            <div class="kitchen-visual">
+                <div class="kitchen-icon-group">
+                    <div class="kitchen-icon-item">
+                        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="12" y1="2" x2="12" y2="10"/><circle cx="7" cy="16" r="1.5"/><circle cx="17" cy="16" r="1.5"/></svg>
+                        <span>Stovetop</span>
+                    </div>
+                    <div class="kitchen-icon-item">
+                        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                        <span>Oven</span>
+                    </div>
+                    <div class="kitchen-icon-item">
+                        <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="15" x2="20" y2="15"/><circle cx="12" cy="5" r="1"/></svg>
+                        <span>Fridge</span>
+                    </div>
+                    <div class="kitchen-icon-item">
+                        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/><circle cx="12" cy="12" r="9"/></svg>
+                        <span>Utensils</span>
+                    </div>
+                </div>
             </div>
-
-            <!-- Card 2: Woolworths Gordonvale -->
-            <div class="essential-card">
-                <div class="card-icon">&#127822;</div>
-                <h3>Woolworths Gordonvale</h3>
-                <p>A full-range Woolworths supermarket located on the Bruce Highway in Gordonvale, offering everything from fresh groceries and bakery items to household goods and pharmacy essentials.</p>
-                <p class="distance-note">Short drive north on the Bruce Highway</p>
+            <div class="kitchen-content">
+                <div class="kitchen-badge">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    On-site at Ahana
+                </div>
+                <h2><em>Fully Equipped</em> Kitchen</h2>
+                <p>No need to eat out every night. Our on-site kitchen is fully equipped for guests to prepare their own meals &mdash; bring your groceries and cook just like home. It's perfect for families, budget-conscious travellers, or anyone who simply enjoys cooking with fresh tropical produce from the local markets.</p>
+                <div class="kitchen-features-list">
+                    <span class="kitchen-feat">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Full stovetop &amp; oven
+                    </span>
+                    <span class="kitchen-feat">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Fridge &amp; freezer
+                    </span>
+                    <span class="kitchen-feat">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Pots, pans &amp; utensils
+                    </span>
+                    <span class="kitchen-feat">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Plates &amp; cutlery
+                    </span>
+                    <span class="kitchen-feat">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Kettle &amp; toaster
+                    </span>
+                    <span class="kitchen-feat">
+                        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                        Microwave
+                    </span>
+                </div>
             </div>
-
-            <!-- Card 3: Fast Food & Dining -->
-            <div class="essential-card">
-                <div class="card-icon">&#127828;</div>
-                <h3>Fast Food &amp; Dining</h3>
-                <p>Craving a quick bite? KFC and McDonald's are both within easy reach in Gordonvale, along with a selection of local cafes and eateries perfect for a relaxed meal out.</p>
-                <p class="distance-note">KFC &amp; McDonald's within easy reach</p>
-            </div>
-
         </div>
-    </main>
+    </div>
 
-    <!-- Footer -->
+    <!-- Nearby Essentials Section -->
+    <div class="essentials-intro">
+        <p class="essentials-intro-label">Nearby</p>
+        <h2>Shops &amp; Dining</h2>
+        <p>When you need to stock up on groceries or grab a quick bite, everything is a short drive down the Bruce Highway.</p>
+    </div>
+
+    <div class="essentials-journey">
+
+        <!-- Stop 1: IGA Supermarket -->
+        <div class="essential-stop">
+            <div class="essential-dot"></div>
+            <div class="essential-card">
+                <div class="essential-card-header">
+                    <div class="essential-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    </div>
+                    <div>
+                        <h3>IGA Supermarket</h3>
+                        <span class="distance-badge">Closest store to Ahana Hillside</span>
+                    </div>
+                </div>
+                <p>Your nearest supermarket for all everyday essentials. Well-stocked with fresh produce, pantry staples, camping supplies, and everything you need to make the most of the on-site kitchen. Conveniently open until midnight for those late-night needs or if you forgot something for tomorrow's breakfast.</p>
+                <div class="essential-tags">
+                    <span class="essential-tag">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        Open until midnight
+                    </span>
+                    <span class="essential-tag">
+                        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                        Fresh produce &middot; Pantry &middot; Camping supplies
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stop 2: Woolworths Gordonvale -->
+        <div class="essential-stop">
+            <div class="essential-dot"></div>
+            <div class="essential-card">
+                <div class="essential-card-header">
+                    <div class="essential-icon">
+                        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    </div>
+                    <div>
+                        <h3>Woolworths Gordonvale</h3>
+                        <span class="distance-badge">~10 min north on Bruce Highway</span>
+                    </div>
+                </div>
+                <p>A full-range Woolworths supermarket in Gordonvale with everything from fresh groceries and bakery items to household goods and pharmacy essentials. If you're planning to cook up a storm in the Ahana kitchen, this is the place to do a proper shop on your way in.</p>
+                <div class="essential-tags">
+                    <span class="essential-tag">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        ~10 min drive
+                    </span>
+                    <span class="essential-tag">
+                        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                        Full grocery &middot; Bakery &middot; Pharmacy
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stop 3: Fast Food & Dining -->
+        <div class="essential-stop">
+            <div class="essential-dot"></div>
+            <div class="essential-card">
+                <div class="essential-card-header">
+                    <div class="essential-icon">
+                        <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                    </div>
+                    <div>
+                        <h3>Fast Food &amp; Dining</h3>
+                        <span class="distance-badge">~10 min in Gordonvale area</span>
+                    </div>
+                </div>
+                <p>Craving a quick bite? KFC and McDonald's are both within easy reach in the Gordonvale area, along with a selection of local cafes and eateries perfect for a relaxed meal out. Great for those nights when you'd rather let someone else do the cooking.</p>
+                <div class="essential-tags">
+                    <span class="essential-tag">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        ~10 min drive
+                    </span>
+                    <span class="essential-tag">
+                        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M3 9h18M9 3v18"/></svg>
+                        KFC &middot; McDonald's &middot; Local cafes
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- End of journey -->
+    <div class="journey-end">
+        <div class="journey-end-dot"></div>
+        <p>Cook on-site or grab a bite nearby &mdash; you're covered either way</p>
+        <a href="explore.html" class="journey-cta">Back to Explore &rarr;</a>
+    </div>
+
     <footer class="site-footer">
-        <div class="footer-links">
-            <a href="about.html">About</a>
-            <a href="gallery.html">Gallery</a>
-            <a href="explore.html">Explore</a>
-            <a href="campsites.html">Campsites</a>
-            <a href="contact.html">Contact</a>
-            <a href="disclaimer.html">Disclaimer</a>
-        </div>
-        <p class="footer-copy">&copy; 2026 Ahana Hillside</p>
+        <a href="about.html">About</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="explore.html">Explore</a>
+        <a href="campsites.html">Campsites</a>
+        <a href="contact.html">Contact</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <br><br>
+        &copy; 2026 Ahana Hillside
     </footer>
 
     <script>
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const menuOverlay = document.getElementById('menuOverlay');
+    function toggleMenu() {
+        document.querySelector('.menu-btn').classList.toggle('open');
+        document.querySelector('.menu-overlay').classList.toggle('open');
+        document.querySelector('.menu-panel').classList.toggle('open');
+    }
 
-        hamburgerBtn.addEventListener('click', () => {
-            hamburgerBtn.classList.toggle('active');
-            menuOverlay.classList.toggle('active');
-        });
-
-        // Close menu when a link is clicked
-        menuOverlay.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => {
-                hamburgerBtn.classList.remove('active');
-                menuOverlay.classList.remove('active');
+    // Scroll-reveal animation
+    (function() {
+        var items = document.querySelectorAll('.kitchen-feature, .essential-stop');
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
             });
-        });
-    </script>
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
 
+        items.forEach(function(item) {
+            item.style.transitionDelay = '0.1s';
+            observer.observe(item);
+        });
+    })();
+    </script>
 </body>
 </html>
