@@ -74,7 +74,7 @@
             border: 1px solid var(--color-light-stone);
             background: #fff;
             font-family: var(--font-sans);
-            font-size: 0.9rem;
+            font-size: 16px;
             color: var(--color-charcoal);
             outline: none;
             margin-bottom: 1rem;
@@ -286,7 +286,7 @@
             border: 1px solid var(--color-light-stone);
             background: #fff;
             font-family: var(--font-sans);
-            font-size: 0.85rem;
+            font-size: 16px;
             color: var(--color-charcoal);
             outline: none;
             transition: border-color 0.2s;
@@ -412,7 +412,7 @@
             border: 1px solid var(--color-light-stone);
             background: #fff;
             font-family: var(--font-sans);
-            font-size: 0.8rem;
+            font-size: 16px;
             color: var(--color-charcoal);
             outline: none;
         }
@@ -850,13 +850,42 @@
         }
 
         /* Responsive */
-        @media (max-width: 700px) {
+        @media (max-width: 768px) {
             .card-grid { grid-template-columns: 1fr; }
             .tabs { padding: 0 1rem; }
             .sub-tabs { padding: 0 1rem; }
             .tab-content { padding: 1.5rem 1rem; }
             .tab-btn { padding: 0.75rem 1rem; font-size: 0.75rem; }
             .sub-tab-btn { padding: 0.55rem 0.85rem; font-size: 0.7rem; }
+
+            .dash-header .logout-btn {
+                padding: 0.5rem 1rem;
+                min-height: 44px;
+            }
+
+            .btn-danger {
+                padding: 0.5rem 0.85rem;
+                font-size: 0.75rem;
+                min-height: 44px;
+            }
+
+            .filter-btn {
+                padding: 0.55rem 0.85rem;
+                min-height: 44px;
+            }
+
+            .cal-nav-btn {
+                padding: 0.5rem 0.85rem;
+                min-height: 44px;
+            }
+
+            .booking-details {
+                grid-template-columns: 1fr;
+            }
+
+            .image-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
