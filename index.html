@@ -328,6 +328,10 @@
         }
 
         /* --- Welcome Section --- */
+        .welcome-wrapper {
+            background-color: #fff;
+        }
+
         .welcome {
             padding: 5rem 2rem 3rem;
             max-width: 780px;
@@ -388,8 +392,12 @@
         }
 
         /* --- Neighbourhood Section --- */
+        .neighbourhood-wrapper {
+            background-color: var(--color-cream);
+        }
+
         .neighbourhood {
-            padding: 3rem 2rem 5rem;
+            padding: 4rem 2rem 4rem;
             max-width: 1100px;
             margin: 0 auto;
         }
@@ -459,7 +467,7 @@
         .neighbourhood-image,
         .neighbourhood-video {
             width: 100%;
-            height: 400px;
+            aspect-ratio: 16 / 10;
             object-fit: cover;
         }
 
@@ -469,6 +477,7 @@
             padding: 2rem;
             font-size: 0.7rem;
             color: var(--color-stone);
+            background-color: #fff;
             border-top: 1px solid var(--color-light-stone);
         }
 
@@ -509,7 +518,7 @@
             }
             .neighbourhood-image,
             .neighbourhood-video {
-                height: 280px;
+                aspect-ratio: 16 / 9;
             }
             .neighbourhood {
                 padding: 2rem 1.25rem 3rem;
@@ -582,39 +591,43 @@
     </section>
 
     <!-- Welcome Section -->
-    <section class="welcome" id="neighbourhood">
-        <p class="welcome-label">Welcome</p>
-        <h2 class="welcome-title"><em>Welcome to</em> Ahana Hillside</h2>
-        <div class="welcome-divider"></div>
-        <p class="welcome-desc">
-            Tucked away in the lush green hills just outside Cairns, Ahana Hillside is a private retreat where the rainforest meets the sky. Wake to birdsong, breathe in the tropical air, and let the pace of the hillside slow you down.
-        </p>
-        <p class="welcome-desc">
-            Whether you're camping under the stars at one of our spacious campsites or enjoying a budget-friendly stay, Ahana is your base to explore the wonders of Tropical North Queensland &mdash; from the Great Barrier Reef to ancient rainforests and hidden waterfalls.
-        </p>
-        <a href="about.html" class="welcome-link">Learn more about us &rarr;</a>
-    </section>
+    <div class="welcome-wrapper" id="neighbourhood">
+        <section class="welcome">
+            <p class="welcome-label">Welcome</p>
+            <h2 class="welcome-title"><em>Welcome to</em> Ahana Hillside</h2>
+            <div class="welcome-divider"></div>
+            <p class="welcome-desc">
+                Tucked away in the lush green hills just outside Cairns, Ahana Hillside is a private retreat where the rainforest meets the sky. Wake to birdsong, breathe in the tropical air, and let the pace of the hillside slow you down.
+            </p>
+            <p class="welcome-desc">
+                Whether you're camping under the stars at one of our spacious campsites or enjoying a budget-friendly stay, Ahana is your base to explore the wonders of Tropical North Queensland &mdash; from the Great Barrier Reef to ancient rainforests and hidden waterfalls.
+            </p>
+            <a href="about.html" class="welcome-link">Learn more about us &rarr;</a>
+        </section>
+    </div>
 
     <!-- Neighbourhood / Explore Section -->
-    <section class="neighbourhood">
-        <div class="neighbourhood-inner">
-            <div class="neighbourhood-text">
-                <p class="neighbourhood-label">The Neighbourhood</p>
-                <h2 class="neighbourhood-title"><em>Explore</em> Cairns &amp; Surroundings</h2>
-                <div class="neighbourhood-divider"></div>
-                <p class="neighbourhood-desc">
-                    Nestled in the hills above Cairns, Ahana Hillside places you at the doorstep of Tropical North Queensland's most extraordinary natural wonders. From ancient rainforests and cascading waterfalls to the Great Barrier Reef, this corner of Australia offers experiences found nowhere else on Earth.
-                </p>
-                <p class="neighbourhood-desc">
-                    Spend your mornings chasing waterfalls at Crystal Cascades or Josephine Falls, your afternoons snorkelling the reef, and your evenings watching the sunset from your hillside retreat.
-                </p>
-                <a href="explore.html" class="neighbourhood-link">More info</a>
+    <div class="neighbourhood-wrapper">
+        <section class="neighbourhood">
+            <div class="neighbourhood-inner">
+                <div class="neighbourhood-text">
+                    <p class="neighbourhood-label">The Neighbourhood</p>
+                    <h2 class="neighbourhood-title"><em>Explore</em> Cairns &amp; Surroundings</h2>
+                    <div class="neighbourhood-divider"></div>
+                    <p class="neighbourhood-desc">
+                        Nestled in the hills above Cairns, Ahana Hillside places you at the doorstep of Tropical North Queensland's most extraordinary natural wonders. From ancient rainforests and cascading waterfalls to the Great Barrier Reef, this corner of Australia offers experiences found nowhere else on Earth.
+                    </p>
+                    <p class="neighbourhood-desc">
+                        Spend your mornings chasing waterfalls at Crystal Cascades or Josephine Falls, your afternoons snorkelling the reef, and your evenings watching the sunset from your hillside retreat.
+                    </p>
+                    <a href="explore.html" class="neighbourhood-link">More info</a>
+                </div>
+                <div>
+                    <img id="img-neighbourhood" src="images/explore/neighbourhood.jpg" alt="Tropical North Queensland landscape" class="neighbourhood-image">
+                </div>
             </div>
-            <div>
-                <img id="img-neighbourhood" src="images/explore/neighbourhood.jpg" alt="Tropical North Queensland landscape" class="neighbourhood-image">
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <footer class="site-footer">
         <a href="about.html">About</a>
