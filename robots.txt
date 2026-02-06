@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /admin.html
+Disallow: /booking-confirmed.html
+
+Sitemap: https://ahanahillside.com/sitemap.xml
