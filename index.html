@@ -323,9 +323,69 @@
             50% { transform: translateY(8px); }
         }
 
+        /* --- Welcome Section --- */
+        .welcome {
+            padding: 5rem 2rem 3rem;
+            max-width: 780px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .welcome-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            margin-bottom: 0.75rem;
+        }
+
+        .welcome-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 400;
+            color: var(--color-forest);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .welcome-title em {
+            font-style: italic;
+        }
+
+        .welcome-divider {
+            width: 50px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 0 auto 1.5rem;
+        }
+
+        .welcome-desc {
+            font-size: 0.88rem;
+            line-height: 1.85;
+            color: var(--color-charcoal);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-link {
+            display: inline-block;
+            margin-top: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            text-decoration: none;
+            border-bottom: 1px solid var(--color-forest);
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .welcome-link:hover {
+            color: var(--color-stone);
+            border-color: var(--color-stone);
+        }
+
         /* --- Neighbourhood Section --- */
         .neighbourhood {
-            padding: 5rem 2rem;
+            padding: 3rem 2rem 5rem;
             max-width: 1100px;
             margin: 0 auto;
         }
@@ -398,19 +458,6 @@
             object-fit: cover;
         }
 
-        .neighbourhood-image-placeholder {
-            width: 100%;
-            height: 400px;
-            background: linear-gradient(135deg, #d4e4d7 0%, #a8c5ae 50%, #7ba689 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-family: var(--font-serif);
-            font-size: 1.2rem;
-            font-style: italic;
-        }
-
         /* --- Site Footer (outside hero) --- */
         .site-footer {
             text-align: center;
@@ -455,12 +502,14 @@
             .neighbourhood-text {
                 padding-right: 0;
             }
-            .neighbourhood-image,
-            .neighbourhood-image-placeholder {
+            .neighbourhood-image {
                 height: 280px;
             }
             .neighbourhood {
-                padding: 3rem 1.25rem;
+                padding: 2rem 1.25rem 3rem;
+            }
+            .welcome {
+                padding: 3rem 1.25rem 2rem;
             }
         }
     </style>
@@ -526,8 +575,22 @@
         </a>
     </section>
 
+    <!-- Welcome Section -->
+    <section class="welcome" id="neighbourhood">
+        <p class="welcome-label">Welcome</p>
+        <h2 class="welcome-title"><em>Welcome to</em> Ahana Hillside</h2>
+        <div class="welcome-divider"></div>
+        <p class="welcome-desc">
+            Tucked away in the lush green hills just outside Cairns, Ahana Hillside is a private retreat where the rainforest meets the sky. Wake to birdsong, breathe in the tropical air, and let the pace of the hillside slow you down.
+        </p>
+        <p class="welcome-desc">
+            Whether you're camping under the stars at one of our spacious campsites or enjoying a budget-friendly stay, Ahana is your base to explore the wonders of Tropical North Queensland &mdash; from the Great Barrier Reef to ancient rainforests and hidden waterfalls.
+        </p>
+        <a href="about.html" class="welcome-link">Learn more about us &rarr;</a>
+    </section>
+
     <!-- Neighbourhood / Explore Section -->
-    <section class="neighbourhood" id="neighbourhood">
+    <section class="neighbourhood">
         <div class="neighbourhood-inner">
             <div class="neighbourhood-text">
                 <p class="neighbourhood-label">The Neighbourhood</p>
@@ -542,7 +605,7 @@
                 <a href="explore.html" class="neighbourhood-link">More info</a>
             </div>
             <div>
-                <div class="neighbourhood-image-placeholder">Tropical North Queensland</div>
+                <img src="images/explore/neighbourhood.jpg" alt="Tropical North Queensland landscape" class="neighbourhood-image">
             </div>
         </div>
     </section>
