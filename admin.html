@@ -849,6 +849,47 @@
             grid-column: 1 / -1;
         }
 
+        /* Explore slot cards */
+        .explore-slot-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.75rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            grid-template-rows: auto auto;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .explore-slot-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+        }
+        .explore-slot-header strong {
+            color: var(--color-forest);
+        }
+        .explore-slot-status {
+            font-size: 0.7rem;
+            color: var(--color-stone);
+        }
+        .explore-slot-preview {
+            grid-column: 1 / -1;
+        }
+        .explore-slot-preview img,
+        .explore-slot-preview video {
+            max-height: 120px;
+            max-width: 100%;
+            object-fit: cover;
+            border: 1px solid var(--color-light-stone);
+        }
+        .explore-slot-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            grid-column: 1 / -1;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .card-grid { grid-template-columns: 1fr; }
@@ -1204,6 +1245,106 @@
                 </div>
                 <div class="upload-progress" id="progress-homebg"></div>
             </div>
+
+            <div class="card" style="max-width:700px;margin-top:1.5rem">
+                <div class="card-title">Explore Page &mdash; Section Images</div>
+                <div class="section-desc" style="margin-bottom:1rem">Upload images or videos for each section on the Explore page and the homepage neighbourhood panel. Accepts images (5MB) or videos (50MB).</div>
+
+                <div id="explore-slots-grid" style="display:grid;grid-template-columns:1fr;gap:1rem">
+
+                    <div class="explore-slot-card" data-slot="neighbourhood">
+                        <div class="explore-slot-header">
+                            <strong>Homepage &mdash; Neighbourhood Image</strong>
+                            <span class="explore-slot-status" id="explore-status-neighbourhood"></span>
+                        </div>
+                        <div class="explore-slot-preview" id="explore-preview-neighbourhood"></div>
+                        <div class="explore-slot-actions">
+                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-neighbourhood').click()">Upload</button>
+                            <input type="file" id="file-explore-neighbourhood" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('neighbourhood', this.files[0])">
+                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-neighbourhood" onclick="deleteExploreSlot('neighbourhood')">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="explore-slot-card" data-slot="reef">
+                        <div class="explore-slot-header">
+                            <strong>Explore &mdash; Great Barrier Reef</strong>
+                            <span class="explore-slot-status" id="explore-status-reef"></span>
+                        </div>
+                        <div class="explore-slot-preview" id="explore-preview-reef"></div>
+                        <div class="explore-slot-actions">
+                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-reef').click()">Upload</button>
+                            <input type="file" id="file-explore-reef" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('reef', this.files[0])">
+                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-reef" onclick="deleteExploreSlot('reef')">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="explore-slot-card" data-slot="rainforest">
+                        <div class="explore-slot-header">
+                            <strong>Explore &mdash; Daintree Rainforest</strong>
+                            <span class="explore-slot-status" id="explore-status-rainforest"></span>
+                        </div>
+                        <div class="explore-slot-preview" id="explore-preview-rainforest"></div>
+                        <div class="explore-slot-actions">
+                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-rainforest').click()">Upload</button>
+                            <input type="file" id="file-explore-rainforest" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('rainforest', this.files[0])">
+                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-rainforest" onclick="deleteExploreSlot('rainforest')">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="explore-slot-card" data-slot="waterfall">
+                        <div class="explore-slot-header">
+                            <strong>Explore &mdash; Waterfalls &amp; Swimming Holes</strong>
+                            <span class="explore-slot-status" id="explore-status-waterfall"></span>
+                        </div>
+                        <div class="explore-slot-preview" id="explore-preview-waterfall"></div>
+                        <div class="explore-slot-actions">
+                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-waterfall').click()">Upload</button>
+                            <input type="file" id="file-explore-waterfall" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('waterfall', this.files[0])">
+                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-waterfall" onclick="deleteExploreSlot('waterfall')">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="explore-slot-card" data-slot="tablelands">
+                        <div class="explore-slot-header">
+                            <strong>Explore &mdash; Atherton Tablelands</strong>
+                            <span class="explore-slot-status" id="explore-status-tablelands"></span>
+                        </div>
+                        <div class="explore-slot-preview" id="explore-preview-tablelands"></div>
+                        <div class="explore-slot-actions">
+                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-tablelands').click()">Upload</button>
+                            <input type="file" id="file-explore-tablelands" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('tablelands', this.files[0])">
+                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-tablelands" onclick="deleteExploreSlot('tablelands')">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="explore-slot-card" data-slot="beach">
+                        <div class="explore-slot-header">
+                            <strong>Explore &mdash; Beaches &amp; Islands</strong>
+                            <span class="explore-slot-status" id="explore-status-beach"></span>
+                        </div>
+                        <div class="explore-slot-preview" id="explore-preview-beach"></div>
+                        <div class="explore-slot-actions">
+                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-beach').click()">Upload</button>
+                            <input type="file" id="file-explore-beach" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('beach', this.files[0])">
+                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-beach" onclick="deleteExploreSlot('beach')">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="explore-slot-card" data-slot="cairns">
+                        <div class="explore-slot-header">
+                            <strong>Explore &mdash; Cairns City</strong>
+                            <span class="explore-slot-status" id="explore-status-cairns"></span>
+                        </div>
+                        <div class="explore-slot-preview" id="explore-preview-cairns"></div>
+                        <div class="explore-slot-actions">
+                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-cairns').click()">Upload</button>
+                            <input type="file" id="file-explore-cairns" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('cairns', this.files[0])">
+                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-cairns" onclick="deleteExploreSlot('cairns')">Remove</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
         <!-- SETTINGS PANEL -->
@@ -1358,6 +1499,7 @@
         loadStripeSettings();
         loadGalleryItems();
         loadHomepageBg();
+        loadExploreSlots();
     }
 
     // --- Config ---
@@ -2337,6 +2479,88 @@
         zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
         zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); uploadHomepageBg(e.dataTransfer.files[0]); });
     })();
+
+    // --- Explore Section Images ---
+    let exploreSlots = {};
+
+    async function loadExploreSlots() {
+        try {
+            const res = await fetch(WORKER_URL + '/explore/list');
+            const data = await res.json();
+            exploreSlots = data.slots || {};
+        } catch (e) {
+            exploreSlots = {};
+        }
+        renderExploreSlots();
+    }
+
+    function renderExploreSlots() {
+        const slotNames = ['neighbourhood', 'reef', 'rainforest', 'waterfall', 'tablelands', 'beach', 'cairns'];
+        slotNames.forEach(slot => {
+            const preview = document.getElementById('explore-preview-' + slot);
+            const status = document.getElementById('explore-status-' + slot);
+            const delBtn = document.getElementById('explore-del-' + slot);
+            if (!preview) return;
+
+            const meta = exploreSlots[slot];
+            if (meta) {
+                const url = WORKER_URL + '/explore/' + slot + '?t=' + Date.now();
+                if (meta.mediaType === 'video') {
+                    preview.innerHTML = '<video src="' + url + '" style="max-height:120px;max-width:100%;border:1px solid var(--color-light-stone)" muted playsinline></video>';
+                } else {
+                    preview.innerHTML = '<img src="' + url + '" alt="' + slot + '">';
+                }
+                status.textContent = meta.name ? '(' + meta.name + ')' : '(uploaded)';
+                delBtn.style.display = '';
+            } else {
+                preview.innerHTML = '<span style="font-size:0.75rem;color:var(--color-stone)">Using default image</span>';
+                status.textContent = '';
+                delBtn.style.display = 'none';
+            }
+        });
+    }
+
+    async function uploadExploreSlot(slot, file) {
+        if (!file) return;
+        const status = document.getElementById('explore-status-' + slot);
+        status.textContent = 'Uploading...';
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('slot', slot);
+
+        try {
+            const res = await fetch(WORKER_URL + '/explore/upload', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + authToken },
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+                exploreSlots[slot] = { mediaType: data.mediaType, name: file.name, size: file.size, uploadedAt: new Date().toISOString() };
+                renderExploreSlots();
+            } else {
+                status.textContent = 'Error: ' + (data.error || 'Upload failed');
+            }
+        } catch (err) {
+            status.textContent = 'Upload failed';
+        }
+        const fileInput = document.getElementById('file-explore-' + slot);
+        if (fileInput) fileInput.value = '';
+    }
+
+    async function deleteExploreSlot(slot) {
+        if (!confirm('Remove this image? The page will fall back to the default.')) return;
+        try {
+            await fetch(WORKER_URL + '/explore/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ slot }),
+            });
+            delete exploreSlots[slot];
+            renderExploreSlots();
+        } catch (err) {}
+    }
 
     ['samavas', 'chhaya'].forEach(site => {
         const zone = document.getElementById('upload-zone-' + site);
