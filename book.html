@@ -751,6 +751,19 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.88rem;
+            cursor: pointer;
+            padding: 0.35rem 0.5rem;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            transition: border-color 0.2s, background 0.2s;
+            flex-wrap: wrap;
+        }
+        .rate-plan:hover {
+            background: rgba(44,62,45,0.03);
+        }
+        .rate-plan.rate-selected {
+            border-color: var(--color-forest);
+            background: rgba(44,62,45,0.04);
         }
 
         .rate-badge {
@@ -776,36 +789,22 @@
             border: 1px solid #FFE0B2;
         }
 
-        .rate-plan {
-            cursor: pointer;
-            padding: 0.35rem 0.5rem;
-            border: 2px solid transparent;
-            border-radius: 4px;
-            transition: border-color 0.2s, background 0.2s;
-        }
-        .rate-plan:hover {
-            background: rgba(44,62,45,0.03);
-        }
-        .rate-plan.rate-selected {
-            border-color: var(--color-forest);
-            background: rgba(44,62,45,0.04);
-        }
         .rate-plan .rate-check {
             display: none;
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
             border-radius: 50%;
             border: 2px solid var(--color-forest);
             background: var(--color-forest);
-            margin-right: 0.4rem;
             position: relative;
-            vertical-align: middle;
+            flex-shrink: 0;
         }
         .rate-plan .rate-check::after {
             content: '';
             position: absolute;
-            top: 2px;
-            left: 2px;
+            top: 3px;
+            left: 3px;
             width: 6px;
             height: 6px;
             border-radius: 50%;
@@ -816,12 +815,12 @@
         }
         .rate-plan .rate-uncheck {
             display: inline-block;
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
             border-radius: 50%;
             border: 2px solid var(--color-light-stone);
-            margin-right: 0.4rem;
-            vertical-align: middle;
+            flex-shrink: 0;
         }
         .rate-plan.rate-selected .rate-uncheck {
             display: none;
@@ -936,20 +935,51 @@
             display: none;
         }
 
+        .rate-price-group {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.25rem;
+            white-space: nowrap;
+        }
+
         .rate-plan strong {
             font-size: 1.1rem;
             color: var(--color-forest);
+            white-space: nowrap;
         }
 
         .rate-plan .rate-per {
             font-size: 0.82rem;
             color: var(--color-charcoal);
+            white-space: nowrap;
         }
 
         .rate-plan .rate-save {
             font-size: 0.7rem;
             color: #E65100;
             font-weight: 500;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 480px) {
+            .rate-plan {
+                gap: 0.3rem;
+                padding: 0.4rem 0.4rem;
+                font-size: 0.82rem;
+            }
+            .rate-plan strong {
+                font-size: 0.95rem;
+            }
+            .rate-badge {
+                font-size: 0.6rem;
+                padding: 0.1rem 0.4rem;
+            }
+            .rate-plan .rate-per {
+                font-size: 0.75rem;
+            }
+            .rate-plan .rate-save {
+                font-size: 0.65rem;
+            }
         }
 
         .campsite-price .price-note {
@@ -3149,8 +3179,8 @@
                     var nrSel0 = selectedCancellationPolicy === 'non-refundable' ? ' rate-selected' : '';
                     priceEl.innerHTML =
                         '<div class="rate-plans">'
-                        + '<div class="rate-plan' + flexSel0 + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + cfg.basePrice + '</strong> <span class="rate-per">/ night</span></div>'
-                        + '<div class="rate-plan' + nrSel0 + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPrice + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>'
+                        + '<div class="rate-plan' + flexSel0 + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <span class="rate-price-group"><strong>' + sym + cfg.basePrice + '</strong> <span class="rate-per">/ night</span></span></div>'
+                        + '<div class="rate-plan' + nrSel0 + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <span class="rate-price-group"><strong>' + sym + nrPrice + '</strong> <span class="rate-per">/ night</span></span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>'
                         + '</div>'
                         + '<span class="price-note">for ' + baseGuests
                         + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
@@ -3280,8 +3310,8 @@
             var nrSel = selectedCancellationPolicy === 'non-refundable' ? ' rate-selected' : '';
 
             let html = '<div class="rate-plans">';
-            html += '<div class="rate-plan' + flexSel + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + perNight + '</strong> <span class="rate-per">/ night</span></div>';
-            html += '<div class="rate-plan' + nrSel + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPerNight + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>';
+            html += '<div class="rate-plan' + flexSel + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <span class="rate-price-group"><strong>' + sym + perNight + '</strong> <span class="rate-per">/ night</span></span></div>';
+            html += '<div class="rate-plan' + nrSel + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <span class="rate-price-group"><strong>' + sym + nrPerNight + '</strong> <span class="rate-per">/ night</span></span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>';
             html += '</div>';
             html += noteHtml;
 
