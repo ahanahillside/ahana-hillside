@@ -1150,6 +1150,7 @@
         <button class="tab-btn active" data-tab="messages">Messages <span class="msg-badge" id="msg-badge"></span></button>
         <button class="tab-btn" data-tab="bookings">Bookings <span class="msg-badge" id="booking-badge"></span></button>
         <button class="tab-btn" data-tab="campsites">Campsites &amp; Rooms</button>
+        <button class="tab-btn" data-tab="viator">Viator</button>
         <button class="tab-btn" data-tab="gallery">Gallery</button>
         <button class="tab-btn" data-tab="settings">Settings</button>
     </div>
@@ -1875,28 +1876,45 @@
                     <button class="btn btn-primary" onclick="saveConfig('addons')">Save Add-ons</button>
                     <span class="save-msg" id="addons-msg"></span>
                 </div>
+            </div>
 
-                <!-- ==================== AFFILIATE EXPERIENCES ==================== -->
-                <hr class="section-divider">
-                <div class="section-heading">Affiliate Experiences</div>
-                <div class="section-desc">Viator affiliate experiences shown on the homepage and explore pages. Add tour links with images to earn commission when guests book.</div>
+        </div>
+
+        <!-- VIATOR PANEL -->
+        <div class="tab-panel" id="panel-viator">
+            <div class="panel-title">Viator Affiliate Experiences</div>
+            <div class="panel-desc">Manage Viator affiliate experiences shown on the homepage and explore pages. Add tour links with images to earn commission when guests book.</div>
+
+            <div class="card" style="max-width:900px">
+                <div class="card-title">Experiences</div>
 
                 <div id="experiences-admin-list"></div>
 
-                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem">
+                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:1rem">
                     <input type="text" id="exp-new-name" placeholder="Experience name" style="flex:1;min-width:180px">
                     <input type="text" id="exp-new-desc" placeholder="Short description" style="flex:2;min-width:180px">
-                    <input type="text" id="exp-new-image" placeholder="Image URL" style="flex:2;min-width:200px">
-                    <input type="text" id="exp-new-url" placeholder="Affiliate URL" style="flex:2;min-width:200px">
+                </div>
+                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
+                    <input type="text" id="exp-new-image" placeholder="Image URL (from Viator)" style="flex:1;min-width:200px">
+                    <input type="text" id="exp-new-url" placeholder="Affiliate URL" style="flex:1;min-width:200px">
                     <button class="btn btn-secondary" onclick="addExperience()" style="padding:0.5rem 1rem">Add</button>
                 </div>
 
                 <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('experiences')">Save Experiences</button>
-                    <span class="save-msg" id="experiences-msg"></span>
+                    <button class="btn btn-primary" onclick="saveConfig('viator')">Save Experiences</button>
+                    <span class="save-msg" id="viator-msg"></span>
                 </div>
             </div>
 
+            <div class="card" style="max-width:900px;margin-top:1.5rem">
+                <div class="card-title">How It Works</div>
+                <div style="font-size:0.85rem;color:var(--color-charcoal);line-height:1.8">
+                    <p>1. Go to your <a href="https://www.viator.com/partnerResources/home" target="_blank" style="color:var(--color-forest)">Viator Partner Dashboard</a> and create affiliate links for Cairns tours.</p>
+                    <p style="margin-top:0.5rem">2. For each tour, copy the <strong>affiliate URL</strong> and the <strong>tour image URL</strong> (right-click the tour image on Viator and copy image address).</p>
+                    <p style="margin-top:0.5rem">3. Add the experience above with a short name and description. Enabled experiences appear on your homepage.</p>
+                    <p style="margin-top:0.5rem">4. You earn <strong>8% commission</strong> on completed bookings made through your links.</p>
+                </div>
+            </div>
         </div>
 
         <!-- GALLERY PANEL -->
