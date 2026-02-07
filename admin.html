@@ -1044,8 +1044,8 @@
                 <div class="panel-desc">Manage campsite photos, descriptions, and campground rules.</div>
 
                 <!-- Images section -->
-                <div class="section-heading">Images</div>
-                <div class="section-desc">Upload, reorder, and manage photos. First image is the cover photo. Max 15 per site, 5MB each (JPEG, PNG, WebP).</div>
+                <div class="section-heading">Images &amp; Videos</div>
+                <div class="section-desc">Upload, reorder, and manage photos &amp; videos. First item is the cover. Max 15 per site. Images are auto-compressed for fast loading. Videos up to 50MB (MP4, WebM, MOV).</div>
 
                 <div class="card-grid">
                     <div class="card">
@@ -1053,7 +1053,7 @@
                         <div class="upload-zone" id="upload-zone-samavas" onclick="document.getElementById('file-samavas').click()">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             <span>Click to upload or drag & drop</span>
-                            <input type="file" id="file-samavas" accept="image/jpeg,image/png,image/webp" multiple style="display:none" onchange="handleFileSelect('samavas', this.files)">
+                            <input type="file" id="file-samavas" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('samavas', this.files)">
                         </div>
                         <div class="upload-progress" id="progress-samavas"></div>
                         <div class="image-grid" id="images-samavas"></div>
@@ -1064,7 +1064,7 @@
                         <div class="upload-zone" id="upload-zone-chhaya" onclick="document.getElementById('file-chhaya').click()">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             <span>Click to upload or drag & drop</span>
-                            <input type="file" id="file-chhaya" accept="image/jpeg,image/png,image/webp" multiple style="display:none" onchange="handleFileSelect('chhaya', this.files)">
+                            <input type="file" id="file-chhaya" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('chhaya', this.files)">
                         </div>
                         <div class="upload-progress" id="progress-chhaya"></div>
                         <div class="image-grid" id="images-chhaya"></div>
@@ -2198,14 +2198,22 @@
         const images = siteImages[site];
 
         if (images.length === 0) {
-            container.innerHTML = '<div class="img-empty">No images uploaded yet.</div>';
+            container.innerHTML = '<div class="img-empty">No images or videos uploaded yet.</div>';
             return;
         }
 
         container.innerHTML = images.map((img, i) => {
-            const imgUrl = WORKER_URL + '/images/' + site + '/' + img.id;
+            const mediaUrl = WORKER_URL + '/images/' + site + '/' + img.id;
+            const isVideo = img.mediaType === 'video' || (img.contentType && img.contentType.startsWith('video/'));
+            let preview;
+            if (isVideo) {
+                preview = '<video src="' + mediaUrl + '" muted style="width:100%;height:100%;object-fit:cover"></video>'
+                    + '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:1.5rem;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,0.5)">&#9654;</span>';
+            } else {
+                preview = '<img src="' + mediaUrl + '" alt="' + escHtml(img.name || '') + '" loading="lazy">';
+            }
             return '<div class="img-thumb">'
-                + '<img src="' + imgUrl + '" alt="' + escHtml(img.name || '') + '" loading="lazy">'
+                + preview
                 + '<span class="img-order">' + (i + 1) + '</span>'
                 + '<div class="img-actions">'
                 + (i > 0 ? '<button class="img-action-btn move-btn" onclick="moveImage(\'' + site + '\',' + i + ',-1)" title="Move left">&larr;</button>' : '')
@@ -2216,6 +2224,32 @@
         }).join('');
     }
 
+    // --- Image compression ---
+    function compressImage(file, maxWidth, quality) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                let w = img.width, h = img.height;
+                if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                canvas.toBlob((blob) => {
+                    resolve(blob);
+                }, 'image/jpeg', quality);
+            };
+            img.src = URL.createObjectURL(file);
+        });
+    }
+
+    function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
     async function handleFileSelect(site, files) {
         if (!files || files.length === 0) return;
         const progressEl = document.getElementById('progress-' + site);
@@ -2223,11 +2257,34 @@
         let uploaded = 0;
 
         for (const file of files) {
-            progressEl.textContent = 'Uploading ' + (uploaded + 1) + ' of ' + total + '...';
+            const isVideo = file.type.startsWith('video/');
+            let uploadFile = file;
+            let uploadName = file.name;
+            let uploadType = file.type;
+            let mediaType = isVideo ? 'video' : 'image';
+
+            if (!isVideo) {
+                // Auto-compress images
+                progressEl.textContent = 'Compressing ' + (uploaded + 1) + ' of ' + total + '...';
+                try {
+                    const compressed = await compressImage(file, 1920, 0.82);
+                    if (compressed && compressed.size < file.size) {
+                        progressEl.textContent = 'Compressed: ' + formatSize(file.size) + ' → ' + formatSize(compressed.size) + '. Uploading...';
+                        uploadFile = new File([compressed], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' });
+                        uploadType = 'image/jpeg';
+                    } else {
+                        progressEl.textContent = 'Uploading ' + (uploaded + 1) + ' of ' + total + '...';
+                    }
+                } catch (e) {
+                    progressEl.textContent = 'Uploading ' + (uploaded + 1) + ' of ' + total + '...';
+                }
+            } else {
+                progressEl.textContent = 'Uploading video ' + (uploaded + 1) + ' of ' + total + '...';
+            }
 
             const formData = new FormData();
             formData.append('site', site);
-            formData.append('file', file);
+            formData.append('file', uploadFile);
 
             try {
                 const res = await fetch(WORKER_URL + '/images/upload', {
@@ -2239,9 +2296,10 @@
                 if (data.success) {
                     siteImages[site].push({
                         id: data.id,
-                        name: file.name,
-                        contentType: file.type,
-                        size: file.size,
+                        name: uploadName,
+                        contentType: uploadType,
+                        size: uploadFile.size,
+                        mediaType,
                     });
                     uploaded++;
                 } else {
@@ -2255,12 +2313,11 @@
         }
 
         if (uploaded === total) {
-            progressEl.textContent = uploaded + ' image(s) uploaded successfully';
+            progressEl.textContent = uploaded + ' file(s) uploaded successfully';
             setTimeout(() => { progressEl.textContent = ''; }, 3000);
         }
 
         renderImages(site);
-        // Reset file input
         document.getElementById('file-' + site).value = '';
     }
 

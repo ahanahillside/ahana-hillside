@@ -45,6 +45,8 @@ const DEFAULT_CONFIG = {
 const DEFAULT_PASSWORD = 'ahana2026';
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
 const MAX_IMAGES_PER_SITE = 15;
+const SITE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const SITE_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime'];
 const MAX_GALLERY_ITEMS = 50;
 const MAX_VIDEO_SIZE = 50 * 1024 * 1024; // 50MB per video
 const GALLERY_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -480,14 +482,16 @@ export default {
         }
 
         // Validate file type
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
-        if (!allowedTypes.includes(file.type)) {
-          return jsonResponse({ error: 'Only JPEG, PNG, and WebP images are allowed' }, 400, origin);
+        const isImage = SITE_IMAGE_TYPES.includes(file.type);
+        const isVideo = SITE_VIDEO_TYPES.includes(file.type);
+        if (!isImage && !isVideo) {
+          return jsonResponse({ error: 'Only JPEG, PNG, WebP images and MP4, WebM, MOV videos are allowed' }, 400, origin);
         }
 
         // Validate file size
-        if (file.size > MAX_IMAGE_SIZE) {
-          return jsonResponse({ error: 'Image must be under 5MB' }, 400, origin);
+        const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        if (file.size > maxSize) {
+          return jsonResponse({ error: isVideo ? 'Video must be under 50MB' : 'Image must be under 5MB' }, 400, origin);
         }
 
         // Check image count limit
@@ -499,10 +503,11 @@ export default {
         // Generate unique ID
         const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
-        // Store image binary in KV
+        // Store file binary in KV
+        const mediaType = isVideo ? 'video' : 'image';
         const arrayBuffer = await file.arrayBuffer();
         await env.CONFIG.put(`image:${id}`, arrayBuffer, {
-          metadata: { contentType: file.type, site, name: file.name },
+          metadata: { contentType: file.type, site, name: file.name, mediaType },
         });
 
         // Add to image list
@@ -511,6 +516,7 @@ export default {
           name: file.name,
           contentType: file.type,
           size: file.size,
+          mediaType,
           uploadedAt: new Date().toISOString(),
         });
         await saveImageList(env, site, imageList);
