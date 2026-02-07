@@ -2782,6 +2782,10 @@
                 el.classList.remove('active');
             });
 
+            // Only show camping experience section on initial campsite view (steps 1-2)
+            var campExp = document.querySelector('.camp-experience');
+            if (campExp) campExp.style.display = currentStep <= 2 ? '' : 'none';
+
             if (currentStep === 2) {
                 document.getElementById('step-select').classList.add('active');
             } else if (currentStep === 3) {
