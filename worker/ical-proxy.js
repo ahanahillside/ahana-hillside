@@ -544,6 +544,13 @@ export default {
       return jsonResponse(config, 200, origin, 'public, max-age=60');
     }
 
+    // --- GET /experiences — public, returns affiliate experiences ---
+    if (path === '/experiences' && request.method === 'GET') {
+      const config = await getConfig(env);
+      const experiences = (config.experiences || []).filter(e => e.enabled !== false);
+      return jsonResponse({ experiences }, 200, origin, 'public, max-age=60');
+    }
+
     // --- POST /config — admin only, updates site configuration ---
     if (path === '/config' && request.method === 'POST') {
       { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
