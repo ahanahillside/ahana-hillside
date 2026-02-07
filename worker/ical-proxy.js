@@ -64,7 +64,179 @@ const DEFAULT_CONFIG = {
     'No loud or open music',
     'All dogs must be kept on a leash when on the main campground',
   ],
+  // Pricing policies (rooms only — campsites keep flat rates)
+  weekendMarkup: 20,        // % surcharge on Fri & Sat nights (rooms only)
+  holidayMarkup: 25,        // % surcharge on public holiday nights (rooms only)
+  cancellationDays: 14,     // free cancellation cutoff (days before check-in)
+  nonRefundableDiscount: 10, // % discount for non-refundable bookings
+  otaMarkup: 15,            // % markup for OTA channel comparison
 };
+
+// --- Australian Public Holidays engine ---
+// Easter calculation (Anonymous Gregorian algorithm)
+function easterSunday(year) {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+// Next Monday on or after a date
+function nextMonday(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  if (day === 0) d.setDate(d.getDate() + 1);
+  else if (day > 1) d.setDate(d.getDate() + (8 - day));
+  return d;
+}
+
+// Format date as YYYY-MM-DD
+function fmtDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return y + '-' + m + '-' + dd;
+}
+
+// Add days to a date
+function addDays(date, n) {
+  const d = new Date(date);
+  d.setDate(d.getDate() + n);
+  return d;
+}
+
+// Second Monday of a month
+function secondMonday(year, month) {
+  const d = new Date(year, month, 1);
+  const day = d.getDay();
+  const first = day === 1 ? 1 : (day === 0 ? 2 : 9 - day);
+  return new Date(year, month, first + 7);
+}
+
+// First Monday of a month
+function firstMonday(year, month) {
+  const d = new Date(year, month, 1);
+  const day = d.getDay();
+  const first = day === 1 ? 1 : (day === 0 ? 2 : 9 - day);
+  return new Date(year, month, first);
+}
+
+// Substitute: if holiday falls on Sat → Mon; if Sun → Mon
+function substituteDay(year, month, day) {
+  const d = new Date(year, month, day);
+  const dow = d.getDay();
+  if (dow === 6) return addDays(d, 2); // Sat → Mon
+  if (dow === 0) return addDays(d, 1); // Sun → Mon
+  return d;
+}
+
+// Generate all Australian public holidays for a given year (national + all states)
+function getAustralianHolidays(year) {
+  const holidays = [];
+  const add = (date, name, scope) => {
+    holidays.push({ date: fmtDate(date), name, scope });
+  };
+
+  // --- National holidays ---
+  add(substituteDay(year, 0, 1), "New Year's Day", 'National');
+  add(substituteDay(year, 0, 26), 'Australia Day', 'National');
+
+  const easter = easterSunday(year);
+  const goodFriday = addDays(easter, -2);
+  const easterSaturday = addDays(easter, -1);
+  const easterMonday = addDays(easter, 1);
+  add(goodFriday, 'Good Friday', 'National');
+  add(easterSaturday, 'Easter Saturday', 'National');
+  add(easter, 'Easter Sunday', 'National');
+  add(easterMonday, 'Easter Monday', 'National');
+
+  // Anzac Day — 25 April (no substitute in most states if on weekend, but WA/NT sub Mon if Sun)
+  add(new Date(year, 3, 25), 'Anzac Day', 'National');
+
+  add(substituteDay(year, 11, 25), 'Christmas Day', 'National');
+  // Boxing Day — 26 Dec. If Christmas is Sat (sub Mon 27), Boxing Day subs to Tue 28
+  const xmas = new Date(year, 11, 25);
+  const xmasDow = xmas.getDay();
+  if (xmasDow === 5) {
+    // Christmas Fri, Boxing Day Sat → Mon 28
+    add(new Date(year, 11, 28), 'Boxing Day', 'National');
+  } else if (xmasDow === 6) {
+    // Christmas Sat → Mon 27, Boxing Day Sun → Tue 28
+    add(new Date(year, 11, 28), 'Boxing Day', 'National');
+  } else if (xmasDow === 0) {
+    // Christmas Sun → Mon 27, Boxing Day Mon 26 stays
+    add(new Date(year, 11, 26), 'Boxing Day', 'National');
+  } else {
+    add(substituteDay(year, 11, 26), 'Boxing Day', 'National');
+  }
+
+  // --- ACT ---
+  add(secondMonday(year, 2), 'Canberra Day', 'ACT');
+  add(new Date(year, 4, 27), 'Reconciliation Day', 'ACT'); // 27 May or nearest Mon
+  // Family & Community Day — last Mon before or on Sep 30 (now called "day off for the King's Birthday" region-adjusted)
+
+  // --- NSW ---
+  // Bank Holiday (not a public holiday for most workers, skip)
+
+  // --- NT ---
+  add(firstMonday(year, 4), 'May Day', 'NT');
+  // Picnic Day — first Monday in August
+  add(firstMonday(year, 7), 'Picnic Day', 'NT');
+
+  // --- QLD ---
+  // Royal Queensland Show (Brisbane only, skip — regional)
+
+  // --- SA ---
+  // Adelaide Cup — second Monday in March
+  add(secondMonday(year, 2), 'Adelaide Cup', 'SA');
+  // Proclamation Day — last Mon before or on 26 Dec (usually 24 Dec area)
+
+  // --- TAS ---
+  // Royal Hobart Regatta — second Monday in February (southern Tas only)
+  add(secondMonday(year, 1), 'Royal Hobart Regatta', 'TAS');
+
+  // --- VIC ---
+  // Melbourne Cup — first Tuesday in November (metro only)
+  const nov1 = new Date(year, 10, 1);
+  const nov1dow = nov1.getDay();
+  const melbCupDay = 1 + ((2 - nov1dow + 7) % 7);
+  add(new Date(year, 10, melbCupDay), 'Melbourne Cup', 'VIC');
+
+  // --- WA ---
+  // Western Australia Day — 1 June
+  add(substituteDay(year, 5, 1), 'Western Australia Day', 'WA');
+
+  // --- King's/Queen's Birthday (varies by state) ---
+  // ACT, NSW, SA, TAS — second Monday in June
+  add(secondMonday(year, 5), "King's Birthday", 'ACT/NSW/SA/TAS');
+  // QLD — last Monday in October
+  const oct31 = new Date(year, 9, 31);
+  const oct31dow = oct31.getDay();
+  const lastMonOct = oct31dow === 1 ? oct31 : new Date(year, 9, 31 - ((oct31dow + 6) % 7));
+  add(lastMonOct, "King's Birthday", 'QLD');
+  // VIC — second Monday in June (same as above group)
+  add(secondMonday(year, 5), "King's Birthday", 'VIC');
+  // WA — last Monday in September
+  const sep30 = new Date(year, 8, 30);
+  const sep30dow = sep30.getDay();
+  const lastMonSep = sep30dow === 1 ? sep30 : new Date(year, 8, 30 - ((sep30dow + 6) % 7));
+  add(lastMonSep, "King's Birthday", 'WA');
+  // NT — second Monday in June
+  add(secondMonday(year, 5), "King's Birthday", 'NT');
+
+  return holidays;
+}
 
 const DEFAULT_PASSWORD = 'ahana2026';
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
@@ -376,6 +548,27 @@ export default {
       } catch (err) {
         return jsonResponse({ error: 'Invalid data', detail: err.message }, 400, origin);
       }
+    }
+
+    // --- GET /holidays — public, returns Australian public holidays for given year(s) ---
+    if (path === '/holidays' && request.method === 'GET') {
+      const url = new URL(request.url);
+      const yearParam = url.searchParams.get('year');
+      const currentYear = new Date().getFullYear();
+      const years = yearParam ? yearParam.split(',').map(Number).filter(y => y >= 2020 && y <= 2050) : [currentYear, currentYear + 1];
+      const holidays = [];
+      for (const yr of years) {
+        holidays.push(...getAustralianHolidays(yr));
+      }
+      // Deduplicate by date (same date can appear for multiple scopes)
+      const seen = new Set();
+      const unique = holidays.filter(h => {
+        if (seen.has(h.date)) return false;
+        seen.add(h.date);
+        return true;
+      });
+      unique.sort((a, b) => a.date.localeCompare(b.date));
+      return jsonResponse({ holidays: unique }, 200, origin, 'public, max-age=86400');
     }
 
     // --- POST /auth — login, returns token on success ---
@@ -1044,6 +1237,7 @@ export default {
           discount: parseFloat(b.discount) || 0,
           total: parseFloat(b.total) || 0,
           currency: (b.currency || 'AUD').slice(0, 5),
+          cancellationPolicy: ['flexible', 'non-refundable'].includes(b.cancellationPolicy) ? b.cancellationPolicy : 'flexible',
           status: 'pending',
           date: new Date().toISOString(),
         });
