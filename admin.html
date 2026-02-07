@@ -1875,6 +1875,26 @@
                     <button class="btn btn-primary" onclick="saveConfig('addons')">Save Add-ons</button>
                     <span class="save-msg" id="addons-msg"></span>
                 </div>
+
+                <!-- ==================== AFFILIATE EXPERIENCES ==================== -->
+                <hr class="section-divider">
+                <div class="section-heading">Affiliate Experiences</div>
+                <div class="section-desc">Viator affiliate experiences shown on the homepage and explore pages. Add tour links with images to earn commission when guests book.</div>
+
+                <div id="experiences-admin-list"></div>
+
+                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem">
+                    <input type="text" id="exp-new-name" placeholder="Experience name" style="flex:1;min-width:180px">
+                    <input type="text" id="exp-new-desc" placeholder="Short description" style="flex:2;min-width:180px">
+                    <input type="text" id="exp-new-image" placeholder="Image URL" style="flex:2;min-width:200px">
+                    <input type="text" id="exp-new-url" placeholder="Affiliate URL" style="flex:2;min-width:200px">
+                    <button class="btn btn-secondary" onclick="addExperience()" style="padding:0.5rem 1rem">Add</button>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('experiences')">Save Experiences</button>
+                    <span class="save-msg" id="experiences-msg"></span>
+                </div>
             </div>
 
         </div>
@@ -2253,6 +2273,9 @@
         // Booking add-ons
         renderAddons();
 
+        // Affiliate experiences
+        renderExperiences();
+
         // Rules
         renderRules();
 
@@ -2332,6 +2355,7 @@
             currency: document.getElementById('p-currency').value,
             promoCodes: siteConfig.promoCodes || {},
             bookingAddons: siteConfig.bookingAddons || [],
+            experiences: siteConfig.experiences || [],
             rules: siteConfig.rules || [],
             checkinTime: document.getElementById('c-checkin-time').value || '3:00 PM',
             checkoutTime: document.getElementById('c-checkout-time').value || '10:00 AM',
@@ -2676,6 +2700,80 @@
         a.price = parseFloat(newPrice) || 0;
         a.description = newDesc.trim();
         renderAddons();
+    }
+
+    // --- Affiliate Experiences ---
+    function renderExperiences() {
+        var container = document.getElementById('experiences-admin-list');
+        if (!container) return;
+        var list = siteConfig.experiences || [];
+        if (list.length === 0) {
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No experiences yet.</div>';
+            return;
+        }
+        container.innerHTML = list.map(function(e, i) {
+            var imgPreview = e.imageUrl ? '<img src="' + escapeHtml(e.imageUrl) + '" style="width:60px;height:40px;object-fit:cover;border-radius:3px;flex-shrink:0">' : '';
+            return '<div class="list-item" style="flex-wrap:wrap;gap:0.5rem">'
+                + '<div style="display:flex;align-items:center;gap:0.75rem;flex:1;min-width:200px">'
+                + imgPreview
+                + '<div class="item-info">'
+                + '<strong>' + escapeHtml(e.name) + '</strong>'
+                + (e.description ? '<br><span style="font-size:0.8rem;color:var(--color-stone)">' + escapeHtml(e.description) + '</span>' : '')
+                + '</div></div>'
+                + '<div style="display:flex;gap:0.4rem;align-items:center">'
+                + '<button class="btn btn-secondary" onclick="editExperience(' + i + ')" style="padding:0.3rem 0.6rem;font-size:0.8rem">Edit</button>'
+                + '<label style="font-size:0.8rem;display:flex;align-items:center;gap:0.3rem;cursor:pointer"><input type="checkbox" onchange="toggleExperience(' + i + ')" ' + (e.enabled !== false ? 'checked' : '') + '> Enabled</label>'
+                + '<button class="btn btn-danger" onclick="removeExperience(' + i + ')" style="padding:0.3rem 0.6rem">Remove</button>'
+                + '</div></div>';
+        }).join('');
+    }
+
+    function addExperience() {
+        var name = document.getElementById('exp-new-name').value.trim();
+        var desc = document.getElementById('exp-new-desc').value.trim();
+        var imageUrl = document.getElementById('exp-new-image').value.trim();
+        var affiliateUrl = document.getElementById('exp-new-url').value.trim();
+        if (!name || !affiliateUrl) { alert('Name and affiliate URL are required.'); return; }
+        if (!siteConfig.experiences) siteConfig.experiences = [];
+        var id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        var existing = siteConfig.experiences.map(function(e) { return e.id; });
+        var base = id; var n = 1;
+        while (existing.indexOf(id) !== -1) { id = base + '-' + (++n); }
+        siteConfig.experiences.push({ id: id, name: name, description: desc, imageUrl: imageUrl, affiliateUrl: affiliateUrl, enabled: true });
+        document.getElementById('exp-new-name').value = '';
+        document.getElementById('exp-new-desc').value = '';
+        document.getElementById('exp-new-image').value = '';
+        document.getElementById('exp-new-url').value = '';
+        renderExperiences();
+    }
+
+    function removeExperience(index) {
+        if (!siteConfig.experiences) return;
+        siteConfig.experiences.splice(index, 1);
+        renderExperiences();
+    }
+
+    function toggleExperience(index) {
+        if (!siteConfig.experiences || !siteConfig.experiences[index]) return;
+        siteConfig.experiences[index].enabled = !siteConfig.experiences[index].enabled;
+    }
+
+    function editExperience(index) {
+        var e = siteConfig.experiences[index];
+        if (!e) return;
+        var newName = prompt('Experience name:', e.name);
+        if (newName === null) return;
+        var newDesc = prompt('Short description:', e.description || '');
+        if (newDesc === null) return;
+        var newImage = prompt('Image URL:', e.imageUrl || '');
+        if (newImage === null) return;
+        var newUrl = prompt('Affiliate URL:', e.affiliateUrl || '');
+        if (newUrl === null) return;
+        e.name = newName.trim() || e.name;
+        e.description = newDesc.trim();
+        e.imageUrl = newImage.trim();
+        e.affiliateUrl = newUrl.trim() || e.affiliateUrl;
+        renderExperiences();
     }
 
     // --- Rules ---
