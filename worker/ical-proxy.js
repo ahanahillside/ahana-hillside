@@ -228,7 +228,7 @@ async function sendBookingEmail(env, booking) {
           <tr><td style="padding:6px 0;color:#A69583">Total</td><td style="padding:6px 0;color:#2C3E2D"><strong>${sym}${(booking.total || 0).toFixed(2)}</strong>${booking.promoCode ? ' (promo: ' + booking.promoCode + ')' : ''}</td></tr>
         </table>
         <hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">
-        <p style="font-size:13px;color:#A69583">View and manage this booking on your <a href="https://www.ahanahillside.com/admin.html" style="color:#2C3E2D">Admin Dashboard</a>.</p>
+        <p style="font-size:13px;color:#A69583">View and manage this booking on your <a href="https://www.ahanahillside.com/admin" style="color:#2C3E2D">Admin Dashboard</a>.</p>
       </div>
     `;
 
@@ -275,8 +275,8 @@ async function createCheckoutSession(secretKey, booking, siteUrl) {
   params.append('line_items[0][price_data][unit_amount]', amount.toString());
   params.append('line_items[0][quantity]', '1');
   params.append('mode', 'payment');
-  params.append('success_url', siteUrl + '/booking-confirmed.html');
-  params.append('cancel_url', siteUrl + '/campsites.html');
+  params.append('success_url', siteUrl + '/booking-confirmed');
+  params.append('cancel_url', siteUrl + '/campsites');
   params.append('customer_email', booking.email);
   params.append('metadata[booking_id]', booking.id);
 
