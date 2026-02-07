@@ -122,6 +122,7 @@
             background: var(--color-light-stone);
             cursor: pointer;
             position: relative;
+            touch-action: manipulation;
         }
 
         .gallery-item img {
@@ -191,6 +192,8 @@
             display: none;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
+            touch-action: none;
         }
 
         .lightbox.active {
