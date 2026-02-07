@@ -726,9 +726,57 @@
             margin-top: auto;
         }
 
-        .campsite-price strong {
-            font-size: 1.15rem;
+        .rate-plans {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .rate-plan {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.88rem;
+        }
+
+        .rate-badge {
+            display: inline-block;
+            padding: 0.15rem 0.55rem;
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
+        .rate-badge-flexible {
+            background: #E8F5E9;
+            color: #2E7D32;
+            border: 1px solid #C8E6C9;
+        }
+
+        .rate-badge-nonrefundable {
+            background: #FFF3E0;
+            color: #E65100;
+            border: 1px solid #FFE0B2;
+        }
+
+        .rate-plan strong {
+            font-size: 1.1rem;
             color: var(--color-forest);
+        }
+
+        .rate-plan .rate-per {
+            font-size: 0.82rem;
+            color: var(--color-charcoal);
+        }
+
+        .rate-plan .rate-save {
+            font-size: 0.7rem;
+            color: #E65100;
+            font-weight: 500;
         }
 
         .campsite-price .price-note {
@@ -2929,8 +2977,13 @@
                 var priceEl = document.getElementById(site + '-price');
                 if (priceEl) {
                     var baseGuests = ROOM_SITES.includes(site) ? '1 guest' : '2 guests';
+                    var nrDiscount = siteConfig.nonRefundableDiscount || 10;
+                    var nrPrice = Math.round(cfg.basePrice * (1 - nrDiscount / 100));
                     priceEl.innerHTML =
-                        'from <strong>' + sym + cfg.basePrice + '</strong> / night '
+                        '<div class="rate-plans">'
+                        + '<div class="rate-plan"><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + cfg.basePrice + '</strong> <span class="rate-per">/ night</span></div>'
+                        + '<div class="rate-plan"><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPrice + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>'
+                        + '</div>'
                         + '<span class="price-note">for ' + baseGuests
                         + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
                         + '</span>';
@@ -3033,21 +3086,28 @@
             const guestCount = getSearchGuests();
             const extraGuests = Math.max(0, guestCount - 2);
             const perNight = cfg.basePrice + (extraGuests * cfg.extraGuestFee);
+            const nrDiscount = siteConfig.nonRefundableDiscount || 10;
+            const nrPerNight = Math.round(perNight * (1 - nrDiscount / 100));
 
-            let html = '<strong>' + sym + perNight + '</strong> / night ';
-            html += '<span class="price-note">for ' + guestCount + ' guest' + (guestCount > 1 ? 's' : '');
+            let noteHtml = '<span class="price-note">for ' + guestCount + ' guest' + (guestCount > 1 ? 's' : '');
             if (extraGuests > 0) {
-                html += ' &middot; base ' + sym + cfg.basePrice + ' + ' + extraGuests + ' extra x ' + sym + cfg.extraGuestFee;
+                noteHtml += ' &middot; base ' + sym + cfg.basePrice + ' + ' + extraGuests + ' extra x ' + sym + cfg.extraGuestFee;
             }
-            // Show weekend/holiday rate note for rooms
             if (isRoom(site)) {
                 const wkPct = siteConfig.weekendMarkup || 0;
                 const holPct = siteConfig.holidayMarkup || 0;
                 if (wkPct > 0 || holPct > 0) {
-                    html += ' &middot; <span style="color:var(--color-stone)">weekend/holiday rates apply</span>';
+                    noteHtml += ' &middot; <span style="color:var(--color-stone)">weekend/holiday rates apply</span>';
                 }
             }
-            html += '</span>';
+            noteHtml += '</span>';
+
+            let html = '<div class="rate-plans">';
+            html += '<div class="rate-plan"><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + perNight + '</strong> <span class="rate-per">/ night</span></div>';
+            html += '<div class="rate-plan"><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPerNight + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>';
+            html += '</div>';
+            html += noteHtml;
+
             document.getElementById(site + '-price').innerHTML = html;
         }
 
