@@ -577,13 +577,21 @@
             color: var(--color-stone);
             margin-bottom: 2.5rem;
         }
-        .discover-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 1.5rem;
+        .discover-scroll-wrap {
+            position: relative;
             max-width: 1100px;
             margin: 0 auto 2rem;
         }
+        .discover-grid {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 0.5rem;
+        }
+        .discover-grid::-webkit-scrollbar { display: none; }
         .discover-card {
             background: var(--color-cream);
             border-radius: 6px;
@@ -594,6 +602,10 @@
             color: inherit;
             display: flex;
             flex-direction: column;
+            min-width: calc(33.333% - 1rem);
+            max-width: calc(33.333% - 1rem);
+            scroll-snap-align: start;
+            flex-shrink: 0;
         }
         .discover-card:hover {
             transform: translateY(-3px);
@@ -622,6 +634,10 @@
             color: var(--color-stone);
             line-height: 1.6;
             flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         .discover-card-cta {
             display: inline-block;
@@ -632,6 +648,32 @@
             border-bottom: 1px solid var(--color-forest);
             padding-bottom: 1px;
         }
+        .discover-scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            color: var(--color-forest);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .discover-scroll-btn:hover {
+            background: var(--color-cream);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .discover-scroll-btn.show { display: flex; }
+        .discover-scroll-prev { left: -18px; }
+        .discover-scroll-next { right: -18px; }
         .discover-more {
             display: inline-block;
             font-size: 0.85rem;
@@ -645,6 +687,13 @@
         .discover-more:hover {
             color: var(--color-stone);
             border-color: var(--color-stone);
+        }
+        @media (max-width: 768px) {
+            .discover-card {
+                min-width: 75vw;
+                max-width: 75vw;
+            }
+            .discover-scroll-btn { display: none !important; }
         }
 
         /* --- Site Footer (outside hero) --- */
@@ -867,8 +916,11 @@
     <section class="discover-section" id="discover-section" style="display:none">
         <h2><em>Discover</em> Tropical North Queensland</h2>
         <p class="discover-subtitle">World-class experiences right on your doorstep</p>
-        <div class="discover-grid" id="discover-grid"></div>
-        <a href="/explore" class="discover-more">View all experiences &rarr;</a>
+        <div class="discover-scroll-wrap">
+            <button class="discover-scroll-btn discover-scroll-prev" id="discover-prev" onclick="scrollDiscover(-1)">&#8249;</button>
+            <div class="discover-grid" id="discover-grid"></div>
+            <button class="discover-scroll-btn discover-scroll-next" id="discover-next" onclick="scrollDiscover(1)">&#8250;</button>
+        </div>
     </section>
 
     <footer class="site-footer">
@@ -904,8 +956,29 @@
             }).join('');
 
             document.getElementById('discover-section').style.display = '';
+            updateDiscoverBtns();
+            grid.addEventListener('scroll', updateDiscoverBtns);
         } catch (err) {}
     })();
+
+    function scrollDiscover(dir) {
+        var grid = document.getElementById('discover-grid');
+        var card = grid.querySelector('.discover-card');
+        if (!card) return;
+        var scrollAmt = card.offsetWidth + 24; // card width + gap
+        grid.scrollBy({ left: dir * scrollAmt, behavior: 'smooth' });
+    }
+
+    function updateDiscoverBtns() {
+        var grid = document.getElementById('discover-grid');
+        var prev = document.getElementById('discover-prev');
+        var next = document.getElementById('discover-next');
+        if (!grid || !prev || !next) return;
+        var atStart = grid.scrollLeft <= 5;
+        var atEnd = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 5;
+        prev.classList.toggle('show', !atStart);
+        next.classList.toggle('show', !atEnd);
+    }
 
     // Smooth scroll for arrow
     document.querySelector('.scroll-arrow').addEventListener('click', function(e) {
