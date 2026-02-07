@@ -1043,8 +1043,25 @@
                 <div class="panel-title">Content &amp; Media</div>
                 <div class="panel-desc">Manage campsite photos, descriptions, and campground rules.</div>
 
+                <!-- Camping Experience Background -->
+                <div class="section-heading">Camping Experience Background</div>
+                <div class="section-desc">Replace the background of the "Slow Down. Breathe. Reconnect." section. Accepts images (5MB) or videos (50MB). The default SVG illustration is used when no custom background is set.</div>
+
+                <div class="card" style="max-width:700px">
+                    <div class="card-title">Section Background</div>
+                    <div id="campsite-bg-preview" style="margin-bottom:0.75rem"></div>
+                    <div class="upload-zone" id="upload-zone-campsitebg" onclick="document.getElementById('file-campsitebg').click()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        <span>Upload background image or video</span>
+                        <input type="file" id="file-campsitebg" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadCampsiteBg(this.files[0])">
+                    </div>
+                    <div class="upload-progress" id="progress-campsitebg"></div>
+                </div>
+
+                <hr class="section-divider">
+
                 <!-- Images section -->
-                <div class="section-heading">Images &amp; Videos</div>
+                <div class="section-heading">Campsite Images &amp; Videos</div>
                 <div class="section-desc">Upload, reorder, and manage photos &amp; videos. First item is the cover. Max 15 per site. Images are auto-compressed for fast loading. Videos up to 50MB (MP4, WebM, MOV).</div>
 
                 <div class="card-grid">
@@ -1521,6 +1538,7 @@
         loadStripeSettings();
         loadGalleryItems();
         loadHomepageBg();
+        loadCampsiteBg();
         loadExploreSlots();
     }
 
@@ -2557,6 +2575,102 @@
         zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
         zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
         zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); uploadHomepageBg(e.dataTransfer.files[0]); });
+    })();
+
+    // --- Camping Experience Background ---
+    async function loadCampsiteBg() {
+        const preview = document.getElementById('campsite-bg-preview');
+        try {
+            const res = await fetch(WORKER_URL + '/campsite-bg/info');
+            const data = await res.json();
+            if (data.exists) {
+                const url = WORKER_URL + '/campsite-bg?t=' + Date.now();
+                if (data.mediaType === 'video') {
+                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" autoplay muted loop></video>'
+                        + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
+                        + '<span style="font-size:0.75rem;color:var(--color-stone)">Current: video background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteCampsiteBg()" style="padding:0.3rem 0.75rem;font-size:0.7rem">Remove</button>'
+                        + '</div>';
+                } else {
+                    preview.innerHTML = '<img src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)">'
+                        + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
+                        + '<span style="font-size:0.75rem;color:var(--color-stone)">Current: image background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteCampsiteBg()" style="padding:0.3rem 0.75rem;font-size:0.7rem">Remove</button>'
+                        + '</div>';
+                }
+            } else {
+                preview.innerHTML = '<div style="font-size:0.8rem;color:var(--color-stone);padding:0.5rem 0">Using default SVG illustration</div>';
+            }
+        } catch (err) {
+            preview.innerHTML = '<div style="font-size:0.8rem;color:var(--color-stone)">Could not load preview</div>';
+        }
+    }
+
+    async function uploadCampsiteBg(file) {
+        if (!file) return;
+        const progressEl = document.getElementById('progress-campsitebg');
+
+        const isVideo = file.type.startsWith('video/');
+        let uploadFile = file;
+        if (!isVideo) {
+            progressEl.textContent = 'Compressing...';
+            try {
+                const compressed = await compressImage(file, 1920, 0.82);
+                if (compressed && compressed.size < file.size) {
+                    progressEl.textContent = 'Compressed: ' + formatSize(file.size) + ' → ' + formatSize(compressed.size) + '. Uploading...';
+                    uploadFile = new File([compressed], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' });
+                } else {
+                    progressEl.textContent = 'Uploading...';
+                }
+            } catch (e) {
+                progressEl.textContent = 'Uploading...';
+            }
+        } else {
+            progressEl.textContent = 'Uploading video...';
+        }
+
+        const formData = new FormData();
+        formData.append('file', uploadFile);
+
+        try {
+            const res = await fetch(WORKER_URL + '/campsite-bg/upload', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + authToken },
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+                progressEl.textContent = 'Background updated!';
+                setTimeout(() => { progressEl.textContent = ''; }, 3000);
+                loadCampsiteBg();
+            } else {
+                progressEl.textContent = 'Error: ' + (data.error || 'Upload failed');
+            }
+        } catch (err) {
+            progressEl.textContent = 'Upload failed — connection error';
+        }
+        document.getElementById('file-campsitebg').value = '';
+    }
+
+    async function deleteCampsiteBg() {
+        if (!confirm('Remove custom background? The section will revert to the default SVG illustration.')) return;
+        try {
+            await fetch(WORKER_URL + '/campsite-bg/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: '{}',
+            });
+            loadCampsiteBg();
+        } catch (err) {}
+    }
+
+    // Campsite bg drag & drop
+    (function() {
+        const zone = document.getElementById('upload-zone-campsitebg');
+        if (!zone) return;
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+        zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
+        zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); uploadCampsiteBg(e.dataTransfer.files[0]); });
     })();
 
     // --- Explore Section Images ---
