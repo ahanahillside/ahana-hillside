@@ -247,6 +247,10 @@
             margin-bottom: 1.5rem;
         }
 
+        .card-grid-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
         .card {
             background: #fff;
             border: 1px solid var(--color-light-stone);
@@ -900,6 +904,7 @@
         /* Responsive */
         @media (max-width: 768px) {
             .card-grid { grid-template-columns: 1fr; }
+            .card-grid-3 { grid-template-columns: 1fr; }
             .tabs { padding: 0 1rem; }
             .sub-tabs { padding: 0 1rem; }
             .tab-content { padding: 1.5rem 1rem; }
@@ -1229,11 +1234,118 @@
             <!-- Pricing & Promos sub-panel -->
             <div class="sub-panel" id="subpanel-pricing">
                 <div class="panel-title">Pricing &amp; Promos</div>
-                <div class="panel-desc">Set base prices, extra guest fees, and manage discount codes.</div>
+                <div class="panel-desc">Manage room and campsite rates, rate policies, and discount codes.</div>
 
-                <!-- Pricing section -->
-                <div class="section-heading">Pricing</div>
-                <div class="section-desc">Prices are per night. Base price covers 1-2 guests.</div>
+                <!-- ==================== ROOMS ==================== -->
+                <div class="section-heading">Room Pricing</div>
+                <div class="section-desc">Base prices per night. Weekend and public holiday surcharges are applied automatically.</div>
+
+                <div class="card-grid card-grid-3">
+                    <div class="card">
+                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                        <div class="field">
+                            <label>Base price per night</label>
+                            <input type="number" id="p-mountain-view-base" min="0" step="1">
+                            <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-mountain-view-extra" min="0" step="1">
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-mountain-view-max" min="1" max="50" step="1">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">GARDEN VIEW ROOM</div>
+                        <div class="field">
+                            <label>Base price per night</label>
+                            <input type="number" id="p-garden-view-base" min="0" step="1">
+                            <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-garden-view-extra" min="0" step="1">
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-garden-view-max" min="1" max="50" step="1">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                        <div class="field">
+                            <label>Base price per night</label>
+                            <input type="number" id="p-suite-base" min="0" step="1">
+                            <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-suite-extra" min="0" step="1">
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-suite-max" min="1" max="50" step="1">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rate Policies (inside Rooms section) -->
+                <div class="section-heading" style="margin-top:1.5rem">Rate Policies</div>
+                <div class="section-desc">Surcharges and booking policies applied to room rates. Calculated as a percentage markup on the base room price above.</div>
+
+                <div class="card-grid card-grid-3">
+                    <div class="card">
+                        <div class="card-title">Weekend &amp; Holiday Rates</div>
+                        <div class="field">
+                            <label>Weekend markup % (Fri &amp; Sat nights)</label>
+                            <input type="number" id="p-weekend-markup" min="0" max="100" step="1" value="20">
+                            <div class="hint">e.g. 20% on an AU$85 room = AU$102/night</div>
+                        </div>
+                        <div class="field">
+                            <label>Public holiday markup %</label>
+                            <input type="number" id="p-holiday-markup" min="0" max="100" step="1" value="25">
+                            <div class="hint">All Australian public holidays (national + state). Holiday takes precedence if both apply.</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">Cancellation &amp; Booking Policies</div>
+                        <div class="field">
+                            <label>Free cancellation cutoff (days before check-in)</label>
+                            <input type="number" id="p-cancellation-days" min="1" max="90" step="1" value="14">
+                            <div class="hint">Guests can cancel for free up to this many days before arrival</div>
+                        </div>
+                        <div class="field">
+                            <label>Non-refundable discount %</label>
+                            <input type="number" id="p-nonrefundable-discount" min="0" max="50" step="1" value="10">
+                            <div class="hint">Discount offered to guests who choose the non-refundable option</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">OTA Rate Comparison</div>
+                        <div class="field">
+                            <label>OTA markup % (Booking.com, Expedia, etc.)</label>
+                            <input type="number" id="p-ota-markup" min="0" max="50" step="1" value="15">
+                            <div class="hint">For reference only — shows what the equivalent OTA rate would be</div>
+                        </div>
+                        <div id="ota-comparison" style="margin-top:0.75rem"></div>
+                    </div>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('pricing')">Save Room Pricing</button>
+                    <span class="save-msg" id="pricing-msg"></span>
+                </div>
+
+                <!-- ==================== CAMPSITES ==================== -->
+                <hr class="section-divider">
+                <div class="section-heading">Campsite Pricing</div>
+                <div class="section-desc">Flat nightly rates — no weekend or holiday surcharges. These sites are also listed on Hipcamp.</div>
 
                 <div class="card-grid">
                     <div class="card">
@@ -1271,64 +1383,19 @@
                             <input type="number" id="p-chhaya-max" min="1" max="50" step="1">
                         </div>
                     </div>
-
-                    <div class="card">
-                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
-                        <div class="field">
-                            <label>Base price per night (1-2 guests)</label>
-                            <input type="number" id="p-mountain-view-base" min="0" step="1">
-                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
-                        </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-mountain-view-extra" min="0" step="1">
-                            <div class="hint">Charged for each guest above 2</div>
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-mountain-view-max" min="1" max="50" step="1">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">GARDEN VIEW ROOM</div>
-                        <div class="field">
-                            <label>Base price per night (1-2 guests)</label>
-                            <input type="number" id="p-garden-view-base" min="0" step="1">
-                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
-                        </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-garden-view-extra" min="0" step="1">
-                            <div class="hint">Charged for each guest above 2</div>
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-garden-view-max" min="1" max="50" step="1">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
-                        <div class="field">
-                            <label>Base price per night (1-2 guests)</label>
-                            <input type="number" id="p-suite-base" min="0" step="1">
-                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
-                        </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-suite-extra" min="0" step="1">
-                            <div class="hint">Charged for each guest above 2</div>
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-suite-max" min="1" max="50" step="1">
-                        </div>
-                    </div>
                 </div>
 
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('campsites')">Save Campsite Pricing</button>
+                    <span class="save-msg" id="campsites-msg"></span>
+                </div>
+
+                <!-- ==================== CURRENCY ==================== -->
+                <hr class="section-divider">
+                <div class="section-heading">Currency</div>
+
                 <div class="field" style="max-width:200px">
-                    <label>Currency</label>
+                    <label>Display currency</label>
                     <select id="p-currency">
                         <option value="AUD">AUD (AU$)</option>
                         <option value="USD">USD (US$)</option>
@@ -1338,61 +1405,11 @@
                 </div>
 
                 <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('pricing')">Save Pricing</button>
-                    <span class="save-msg" id="pricing-msg"></span>
+                    <button class="btn btn-primary" onclick="saveConfig('currency')">Save Currency</button>
+                    <span class="save-msg" id="currency-msg"></span>
                 </div>
 
-                <!-- Rate Policies section (rooms only) -->
-                <hr class="section-divider">
-                <div class="section-heading">Rate Policies</div>
-                <div class="section-desc">Weekend and holiday surcharges apply to <strong>rooms only</strong> — campsites use flat rates. Rates are calculated as a percentage markup on the base room price.</div>
-
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-title">Weekend &amp; Holiday Rates</div>
-                        <div class="field">
-                            <label>Weekend markup % (Fri &amp; Sat nights)</label>
-                            <input type="number" id="p-weekend-markup" min="0" max="100" step="1" value="20">
-                            <div class="hint">e.g. 20% on an AU$85 room = AU$102/night</div>
-                        </div>
-                        <div class="field">
-                            <label>Public holiday markup %</label>
-                            <input type="number" id="p-holiday-markup" min="0" max="100" step="1" value="25">
-                            <div class="hint">Covers all Australian public holidays (national + state). Holiday takes precedence over weekend if both apply.</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">Cancellation &amp; Booking Policies</div>
-                        <div class="field">
-                            <label>Free cancellation cutoff (days before check-in)</label>
-                            <input type="number" id="p-cancellation-days" min="1" max="90" step="1" value="14">
-                            <div class="hint">Guests can cancel for free up to this many days before arrival</div>
-                        </div>
-                        <div class="field">
-                            <label>Non-refundable discount %</label>
-                            <input type="number" id="p-nonrefundable-discount" min="0" max="50" step="1" value="10">
-                            <div class="hint">Discount offered to guests who choose the non-refundable option</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">OTA Rate Comparison</div>
-                        <div class="field">
-                            <label>OTA markup % (Booking.com, Expedia, etc.)</label>
-                            <input type="number" id="p-ota-markup" min="0" max="50" step="1" value="15">
-                            <div class="hint">For reference only — shows what the equivalent OTA rate would be</div>
-                        </div>
-                        <div id="ota-comparison" style="margin-top:0.75rem"></div>
-                    </div>
-                </div>
-
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('policies')">Save Rate Policies</button>
-                    <span class="save-msg" id="policies-msg"></span>
-                </div>
-
-                <!-- Promo Codes section -->
+                <!-- ==================== PROMO CODES ==================== -->
                 <hr class="section-divider">
                 <div class="section-heading">Promo Codes</div>
                 <div class="section-desc">Discount codes that guests can use when booking. These are independent of Hipcamp.</div>
