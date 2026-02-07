@@ -763,6 +763,115 @@
             border: 1px solid #FFE0B2;
         }
 
+        /* T&C Modal */
+        .tc-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .tc-overlay.open {
+            display: flex;
+        }
+        .tc-modal {
+            background: #fff;
+            width: 92%;
+            max-width: 680px;
+            max-height: 82vh;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+        }
+        .tc-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e0d8;
+        }
+        .tc-modal-header h3 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--color-forest);
+        }
+        .tc-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-stone);
+            line-height: 1;
+            padding: 0 0.25rem;
+        }
+        .tc-modal-close:hover { color: var(--color-forest); }
+        .tc-modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: #3a3a3a;
+        }
+        .tc-modal-body h4 {
+            margin: 1.2rem 0 0.4rem;
+            font-size: 0.95rem;
+            color: var(--color-forest);
+        }
+        .tc-modal-body h4:first-child { margin-top: 0; }
+        .tc-modal-body p {
+            margin: 0 0 0.5rem;
+        }
+        .tc-modal-body ul {
+            margin: 0 0 0.5rem;
+            padding-left: 1.2rem;
+        }
+        .tc-modal-body ul li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* T&C agreement */
+        .tc-agreement {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin: 1rem 0 0.5rem;
+            padding: 0.75rem 1rem;
+            background: #f9f7f3;
+            border: 1px solid #e5e0d8;
+            border-radius: 4px;
+        }
+        .tc-agreement input[type="checkbox"] {
+            margin-top: 0.2rem;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            accent-color: var(--color-forest);
+        }
+        .tc-agreement label {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #3a3a3a;
+            cursor: pointer;
+        }
+        .tc-agreement label a {
+            color: var(--color-forest);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        .tc-agreement label a:hover {
+            color: #1a2e1b;
+        }
+        .tc-error {
+            color: #c62828;
+            font-size: 0.8rem;
+            margin: 0 0 0.5rem 0;
+            display: none;
+        }
+
         .rate-plan strong {
             font-size: 1.1rem;
             color: var(--color-forest);
@@ -2450,6 +2559,12 @@
                 </div>
             </div>
 
+            <div class="tc-agreement">
+                <input type="checkbox" id="tc-agree">
+                <label for="tc-agree">I have read and agree to the <a href="#" onclick="openTcModal(); return false;">Terms &amp; Conditions</a> and cancellation policy</label>
+            </div>
+            <p class="tc-error" id="tc-error">Please agree to the Terms &amp; Conditions to continue.</p>
+
             <div class="step-nav">
                 <button type="button" class="btn-secondary" onclick="goToStep(4)">&larr; Back</button>
                 <button type="button" class="btn-primary" id="btn-book" onclick="submitBooking()">Book & Pay</button>
@@ -2463,6 +2578,18 @@
         </div>
         &copy; 2026 Ahana Hillside &middot; ABN: 731 5158 2872
     </footer>
+
+    <!-- T&C Modal -->
+    <div class="tc-overlay" id="tc-overlay" onclick="if(event.target===this)closeTcModal()">
+        <div class="tc-modal">
+            <div class="tc-modal-header">
+                <h3>Terms &amp; Conditions</h3>
+                <button class="tc-modal-close" onclick="closeTcModal()">&times;</button>
+            </div>
+            <div class="tc-modal-body" id="tc-modal-body">
+            </div>
+        </div>
+    </div>
 
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
@@ -2731,6 +2858,9 @@
             currency: 'AUD',
             promoCodes: {},
             rules: [],
+            checkinTime: '3:00 PM',
+            checkoutTime: '10:00 AM',
+            termsAndConditions: '1. Booking and Payment\n\nAll bookings must be made through our official website, Booking.com, or other authorised platforms.\nFull payment is required at the time of booking unless otherwise stated.\nPrices are listed in Australian Dollars (AUD) and include GST where applicable.\nA valid credit or debit card is required to secure your booking.\nAhana Hillside reserves the right to cancel any booking suspected of being fraudulent.\n\n2. Weather-Related Cancellations\n\nIf severe weather conditions (e.g., cyclones, floods, extreme storms) make it unsafe to stay at the property, guests may reschedule their booking at no extra cost, subject to availability.\nAhana Hillside reserves the right to close the campsite due to weather conditions for the safety of guests.\nRefunds will not be issued for weather-related cancellations, but credit towards a future booking will be offered.\n\n3. Check-in and Check-out\n\nCheck-in time: 3:00 PM. Check-out time: 10:00 AM.\nEarly check-in and late check-out may be available upon request, subject to availability.\nGuests must vacate their campsite or room by the check-out time. Additional charges may apply for late departures.\n\n4. Guest Responsibilities\n\nGuests are responsible for keeping their campsite/room clean and tidy.\nAny damage to property, furniture, or equipment will be charged to the guest.\nExcessive noise is not permitted between 10:00 PM and 7:00 AM.\nGuests must follow all fire safety rules, including the use of designated fire pits only.\nAll rubbish must be disposed of properly; please follow our waste and recycling guidelines.\n\n5. Liability\n\nAhana Hillside is not responsible for loss, theft, or damage to personal belongings.\nGuests use all facilities at their own risk.\nBy staying at Ahana Hillside, guests acknowledge and accept the inherent risks of outdoor and nature-based accommodation.\n\n6. Smoking and Alcohol\n\nSmoking is only permitted in designated areas. Breaching this may result in eviction without refund.\nAlcohol is permitted but must be consumed responsibly. Ahana Hillside reserves the right to remove guests who cause disturbances due to intoxication.\n\n7. Pets\n\nPets are not allowed on the property unless explicitly stated otherwise.\nService animals are welcome with prior notification.\n\n8. Use of Facilities\n\nAll guests must follow the posted rules for use of shared amenities, including bathrooms, BBQ areas, and fire pits.\nAhana Hillside reserves the right to restrict access to any facility for safety or maintenance reasons.\n\n9. Amendments to Terms\n\nAhana Hillside reserves the right to update these terms and conditions at any time. Any changes will be communicated on our website.',
             weekendMarkup: 20,
             holidayMarkup: 25,
             cancellationDays: 14,
@@ -2958,6 +3088,32 @@
             if (btn) btn.innerHTML = isOpen ? 'View details &#9662;' : 'Hide details &#9652;';
         }
 
+        function formatTcText(text) {
+            if (!text) return '';
+            var html = '';
+            var lines = text.split('\n');
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (!line) continue;
+                if (/^\d+\.\s/.test(line)) {
+                    html += '<h4>' + escapeHtml(line) + '</h4>';
+                } else {
+                    html += '<p>' + escapeHtml(line) + '</p>';
+                }
+            }
+            return html;
+        }
+
+        function openTcModal() {
+            document.getElementById('tc-overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTcModal() {
+            document.getElementById('tc-overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
         function applyConfig() {
             ALL_SITES.forEach(site => {
                 const cfg = siteConfig[site];
@@ -3076,6 +3232,13 @@
 
             updateGuestAvailability();
             updatePolicyDescriptions();
+
+            // Populate T&C modal
+            var tcBody = document.getElementById('tc-modal-body');
+            if (tcBody) {
+                var tcText = siteConfig.termsAndConditions || DEFAULT_CONFIG.termsAndConditions || '';
+                tcBody.innerHTML = formatTcText(tcText);
+            }
         }
 
         // --- Per-night price display ---
@@ -3722,6 +3885,16 @@
         // --- Submit booking ---
         async function submitBooking() {
             const btn = document.getElementById('btn-book');
+            // Check T&C agreement
+            var tcCheckbox = document.getElementById('tc-agree');
+            var tcError = document.getElementById('tc-error');
+            if (tcCheckbox && !tcCheckbox.checked) {
+                if (tcError) tcError.style.display = 'block';
+                tcCheckbox.focus();
+                return;
+            }
+            if (tcError) tcError.style.display = 'none';
+
             const checkin = getSearchDate('checkin');
             const checkout = getSearchDate('checkout');
             const guestCount = getSearchGuests();
