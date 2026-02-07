@@ -718,6 +718,16 @@
             background: #a93226;
         }
 
+        .cal-cell.booked {
+            background: #2874a6;
+            color: #fff;
+            border-radius: 2px;
+            cursor: not-allowed;
+        }
+        .cal-cell.booked:hover {
+            background: #21618c;
+        }
+
         .cal-cell.today {
             border: 1px solid var(--color-forest);
             font-weight: 600;
@@ -1182,7 +1192,11 @@
             <!-- Availability sub-panel -->
             <div class="sub-panel active" id="subpanel-availability">
                 <div class="panel-title">Availability</div>
-                <div class="panel-desc">Click dates to block or unblock them. Blocked dates cannot be booked by guests. Red = blocked.</div>
+                <div class="panel-desc">Click dates to block or unblock them. Blocked dates cannot be booked by guests.</div>
+                <div style="display:flex;gap:1rem;margin-bottom:1rem;font-size:0.78rem;color:#666">
+                    <span><span style="display:inline-block;width:12px;height:12px;background:#c0392b;border-radius:2px;vertical-align:middle;margin-right:4px"></span> Manually blocked</span>
+                    <span><span style="display:inline-block;width:12px;height:12px;background:#2874a6;border-radius:2px;vertical-align:middle;margin-right:4px"></span> Booked by guest</span>
+                </div>
 
                 <div class="card-grid">
                     <div class="card">
@@ -3025,6 +3039,8 @@
             if (booking) booking.status = status;
             renderBookings();
             updateBookingBadge();
+            // Refresh availability calendars since booking status affects blocked dates
+            loadBlockedDates();
         } catch (err) {}
     }
 
@@ -3044,15 +3060,26 @@
 
     // --- Availability / Blocked Dates ---
     const calState = {
-        samavas: { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
-        chhaya:  { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
-        'mountain-view': { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
-        'garden-view':   { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
-        'suite':         { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
+        samavas: { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
+        chhaya:  { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
+        'mountain-view': { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
+        'garden-view':   { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
+        'suite':         { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
     };
 
     async function loadBlockedDates() {
+        // Load confirmed bookings to show booked dates
+        let allBookings = [];
+        try {
+            const bRes = await fetch(WORKER_URL + '/bookings', {
+                headers: { 'Authorization': 'Bearer ' + authToken },
+            });
+            const bData = await bRes.json();
+            allBookings = (bData.bookings || []).filter(b => b.status === 'confirmed' || b.status === 'completed');
+        } catch (e) {}
+
         for (const site of ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite']) {
+            // Load manually blocked dates
             try {
                 const res = await fetch(WORKER_URL + '/blocked-dates/' + site);
                 const data = await res.json();
@@ -3060,6 +3087,20 @@
             } catch (err) {
                 calState[site].blocked = new Set();
             }
+
+            // Compute booked dates from confirmed bookings
+            const bookedSet = new Set();
+            allBookings.filter(b => b.site === site).forEach(b => {
+                const start = new Date(b.checkin);
+                const end = new Date(b.checkout);
+                const cur = new Date(start);
+                while (cur < end) {
+                    bookedSet.add(cur.toISOString().split('T')[0]);
+                    cur.setDate(cur.getDate() + 1);
+                }
+            });
+            calState[site].booked = bookedSet;
+
             renderCalendar(site);
         }
     }
@@ -3096,15 +3137,18 @@
             const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
             const isPast = dateStr < todayStr;
             const isBlocked = state.blocked.has(dateStr);
+            const isBooked = state.booked && state.booked.has(dateStr);
             const isToday = dateStr === todayStr;
 
             let cls = 'cal-cell';
             if (isPast) cls += ' past';
-            if (isBlocked) cls += ' blocked';
+            if (isBooked && !isBlocked) cls += ' booked';
+            else if (isBlocked) cls += ' blocked';
             if (isToday) cls += ' today';
 
-            const clickHandler = isPast ? '' : ' onclick="toggleDate(\'' + site + '\',\'' + dateStr + '\')"';
-            html += '<div class="' + cls + '"' + clickHandler + '>' + d + '</div>';
+            // Booked dates cannot be toggled (only manually blocked can)
+            const clickHandler = (isPast || isBooked) ? '' : ' onclick="toggleDate(\'' + site + '\',\'' + dateStr + '\')"';
+            html += '<div class="' + cls + '"' + clickHandler + ' title="' + (isBooked ? 'Booked by guest' : isBlocked ? 'Manually blocked' : '') + '">' + d + '</div>';
         }
 
         grid.innerHTML = html;
