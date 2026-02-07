@@ -1255,6 +1255,10 @@
             height: 100%;
             display: block;
         }
+        .camp-scene img,
+        .camp-scene video {
+            filter: brightness(0.45);
+        }
 
         /* Text overlay */
         .camp-overlay {
@@ -2318,6 +2322,23 @@
             }
         }
         initCarousels();
+
+        // --- Camping experience custom background ---
+        (async function() {
+            try {
+                const res = await fetch(WORKER_URL + '/campsite-bg/info');
+                const data = await res.json();
+                if (!data.exists) return;
+                const scene = document.querySelector('.camp-scene');
+                if (!scene) return;
+                const url = WORKER_URL + '/campsite-bg';
+                if (data.mediaType === 'video') {
+                    scene.innerHTML = '<video src="' + url + '" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover"></video>';
+                } else {
+                    scene.innerHTML = '<img src="' + url + '" alt="Camping experience" style="width:100%;height:100%;object-fit:cover">';
+                }
+            } catch (e) {}
+        })();
 
         // --- Configuration ---
         const DEFAULT_CONFIG = {

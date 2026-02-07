@@ -811,6 +811,87 @@ export default {
       }
     }
 
+    // --- Camping experience background endpoints ---
+
+    // GET /campsite-bg/info — public, returns background metadata
+    if (path === '/campsite-bg/info' && request.method === 'GET') {
+      try {
+        const meta = await env.CONFIG.get('campsite-bg-meta', 'json');
+        if (meta) return jsonResponse({ exists: true, mediaType: meta.mediaType, contentType: meta.contentType }, 200, origin, 'public, max-age=60');
+        return jsonResponse({ exists: false }, 200, origin, 'public, max-age=60');
+      } catch (e) {
+        return jsonResponse({ exists: false }, 200, origin);
+      }
+    }
+
+    // GET /campsite-bg — public, serves the camping experience background
+    if (path === '/campsite-bg' && request.method === 'GET') {
+      try {
+        const { value, metadata } = await env.CONFIG.getWithMetadata('campsite-bg-file', 'arrayBuffer');
+        if (!value) return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+        return new Response(value, {
+          status: 200,
+          headers: {
+            'Content-Type': metadata?.contentType || 'image/jpeg',
+            'Cache-Control': 'public, max-age=86400',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      }
+    }
+
+    // POST /campsite-bg/upload — admin only, upload camping experience background
+    if (path === '/campsite-bg/upload' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const formData = await request.formData();
+        const file = formData.get('file');
+
+        if (!file || !(file instanceof File)) {
+          return jsonResponse({ error: 'No file provided' }, 400, origin);
+        }
+
+        const isImage = GALLERY_IMAGE_TYPES.includes(file.type);
+        const isVideo = GALLERY_VIDEO_TYPES.includes(file.type);
+        if (!isImage && !isVideo) {
+          return jsonResponse({ error: 'Only JPEG, PNG, WebP images and MP4, WebM, MOV videos are allowed' }, 400, origin);
+        }
+
+        const maxSize = isVideo ? MAX_VIDEO_SIZE : MAX_IMAGE_SIZE;
+        if (file.size > maxSize) {
+          return jsonResponse({ error: isVideo ? 'Video must be under 50MB' : 'Image must be under 5MB' }, 400, origin);
+        }
+
+        const arrayBuffer = await file.arrayBuffer();
+        const mediaType = isVideo ? 'video' : 'image';
+
+        await env.CONFIG.put('campsite-bg-file', arrayBuffer, {
+          metadata: { contentType: file.type, mediaType, name: file.name },
+        });
+        await env.CONFIG.put('campsite-bg-meta', JSON.stringify({
+          mediaType, contentType: file.type, name: file.name, size: file.size, uploadedAt: new Date().toISOString(),
+        }));
+
+        return jsonResponse({ success: true, mediaType }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Upload failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // POST /campsite-bg/delete — admin only, remove camping experience background
+    if (path === '/campsite-bg/delete' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        await env.CONFIG.delete('campsite-bg-file');
+        await env.CONFIG.delete('campsite-bg-meta');
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);
+      }
+    }
+
     // --- Explore section image endpoints ---
 
     // GET /explore/list — public, returns metadata for all explore slots
