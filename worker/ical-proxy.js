@@ -58,6 +58,12 @@ const DEFAULT_CONFIG = {
     maxGuests: 4,
   },
   currency: 'AUD',
+  bookingAddons: [
+    { id: 'washing', name: 'Washing', price: 15, description: 'Use of washing machine for one load', enabled: true },
+    { id: 'dryer', name: 'Clothes Dryer', price: 10, description: 'Use of clothes dryer for one load', enabled: true },
+    { id: 'airport-pickup', name: 'Airport Pickup', price: 50, description: 'Pickup from Cairns Airport to Ahana Hillside', enabled: true },
+    { id: 'airport-drop', name: 'Airport Drop-off', price: 50, description: 'Drop-off from Ahana Hillside to Cairns Airport', enabled: true },
+  ],
   promoCodes: {},
   rules: [
     'No parties allowed without prior permission',
@@ -1238,6 +1244,8 @@ export default {
           total: parseFloat(b.total) || 0,
           currency: (b.currency || 'AUD').slice(0, 5),
           cancellationPolicy: ['flexible', 'non-refundable'].includes(b.cancellationPolicy) ? b.cancellationPolicy : 'flexible',
+          addons: b.addons || {},
+          addonsCost: parseFloat(b.addonsCost) || 0,
           status: 'pending',
           date: new Date().toISOString(),
         });

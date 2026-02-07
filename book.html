@@ -2412,24 +2412,9 @@
     <div class="wizard-step" id="step-addons">
         <div class="step-content">
             <h2 class="step-title">Add-ons for <span id="addons-site-name">SAMAVAS</span></h2>
-            <p class="step-subtitle">Enhance your camping experience</p>
+            <p class="step-subtitle">Enhance your stay</p>
 
-            <div class="addon-card">
-                <div class="addon-header">
-                    <div class="addon-name"><span style="font-size:1.2rem;margin-right:0.4rem">🪵</span>Firewood Bundle</div>
-                    <div class="addon-price" id="firewood-price">AU$20</div>
-                </div>
-                <div class="addon-desc">5kg bundle of quality firewood for your campfire.</div>
-                <div class="addon-note">Note: Locally sourced from the farm</div>
-                <div class="addon-qty">
-                    <label>Quantity:</label>
-                    <div class="qty-control">
-                        <button type="button" class="qty-btn" onclick="updateAddonQty('firewood', -1)">−</button>
-                        <span class="qty-value" id="firewood-qty">0</span>
-                        <button type="button" class="qty-btn" onclick="updateAddonQty('firewood', 1)">+</button>
-                    </div>
-                </div>
-            </div>
+            <div id="addons-list"></div>
 
             <div class="summary-box" id="addons-summary">
                 <div class="summary-title">Booking Summary</div>
@@ -2607,9 +2592,7 @@
         // --- Wizard state ---
         let currentStep = 2;
         let selectedSite = null;
-        let addons = {
-            firewood: { qty: 0, price: 20, unit: '5kg bundle' }
-        };
+        let addons = {};
         let appliedPromo = null;
         let activeCategory = 'campsites';
         let selectedCancellationPolicy = 'flexible'; // 'flexible' or 'non-refundable'
@@ -3229,7 +3212,7 @@
                 rulesList.innerHTML = siteConfig.rules.map(r => '<li>' + r + '</li>').join('');
             }
 
-            document.getElementById('firewood-price').textContent = currencySymbol() + addons.firewood.price;
+            initAddons();
 
             updateGuestAvailability();
             updatePolicyDescriptions();
@@ -3606,20 +3589,55 @@
         // --- Select site ---
         function selectSite(site) {
             selectedSite = site;
-            addons.firewood.qty = 0;
-            document.getElementById('firewood-qty').textContent = '0';
+            // Reset all addon quantities
+            for (var key in addons) { addons[key].qty = 0; }
             selectedCancellationPolicy = 'flexible';
             selectPolicy('flexible');
 
             document.getElementById('addons-site-name').textContent = site.toUpperCase();
+            renderAddonsUI();
             goToStep(3);
         }
 
         // --- Add-ons ---
+        function initAddons() {
+            var addonDefs = siteConfig.bookingAddons || [];
+            addons = {};
+            addonDefs.forEach(function(a) {
+                if (a.enabled !== false) {
+                    addons[a.id] = { qty: 0, price: a.price || 0, name: a.name, description: a.description || '' };
+                }
+            });
+        }
+
+        function renderAddonsUI() {
+            var container = document.getElementById('addons-list');
+            var sym = currencySymbol();
+            var html = '';
+            for (var key in addons) {
+                var a = addons[key];
+                html += '<div class="addon-card">';
+                html += '<div class="addon-header">';
+                html += '<div class="addon-name">' + a.name + '</div>';
+                html += '<div class="addon-price">' + sym + a.price + '</div>';
+                html += '</div>';
+                if (a.description) html += '<div class="addon-desc">' + a.description + '</div>';
+                html += '<div class="addon-qty">';
+                html += '<label>Quantity:</label>';
+                html += '<div class="qty-control">';
+                html += '<button type="button" class="qty-btn" onclick="updateAddonQty(\'' + key + '\', -1)">−</button>';
+                html += '<span class="qty-value" id="' + key + '-qty">' + a.qty + '</span>';
+                html += '<button type="button" class="qty-btn" onclick="updateAddonQty(\'' + key + '\', 1)">+</button>';
+                html += '</div></div></div>';
+            }
+            if (!html) html = '<p style="color:var(--color-stone);font-size:0.9rem">No add-ons available.</p>';
+            container.innerHTML = html;
+        }
+
         function updateAddonQty(addon, delta) {
-            const maxQty = 5;
-            const current = addons[addon].qty;
-            const newQty = Math.max(0, Math.min(maxQty, current + delta));
+            var maxQty = 10;
+            var current = addons[addon].qty;
+            var newQty = Math.max(0, Math.min(maxQty, current + delta));
             addons[addon].qty = newQty;
             document.getElementById(addon + '-qty').textContent = newQty;
             updateSummaries();
@@ -3781,9 +3799,9 @@
                 addonsHtml += '<div class="summary-line"><span>' + extraGuests + ' extra guest' + (extraGuests > 1 ? 's' : '') + ' x ' + sym + cfg.extraGuestFee + ' x ' + nights + ' nights</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
             }
 
-            if (addons.firewood.qty > 0) {
-                addonsHtml += '<div class="summary-line"><span>Firewood x ' + addons.firewood.qty + '</span><span>' + sym + (addons.firewood.qty * addons.firewood.price).toFixed(2) + '</span></div>';
-            }
+            for (var ak in addons) { if (addons[ak].qty > 0) {
+                addonsHtml += '<div class="summary-line"><span>' + addons[ak].name + ' x ' + addons[ak].qty + '</span><span>' + sym + (addons[ak].qty * addons[ak].price).toFixed(2) + '</span></div>';
+            }}
 
             addonsHtml += '<div class="summary-line total"><span>Total</span><span>' + sym + (baseCost + extraCost + addonsCost).toFixed(2) + '</span></div>';
 
@@ -3795,9 +3813,9 @@
                 detailsHtml += '<div class="summary-line"><span>Extra guests (' + extraGuests + ')</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
             }
 
-            if (addons.firewood.qty > 0) {
-                detailsHtml += '<div class="summary-line"><span>Firewood x ' + addons.firewood.qty + '</span><span>' + sym + (addons.firewood.qty * addons.firewood.price).toFixed(2) + '</span></div>';
-            }
+            for (var dk in addons) { if (addons[dk].qty > 0) {
+                detailsHtml += '<div class="summary-line"><span>' + addons[dk].name + ' x ' + addons[dk].qty + '</span><span>' + sym + (addons[dk].qty * addons[dk].price).toFixed(2) + '</span></div>';
+            }}
 
             if (discount > 0) {
                 detailsHtml += '<div class="summary-line discount"><span>Promo: ' + appliedPromo.code + '</span><span>-' + sym + discount.toFixed(2) + '</span></div>';
@@ -3851,9 +3869,9 @@
                 breakdownHtml += '<div class="summary-line"><span>Extra guests (' + extraGuests + ')</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
             }
 
-            if (addons.firewood.qty > 0) {
-                breakdownHtml += '<div class="summary-line"><span>Firewood x ' + addons.firewood.qty + '</span><span>' + sym + (addons.firewood.qty * addons.firewood.price).toFixed(2) + '</span></div>';
-            }
+            for (var rk in addons) { if (addons[rk].qty > 0) {
+                breakdownHtml += '<div class="summary-line"><span>' + addons[rk].name + ' x ' + addons[rk].qty + '</span><span>' + sym + (addons[rk].qty * addons[rk].price).toFixed(2) + '</span></div>';
+            }}
 
             if (discount > 0) {
                 breakdownHtml += '<div class="summary-line discount"><span>Promo: ' + appliedPromo.code + '</span><span>-' + sym + discount.toFixed(2) + '</span></div>';
@@ -3924,9 +3942,7 @@
                         nights: totals.nights,
                         baseCost: totals.baseCost,
                         extraCost: totals.extraCost,
-                        addons: {
-                            firewood: addons.firewood.qty
-                        },
+                        addons: Object.fromEntries(Object.entries(addons).filter(function(e) { return e[1].qty > 0; }).map(function(e) { return [e[0], { qty: e[1].qty, name: e[1].name, price: e[1].price }]; })),
                         addonsCost: totals.addonsCost,
                         promoCode: appliedPromo ? appliedPromo.code : '',
                         discount: totals.discount + (totals.nonRefundableDiscount || 0),
