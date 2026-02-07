@@ -763,6 +763,57 @@
             border: 1px solid #FFE0B2;
         }
 
+        .rate-plan {
+            cursor: pointer;
+            padding: 0.35rem 0.5rem;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .rate-plan:hover {
+            background: rgba(44,62,45,0.03);
+        }
+        .rate-plan.rate-selected {
+            border-color: var(--color-forest);
+            background: rgba(44,62,45,0.04);
+        }
+        .rate-plan .rate-check {
+            display: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid var(--color-forest);
+            background: var(--color-forest);
+            margin-right: 0.4rem;
+            position: relative;
+            vertical-align: middle;
+        }
+        .rate-plan .rate-check::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+        }
+        .rate-plan.rate-selected .rate-check {
+            display: inline-block;
+        }
+        .rate-plan .rate-uncheck {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid var(--color-light-stone);
+            margin-right: 0.4rem;
+            vertical-align: middle;
+        }
+        .rate-plan.rate-selected .rate-uncheck {
+            display: none;
+        }
+
         /* T&C Modal */
         .tc-overlay {
             display: none;
@@ -1205,58 +1256,6 @@
 
         .promo-msg.valid { color: #5a9a5a; }
         .promo-msg.invalid { color: #b44; }
-
-        /* Cancellation Policy */
-        .cancellation-policy-section {
-            margin: 1.5rem 0;
-        }
-        .policy-options {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        .policy-option {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 1.25rem;
-            background: #fff;
-            border: 2px solid var(--color-light-stone);
-            cursor: pointer;
-            transition: border-color 0.2s ease, background 0.2s ease;
-        }
-        .policy-option:hover {
-            border-color: var(--color-stone);
-        }
-        .policy-option.selected {
-            border-color: var(--color-forest);
-            background: rgba(44,62,45,0.03);
-        }
-        .policy-option input[type="radio"] {
-            accent-color: var(--color-forest);
-            width: 16px;
-            height: 16px;
-            flex-shrink: 0;
-        }
-        .policy-content {
-            flex: 1;
-        }
-        .policy-name {
-            font-family: var(--font-serif);
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--color-charcoal);
-        }
-        .policy-desc {
-            font-size: 0.8rem;
-            color: var(--color-stone);
-            margin-top: 0.15rem;
-        }
-        .policy-price {
-            font-size: 0.85rem;
-            color: var(--color-stone);
-            white-space: nowrap;
-        }
 
         /* Step 5: Review */
         .review-card {
@@ -2498,29 +2497,6 @@
                 </div>
             </div>
 
-            <!-- Cancellation Policy -->
-            <div class="cancellation-policy-section">
-                <div class="section-label" style="font-family:var(--font-serif);font-size:1.1rem;font-weight:600;margin-bottom:0.75rem">Cancellation Policy</div>
-                <div class="policy-options">
-                    <label class="policy-option selected" id="policy-flexible" onclick="selectPolicy('flexible')">
-                        <input type="radio" name="cancellation" value="flexible" checked>
-                        <div class="policy-content">
-                            <div class="policy-name">Flexible</div>
-                            <div class="policy-desc" id="policy-flexible-desc">Free cancellation up to 14 days before check-in</div>
-                        </div>
-                        <div class="policy-price">Standard rate</div>
-                    </label>
-                    <label class="policy-option" id="policy-nonrefundable" onclick="selectPolicy('non-refundable')">
-                        <input type="radio" name="cancellation" value="non-refundable">
-                        <div class="policy-content">
-                            <div class="policy-name">Non-refundable</div>
-                            <div class="policy-desc">No cancellations or changes — save <span id="nr-discount-pct">10</span>%</div>
-                        </div>
-                        <div class="policy-price" id="nr-savings" style="color:var(--color-forest);font-weight:600"></div>
-                    </label>
-                </div>
-            </div>
-
             <div class="summary-box" id="details-summary">
                 <div class="summary-title">Booking Summary</div>
                 <div id="details-summary-content"></div>
@@ -3156,10 +3132,12 @@
                     var baseGuests = ROOM_SITES.includes(site) ? '1 guest' : '2 guests';
                     var nrDiscount = siteConfig.nonRefundableDiscount || 10;
                     var nrPrice = Math.round(cfg.basePrice * (1 - nrDiscount / 100));
+                    var flexSel0 = selectedCancellationPolicy === 'flexible' ? ' rate-selected' : '';
+                    var nrSel0 = selectedCancellationPolicy === 'non-refundable' ? ' rate-selected' : '';
                     priceEl.innerHTML =
                         '<div class="rate-plans">'
-                        + '<div class="rate-plan"><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + cfg.basePrice + '</strong> <span class="rate-per">/ night</span></div>'
-                        + '<div class="rate-plan"><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPrice + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>'
+                        + '<div class="rate-plan' + flexSel0 + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + cfg.basePrice + '</strong> <span class="rate-per">/ night</span></div>'
+                        + '<div class="rate-plan' + nrSel0 + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPrice + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>'
                         + '</div>'
                         + '<span class="price-note">for ' + baseGuests
                         + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
@@ -3252,7 +3230,6 @@
             initAddons();
 
             updateGuestAvailability();
-            updatePolicyDescriptions();
 
             // Populate T&C modal
             var tcBody = document.getElementById('tc-modal-body');
@@ -3286,9 +3263,12 @@
             }
             noteHtml += '</span>';
 
+            var flexSel = selectedCancellationPolicy === 'flexible' ? ' rate-selected' : '';
+            var nrSel = selectedCancellationPolicy === 'non-refundable' ? ' rate-selected' : '';
+
             let html = '<div class="rate-plans">';
-            html += '<div class="rate-plan"><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + perNight + '</strong> <span class="rate-per">/ night</span></div>';
-            html += '<div class="rate-plan"><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPerNight + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>';
+            html += '<div class="rate-plan' + flexSel + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <strong>' + sym + perNight + '</strong> <span class="rate-per">/ night</span></div>';
+            html += '<div class="rate-plan' + nrSel + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <strong>' + sym + nrPerNight + '</strong> <span class="rate-per">/ night</span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>';
             html += '</div>';
             html += noteHtml;
 
@@ -3344,7 +3324,15 @@
                 html += '<div class="price-line"><span>' + extraGuests + ' extra guest' + (extraGuests > 1 ? 's' : '') + '</span><span>' + sym + extraCost.toFixed(2) + '</span></div>';
             }
 
-            html += '<div class="price-line total"><span>Total</span><span>' + sym + total.toFixed(2) + '</span></div>';
+            var cardTotal = total;
+            if (selectedCancellationPolicy === 'non-refundable') {
+                var nrPct = siteConfig.nonRefundableDiscount || 10;
+                var nrSaving = total * (nrPct / 100);
+                cardTotal = total - nrSaving;
+                html += '<div class="price-line" style="color:var(--color-forest)"><span>Non-refundable discount (' + nrPct + '%)</span><span>-' + sym + nrSaving.toFixed(2) + '</span></div>';
+            }
+
+            html += '<div class="price-line total"><span>Total</span><span>' + sym + cardTotal.toFixed(2) + '</span></div>';
 
             breakdownEl.innerHTML = html;
             breakdownEl.style.display = 'block';
@@ -3654,7 +3642,6 @@
             selectedSite = site;
             // Reset all addon quantities
             for (var key in addons) { addons[key].qty = 0; }
-            selectedCancellationPolicy = 'flexible';
             selectPolicy('flexible');
 
             document.getElementById('addons-site-name').textContent = site.toUpperCase();
@@ -3740,32 +3727,9 @@
         // --- Cancellation policy ---
         function selectPolicy(policy) {
             selectedCancellationPolicy = policy;
-            document.getElementById('policy-flexible').classList.toggle('selected', policy === 'flexible');
-            document.getElementById('policy-nonrefundable').classList.toggle('selected', policy === 'non-refundable');
-            document.querySelector('input[name="cancellation"][value="flexible"]').checked = (policy === 'flexible');
-            document.querySelector('input[name="cancellation"][value="non-refundable"]').checked = (policy === 'non-refundable');
             updateSummaries();
         }
 
-        function updatePolicyDescriptions() {
-            var days = siteConfig.cancellationDays || 14;
-            var pct = siteConfig.nonRefundableDiscount || 10;
-            var desc = document.getElementById('policy-flexible-desc');
-            if (desc) desc.textContent = 'Free cancellation up to ' + days + ' days before check-in';
-            var nrPct = document.getElementById('nr-discount-pct');
-            if (nrPct) nrPct.textContent = pct;
-
-            // Show savings amount if we have a selected site
-            var savingsEl = document.getElementById('nr-savings');
-            if (savingsEl && selectedSite) {
-                var totals = calculateTotals();
-                if (totals && selectedCancellationPolicy === 'flexible') {
-                    // Calculate what saving would be
-                    var saving = (totals.subtotal - totals.discount) * (pct / 100);
-                    savingsEl.textContent = 'Save ' + currencySymbol() + saving.toFixed(2);
-                }
-            }
-        }
 
         // --- Calculate totals ---
         function calculateTotals() {
