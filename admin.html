@@ -12,13 +12,13 @@
 
     <style>
         :root {
-            --color-stone: #A69583;
+            --color-stone: #6B6560;
             --color-forest: #2C3E2D;
-            --color-cream: #F3F1EC;
-            --color-charcoal: #3D3D3D;
-            --color-light-stone: #e8e0d8;
-            --color-success: #5a9a5a;
-            --color-error: #b44;
+            --color-cream: #F5F5F3;
+            --color-charcoal: #2D2D2D;
+            --color-light-stone: #DDDBD8;
+            --color-success: #3D7A3D;
+            --color-error: #B93E3E;
 
             --font-serif: 'Cormorant Garamond', Georgia, serif;
             --font-sans: 'DM Sans', -apple-system, sans-serif;
@@ -30,7 +30,8 @@
             font-family: var(--font-sans);
             background-color: var(--color-cream);
             color: var(--color-charcoal);
-            line-height: 1.6;
+            line-height: 1.65;
+            font-size: 15px;
             min-height: 100vh;
         }
 
@@ -61,7 +62,7 @@
         }
 
         .login-card .subtitle {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--color-stone);
             letter-spacing: 0.1em;
             text-transform: uppercase;
@@ -107,17 +108,17 @@
 
         .dash-header h1 {
             font-family: var(--font-serif);
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 500;
         }
 
         .dash-header .logout-btn {
             background: none;
-            border: 1px solid rgba(255,255,255,0.3);
-            color: var(--color-cream);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: #fff;
             padding: 0.4rem 1rem;
             font-family: var(--font-sans);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             cursor: pointer;
@@ -143,7 +144,7 @@
             border-bottom: 2px solid transparent;
             padding: 0.85rem 1.5rem;
             font-family: var(--font-sans);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             letter-spacing: 0.05em;
             text-transform: uppercase;
@@ -176,7 +177,7 @@
             border-bottom: 2px solid transparent;
             padding: 0.65rem 1.25rem;
             font-family: var(--font-sans);
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 500;
             letter-spacing: 0.04em;
             color: var(--color-stone);
@@ -206,15 +207,15 @@
 
         .panel-title {
             font-family: var(--font-serif);
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 500;
             color: var(--color-forest);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem;
         }
 
         .panel-desc {
-            font-size: 0.85rem;
-            color: var(--color-stone);
+            font-size: 0.9rem;
+            color: var(--color-charcoal);
             margin-bottom: 1.5rem;
         }
 
@@ -227,15 +228,15 @@
 
         .section-heading {
             font-family: var(--font-serif);
-            font-size: 1.15rem;
+            font-size: 1.25rem;
             font-weight: 500;
             color: var(--color-forest);
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem;
         }
 
         .section-desc {
-            font-size: 0.8rem;
-            color: var(--color-stone);
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
             margin-bottom: 1rem;
         }
 
@@ -254,7 +255,7 @@
 
         .card-title {
             font-family: var(--font-serif);
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
             color: var(--color-forest);
             letter-spacing: 0.05em;
@@ -271,11 +272,12 @@
 
         .field label {
             display: block;
-            font-size: 0.7rem;
+            font-size: 0.8rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--color-stone);
-            margin-bottom: 0.3rem;
+            letter-spacing: 0.08em;
+            color: var(--color-charcoal);
+            margin-bottom: 0.35rem;
         }
 
         .field input,
@@ -305,9 +307,9 @@
         }
 
         .field .hint {
-            font-size: 0.7rem;
+            font-size: 0.78rem;
             color: var(--color-stone);
-            margin-top: 0.2rem;
+            margin-top: 0.25rem;
         }
 
         /* Buttons */
@@ -315,7 +317,7 @@
             display: inline-block;
             padding: 0.65rem 1.75rem;
             font-family: var(--font-sans);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 500;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -348,8 +350,8 @@
             border-color: var(--color-error);
             background: transparent;
             color: var(--color-error);
-            padding: 0.3rem 0.75rem;
-            font-size: 0.7rem;
+            padding: 0.35rem 0.85rem;
+            font-size: 0.78rem;
         }
 
         .btn-danger:hover {
@@ -365,7 +367,7 @@
         }
 
         .save-msg {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -379,11 +381,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.6rem 0.75rem;
+            padding: 0.65rem 0.85rem;
             background: #fff;
             border: 1px solid var(--color-light-stone);
             margin-bottom: 0.5rem;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
 
         .list-item .item-info {
@@ -396,7 +398,7 @@
         }
 
         .list-item .item-detail {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--color-stone);
         }
 
@@ -424,13 +426,14 @@
         /* Message badge */
         .msg-badge {
             display: none;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
+            font-weight: 600;
             background: var(--color-error);
             color: #fff;
             border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            line-height: 18px;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
             text-align: center;
             vertical-align: middle;
             margin-left: 0.3rem;
@@ -449,12 +452,12 @@
         .filter-btn {
             background: none;
             border: 1px solid var(--color-light-stone);
-            padding: 0.4rem 0.85rem;
+            padding: 0.45rem 0.9rem;
             font-family: var(--font-sans);
-            font-size: 0.75rem;
+            font-size: 0.82rem;
             font-weight: 500;
             letter-spacing: 0.04em;
-            color: var(--color-stone);
+            color: var(--color-charcoal);
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -464,12 +467,12 @@
 
         .filter-btn .filter-count {
             display: inline-block;
-            font-size: 0.6rem;
-            background: rgba(0,0,0,0.15);
+            font-size: 0.65rem;
+            background: rgba(0,0,0,0.12);
             border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            line-height: 16px;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
             text-align: center;
             margin-left: 0.3rem;
             vertical-align: middle;
@@ -500,24 +503,24 @@
 
         .booking-site {
             font-family: var(--font-serif);
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             color: var(--color-forest);
         }
 
         .booking-status {
-            font-size: 0.65rem;
-            font-weight: 500;
+            font-size: 0.72rem;
+            font-weight: 600;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            padding: 0.2rem 0.6rem;
+            padding: 0.25rem 0.65rem;
             border-radius: 2px;
         }
 
-        .booking-status.st-pending { background: #fef3e2; color: #e67e22; }
-        .booking-status.st-confirmed { background: #e8f5e9; color: #4a8c4a; }
-        .booking-status.st-cancelled { background: #fde8e8; color: #b44; }
-        .booking-status.st-completed { background: #f0ece8; color: var(--color-stone); }
+        .booking-status.st-pending { background: #fef3e2; color: #c06a10; }
+        .booking-status.st-confirmed { background: #e8f5e9; color: #2e6e2e; }
+        .booking-status.st-cancelled { background: #fde8e8; color: #993333; }
+        .booking-status.st-completed { background: #eceae8; color: #555; }
 
         .booking-details {
             display: grid;
@@ -527,14 +530,15 @@
         }
 
         .booking-detail-label {
-            font-size: 0.65rem;
+            font-size: 0.75rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.06em;
             color: var(--color-stone);
         }
 
         .booking-detail-value {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--color-charcoal);
         }
 
@@ -547,7 +551,7 @@
         .booking-detail-value a:hover { border-color: var(--color-forest); }
 
         .booking-pricing {
-            font-size: 0.8rem;
+            font-size: 0.88rem;
             color: var(--color-charcoal);
             padding: 0.5rem 0.75rem;
             background: #fff;
@@ -567,7 +571,7 @@
         }
 
         .booking-date-submitted {
-            font-size: 0.7rem;
+            font-size: 0.78rem;
             color: var(--color-stone);
             margin-top: 0.3rem;
         }
@@ -595,31 +599,31 @@
         .message-from {
             font-weight: 500;
             color: var(--color-forest);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .message-email {
-            font-size: 0.75rem;
+            font-size: 0.82rem;
             color: var(--color-stone);
         }
 
         .message-date {
-            font-size: 0.7rem;
+            font-size: 0.78rem;
             color: var(--color-stone);
             white-space: nowrap;
         }
 
         .message-subject {
-            font-size: 0.8rem;
+            font-size: 0.88rem;
             font-weight: 500;
             color: var(--color-charcoal);
             margin-bottom: 0.4rem;
         }
 
         .message-body {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--color-charcoal);
-            line-height: 1.6;
+            line-height: 1.65;
             white-space: pre-wrap;
             word-break: break-word;
         }
@@ -643,8 +647,8 @@
         .cal-nav-btn {
             background: none;
             border: 1px solid var(--color-light-stone);
-            padding: 0.3rem 0.75rem;
-            font-size: 0.85rem;
+            padding: 0.35rem 0.85rem;
+            font-size: 0.9rem;
             cursor: pointer;
             color: var(--color-charcoal);
             transition: border-color 0.2s;
@@ -654,7 +658,7 @@
 
         .cal-month-label {
             font-family: var(--font-serif);
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 500;
             color: var(--color-forest);
         }
@@ -667,17 +671,18 @@
 
         .cal-header-cell {
             text-align: center;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--color-stone);
-            padding: 0.3rem 0;
+            letter-spacing: 0.06em;
+            color: var(--color-charcoal);
+            padding: 0.35rem 0;
         }
 
         .cal-cell {
             text-align: center;
-            padding: 0.4rem 0;
-            font-size: 0.75rem;
+            padding: 0.45rem 0;
+            font-size: 0.82rem;
             cursor: pointer;
             border: 1px solid transparent;
             transition: background 0.15s, color 0.15s;
@@ -719,8 +724,8 @@
             gap: 1.5rem;
             justify-content: center;
             margin-top: 1.5rem;
-            font-size: 0.75rem;
-            color: var(--color-stone);
+            font-size: 0.8rem;
+            color: var(--color-charcoal);
         }
 
         .legend-item {
@@ -763,11 +768,11 @@
         }
 
         .upload-zone span {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
         .upload-progress {
-            font-size: 0.75rem;
+            font-size: 0.82rem;
             color: var(--color-stone);
             margin-bottom: 0.5rem;
             min-height: 1em;
@@ -801,8 +806,9 @@
             left: 4px;
             background: rgba(0,0,0,0.6);
             color: #fff;
-            font-size: 0.6rem;
-            padding: 1px 5px;
+            font-size: 0.68rem;
+            font-weight: 500;
+            padding: 2px 6px;
             border-radius: 2px;
         }
 
@@ -823,9 +829,10 @@
 
         .img-action-btn {
             flex: 1;
-            padding: 4px 0;
+            padding: 5px 0;
             border: none;
-            font-size: 0.6rem;
+            font-size: 0.68rem;
+            font-weight: 500;
             font-family: var(--font-sans);
             cursor: pointer;
             text-transform: uppercase;
@@ -843,7 +850,7 @@
         }
 
         .img-empty {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--color-stone);
             padding: 0.5rem 0;
             grid-column: 1 / -1;
@@ -864,13 +871,13 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.8rem;
+            font-size: 0.88rem;
         }
         .explore-slot-header strong {
             color: var(--color-forest);
         }
         .explore-slot-status {
-            font-size: 0.7rem;
+            font-size: 0.78rem;
             color: var(--color-stone);
         }
         .explore-slot-preview {
@@ -896,8 +903,8 @@
             .tabs { padding: 0 1rem; }
             .sub-tabs { padding: 0 1rem; }
             .tab-content { padding: 1.5rem 1rem; }
-            .tab-btn { padding: 0.75rem 1rem; font-size: 0.75rem; }
-            .sub-tab-btn { padding: 0.55rem 0.85rem; font-size: 0.7rem; }
+            .tab-btn { padding: 0.75rem 1rem; font-size: 0.8rem; }
+            .sub-tab-btn { padding: 0.55rem 0.85rem; font-size: 0.75rem; }
 
             .dash-header .logout-btn {
                 padding: 0.5rem 1rem;
@@ -906,7 +913,7 @@
 
             .btn-danger {
                 padding: 0.5rem 0.85rem;
-                font-size: 0.75rem;
+                font-size: 0.8rem;
                 min-height: 44px;
             }
 
@@ -974,7 +981,7 @@
         <div class="tab-panel active" id="panel-messages">
             <div class="panel-title">Messages</div>
             <div class="panel-desc">Messages from visitors via the Contact Us page.</div>
-            <div id="messages-list"><div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">Loading messages...</div></div>
+            <div id="messages-list"><div style="font-size:0.9rem;color:var(--color-stone);padding:1rem 0;">Loading messages...</div></div>
         </div>
 
         <!-- BOOKINGS PANEL -->
@@ -990,7 +997,7 @@
                 <button class="filter-btn" data-filter="completed" onclick="filterBookings('completed')">Completed</button>
             </div>
 
-            <div id="bookings-list"><div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">Loading bookings...</div></div>
+            <div id="bookings-list"><div style="font-size:0.9rem;color:var(--color-stone);padding:1rem 0;">Loading bookings...</div></div>
         </div>
 
         <!-- CAMPSITES PANEL (contains sub-panels) -->
@@ -1452,9 +1459,9 @@
                     </div>
                     <div class="explore-slot-preview" id="explore-preview-kitchen"></div>
                     <div class="explore-slot-actions">
-                        <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-kitchen').click()">Upload</button>
+                        <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-kitchen').click()">Upload</button>
                         <input type="file" id="file-explore-kitchen" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('kitchen', this.files[0])">
-                        <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-kitchen" onclick="deleteExploreSlot('kitchen')">Remove</button>
+                        <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-kitchen" onclick="deleteExploreSlot('kitchen')">Remove</button>
                     </div>
                 </div>
             </div>
@@ -1476,9 +1483,9 @@
                         </div>
                         <div class="explore-slot-preview" id="explore-preview-neighbourhood"></div>
                         <div class="explore-slot-actions">
-                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-neighbourhood').click()">Upload</button>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-neighbourhood').click()">Upload</button>
                             <input type="file" id="file-explore-neighbourhood" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('neighbourhood', this.files[0])">
-                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-neighbourhood" onclick="deleteExploreSlot('neighbourhood')">Remove</button>
+                            <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-neighbourhood" onclick="deleteExploreSlot('neighbourhood')">Remove</button>
                         </div>
                     </div>
 
@@ -1489,9 +1496,9 @@
                         </div>
                         <div class="explore-slot-preview" id="explore-preview-reef"></div>
                         <div class="explore-slot-actions">
-                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-reef').click()">Upload</button>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-reef').click()">Upload</button>
                             <input type="file" id="file-explore-reef" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('reef', this.files[0])">
-                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-reef" onclick="deleteExploreSlot('reef')">Remove</button>
+                            <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-reef" onclick="deleteExploreSlot('reef')">Remove</button>
                         </div>
                     </div>
 
@@ -1502,9 +1509,9 @@
                         </div>
                         <div class="explore-slot-preview" id="explore-preview-rainforest"></div>
                         <div class="explore-slot-actions">
-                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-rainforest').click()">Upload</button>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-rainforest').click()">Upload</button>
                             <input type="file" id="file-explore-rainforest" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('rainforest', this.files[0])">
-                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-rainforest" onclick="deleteExploreSlot('rainforest')">Remove</button>
+                            <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-rainforest" onclick="deleteExploreSlot('rainforest')">Remove</button>
                         </div>
                     </div>
 
@@ -1515,9 +1522,9 @@
                         </div>
                         <div class="explore-slot-preview" id="explore-preview-waterfall"></div>
                         <div class="explore-slot-actions">
-                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-waterfall').click()">Upload</button>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-waterfall').click()">Upload</button>
                             <input type="file" id="file-explore-waterfall" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('waterfall', this.files[0])">
-                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-waterfall" onclick="deleteExploreSlot('waterfall')">Remove</button>
+                            <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-waterfall" onclick="deleteExploreSlot('waterfall')">Remove</button>
                         </div>
                     </div>
 
@@ -1528,9 +1535,9 @@
                         </div>
                         <div class="explore-slot-preview" id="explore-preview-tablelands"></div>
                         <div class="explore-slot-actions">
-                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-tablelands').click()">Upload</button>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-tablelands').click()">Upload</button>
                             <input type="file" id="file-explore-tablelands" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('tablelands', this.files[0])">
-                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-tablelands" onclick="deleteExploreSlot('tablelands')">Remove</button>
+                            <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-tablelands" onclick="deleteExploreSlot('tablelands')">Remove</button>
                         </div>
                     </div>
 
@@ -1541,9 +1548,9 @@
                         </div>
                         <div class="explore-slot-preview" id="explore-preview-beach"></div>
                         <div class="explore-slot-actions">
-                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-beach').click()">Upload</button>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-beach').click()">Upload</button>
                             <input type="file" id="file-explore-beach" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('beach', this.files[0])">
-                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-beach" onclick="deleteExploreSlot('beach')">Remove</button>
+                            <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-beach" onclick="deleteExploreSlot('beach')">Remove</button>
                         </div>
                     </div>
 
@@ -1554,9 +1561,9 @@
                         </div>
                         <div class="explore-slot-preview" id="explore-preview-cairns"></div>
                         <div class="explore-slot-actions">
-                            <button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="document.getElementById('file-explore-cairns').click()">Upload</button>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="document.getElementById('file-explore-cairns').click()">Upload</button>
                             <input type="file" id="file-explore-cairns" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadExploreSlot('cairns', this.files[0])">
-                            <button class="btn btn-danger" style="padding:0.3rem 0.75rem;font-size:0.7rem;display:none" id="explore-del-cairns" onclick="deleteExploreSlot('cairns')">Remove</button>
+                            <button class="btn btn-danger" style="padding:0.35rem 0.85rem;font-size:0.78rem;display:none" id="explore-del-cairns" onclick="deleteExploreSlot('cairns')">Remove</button>
                         </div>
                     </div>
 
@@ -1631,7 +1638,7 @@
                     <input type="password" id="stripe-webhook-secret" placeholder="whsec_...">
                     <div class="hint">
                         Create a webhook in Stripe pointing to:<br>
-                        <code style="font-size:0.7rem;background:var(--color-cream);padding:2px 6px;border:1px solid var(--color-light-stone);word-break:break-all">https://ahana-ical-proxy.ahanahillside.workers.dev/stripe-webhook</code><br>
+                        <code style="font-size:0.8rem;background:var(--color-cream);padding:3px 8px;border:1px solid var(--color-light-stone);word-break:break-all">https://ahana-ical-proxy.ahanahillside.workers.dev/stripe-webhook</code><br>
                         Listen for the <strong>checkout.session.completed</strong> event.
                     </div>
                 </div>
@@ -1834,7 +1841,7 @@
             { key: 'suite', name: 'Suite' },
         ];
         const sym = 'AU$';
-        let html = '<table style="width:100%;font-size:0.8rem;border-collapse:collapse">';
+        let html = '<table style="width:100%;font-size:0.85rem;border-collapse:collapse">';
         html += '<tr style="border-bottom:1px solid #ddd"><th style="text-align:left;padding:0.3rem 0">Room</th><th style="text-align:right;padding:0.3rem 0.5rem">Direct</th><th style="text-align:right;padding:0.3rem 0.5rem">Weekend</th><th style="text-align:right;padding:0.3rem 0">OTA equiv.</th></tr>';
         rooms.forEach(function(r) {
             const base = parseFloat(document.getElementById('p-' + r.key + '-base').value) || 0;
@@ -2051,7 +2058,7 @@
         const keys = Object.keys(codes);
 
         if (keys.length === 0) {
-            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:0.5rem 0;">No promo codes yet.</div>';
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No promo codes yet.</div>';
             return;
         }
 
@@ -2095,7 +2102,7 @@
         const rules = siteConfig.rules || [];
 
         if (rules.length === 0) {
-            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:0.5rem 0;">No rules yet.</div>';
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No rules yet.</div>';
             return;
         }
 
@@ -2144,7 +2151,7 @@
         const container = document.getElementById('messages-list');
 
         if (messages.length === 0) {
-            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">No messages yet. Messages from the Contact Us page will appear here.</div>';
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:1rem 0;">No messages yet. Messages from the Contact Us page will appear here.</div>';
             return;
         }
 
@@ -2161,8 +2168,8 @@
                 + (m.subject && m.subject !== 'No subject' ? '<div class="message-subject">' + escHtml(m.subject) + '</div>' : '')
                 + '<div class="message-body">' + escHtml(m.message) + '</div>'
                 + '<div class="message-actions">'
-                + (m.read ? '' : '<button class="btn btn-secondary" onclick="markRead(\'' + m.id + '\')" style="padding:0.3rem 0.75rem;font-size:0.7rem">Mark read</button>')
-                + '<a href="mailto:' + encodeURIComponent(m.email) + '?subject=Re: ' + encodeURIComponent(m.subject || 'Your message') + '" class="btn btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem;text-decoration:none">Reply</a>'
+                + (m.read ? '' : '<button class="btn btn-secondary" onclick="markRead(\'' + m.id + '\')" style="padding:0.35rem 0.85rem;font-size:0.78rem">Mark read</button>')
+                + '<a href="mailto:' + encodeURIComponent(m.email) + '?subject=Re: ' + encodeURIComponent(m.subject || 'Your message') + '" class="btn btn-secondary" style="padding:0.35rem 0.85rem;font-size:0.78rem;text-decoration:none">Reply</a>'
                 + '<button class="btn btn-danger" onclick="deleteMessage(\'' + m.id + '\')">Delete</button>'
                 + '</div>'
                 + '</div>';
@@ -2259,7 +2266,7 @@
         });
 
         if (filtered.length === 0) {
-            container.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone);padding:1rem 0;">No ' + (bookingFilter === 'all' ? '' : bookingFilter + ' ') + 'bookings yet.</div>';
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:1rem 0;">No ' + (bookingFilter === 'all' ? '' : bookingFilter + ' ') + 'bookings yet.</div>';
             return;
         }
 
@@ -2269,19 +2276,19 @@
 
             let actions = '';
             if (b.status === 'pending') {
-                actions += '<button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="updateBookingStatus(\'' + b.id + '\',\'confirmed\')">Confirm</button>';
+                actions += '<button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="updateBookingStatus(\'' + b.id + '\',\'confirmed\')">Confirm</button>';
                 actions += '<button class="btn btn-danger" onclick="updateBookingStatus(\'' + b.id + '\',\'cancelled\')">Cancel</button>';
             } else if (b.status === 'confirmed') {
-                actions += '<button class="btn btn-primary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="updateBookingStatus(\'' + b.id + '\',\'completed\')">Complete</button>';
+                actions += '<button class="btn btn-primary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="updateBookingStatus(\'' + b.id + '\',\'completed\')">Complete</button>';
                 actions += '<button class="btn btn-danger" onclick="updateBookingStatus(\'' + b.id + '\',\'cancelled\')">Cancel</button>';
             } else if (b.status === 'cancelled' || b.status === 'completed') {
-                actions += '<button class="btn btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="updateBookingStatus(\'' + b.id + '\',\'pending\')">Reopen</button>';
+                actions += '<button class="btn btn-secondary" style="padding:0.35rem 0.85rem;font-size:0.78rem" onclick="updateBookingStatus(\'' + b.id + '\',\'pending\')">Reopen</button>';
             }
             actions += '<button class="btn btn-danger" onclick="deleteBooking(\'' + b.id + '\')">Delete</button>';
 
             let pricing = sym + (b.total || 0).toFixed(2) + ' total';
             if (b.promoCode) pricing += ' (promo: ' + escHtml(b.promoCode) + ')';
-            var policyTag = b.cancellationPolicy === 'non-refundable' ? '<span style="display:inline-block;font-size:0.65rem;padding:0.1rem 0.4rem;background:#fef3e2;color:#e67e22;border-radius:3px;margin-left:0.4rem">Non-refundable</span>' : '';
+            var policyTag = b.cancellationPolicy === 'non-refundable' ? '<span style="display:inline-block;font-size:0.72rem;padding:0.15rem 0.5rem;background:#fef3e2;color:#c06a10;border-radius:3px;margin-left:0.4rem;font-weight:500">Non-refundable</span>' : '';
 
             return '<div class="booking-card status-' + b.status + '">'
                 + '<div class="booking-top">'
@@ -2298,10 +2305,10 @@
                 + '<div><div class="booking-detail-label">Nights</div><div class="booking-detail-value">' + b.nights + '</div></div>'
                 + '<div><div class="booking-detail-label">Total</div><div class="booking-detail-value"><strong>' + pricing + '</strong>' + policyTag + '</div></div>'
                 + '</div>'
-                + (b.paidAt ? '<div style="font-size:0.7rem;color:#4a8c4a;margin-top:0.3rem;font-weight:500">Paid via Stripe — ' + new Date(b.paidAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + '</div>' : '')
+                + (b.paidAt ? '<div style="font-size:0.78rem;color:#2e6e2e;margin-top:0.3rem;font-weight:500">Paid via Stripe — ' + new Date(b.paidAt).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + '</div>' : '')
                 + '<div class="booking-date-submitted">Submitted ' + submitted + '</div>'
                 + '<div class="booking-actions">'
-                + '<a href="mailto:' + encodeURIComponent(b.email) + '?subject=Re: Booking at Ahana Hillside — ' + encodeURIComponent(b.siteName || '') + '" class="btn btn-secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem;text-decoration:none">Email Guest</a>'
+                + '<a href="mailto:' + encodeURIComponent(b.email) + '?subject=Re: Booking at Ahana Hillside — ' + encodeURIComponent(b.siteName || '') + '" class="btn btn-secondary" style="padding:0.35rem 0.85rem;font-size:0.78rem;text-decoration:none">Email Guest</a>'
                 + actions
                 + '</div>'
                 + '</div>';
@@ -2767,14 +2774,14 @@
                 if (data.mediaType === 'video') {
                     preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" autoplay muted loop></video>'
                         + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
-                        + '<span style="font-size:0.75rem;color:var(--color-stone)">Current: video background</span>'
-                        + '<button class="btn btn-danger" onclick="deleteHomepageBg()" style="padding:0.3rem 0.75rem;font-size:0.7rem">Remove</button>'
+                        + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: video background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteHomepageBg()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
                         + '</div>';
                 } else {
                     preview.innerHTML = '<img src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)">'
                         + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
-                        + '<span style="font-size:0.75rem;color:var(--color-stone)">Current: image background</span>'
-                        + '<button class="btn btn-danger" onclick="deleteHomepageBg()" style="padding:0.3rem 0.75rem;font-size:0.7rem">Remove</button>'
+                        + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: image background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteHomepageBg()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
                         + '</div>';
                 }
             } else {
@@ -2845,14 +2852,14 @@
                 if (data.mediaType === 'video') {
                     preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" autoplay muted loop></video>'
                         + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
-                        + '<span style="font-size:0.75rem;color:var(--color-stone)">Current: video background</span>'
-                        + '<button class="btn btn-danger" onclick="deleteCampsiteBg()" style="padding:0.3rem 0.75rem;font-size:0.7rem">Remove</button>'
+                        + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: video background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteCampsiteBg()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
                         + '</div>';
                 } else {
                     preview.innerHTML = '<img src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)">'
                         + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
-                        + '<span style="font-size:0.75rem;color:var(--color-stone)">Current: image background</span>'
-                        + '<button class="btn btn-danger" onclick="deleteCampsiteBg()" style="padding:0.3rem 0.75rem;font-size:0.7rem">Remove</button>'
+                        + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: image background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteCampsiteBg()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
                         + '</div>';
                 }
             } else {
@@ -2977,7 +2984,7 @@
                 status.textContent = meta.name ? '(' + meta.name + ')' : '(uploaded)';
                 delBtn.style.display = '';
             } else {
-                preview.innerHTML = '<span style="font-size:0.75rem;color:var(--color-stone)">Using default image</span>';
+                preview.innerHTML = '<span style="font-size:0.82rem;color:var(--color-stone)">Using default image</span>';
                 status.textContent = '';
                 delBtn.style.display = 'none';
             }
