@@ -1583,9 +1583,36 @@ export default {
       );
     }
 
-    // Rooms don't have iCal feeds — return empty dates
+    // Gather confirmed/completed booking dates for this site
+    let siteBookingDates = [];
+    try {
+      const allBookings = await env.CONFIG.get('bookings', 'json') || [];
+      const confirmed = allBookings.filter(b =>
+        b.site === site && (b.status === 'confirmed' || b.status === 'completed')
+      );
+      const dateSet = new Set();
+      confirmed.forEach(b => {
+        const start = new Date(b.checkin);
+        const end = new Date(b.checkout);
+        const cur = new Date(start);
+        while (cur < end) {
+          dateSet.add(cur.toISOString().split('T')[0]);
+          cur.setDate(cur.getDate() + 1);
+        }
+      });
+      siteBookingDates = [...dateSet];
+    } catch (e) {}
+
+    // Gather manually blocked dates
+    let manualDates = [];
+    try {
+      manualDates = await env.CONFIG.get(`blocked-dates:${site}`, 'json') || [];
+    } catch (e) {}
+
+    // Rooms don't have iCal feeds — merge manual blocks + booking dates
     if (!ICAL_FEEDS[site]) {
-      return jsonResponse({ site, bookedDates: [] }, 200, origin, 'public, max-age=300');
+      const bookedDates = [...new Set([...manualDates, ...siteBookingDates])].sort();
+      return jsonResponse({ site, bookedDates, events: [], updatedAt: new Date().toISOString() }, 200, origin, 'public, max-age=30');
     }
 
     try {
@@ -1601,13 +1628,7 @@ export default {
       const events = parseIcal(icsText);
       const hipcampDates = [...new Set(events.flatMap(e => e.dates))].sort();
 
-      // Merge with manually blocked dates
-      let manualDates = [];
-      try {
-        manualDates = await env.CONFIG.get(`blocked-dates:${site}`, 'json') || [];
-      } catch (e) {}
-
-      const bookedDates = [...new Set([...hipcampDates, ...manualDates])].sort();
+      const bookedDates = [...new Set([...hipcampDates, ...manualDates, ...siteBookingDates])].sort();
 
       return new Response(
         JSON.stringify({ site, bookedDates, events, updatedAt: new Date().toISOString() }),
@@ -1616,7 +1637,7 @@ export default {
           headers: {
             'Content-Type': 'application/json',
             ...corsHeaders(origin),
-            'Cache-Control': 'public, max-age=300',
+            'Cache-Control': 'public, max-age=30',
           },
         }
       );

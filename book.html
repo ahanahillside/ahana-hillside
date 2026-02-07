@@ -1407,6 +1407,23 @@
             line-height: 1;
         }
 
+        .dp-day.dp-limited {
+            color: #b87a00;
+            background: #fef9e7;
+            position: relative;
+        }
+        .dp-day.dp-limited::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #d4a017;
+        }
+
         .dp-day.dp-selected {
             background: var(--color-forest);
             color: #fff !important;
@@ -1416,6 +1433,26 @@
 
         .dp-day.dp-in-range {
             background: rgba(44, 62, 45, 0.08);
+        }
+
+        .dp-legend {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+            font-size: 0.65rem;
+            color: var(--color-stone);
+        }
+        .dp-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .dp-legend-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            display: inline-block;
         }
 
         .dp-footer {
@@ -3343,9 +3380,10 @@
         // --- Fetch availability from Cloudflare Worker ---
         async function fetchAvailability(site) {
             try {
+                const cacheBust = '_t=' + Date.now();
                 const [calRes, blockedRes] = await Promise.all([
-                    fetch(WORKER_URL + '?site=' + site).then(r => r.ok ? r.json() : { bookedDates: [] }).catch(() => ({ bookedDates: [] })),
-                    fetch(WORKER_URL + '/blocked-dates/' + site).then(r => r.ok ? r.json() : { blockedDates: [] }).catch(() => ({ blockedDates: [] })),
+                    fetch(WORKER_URL + '?site=' + site + '&' + cacheBust, { cache: 'no-store' }).then(r => r.ok ? r.json() : { bookedDates: [] }).catch(() => ({ bookedDates: [] })),
+                    fetch(WORKER_URL + '/blocked-dates/' + site + '?' + cacheBust, { cache: 'no-store' }).then(r => r.ok ? r.json() : { blockedDates: [] }).catch(() => ({ blockedDates: [] })),
                 ]);
 
                 const hipcampDates = calRes.bookedDates || [];
@@ -3355,6 +3393,23 @@
                 console.warn('Availability fetch failed for ' + site + ':', err);
             }
         }
+
+        function refreshAllAvailability() {
+            ALL_SITES.forEach(s => fetchAvailability(s));
+            setTimeout(function() {
+                var open = document.querySelector('.dp-dropdown.open');
+                if (open) {
+                    var field = open.id.replace('dp-search-', '');
+                    renderDatePicker(field);
+                }
+                updateAllCards();
+            }, 1500);
+        }
+
+        // Refresh availability when user returns to the page (e.g. after Stripe payment, or tab switch)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) refreshAllAvailability();
+        });
 
         // --- Custom date picker ---
         const dpState = {
@@ -3445,7 +3500,9 @@
                 const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
                 const isPast = dateStr < todayStr;
                 const activeSites = activeCategory === 'campsites' ? CAMPSITE_SITES : ROOM_SITES;
-                const blockedBoth = activeSites.every(s => bookedDates[s].includes(dateStr));
+                const blockedCount = activeSites.filter(s => bookedDates[s].includes(dateStr)).length;
+                const blockedAll = blockedCount === activeSites.length;
+                const blockedSome = blockedCount > 0 && !blockedAll;
                 const isToday = dateStr === todayStr;
                 const isSelected = dateStr === checkinVal || dateStr === checkoutVal;
 
@@ -3458,17 +3515,23 @@
 
                 let cls = 'dp-day';
                 if (isDisabled) cls += ' dp-past';
-                if (blockedBoth && !isPast) cls += ' dp-blocked';
+                if (blockedAll && !isPast) cls += ' dp-blocked';
+                else if (blockedSome && !isPast) cls += ' dp-limited';
                 if (isToday && !isDisabled) cls += ' dp-today';
                 if (isSelected) cls += ' dp-selected';
-                if (inRange && !blockedBoth) cls += ' dp-in-range';
+                if (inRange && !blockedAll) cls += ' dp-in-range';
 
-                const canClick = !isDisabled && !blockedBoth;
+                const canClick = !isDisabled && !blockedAll;
                 const handler = canClick ? ' onclick="event.stopPropagation();dpSelect(\'' + field + '\',\'' + dateStr + '\')"' : '';
 
                 html += '<div class="' + cls + '"' + handler + '>' + d + '</div>';
             }
 
+            html += '</div>';
+
+            html += '<div class="dp-legend">';
+            html += '<span class="dp-legend-item"><span class="dp-legend-dot" style="background:#c0392b"></span> Fully booked</span>';
+            html += '<span class="dp-legend-item"><span class="dp-legend-dot" style="background:#d4a017"></span> Limited</span>';
             html += '</div>';
 
             html += '<div class="dp-footer">';
@@ -3514,8 +3577,8 @@
         function dpToday(field) {
             const todayStr = new Date().toISOString().split('T')[0];
             const todayActiveSites = activeCategory === 'campsites' ? CAMPSITE_SITES : ROOM_SITES;
-            const blockedBoth = todayActiveSites.every(s => bookedDates[s].includes(todayStr));
-            if (!blockedBoth) {
+            const blockedAll = todayActiveSites.every(s => bookedDates[s].includes(todayStr));
+            if (!blockedAll) {
                 dpSelect(field, todayStr);
             }
         }
