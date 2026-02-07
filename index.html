@@ -172,6 +172,29 @@
 
         .menu-footer a:hover { color: var(--color-forest); }
 
+        /* --- Site Logo --- */
+        .site-logo {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            z-index: 100;
+        }
+        .site-logo img {
+            height: 70px;
+            width: auto;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+        }
+        @media (max-width: 768px) {
+            .site-logo img {
+                height: 50px;
+            }
+        }
+        @media (max-width: 480px) {
+            .site-logo img {
+                height: 40px;
+            }
+        }
+
         /* --- Hero --- */
         .hero {
             min-height: 100vh;
@@ -626,6 +649,9 @@
     </div>
 
     <section class="hero">
+        <a href="index.html" class="site-logo">
+            <img src="images/logo-white.png" alt="Ahana Hillside">
+        </a>
         <div class="hero-background" id="hero-bg">
             <img
                 id="hero-image"

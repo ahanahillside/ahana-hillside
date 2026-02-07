@@ -57,16 +57,24 @@
 
         /* --- Header --- */
         .header {
-            text-align: center;
-            padding: 2.5rem 2rem 1rem;
+            text-align: left;
+            padding: 1.5rem 2rem 1rem;
         }
         .header a { text-decoration: none; }
-        .header-logo {
-            font-family: var(--font-serif);
-            font-size: 1.6rem;
-            font-weight: 500;
-            color: var(--color-forest);
-            letter-spacing: 0.02em;
+        .header-logo-img {
+            height: 70px;
+            width: auto;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(9%) saturate(2184%) hue-rotate(81deg) brightness(96%) contrast(91%);
+        }
+        @media (max-width: 768px) {
+            .header-logo-img {
+                height: 50px;
+            }
+        }
+        @media (max-width: 480px) {
+            .header-logo-img {
+                height: 40px;
+            }
         }
         .back-link {
             display: inline-block;
@@ -432,7 +440,7 @@
 
     <div class="header">
         <a href="index.html">
-            <div class="header-logo">Ahana Hillside</div>
+            <img src="images/logo-white.png" alt="Ahana Hillside" class="header-logo-img">
         </a>
         <br>
         <a href="explore.html" class="back-link">&larr; Back to explore</a>
