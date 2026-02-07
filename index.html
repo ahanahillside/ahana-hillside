@@ -172,27 +172,13 @@
 
         .menu-footer a:hover { color: var(--color-forest); }
 
-        /* --- Site Logo --- */
-        .site-logo {
-            position: absolute;
-            top: 1.5rem;
-            left: 1.5rem;
-            z-index: 100;
-        }
-        .site-logo img {
-            height: 70px;
+        /* --- Hero Logo Image --- */
+        .hero-logo-img {
+            height: clamp(100px, 20vw, 160px);
             width: auto;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
-        }
-        @media (max-width: 768px) {
-            .site-logo img {
-                height: 50px;
-            }
-        }
-        @media (max-width: 480px) {
-            .site-logo img {
-                height: 40px;
-            }
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.4));
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-out;
         }
 
         /* --- Hero --- */
@@ -233,17 +219,6 @@
 
         .hero-content {
             max-width: 600px;
-        }
-
-        .logo {
-            font-family: var(--font-serif);
-            font-size: clamp(2.2rem, 6vw, 3.5rem);
-            font-weight: 700;
-            color: #FFFDF9;
-            letter-spacing: 0.02em;
-            margin-bottom: 1rem;
-            animation: fadeIn 1s ease-out;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         .tagline {
@@ -649,9 +624,6 @@
     </div>
 
     <section class="hero">
-        <a href="index.html" class="site-logo">
-            <img src="images/logo-white.png" alt="Ahana Hillside">
-        </a>
         <div class="hero-background" id="hero-bg">
             <img
                 id="hero-image"
@@ -663,8 +635,8 @@
         </div>
 
         <div class="hero-content">
-            <h1 class="logo">Ahana Hillside</h1>
-            <p class="tagline">A private retreat in the hills</p>
+            <h1><img src="images/logo-white.png" alt="Ahana Hillside" class="hero-logo-img"></h1>
+            <p class="tagline">Escape to a secluded hillside retreat surrounded by tropical rainforest</p>
             <div class="divider"></div>
             <p class="hero-subtitle">Cairns, Tropical North Queensland</p>
             <div class="btn-row">
