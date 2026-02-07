@@ -865,6 +865,32 @@
             margin-bottom: 1.25rem;
         }
 
+        .card-title.collapsible {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+
+        .card-title.collapsible:hover {
+            color: var(--color-charcoal);
+        }
+
+        .card-toggle {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            transition: transform 0.2s;
+        }
+
+        .card-title.collapsible.collapsed .card-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .content-card-body.collapsed {
+            display: none;
+        }
+
         /* Field row (inline fields) */
         .field-row {
             display: flex;
@@ -1263,63 +1289,8 @@
                 <div class="section-desc">Manage descriptions, amenities, and media for each room. First image is the cover. Max 15 per site.</div>
 
                 <div class="card content-card">
-                    <div class="card-title">MOUNTAIN VIEW ROOM</div>
-                    <div class="field">
-                        <label>Room type line</label>
-                        <input type="text" id="c-mountain-view-type">
-                        <div class="hint">e.g. "Private Room &middot; Sleeps 4 &middot; Mountain Views"</div>
-                    </div>
-                    <div class="field">
-                        <label>Description</label>
-                        <textarea id="c-mountain-view-desc" rows="3"></textarea>
-                    </div>
-                    <div class="field-row">
-                        <div class="field">
-                            <label>Size</label>
-                            <input type="text" id="c-mountain-view-size" placeholder="e.g. 18 m²">
-                        </div>
-                        <div class="field">
-                            <label>Beds</label>
-                            <input type="text" id="c-mountain-view-beds" placeholder="e.g. 1 large double bed">
-                        </div>
-                        <div class="field">
-                            <label>Smoking</label>
-                            <select id="c-mountain-view-smoking">
-                                <option value="no">No smoking</option>
-                                <option value="outdoors">Outdoors only</option>
-                                <option value="yes">Smoking allowed</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Highlight Tags</label>
-                        <div class="hint" style="margin-bottom:0.4rem">Quick feature tags shown on the booking card</div>
-                        <div class="amenity-tags" id="amenities-mountain-view"></div>
-                        <div class="amenity-add">
-                            <input type="text" id="amenity-input-mountain-view" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addAmenity('mountain-view');event.preventDefault()}">
-                            <button class="btn btn-secondary btn-sm" onclick="addAmenity('mountain-view')">Add</button>
-                        </div>
-                    </div>
-                    <div class="field">
-                        <label>Amenity Categories</label>
-                        <div class="hint" style="margin-bottom:0.4rem">Detailed amenities grouped by category (e.g. Bathroom, Facilities, View)</div>
-                        <div id="amenity-cats-mountain-view"></div>
-                        <button class="btn btn-secondary btn-sm" onclick="addAmenityCategory('mountain-view')" style="margin-top:0.5rem">+ Add Category</button>
-                    </div>
-                    <div class="field">
-                        <label>Photos &amp; Videos</label>
-                        <div class="upload-zone" id="upload-zone-mountain-view" onclick="document.getElementById('file-mountain-view').click()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                            <span>Click to upload or drag & drop</span>
-                            <input type="file" id="file-mountain-view" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('mountain-view', this.files)">
-                        </div>
-                        <div class="upload-progress" id="progress-mountain-view"></div>
-                        <div class="image-grid" id="images-mountain-view"></div>
-                    </div>
-                </div>
-
-                <div class="card content-card">
-                    <div class="card-title">GARDEN VIEW ROOM</div>
+                    <div class="card-title collapsible" onclick="toggleCard(this)">GARDEN VIEW ROOM <span class="card-toggle">&#9662;</span></div>
+                    <div class="content-card-body">
                     <div class="field">
                         <label>Room type line</label>
                         <input type="text" id="c-garden-view-type">
@@ -1372,10 +1343,70 @@
                         <div class="upload-progress" id="progress-garden-view"></div>
                         <div class="image-grid" id="images-garden-view"></div>
                     </div>
+                    </div>
                 </div>
 
                 <div class="card content-card">
-                    <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                    <div class="card-title collapsible" onclick="toggleCard(this)">MOUNTAIN VIEW ROOM <span class="card-toggle">&#9662;</span></div>
+                    <div class="content-card-body">
+                    <div class="field">
+                        <label>Room type line</label>
+                        <input type="text" id="c-mountain-view-type">
+                        <div class="hint">e.g. "Private Room &middot; Sleeps 4 &middot; Mountain Views"</div>
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-mountain-view-desc" rows="3"></textarea>
+                    </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Size</label>
+                            <input type="text" id="c-mountain-view-size" placeholder="e.g. 18 m²">
+                        </div>
+                        <div class="field">
+                            <label>Beds</label>
+                            <input type="text" id="c-mountain-view-beds" placeholder="e.g. 1 large double bed">
+                        </div>
+                        <div class="field">
+                            <label>Smoking</label>
+                            <select id="c-mountain-view-smoking">
+                                <option value="no">No smoking</option>
+                                <option value="outdoors">Outdoors only</option>
+                                <option value="yes">Smoking allowed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Highlight Tags</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Quick feature tags shown on the booking card</div>
+                        <div class="amenity-tags" id="amenities-mountain-view"></div>
+                        <div class="amenity-add">
+                            <input type="text" id="amenity-input-mountain-view" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addAmenity('mountain-view');event.preventDefault()}">
+                            <button class="btn btn-secondary btn-sm" onclick="addAmenity('mountain-view')">Add</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Amenity Categories</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Detailed amenities grouped by category (e.g. Bathroom, Facilities, View)</div>
+                        <div id="amenity-cats-mountain-view"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addAmenityCategory('mountain-view')" style="margin-top:0.5rem">+ Add Category</button>
+                    </div>
+                    <div class="field">
+                        <label>Photos &amp; Videos</label>
+                        <div class="upload-zone" id="upload-zone-mountain-view" onclick="document.getElementById('file-mountain-view').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-mountain-view" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('mountain-view', this.files)">
+                        </div>
+                        <div class="upload-progress" id="progress-mountain-view"></div>
+                        <div class="image-grid" id="images-mountain-view"></div>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="card content-card">
+                    <div class="card-title collapsible" onclick="toggleCard(this)">SUITE WITH GARDEN VIEW <span class="card-toggle">&#9662;</span></div>
+                    <div class="content-card-body">
                     <div class="field">
                         <label>Room type line</label>
                         <input type="text" id="c-suite-type">
@@ -1428,6 +1459,12 @@
                         <div class="upload-progress" id="progress-suite"></div>
                         <div class="image-grid" id="images-suite"></div>
                     </div>
+                    </div>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('content-rooms')">Save Rooms</button>
+                    <span class="save-msg" id="content-rooms-msg"></span>
                 </div>
 
                 <hr class="section-divider">
@@ -1437,7 +1474,8 @@
                 <div class="section-desc">Manage descriptions, amenities, and media for each campsite. First image is the cover. Max 15 per site.</div>
 
                 <div class="card content-card">
-                    <div class="card-title">SAMAVAS</div>
+                    <div class="card-title collapsible" onclick="toggleCard(this)">SAMAVAS <span class="card-toggle">&#9662;</span></div>
+                    <div class="content-card-body">
                     <div class="field">
                         <label>Site type line</label>
                         <input type="text" id="c-samavas-type">
@@ -1490,10 +1528,12 @@
                         <div class="upload-progress" id="progress-samavas"></div>
                         <div class="image-grid" id="images-samavas"></div>
                     </div>
+                    </div>
                 </div>
 
                 <div class="card content-card">
-                    <div class="card-title">CHHAYA</div>
+                    <div class="card-title collapsible" onclick="toggleCard(this)">CHHAYA <span class="card-toggle">&#9662;</span></div>
+                    <div class="content-card-body">
                     <div class="field">
                         <label>Site type line</label>
                         <input type="text" id="c-chhaya-type">
@@ -1546,11 +1586,12 @@
                         <div class="upload-progress" id="progress-chhaya"></div>
                         <div class="image-grid" id="images-chhaya"></div>
                     </div>
+                    </div>
                 </div>
 
                 <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('content')">Save Content</button>
-                    <span class="save-msg" id="content-msg"></span>
+                    <button class="btn btn-primary" onclick="saveConfig('content-camps')">Save Campsites</button>
+                    <span class="save-msg" id="content-camps-msg"></span>
                 </div>
 
                 <!-- Rules section -->
@@ -2508,6 +2549,14 @@
                 + '<button class="btn btn-danger" onclick="removeRule(' + i + ')">Remove</button>'
                 + '</div>';
         }).join('');
+    }
+
+    // --- Collapsible cards ---
+    function toggleCard(el) {
+        var body = el.nextElementSibling;
+        if (!body) return;
+        body.classList.toggle('collapsed');
+        el.classList.toggle('collapsed');
     }
 
     // --- Amenities ---
