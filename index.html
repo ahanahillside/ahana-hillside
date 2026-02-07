@@ -417,6 +417,64 @@
             border-color: var(--color-stone);
         }
 
+        /* --- Awards Strip --- */
+        .awards-strip {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-light-stone);
+        }
+
+        .awards-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            margin-bottom: 1rem;
+        }
+
+        .awards-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .award-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1.2rem;
+            background: #003580;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .award-badge:hover {
+            opacity: 0.9;
+        }
+
+        .award-badge-text {
+            text-align: left;
+        }
+
+        .award-badge-brand {
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .award-badge-title {
+            font-family: var(--font-sans);
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.02em;
+            line-height: 1.3;
+        }
+
         /* --- Neighbourhood Section --- */
         .neighbourhood-wrapper {
             background-color: var(--color-cream);
@@ -674,6 +732,18 @@
                 Whether you're camping under the stars at one of our spacious campsites or enjoying a budget-friendly stay, Ahana is your base to explore the wonders of Tropical North Queensland &mdash; from the Great Barrier Reef to ancient rainforests and hidden waterfalls.
             </p>
             <a href="about.html" class="welcome-link">Learn more about us &rarr;</a>
+
+            <div class="awards-strip">
+                <p class="awards-label">Recognised by</p>
+                <div class="awards-row">
+                    <a href="https://www.booking.com/hotel/au/ahana-budget-stay-near-cairns.en-gb.html" target="_blank" rel="noopener noreferrer" class="award-badge" aria-label="Booking.com Traveller Review Awards 2026">
+                        <div class="award-badge-text">
+                            <div class="award-badge-brand">Booking.com</div>
+                            <div class="award-badge-title">Traveller Review Awards 2026</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
         </section>
     </div>
 
