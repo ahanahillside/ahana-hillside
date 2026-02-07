@@ -202,9 +202,9 @@
             inset: 0;
             background: radial-gradient(
                 ellipse at center,
-                rgba(245, 242, 238, 0.85) 0%,
-                rgba(245, 242, 238, 0.7) 50%,
-                rgba(245, 242, 238, 0.5) 100%
+                rgba(245, 242, 238, 0.425) 0%,
+                rgba(245, 242, 238, 0.35) 50%,
+                rgba(245, 242, 238, 0.25) 100%
             );
         }
 
@@ -215,20 +215,23 @@
         .logo {
             font-family: var(--font-serif);
             font-size: clamp(2.2rem, 6vw, 3.5rem);
-            font-weight: 500;
+            font-weight: 700;
             color: var(--color-forest);
             letter-spacing: 0.02em;
             margin-bottom: 1rem;
             animation: fadeIn 1s ease-out;
+            text-shadow: 0 1px 4px rgba(245, 242, 238, 0.8);
         }
 
         .tagline {
             font-family: var(--font-serif);
             font-size: clamp(1.1rem, 2.5vw, 1.4rem);
             font-style: italic;
-            color: var(--color-charcoal);
+            color: #1a1a1a;
+            font-weight: 500;
             margin-bottom: 3rem;
             animation: fadeIn 1s ease-out 0.2s both;
+            text-shadow: 0 1px 4px rgba(245, 242, 238, 0.8);
         }
 
         .divider {
@@ -244,9 +247,10 @@
             letter-spacing: 0.15em;
             text-transform: uppercase;
             color: var(--color-forest);
-            font-weight: 500;
+            font-weight: 600;
             animation: fadeIn 1s ease-out 0.5s both;
             margin-bottom: 0.5rem;
+            text-shadow: 0 1px 4px rgba(245, 242, 238, 0.8);
         }
 
         .btn-row {
@@ -298,10 +302,12 @@
             font-size: 1rem;
             font-style: italic;
             color: var(--color-forest);
+            font-weight: 500;
             text-decoration: none;
             border-bottom: 1px solid var(--color-forest);
             padding-bottom: 2px;
             transition: color 0.2s ease, border-color 0.2s ease;
+            text-shadow: 0 1px 4px rgba(245, 242, 238, 0.8);
         }
 
         .contact-link:hover {
