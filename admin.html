@@ -860,6 +860,75 @@
             grid-column: 1 / -1;
         }
 
+        /* Content cards (full-width site cards with description + media) */
+        .content-card {
+            margin-bottom: 1.25rem;
+        }
+
+        /* Amenity tags */
+        .amenity-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
+            min-height: 1.5rem;
+        }
+
+        .amenity-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: var(--color-cream);
+            border: 1px solid var(--color-light-stone);
+            padding: 0.25rem 0.6rem;
+            font-size: 0.8rem;
+            color: var(--color-charcoal);
+            line-height: 1.3;
+        }
+
+        .amenity-tag .amenity-remove {
+            cursor: pointer;
+            color: var(--color-stone);
+            font-size: 1rem;
+            line-height: 1;
+            transition: color 0.15s;
+            border: none;
+            background: none;
+            padding: 0;
+            font-family: var(--font-sans);
+        }
+
+        .amenity-tag .amenity-remove:hover {
+            color: var(--color-error);
+        }
+
+        .amenity-add {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .amenity-add input {
+            flex: 1;
+            padding: 0.45rem 0.65rem;
+            border: 1px solid var(--color-light-stone);
+            background: #fff;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .amenity-add input:focus {
+            border-color: var(--color-forest);
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.85rem;
+            font-size: 0.78rem;
+        }
+
         /* Explore slot cards */
         .explore-slot-card {
             background: #fff;
@@ -1110,7 +1179,7 @@
             <!-- Content & Media sub-panel (Images + Content + Rules) -->
             <div class="sub-panel" id="subpanel-content">
                 <div class="panel-title">Content &amp; Media</div>
-                <div class="panel-desc">Manage campsite photos, descriptions, and campground rules.</div>
+                <div class="panel-desc">Manage photos, descriptions, amenities, and campground rules for rooms and campsites.</div>
 
                 <!-- Camping Experience Background -->
                 <div class="section-heading">Camping Experience Background</div>
@@ -1129,35 +1198,31 @@
 
                 <hr class="section-divider">
 
-                <!-- Images section -->
-                <div class="section-heading">Campsite Images &amp; Videos</div>
-                <div class="section-desc">Upload, reorder, and manage photos &amp; videos. First item is the cover. Max 15 per site. Images are auto-compressed for fast loading. Videos up to 50MB (MP4, WebM, MOV).</div>
+                <!-- ==================== ROOMS ==================== -->
+                <div class="section-heading">Rooms</div>
+                <div class="section-desc">Manage descriptions, amenities, and media for each room. First image is the cover. Max 15 per site.</div>
 
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-title">SAMAVAS</div>
-                        <div class="upload-zone" id="upload-zone-samavas" onclick="document.getElementById('file-samavas').click()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                            <span>Click to upload or drag & drop</span>
-                            <input type="file" id="file-samavas" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('samavas', this.files)">
-                        </div>
-                        <div class="upload-progress" id="progress-samavas"></div>
-                        <div class="image-grid" id="images-samavas"></div>
+                <div class="card content-card">
+                    <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                    <div class="field">
+                        <label>Room type line</label>
+                        <input type="text" id="c-mountain-view-type">
+                        <div class="hint">e.g. "Private Room &middot; Sleeps 4 &middot; Mountain Views"</div>
                     </div>
-
-                    <div class="card">
-                        <div class="card-title">CHHAYA</div>
-                        <div class="upload-zone" id="upload-zone-chhaya" onclick="document.getElementById('file-chhaya').click()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                            <span>Click to upload or drag & drop</span>
-                            <input type="file" id="file-chhaya" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('chhaya', this.files)">
-                        </div>
-                        <div class="upload-progress" id="progress-chhaya"></div>
-                        <div class="image-grid" id="images-chhaya"></div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-mountain-view-desc" rows="3"></textarea>
                     </div>
-
-                    <div class="card">
-                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                    <div class="field">
+                        <label>Amenities</label>
+                        <div class="amenity-tags" id="amenities-mountain-view"></div>
+                        <div class="amenity-add">
+                            <input type="text" id="amenity-input-mountain-view" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('mountain-view');event.preventDefault()}">
+                            <button class="btn btn-secondary btn-sm" onclick="addAmenity('mountain-view')">Add</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Photos &amp; Videos</label>
                         <div class="upload-zone" id="upload-zone-mountain-view" onclick="document.getElementById('file-mountain-view').click()">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             <span>Click to upload or drag & drop</span>
@@ -1166,9 +1231,29 @@
                         <div class="upload-progress" id="progress-mountain-view"></div>
                         <div class="image-grid" id="images-mountain-view"></div>
                     </div>
+                </div>
 
-                    <div class="card">
-                        <div class="card-title">GARDEN VIEW ROOM</div>
+                <div class="card content-card">
+                    <div class="card-title">GARDEN VIEW ROOM</div>
+                    <div class="field">
+                        <label>Room type line</label>
+                        <input type="text" id="c-garden-view-type">
+                        <div class="hint">e.g. "Private Room &middot; Sleeps 4 &middot; Garden Views"</div>
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-garden-view-desc" rows="3"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Amenities</label>
+                        <div class="amenity-tags" id="amenities-garden-view"></div>
+                        <div class="amenity-add">
+                            <input type="text" id="amenity-input-garden-view" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('garden-view');event.preventDefault()}">
+                            <button class="btn btn-secondary btn-sm" onclick="addAmenity('garden-view')">Add</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Photos &amp; Videos</label>
                         <div class="upload-zone" id="upload-zone-garden-view" onclick="document.getElementById('file-garden-view').click()">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             <span>Click to upload or drag & drop</span>
@@ -1177,9 +1262,29 @@
                         <div class="upload-progress" id="progress-garden-view"></div>
                         <div class="image-grid" id="images-garden-view"></div>
                     </div>
+                </div>
 
-                    <div class="card">
-                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                <div class="card content-card">
+                    <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                    <div class="field">
+                        <label>Room type line</label>
+                        <input type="text" id="c-suite-type">
+                        <div class="hint">e.g. "Private Suite &middot; Sleeps 6 &middot; Garden Views"</div>
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-suite-desc" rows="3"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Amenities</label>
+                        <div class="amenity-tags" id="amenities-suite"></div>
+                        <div class="amenity-add">
+                            <input type="text" id="amenity-input-suite" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('suite');event.preventDefault()}">
+                            <button class="btn btn-secondary btn-sm" onclick="addAmenity('suite')">Add</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Photos &amp; Videos</label>
                         <div class="upload-zone" id="upload-zone-suite" onclick="document.getElementById('file-suite').click()">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                             <span>Click to upload or drag & drop</span>
@@ -1190,36 +1295,71 @@
                     </div>
                 </div>
 
-                <!-- Site descriptions section -->
                 <hr class="section-divider">
-                <div class="section-heading">Descriptions</div>
-                <div class="section-desc">Edit the description and details shown on each campsite card.</div>
 
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-title">SAMAVAS</div>
-                        <div class="field">
-                            <label>Site type line</label>
-                            <input type="text" id="c-samavas-type">
-                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m"</div>
-                        </div>
-                        <div class="field">
-                            <label>Description</label>
-                            <textarea id="c-samavas-desc" rows="4"></textarea>
+                <!-- ==================== CAMPSITES ==================== -->
+                <div class="section-heading">Campsites</div>
+                <div class="section-desc">Manage descriptions, amenities, and media for each campsite. First image is the cover. Max 15 per site.</div>
+
+                <div class="card content-card">
+                    <div class="card-title">SAMAVAS</div>
+                    <div class="field">
+                        <label>Site type line</label>
+                        <input type="text" id="c-samavas-type">
+                        <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 15 &middot; Vehicles under 30 m"</div>
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-samavas-desc" rows="3"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Amenities</label>
+                        <div class="amenity-tags" id="amenities-samavas"></div>
+                        <div class="amenity-add">
+                            <input type="text" id="amenity-input-samavas" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('samavas');event.preventDefault()}">
+                            <button class="btn btn-secondary btn-sm" onclick="addAmenity('samavas')">Add</button>
                         </div>
                     </div>
+                    <div class="field">
+                        <label>Photos &amp; Videos</label>
+                        <div class="upload-zone" id="upload-zone-samavas" onclick="document.getElementById('file-samavas').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-samavas" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('samavas', this.files)">
+                        </div>
+                        <div class="upload-progress" id="progress-samavas"></div>
+                        <div class="image-grid" id="images-samavas"></div>
+                    </div>
+                </div>
 
-                    <div class="card">
-                        <div class="card-title">CHHAYA</div>
-                        <div class="field">
-                            <label>Site type line</label>
-                            <input type="text" id="c-chhaya-type">
-                            <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m"</div>
+                <div class="card content-card">
+                    <div class="card-title">CHHAYA</div>
+                    <div class="field">
+                        <label>Site type line</label>
+                        <input type="text" id="c-chhaya-type">
+                        <div class="hint">e.g. "RV / Tent Site &middot; Sleeps 6 &middot; Vehicles under 24 m"</div>
+                    </div>
+                    <div class="field">
+                        <label>Description</label>
+                        <textarea id="c-chhaya-desc" rows="3"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Amenities</label>
+                        <div class="amenity-tags" id="amenities-chhaya"></div>
+                        <div class="amenity-add">
+                            <input type="text" id="amenity-input-chhaya" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('chhaya');event.preventDefault()}">
+                            <button class="btn btn-secondary btn-sm" onclick="addAmenity('chhaya')">Add</button>
                         </div>
-                        <div class="field">
-                            <label>Description</label>
-                            <textarea id="c-chhaya-desc" rows="4"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Photos &amp; Videos</label>
+                        <div class="upload-zone" id="upload-zone-chhaya" onclick="document.getElementById('file-chhaya').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-chhaya" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('chhaya', this.files)">
                         </div>
+                        <div class="upload-progress" id="progress-chhaya"></div>
+                        <div class="image-grid" id="images-chhaya"></div>
                     </div>
                 </div>
 
@@ -1803,11 +1943,24 @@
         document.getElementById('p-ota-markup').value = c.otaMarkup ?? 15;
         updateOtaComparison();
 
-        // Content
+        // Content — Campsites
         document.getElementById('c-samavas-type').value = c.samavas?.type || '';
         document.getElementById('c-samavas-desc').value = c.samavas?.description || '';
         document.getElementById('c-chhaya-type').value = c.chhaya?.type || '';
         document.getElementById('c-chhaya-desc').value = c.chhaya?.description || '';
+
+        // Content — Rooms
+        document.getElementById('c-mountain-view-type').value = c['mountain-view']?.type || '';
+        document.getElementById('c-mountain-view-desc').value = c['mountain-view']?.description || '';
+        document.getElementById('c-garden-view-type').value = c['garden-view']?.type || '';
+        document.getElementById('c-garden-view-desc').value = c['garden-view']?.description || '';
+        document.getElementById('c-suite-type').value = c['suite']?.type || '';
+        document.getElementById('c-suite-desc').value = c['suite']?.description || '';
+
+        // Amenities
+        ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].forEach(function(site) {
+            renderAmenities(site);
+        });
 
         // Promo codes
         renderPromos();
@@ -1822,6 +1975,7 @@
                 name: 'SAMAVAS',
                 type: document.getElementById('c-samavas-type').value,
                 description: document.getElementById('c-samavas-desc').value,
+                amenities: (siteConfig.samavas && siteConfig.samavas.amenities) || [],
                 basePrice: parseFloat(document.getElementById('p-samavas-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-samavas-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-samavas-max').value) || 20,
@@ -1830,24 +1984,34 @@
                 name: 'CHHAYA',
                 type: document.getElementById('c-chhaya-type').value,
                 description: document.getElementById('c-chhaya-desc').value,
+                amenities: (siteConfig.chhaya && siteConfig.chhaya.amenities) || [],
                 basePrice: parseFloat(document.getElementById('p-chhaya-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-chhaya-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-chhaya-max').value) || 20,
             },
             'mountain-view': {
                 name: 'MOUNTAIN VIEW ROOM',
+                type: document.getElementById('c-mountain-view-type').value,
+                description: document.getElementById('c-mountain-view-desc').value,
+                amenities: (siteConfig['mountain-view'] && siteConfig['mountain-view'].amenities) || [],
                 basePrice: parseFloat(document.getElementById('p-mountain-view-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-mountain-view-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-mountain-view-max').value) || 4,
             },
             'garden-view': {
                 name: 'GARDEN VIEW ROOM',
+                type: document.getElementById('c-garden-view-type').value,
+                description: document.getElementById('c-garden-view-desc').value,
+                amenities: (siteConfig['garden-view'] && siteConfig['garden-view'].amenities) || [],
                 basePrice: parseFloat(document.getElementById('p-garden-view-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-garden-view-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-garden-view-max').value) || 4,
             },
             'suite': {
                 name: 'SUITE WITH GARDEN VIEW',
+                type: document.getElementById('c-suite-type').value,
+                description: document.getElementById('c-suite-desc').value,
+                amenities: (siteConfig['suite'] && siteConfig['suite'].amenities) || [],
                 basePrice: parseFloat(document.getElementById('p-suite-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-suite-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-suite-max').value) || 4,
@@ -2144,6 +2308,44 @@
                 + '<button class="btn btn-danger" onclick="removeRule(' + i + ')">Remove</button>'
                 + '</div>';
         }).join('');
+    }
+
+    // --- Amenities ---
+    function renderAmenities(site) {
+        const container = document.getElementById('amenities-' + site);
+        if (!container) return;
+        const key = site;
+        const amenities = (siteConfig[key] && siteConfig[key].amenities) || [];
+        container.innerHTML = amenities.map(function(a, i) {
+            return '<span class="amenity-tag">' + escapeHtml(a) +
+                '<button class="amenity-remove" onclick="removeAmenity(\'' + key + '\',' + i + ')" title="Remove">&times;</button></span>';
+        }).join('');
+    }
+
+    function addAmenity(site) {
+        const input = document.getElementById('amenity-input-' + site);
+        const text = input.value.trim();
+        if (!text) return;
+        if (!siteConfig[site]) siteConfig[site] = {};
+        if (!siteConfig[site].amenities) siteConfig[site].amenities = [];
+        if (siteConfig[site].amenities.indexOf(text) === -1) {
+            siteConfig[site].amenities.push(text);
+        }
+        input.value = '';
+        renderAmenities(site);
+    }
+
+    function removeAmenity(site, index) {
+        if (siteConfig[site] && siteConfig[site].amenities) {
+            siteConfig[site].amenities.splice(index, 1);
+            renderAmenities(site);
+        }
+    }
+
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
     }
 
     function addRule() {
