@@ -632,29 +632,90 @@
         }
 
         .campsite-amenities {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.35rem 1rem;
-            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.75rem;
             font-size: 0.8rem;
             color: var(--color-charcoal);
         }
 
-        .amenity {
-            display: flex;
+        .highlight-tag {
+            display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.3rem;
+            padding: 0.2rem 0.6rem;
+            border: 1px solid var(--color-light-stone);
+            font-size: 0.75rem;
+            color: var(--color-charcoal);
+            background: #fff;
+            white-space: nowrap;
         }
 
-        .amenity svg {
-            width: 14px;
-            height: 14px;
-            flex-shrink: 0;
-            stroke: var(--color-stone);
-            fill: none;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        .details-toggle {
+            background: none;
+            border: none;
+            color: var(--color-forest);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 0.75rem;
+            font-family: var(--font-sans);
+            display: block;
+        }
+
+        .details-toggle:hover {
+            text-decoration: underline;
+        }
+
+        .campsite-details {
+            border-top: 1px solid var(--color-light-stone);
+            padding-top: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .details-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.82rem;
+            color: var(--color-charcoal);
+        }
+
+        .details-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .details-meta strong {
+            font-weight: 600;
+        }
+
+        .details-category {
+            margin-bottom: 0.6rem;
+        }
+
+        .details-category h4 {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--color-charcoal);
+            margin-bottom: 0.25rem;
+        }
+
+        .details-cat-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.15rem 1rem;
+            font-size: 0.8rem;
+            color: var(--color-charcoal);
+        }
+
+        .details-cat-items span::before {
+            content: '\2713  ';
+            color: var(--color-forest);
+            font-weight: 600;
         }
 
         .campsite-price {
@@ -1310,7 +1371,7 @@
                 aspect-ratio: 4 / 3;
             }
 
-            .campsite-amenities {
+            .details-cat-items {
                 grid-template-columns: 1fr;
             }
 
@@ -2024,23 +2085,11 @@
                     <p class="campsite-description" id="samavas-desc">
                         Our largest site, accommodating up to 15 people. Set furthest from the main house for maximum privacy, SAMAVAS is ideal for groups and families looking for a secluded spot in the rainforest.
                     </p>
-                    <div class="campsite-amenities">
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
-                            Campfires allowed
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
-                            Pets allowed
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
-                            Toilet
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
-                            Potable water
-                        </div>
+                    <div class="campsite-amenities" id="samavas-highlights"></div>
+                    <button class="details-toggle" onclick="toggleDetails('samavas')">View details &#9662;</button>
+                    <div class="campsite-details" id="samavas-details" style="display:none">
+                        <div class="details-meta" id="samavas-details-meta"></div>
+                        <div id="samavas-details-cats"></div>
                     </div>
                     <div class="campsite-price" id="samavas-price">
                         from <strong>AU$66</strong> / night
@@ -2069,23 +2118,11 @@
                     <p class="campsite-description" id="chhaya-desc">
                         A cosy, intimate site perfect for couples and solo campers. CHHAYA is just a few metres from the toilets, offering convenience without sacrificing the peaceful rainforest setting.
                     </p>
-                    <div class="campsite-amenities">
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6 2 10c0 5 10 12 10 12s10-7 10-12c0-4-4.48-8-10-8z"/></svg>
-                            Campfires allowed
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M4.5 11a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/><path d="M3 18v-2a3 3 0 013-3h1.5M21 18v-2a3 3 0 00-3-3h-1.5M8 11a4 4 0 118 0M7 21v-2a4 4 0 018 0v2"/></svg>
-                            Pets allowed
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
-                            Toilet
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
-                            Potable water
-                        </div>
+                    <div class="campsite-amenities" id="chhaya-highlights"></div>
+                    <button class="details-toggle" onclick="toggleDetails('chhaya')">View details &#9662;</button>
+                    <div class="campsite-details" id="chhaya-details" style="display:none">
+                        <div class="details-meta" id="chhaya-details-meta"></div>
+                        <div id="chhaya-details-cats"></div>
                     </div>
                     <div class="campsite-price" id="chhaya-price">
                         from <strong>AU$60</strong> / night
@@ -2126,23 +2163,11 @@
                     <p class="campsite-description" id="mountain-view-desc">
                         Wake up to stunning mountain views from this cosy private room. Perfect for couples or solo travellers looking for a budget-friendly stay with the comfort of a real bed and a roof overhead.
                     </p>
-                    <div class="campsite-amenities">
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
-                            Private room
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
-                            Shared bathroom
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                            Kitchen access
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
-                            Wi-Fi
-                        </div>
+                    <div class="campsite-amenities" id="mountain-view-highlights"></div>
+                    <button class="details-toggle" onclick="toggleDetails('mountain-view')">View details &#9662;</button>
+                    <div class="campsite-details" id="mountain-view-details" style="display:none">
+                        <div class="details-meta" id="mountain-view-details-meta"></div>
+                        <div id="mountain-view-details-cats"></div>
                     </div>
                     <div class="campsite-price" id="mountain-view-price">
                         from <strong>AU$85</strong> / night
@@ -2171,23 +2196,11 @@
                     <p class="campsite-description" id="garden-view-desc">
                         A peaceful room overlooking the tropical garden. Surrounded by lush greenery, this room offers a tranquil retreat with easy access to all shared facilities.
                     </p>
-                    <div class="campsite-amenities">
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
-                            Private room
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
-                            Shared bathroom
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                            Kitchen access
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
-                            Wi-Fi
-                        </div>
+                    <div class="campsite-amenities" id="garden-view-highlights"></div>
+                    <button class="details-toggle" onclick="toggleDetails('garden-view')">View details &#9662;</button>
+                    <div class="campsite-details" id="garden-view-details" style="display:none">
+                        <div class="details-meta" id="garden-view-details-meta"></div>
+                        <div id="garden-view-details-cats"></div>
                     </div>
                     <div class="campsite-price" id="garden-view-price">
                         from <strong>AU$75</strong> / night
@@ -2216,23 +2229,11 @@
                     <p class="campsite-description" id="suite-desc">
                         Our most spacious room option — a private suite with separate living area and garden views. Ideal for small families or couples wanting extra space in the heart of the rainforest.
                     </p>
-                    <div class="campsite-amenities">
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
-                            Private suite
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
-                            Shared bathroom
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                            Kitchen access
-                        </div>
-                        <div class="amenity">
-                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
-                            Wi-Fi
-                        </div>
+                    <div class="campsite-amenities" id="suite-highlights"></div>
+                    <button class="details-toggle" onclick="toggleDetails('suite')">View details &#9662;</button>
+                    <div class="campsite-details" id="suite-details" style="display:none">
+                        <div class="details-meta" id="suite-details-meta"></div>
+                        <div id="suite-details-cats"></div>
                     </div>
                     <div class="campsite-price" id="suite-price">
                         from <strong>AU$110</strong> / night
@@ -2894,6 +2895,21 @@
             };
         }
 
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function toggleDetails(site) {
+            var panel = document.getElementById(site + '-details');
+            if (!panel) return;
+            var isOpen = panel.style.display !== 'none';
+            panel.style.display = isOpen ? 'none' : '';
+            var btn = document.querySelector('#campsite-' + site + ' .details-toggle');
+            if (btn) btn.innerHTML = isOpen ? 'View details &#9662;' : 'Hide details &#9652;';
+        }
+
         function applyConfig() {
             ALL_SITES.forEach(site => {
                 const cfg = siteConfig[site];
@@ -2929,6 +2945,56 @@
                     var label = ROOM_SITES.includes(site) ? 'room' : 'site';
                     msgEl.innerHTML = 'This ' + label + ' accommodates up to <strong>' + maxG + ' guests</strong>. Please select fewer guests.';
                 }
+
+                // Highlight tags
+                var hlEl = document.getElementById(site + '-highlights');
+                if (hlEl) {
+                    var tags = cfg.amenities || [];
+                    if (tags.length > 0) {
+                        hlEl.innerHTML = tags.map(function(t) {
+                            return '<span class="highlight-tag">' + escapeHtml(t) + '</span>';
+                        }).join('');
+                    } else {
+                        hlEl.innerHTML = '';
+                    }
+                }
+
+                // Details meta (size, beds, smoking)
+                var metaEl = document.getElementById(site + '-details-meta');
+                if (metaEl) {
+                    var metaParts = [];
+                    if (cfg.size) metaParts.push('<span><strong>Size</strong> ' + escapeHtml(cfg.size) + '</span>');
+                    if (cfg.beds) metaParts.push('<span><strong>Beds</strong> ' + escapeHtml(cfg.beds) + '</span>');
+                    if (cfg.smoking) {
+                        var smokingLabel = cfg.smoking === 'no' ? 'No smoking' : cfg.smoking === 'outdoors' ? 'Outdoors only' : 'Smoking allowed';
+                        metaParts.push('<span><strong>Smoking</strong> ' + smokingLabel + '</span>');
+                    }
+                    metaEl.innerHTML = metaParts.join('');
+                }
+
+                // Amenity categories
+                var catsEl = document.getElementById(site + '-details-cats');
+                if (catsEl) {
+                    var cats = cfg.amenityCategories || [];
+                    if (cats.length > 0) {
+                        catsEl.innerHTML = cats.map(function(cat) {
+                            var itemsHtml = (cat.items || []).map(function(item) {
+                                return '<span>' + escapeHtml(item) + '</span>';
+                            }).join('');
+                            return '<div class="details-category">' +
+                                '<h4>' + escapeHtml(cat.name) + '</h4>' +
+                                '<div class="details-cat-items">' + itemsHtml + '</div>' +
+                                '</div>';
+                        }).join('');
+                    } else {
+                        catsEl.innerHTML = '';
+                    }
+                }
+
+                // Hide details toggle if no details data
+                var toggleBtn = document.querySelector('#campsite-' + site + ' .details-toggle');
+                var hasDetails = (cfg.size || cfg.beds || cfg.smoking || (cfg.amenityCategories && cfg.amenityCategories.length > 0));
+                if (toggleBtn) toggleBtn.style.display = hasDetails ? '' : 'none';
             });
 
             const maxGuests = Math.max(

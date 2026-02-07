@@ -865,6 +865,64 @@
             margin-bottom: 1.25rem;
         }
 
+        /* Field row (inline fields) */
+        .field-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .field-row .field {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* Amenity category blocks */
+        .amenity-cat-block {
+            border: 1px solid var(--color-light-stone);
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.65rem;
+            background: var(--color-cream);
+        }
+
+        .amenity-cat-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .amenity-cat-header input {
+            flex: 1;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid var(--color-light-stone);
+            background: #fff;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+            outline: none;
+        }
+
+        .amenity-cat-header input:focus {
+            border-color: var(--color-forest);
+        }
+
+        .amenity-cat-remove {
+            background: none;
+            border: none;
+            color: var(--color-stone);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0.2rem 0.4rem;
+            line-height: 1;
+            font-family: var(--font-sans);
+        }
+
+        .amenity-cat-remove:hover {
+            color: var(--color-error);
+        }
+
         /* Amenity tags */
         .amenity-tags {
             display: flex;
@@ -983,6 +1041,8 @@
 
         /* Responsive — mobile */
         @media (max-width: 768px) {
+            .field-row { flex-direction: column; gap: 0; }
+            .field-row .field { margin-bottom: 1rem; }
             .card-grid { grid-template-columns: 1fr; }
             .card-grid-3 { grid-template-columns: 1fr; }
             .tabs { padding: 0 1rem; }
@@ -1213,13 +1273,38 @@
                         <label>Description</label>
                         <textarea id="c-mountain-view-desc" rows="3"></textarea>
                     </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Size</label>
+                            <input type="text" id="c-mountain-view-size" placeholder="e.g. 18 m²">
+                        </div>
+                        <div class="field">
+                            <label>Beds</label>
+                            <input type="text" id="c-mountain-view-beds" placeholder="e.g. 1 large double bed">
+                        </div>
+                        <div class="field">
+                            <label>Smoking</label>
+                            <select id="c-mountain-view-smoking">
+                                <option value="no">No smoking</option>
+                                <option value="outdoors">Outdoors only</option>
+                                <option value="yes">Smoking allowed</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="field">
-                        <label>Amenities</label>
+                        <label>Highlight Tags</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Quick feature tags shown on the booking card</div>
                         <div class="amenity-tags" id="amenities-mountain-view"></div>
                         <div class="amenity-add">
-                            <input type="text" id="amenity-input-mountain-view" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('mountain-view');event.preventDefault()}">
+                            <input type="text" id="amenity-input-mountain-view" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addAmenity('mountain-view');event.preventDefault()}">
                             <button class="btn btn-secondary btn-sm" onclick="addAmenity('mountain-view')">Add</button>
                         </div>
+                    </div>
+                    <div class="field">
+                        <label>Amenity Categories</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Detailed amenities grouped by category (e.g. Bathroom, Facilities, View)</div>
+                        <div id="amenity-cats-mountain-view"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addAmenityCategory('mountain-view')" style="margin-top:0.5rem">+ Add Category</button>
                     </div>
                     <div class="field">
                         <label>Photos &amp; Videos</label>
@@ -1244,13 +1329,38 @@
                         <label>Description</label>
                         <textarea id="c-garden-view-desc" rows="3"></textarea>
                     </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Size</label>
+                            <input type="text" id="c-garden-view-size" placeholder="e.g. 18 m²">
+                        </div>
+                        <div class="field">
+                            <label>Beds</label>
+                            <input type="text" id="c-garden-view-beds" placeholder="e.g. 1 large double bed">
+                        </div>
+                        <div class="field">
+                            <label>Smoking</label>
+                            <select id="c-garden-view-smoking">
+                                <option value="no">No smoking</option>
+                                <option value="outdoors">Outdoors only</option>
+                                <option value="yes">Smoking allowed</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="field">
-                        <label>Amenities</label>
+                        <label>Highlight Tags</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Quick feature tags shown on the booking card</div>
                         <div class="amenity-tags" id="amenities-garden-view"></div>
                         <div class="amenity-add">
-                            <input type="text" id="amenity-input-garden-view" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('garden-view');event.preventDefault()}">
+                            <input type="text" id="amenity-input-garden-view" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addAmenity('garden-view');event.preventDefault()}">
                             <button class="btn btn-secondary btn-sm" onclick="addAmenity('garden-view')">Add</button>
                         </div>
+                    </div>
+                    <div class="field">
+                        <label>Amenity Categories</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Detailed amenities grouped by category (e.g. Bathroom, Facilities, View)</div>
+                        <div id="amenity-cats-garden-view"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addAmenityCategory('garden-view')" style="margin-top:0.5rem">+ Add Category</button>
                     </div>
                     <div class="field">
                         <label>Photos &amp; Videos</label>
@@ -1275,13 +1385,38 @@
                         <label>Description</label>
                         <textarea id="c-suite-desc" rows="3"></textarea>
                     </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Size</label>
+                            <input type="text" id="c-suite-size" placeholder="e.g. 28 m²">
+                        </div>
+                        <div class="field">
+                            <label>Beds</label>
+                            <input type="text" id="c-suite-beds" placeholder="e.g. 1 king bed + sofa bed">
+                        </div>
+                        <div class="field">
+                            <label>Smoking</label>
+                            <select id="c-suite-smoking">
+                                <option value="no">No smoking</option>
+                                <option value="outdoors">Outdoors only</option>
+                                <option value="yes">Smoking allowed</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="field">
-                        <label>Amenities</label>
+                        <label>Highlight Tags</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Quick feature tags shown on the booking card</div>
                         <div class="amenity-tags" id="amenities-suite"></div>
                         <div class="amenity-add">
-                            <input type="text" id="amenity-input-suite" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('suite');event.preventDefault()}">
+                            <input type="text" id="amenity-input-suite" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addAmenity('suite');event.preventDefault()}">
                             <button class="btn btn-secondary btn-sm" onclick="addAmenity('suite')">Add</button>
                         </div>
+                    </div>
+                    <div class="field">
+                        <label>Amenity Categories</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Detailed amenities grouped by category (e.g. Bathroom, Facilities, View)</div>
+                        <div id="amenity-cats-suite"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addAmenityCategory('suite')" style="margin-top:0.5rem">+ Add Category</button>
                     </div>
                     <div class="field">
                         <label>Photos &amp; Videos</label>
@@ -1312,13 +1447,38 @@
                         <label>Description</label>
                         <textarea id="c-samavas-desc" rows="3"></textarea>
                     </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Size</label>
+                            <input type="text" id="c-samavas-size" placeholder="e.g. 1000 m²">
+                        </div>
+                        <div class="field">
+                            <label>Beds / Setup</label>
+                            <input type="text" id="c-samavas-beds" placeholder="e.g. BYO tent / swag">
+                        </div>
+                        <div class="field">
+                            <label>Smoking</label>
+                            <select id="c-samavas-smoking">
+                                <option value="no">No smoking</option>
+                                <option value="outdoors">Outdoors only</option>
+                                <option value="yes">Smoking allowed</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="field">
-                        <label>Amenities</label>
+                        <label>Highlight Tags</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Quick feature tags shown on the booking card</div>
                         <div class="amenity-tags" id="amenities-samavas"></div>
                         <div class="amenity-add">
-                            <input type="text" id="amenity-input-samavas" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('samavas');event.preventDefault()}">
+                            <input type="text" id="amenity-input-samavas" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addAmenity('samavas');event.preventDefault()}">
                             <button class="btn btn-secondary btn-sm" onclick="addAmenity('samavas')">Add</button>
                         </div>
+                    </div>
+                    <div class="field">
+                        <label>Amenity Categories</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Detailed amenities grouped by category (e.g. Facilities, View)</div>
+                        <div id="amenity-cats-samavas"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addAmenityCategory('samavas')" style="margin-top:0.5rem">+ Add Category</button>
                     </div>
                     <div class="field">
                         <label>Photos &amp; Videos</label>
@@ -1343,13 +1503,38 @@
                         <label>Description</label>
                         <textarea id="c-chhaya-desc" rows="3"></textarea>
                     </div>
+                    <div class="field-row">
+                        <div class="field">
+                            <label>Size</label>
+                            <input type="text" id="c-chhaya-size" placeholder="e.g. 500 m²">
+                        </div>
+                        <div class="field">
+                            <label>Beds / Setup</label>
+                            <input type="text" id="c-chhaya-beds" placeholder="e.g. BYO tent / swag">
+                        </div>
+                        <div class="field">
+                            <label>Smoking</label>
+                            <select id="c-chhaya-smoking">
+                                <option value="no">No smoking</option>
+                                <option value="outdoors">Outdoors only</option>
+                                <option value="yes">Smoking allowed</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="field">
-                        <label>Amenities</label>
+                        <label>Highlight Tags</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Quick feature tags shown on the booking card</div>
                         <div class="amenity-tags" id="amenities-chhaya"></div>
                         <div class="amenity-add">
-                            <input type="text" id="amenity-input-chhaya" placeholder="Add amenity..." onkeydown="if(event.key==='Enter'){addAmenity('chhaya');event.preventDefault()}">
+                            <input type="text" id="amenity-input-chhaya" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addAmenity('chhaya');event.preventDefault()}">
                             <button class="btn btn-secondary btn-sm" onclick="addAmenity('chhaya')">Add</button>
                         </div>
+                    </div>
+                    <div class="field">
+                        <label>Amenity Categories</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Detailed amenities grouped by category (e.g. Facilities, View)</div>
+                        <div id="amenity-cats-chhaya"></div>
+                        <button class="btn btn-secondary btn-sm" onclick="addAmenityCategory('chhaya')" style="margin-top:0.5rem">+ Add Category</button>
                     </div>
                     <div class="field">
                         <label>Photos &amp; Videos</label>
@@ -1943,23 +2128,18 @@
         document.getElementById('p-ota-markup').value = c.otaMarkup ?? 15;
         updateOtaComparison();
 
-        // Content — Campsites
-        document.getElementById('c-samavas-type').value = c.samavas?.type || '';
-        document.getElementById('c-samavas-desc').value = c.samavas?.description || '';
-        document.getElementById('c-chhaya-type').value = c.chhaya?.type || '';
-        document.getElementById('c-chhaya-desc').value = c.chhaya?.description || '';
-
-        // Content — Rooms
-        document.getElementById('c-mountain-view-type').value = c['mountain-view']?.type || '';
-        document.getElementById('c-mountain-view-desc').value = c['mountain-view']?.description || '';
-        document.getElementById('c-garden-view-type').value = c['garden-view']?.type || '';
-        document.getElementById('c-garden-view-desc').value = c['garden-view']?.description || '';
-        document.getElementById('c-suite-type').value = c['suite']?.type || '';
-        document.getElementById('c-suite-desc').value = c['suite']?.description || '';
-
-        // Amenities
+        // Content — all sites
         ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].forEach(function(site) {
+            var key = site;
+            var cfg = c[key] || {};
+            document.getElementById('c-' + site + '-type').value = cfg.type || '';
+            document.getElementById('c-' + site + '-desc').value = cfg.description || '';
+            document.getElementById('c-' + site + '-size').value = cfg.size || '';
+            document.getElementById('c-' + site + '-beds').value = cfg.beds || '';
+            var smokingEl = document.getElementById('c-' + site + '-smoking');
+            if (smokingEl) smokingEl.value = cfg.smoking || 'no';
             renderAmenities(site);
+            renderAmenityCategories(site);
         });
 
         // Promo codes
@@ -1975,7 +2155,11 @@
                 name: 'SAMAVAS',
                 type: document.getElementById('c-samavas-type').value,
                 description: document.getElementById('c-samavas-desc').value,
+                size: document.getElementById('c-samavas-size').value,
+                beds: document.getElementById('c-samavas-beds').value,
+                smoking: document.getElementById('c-samavas-smoking').value,
                 amenities: (siteConfig.samavas && siteConfig.samavas.amenities) || [],
+                amenityCategories: (siteConfig.samavas && siteConfig.samavas.amenityCategories) || [],
                 basePrice: parseFloat(document.getElementById('p-samavas-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-samavas-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-samavas-max').value) || 20,
@@ -1984,7 +2168,11 @@
                 name: 'CHHAYA',
                 type: document.getElementById('c-chhaya-type').value,
                 description: document.getElementById('c-chhaya-desc').value,
+                size: document.getElementById('c-chhaya-size').value,
+                beds: document.getElementById('c-chhaya-beds').value,
+                smoking: document.getElementById('c-chhaya-smoking').value,
                 amenities: (siteConfig.chhaya && siteConfig.chhaya.amenities) || [],
+                amenityCategories: (siteConfig.chhaya && siteConfig.chhaya.amenityCategories) || [],
                 basePrice: parseFloat(document.getElementById('p-chhaya-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-chhaya-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-chhaya-max').value) || 20,
@@ -1993,7 +2181,11 @@
                 name: 'MOUNTAIN VIEW ROOM',
                 type: document.getElementById('c-mountain-view-type').value,
                 description: document.getElementById('c-mountain-view-desc').value,
+                size: document.getElementById('c-mountain-view-size').value,
+                beds: document.getElementById('c-mountain-view-beds').value,
+                smoking: document.getElementById('c-mountain-view-smoking').value,
                 amenities: (siteConfig['mountain-view'] && siteConfig['mountain-view'].amenities) || [],
+                amenityCategories: (siteConfig['mountain-view'] && siteConfig['mountain-view'].amenityCategories) || [],
                 basePrice: parseFloat(document.getElementById('p-mountain-view-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-mountain-view-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-mountain-view-max').value) || 4,
@@ -2002,7 +2194,11 @@
                 name: 'GARDEN VIEW ROOM',
                 type: document.getElementById('c-garden-view-type').value,
                 description: document.getElementById('c-garden-view-desc').value,
+                size: document.getElementById('c-garden-view-size').value,
+                beds: document.getElementById('c-garden-view-beds').value,
+                smoking: document.getElementById('c-garden-view-smoking').value,
                 amenities: (siteConfig['garden-view'] && siteConfig['garden-view'].amenities) || [],
+                amenityCategories: (siteConfig['garden-view'] && siteConfig['garden-view'].amenityCategories) || [],
                 basePrice: parseFloat(document.getElementById('p-garden-view-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-garden-view-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-garden-view-max').value) || 4,
@@ -2011,7 +2207,11 @@
                 name: 'SUITE WITH GARDEN VIEW',
                 type: document.getElementById('c-suite-type').value,
                 description: document.getElementById('c-suite-desc').value,
+                size: document.getElementById('c-suite-size').value,
+                beds: document.getElementById('c-suite-beds').value,
+                smoking: document.getElementById('c-suite-smoking').value,
                 amenities: (siteConfig['suite'] && siteConfig['suite'].amenities) || [],
+                amenityCategories: (siteConfig['suite'] && siteConfig['suite'].amenityCategories) || [],
                 basePrice: parseFloat(document.getElementById('p-suite-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-suite-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-suite-max').value) || 4,
@@ -2346,6 +2546,80 @@
         var div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
+    }
+
+    // --- Amenity Categories ---
+    function renderAmenityCategories(site) {
+        var container = document.getElementById('amenity-cats-' + site);
+        if (!container) return;
+        var cats = (siteConfig[site] && siteConfig[site].amenityCategories) || [];
+        var html = '';
+        cats.forEach(function(cat, ci) {
+            html += '<div class="amenity-cat-block">';
+            html += '<div class="amenity-cat-header">';
+            html += '<input type="text" value="' + escapeHtml(cat.name) + '" onchange="updateCategoryName(\'' + site + '\',' + ci + ',this.value)" placeholder="Category name">';
+            html += '<button class="amenity-cat-remove" onclick="removeAmenityCategory(\'' + site + '\',' + ci + ')" title="Remove category">&times;</button>';
+            html += '</div>';
+            html += '<div class="amenity-tags">';
+            (cat.items || []).forEach(function(item, ii) {
+                html += '<span class="amenity-tag">' + escapeHtml(item) +
+                    '<button class="amenity-remove" onclick="removeCategoryItem(\'' + site + '\',' + ci + ',' + ii + ')" title="Remove">&times;</button></span>';
+            });
+            html += '</div>';
+            html += '<div class="amenity-add" style="margin-top:0.35rem">';
+            html += '<input type="text" id="cat-item-input-' + site + '-' + ci + '" placeholder="Add item..." onkeydown="if(event.key===\'Enter\'){addCategoryItem(\'' + site + '\',' + ci + ');event.preventDefault()}">';
+            html += '<button class="btn btn-secondary btn-sm" onclick="addCategoryItem(\'' + site + '\',' + ci + ')">Add</button>';
+            html += '</div>';
+            html += '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    function addAmenityCategory(site) {
+        if (!siteConfig[site]) siteConfig[site] = {};
+        if (!siteConfig[site].amenityCategories) siteConfig[site].amenityCategories = [];
+        siteConfig[site].amenityCategories.push({ name: '', items: [] });
+        renderAmenityCategories(site);
+        // Focus the new category name input
+        var cats = siteConfig[site].amenityCategories;
+        var input = document.getElementById('cat-item-input-' + site + '-' + (cats.length - 1));
+        var nameInput = input ? input.closest('.amenity-cat-block').querySelector('.amenity-cat-header input') : null;
+        if (nameInput) nameInput.focus();
+    }
+
+    function removeAmenityCategory(site, catIndex) {
+        if (siteConfig[site] && siteConfig[site].amenityCategories) {
+            siteConfig[site].amenityCategories.splice(catIndex, 1);
+            renderAmenityCategories(site);
+        }
+    }
+
+    function updateCategoryName(site, catIndex, name) {
+        if (siteConfig[site] && siteConfig[site].amenityCategories && siteConfig[site].amenityCategories[catIndex]) {
+            siteConfig[site].amenityCategories[catIndex].name = name;
+        }
+    }
+
+    function addCategoryItem(site, catIndex) {
+        var input = document.getElementById('cat-item-input-' + site + '-' + catIndex);
+        if (!input) return;
+        var text = input.value.trim();
+        if (!text) return;
+        if (siteConfig[site] && siteConfig[site].amenityCategories && siteConfig[site].amenityCategories[catIndex]) {
+            var items = siteConfig[site].amenityCategories[catIndex].items;
+            if (items.indexOf(text) === -1) {
+                items.push(text);
+            }
+            input.value = '';
+            renderAmenityCategories(site);
+        }
+    }
+
+    function removeCategoryItem(site, catIndex, itemIndex) {
+        if (siteConfig[site] && siteConfig[site].amenityCategories && siteConfig[site].amenityCategories[catIndex]) {
+            siteConfig[site].amenityCategories[catIndex].items.splice(itemIndex, 1);
+            renderAmenityCategories(site);
+        }
     }
 
     function addRule() {
