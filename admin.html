@@ -1610,6 +1610,36 @@
                     <button class="btn btn-primary" onclick="saveConfig('rules')">Save Rules</button>
                     <span class="save-msg" id="rules-msg"></span>
                 </div>
+
+                <!-- Policies & Terms section -->
+                <hr class="section-divider">
+                <div class="section-heading">Policies &amp; Terms</div>
+                <div class="section-desc">Edit the terms and conditions shown on the booking page. Guests must agree before completing their booking.</div>
+
+                <div class="card">
+                    <div class="card-title">Terms &amp; Conditions</div>
+                    <div class="field">
+                        <label>Check-in / Check-out times</label>
+                        <div class="field-row">
+                            <div class="field">
+                                <input type="text" id="c-checkin-time" placeholder="e.g. 3:00 PM">
+                            </div>
+                            <div class="field">
+                                <input type="text" id="c-checkout-time" placeholder="e.g. 10:00 AM">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Terms &amp; Conditions text</label>
+                        <div class="hint" style="margin-bottom:0.4rem">Full T&amp;C displayed to guests. Use blank lines to separate paragraphs. Section headings will be auto-formatted if they start with a number and period (e.g. "1. Booking and Payment").</div>
+                        <textarea id="c-terms" rows="18" style="font-size:0.85rem;line-height:1.6"></textarea>
+                    </div>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('policies')">Save Policies</button>
+                    <span class="save-msg" id="policies-msg"></span>
+                </div>
             </div>
 
             <!-- Pricing & Promos sub-panel -->
@@ -2188,6 +2218,11 @@
 
         // Rules
         renderRules();
+
+        // Policies
+        document.getElementById('c-checkin-time').value = c.checkinTime || '3:00 PM';
+        document.getElementById('c-checkout-time').value = c.checkoutTime || '10:00 AM';
+        document.getElementById('c-terms').value = c.termsAndConditions || '';
     }
 
     function gatherConfig() {
@@ -2260,6 +2295,9 @@
             currency: document.getElementById('p-currency').value,
             promoCodes: siteConfig.promoCodes || {},
             rules: siteConfig.rules || [],
+            checkinTime: document.getElementById('c-checkin-time').value || '3:00 PM',
+            checkoutTime: document.getElementById('c-checkout-time').value || '10:00 AM',
+            termsAndConditions: document.getElementById('c-terms').value || '',
             weekendMarkup: parseInt(document.getElementById('p-weekend-markup').value) || 0,
             holidayMarkup: parseInt(document.getElementById('p-holiday-markup').value) || 0,
             cancellationDays: parseInt(document.getElementById('p-cancellation-days').value) || 14,
