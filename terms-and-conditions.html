@@ -3,28 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us — Ahana Hillside</title>
-    <meta name="description" content="Learn about Ahana Hillside — a peaceful hillside retreat on the Bruce Highway, Aloomba, in the Cairns tropical rainforest of North Queensland.">
+    <title>Terms &amp; Conditions — Ahana Hillside</title>
+    <meta name="description" content="Terms and conditions, cancellation policy, and booking terms for Ahana Hillside campsite and rooms in Aloomba, Queensland.">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="About Us — Ahana Hillside">
-    <meta property="og:description" content="A peaceful hillside retreat on the Bruce Highway, Aloomba, in the Cairns tropical rainforest.">
-    <meta property="og:url" content="https://ahanahillside.com/about">
+    <meta property="og:title" content="Terms & Conditions — Ahana Hillside">
+    <meta property="og:description" content="Terms and conditions, cancellation policy, and booking terms for Ahana Hillside.">
+    <meta property="og:url" content="https://ahanahillside.com/terms-and-conditions">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg">
     <meta property="og:site_name" content="Ahana Hillside">
     <meta property="og:locale" content="en_AU">
 
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="About Us — Ahana Hillside">
-    <meta name="twitter:description" content="A peaceful hillside retreat on the Bruce Highway, Aloomba, in the Cairns tropical rainforest.">
-    <meta name="twitter:image" content="https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg">
-
     <!-- SEO -->
-    <link rel="canonical" href="https://ahanahillside.com/about">
-    <meta name="geo.region" content="AU-QLD">
-    <meta name="geo.placename" content="Aloomba, Queensland">
+    <link rel="canonical" href="https://ahanahillside.com/terms-and-conditions">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,14 +53,10 @@
             filter: brightness(0) saturate(100%) invert(20%) sepia(9%) saturate(2184%) hue-rotate(81deg) brightness(96%) contrast(91%);
         }
         @media (max-width: 768px) {
-            .header-logo-img {
-                height: 50px;
-            }
+            .header-logo-img { height: 50px; }
         }
         @media (max-width: 480px) {
-            .header-logo-img {
-                height: 40px;
-            }
+            .header-logo-img { height: 40px; }
         }
         .back-link {
             display: inline-block;
@@ -106,82 +93,43 @@
             margin: 1rem auto 0;
         }
 
-        .about-content {
+        .tc-content {
             max-width: 720px;
             margin: 0 auto;
             padding: 1rem 2rem 4rem;
         }
 
-        .about-section {
-            margin-bottom: 2.5rem;
-        }
-
-        .about-section h2 {
+        .tc-content h4 {
             font-family: var(--font-serif);
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 500;
             color: var(--color-forest);
-            margin-bottom: 0.75rem;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
         }
 
-        .about-section p {
-            font-size: 0.9rem;
+        .tc-content h4:first-child { margin-top: 0; }
+
+        .tc-content p {
+            font-size: 0.85rem;
             line-height: 1.8;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             color: var(--color-charcoal);
         }
 
-        .values-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-            margin-top: 1rem;
-        }
-
-        .value-card {
-            background: #fff;
-            border: 1px solid var(--color-light-stone);
-            padding: 1.25rem;
-        }
-
-        .value-card h3 {
-            font-family: var(--font-serif);
-            font-size: 1.15rem;
-            font-weight: 500;
-            color: var(--color-forest);
-            margin-bottom: 0.4rem;
-        }
-
-        .value-card p {
-            font-size: 0.8rem;
-            line-height: 1.6;
-            color: var(--color-stone);
-            margin: 0;
-        }
-
-        .cta-row {
+        .tc-loading {
             text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            color: var(--color-stone);
+        }
+
+        .last-updated {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            font-style: italic;
             margin-top: 2rem;
-        }
-
-        .cta-row a {
-            display: inline-block;
-            padding: 0.75rem 2rem;
-            font-family: var(--font-sans);
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: var(--color-cream);
-            background-color: var(--color-forest);
-            border: 1px solid var(--color-forest);
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .cta-row a:hover {
-            background: transparent;
-            color: var(--color-forest);
+            text-align: center;
         }
 
         .site-footer {
@@ -218,8 +166,7 @@
         .menu-footer-nav a:hover { color: var(--color-forest); }
 
         @media (max-width: 768px) {
-            .values-grid { grid-template-columns: 1fr; }
-            .about-content { padding: 1rem 1.25rem 3rem; }
+            .tc-content { padding: 1rem 1.25rem 3rem; }
         }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
@@ -251,49 +198,13 @@
     </div>
 
     <div class="page-intro">
-        <h1>About Us</h1>
-        <p>Our story and what makes Ahana special</p>
+        <h1>Terms &amp; Conditions</h1>
+        <p>Booking terms, cancellation policy, and guest responsibilities</p>
         <div class="divider"></div>
     </div>
 
-    <div class="about-content">
-        <div class="about-section">
-            <h2>Our Story</h2>
-            <p>Ahana Hillside is a private retreat nestled in the lush tropical rainforest hills just outside Cairns, in Tropical North Queensland. What began as a love for the land has grown into a welcoming space where travellers can disconnect from the everyday and reconnect with nature.</p>
-            <p>Set on a quiet hillside surrounded by native bushland, our property offers a peaceful escape with sweeping views and the sounds of the rainforest. Whether you're looking for a budget-friendly stay or a unique camping experience, Ahana Hillside is your base to explore everything the region has to offer.</p>
-        </div>
-
-        <div class="about-section">
-            <h2>The Experience</h2>
-            <p>Wake up to birdsong and morning mist rolling through the hills. Spend your days exploring the Great Barrier Reef, Daintree Rainforest, or the Atherton Tablelands, and return to the tranquillity of your hillside retreat.</p>
-            <p>Our eco-friendly campsites are designed to sit gently on the land, offering a genuine connection to the tropical environment while providing the essentials for a comfortable stay.</p>
-        </div>
-
-        <div class="about-section">
-            <h2>What We Value</h2>
-            <div class="values-grid">
-                <div class="value-card">
-                    <h3>Simplicity</h3>
-                    <p>No frills, no fuss. Just nature, fresh air, and a good night's rest under the stars.</p>
-                </div>
-                <div class="value-card">
-                    <h3>Sustainability</h3>
-                    <p>We tread lightly on the land, using locally sourced materials and eco-friendly practices.</p>
-                </div>
-                <div class="value-card">
-                    <h3>Community</h3>
-                    <p>Travellers from all over the world share stories around the campfire here.</p>
-                </div>
-                <div class="value-card">
-                    <h3>Privacy</h3>
-                    <p>Spacious, well-separated sites so you can enjoy your own slice of the hillside.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="cta-row">
-            <a href="/book">Book Your Stay</a>
-        </div>
+    <div class="tc-content" id="tc-body">
+        <div class="tc-loading">Loading terms and conditions...</div>
     </div>
 
     <footer class="site-footer">
@@ -308,6 +219,41 @@
         document.querySelector('.menu-overlay').classList.toggle('open');
         document.querySelector('.menu-panel').classList.toggle('open');
     }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function formatTcText(text) {
+        if (!text) return '';
+        var html = '';
+        var lines = text.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line) continue;
+            if (/^\d+\.\s/.test(line)) {
+                html += '<h4>' + escapeHtml(line) + '</h4>';
+            } else {
+                html += '<p>' + escapeHtml(line) + '</p>';
+            }
+        }
+        html += '<div class="last-updated">Last updated: February 2026</div>';
+        return html;
+    }
+
+    var FALLBACK_TC = '1. Booking and Payment\n\nAll bookings must be made through our official website, Booking.com, or other authorised platforms.\nFull payment is required at the time of booking unless otherwise stated.\nPrices are listed in Australian Dollars (AUD) and include GST where applicable.\nA valid credit or debit card is required to secure your booking.\nAhana Hillside reserves the right to cancel any booking suspected of being fraudulent.\n\n2. Cancellation and Refund Policy\n\nWe offer two rate plans when booking:\n\nFlexible Rate \u2014 Guests may cancel free of charge up to 14 days before the scheduled check-in date. Cancellations made less than 14 days before check-in are non-refundable.\n\nNon-Refundable Rate \u2014 A discounted rate is offered in exchange for a non-refundable commitment. Bookings made at the non-refundable rate cannot be cancelled, amended, or refunded under any circumstances.\n\nThe cancellation window and non-refundable discount percentage may vary and will be displayed at the time of booking. Refunds for eligible cancellations will be processed to the original payment method within 5\u201310 business days.\n\n3. Weather-Related Cancellations\n\nIf severe weather conditions (e.g., cyclones, floods, extreme storms) make it unsafe to stay at the property, guests may reschedule their booking at no extra cost, subject to availability.\nAhana Hillside reserves the right to close the campsite due to weather conditions for the safety of guests.\nRefunds will not be issued for weather-related cancellations, but credit towards a future booking will be offered.\n\n4. Check-in and Check-out\n\nCheck-in time: 3:00 PM. Check-out time: 10:00 AM.\nEarly check-in and late check-out may be available upon request, subject to availability.\nGuests must vacate their campsite or room by the check-out time. Additional charges may apply for late departures.\n\n5. Guest Responsibilities\n\nGuests are responsible for keeping their campsite/room clean and tidy.\nAny damage to property, furniture, or equipment will be charged to the guest.\nExcessive noise is not permitted between 10:00 PM and 7:00 AM.\nGuests must follow all fire safety rules, including the use of designated fire pits only.\nAll rubbish must be disposed of properly; please follow our waste and recycling guidelines.\n\n6. Liability\n\nAhana Hillside is not responsible for loss, theft, or damage to personal belongings.\nGuests use all facilities at their own risk.\nBy staying at Ahana Hillside, guests acknowledge and accept the inherent risks of outdoor and nature-based accommodation.\n\n7. Smoking and Alcohol\n\nSmoking is only permitted in designated areas. Breaching this may result in eviction without refund.\nAlcohol is permitted but must be consumed responsibly. Ahana Hillside reserves the right to remove guests who cause disturbances due to intoxication.\n\n8. Pets\n\nPets are not allowed on the property unless explicitly stated otherwise.\nService animals are welcome with prior notification.\n\n9. Use of Facilities\n\nAll guests must follow the posted rules for use of shared amenities, including bathrooms, BBQ areas, and fire pits.\nAhana Hillside reserves the right to restrict access to any facility for safety or maintenance reasons.\n\n10. Amendments to Terms\n\nAhana Hillside reserves the right to update these terms and conditions at any time. Any changes will be communicated on our website.';
+
+    (async function() {
+        var el = document.getElementById('tc-body');
+        try {
+            var res = await fetch('https://ahana-ical-proxy.ahanahillside.workers.dev/config');
+            var config = await res.json();
+            var text = config.termsAndConditions || FALLBACK_TC;
+            el.innerHTML = formatTcText(text);
+        } catch (e) {
+            el.innerHTML = formatTcText(FALLBACK_TC);
+        }
+    })();
     </script>
 </body>
 </html>
