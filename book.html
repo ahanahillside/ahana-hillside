@@ -3642,7 +3642,6 @@
             selectedSite = site;
             // Reset all addon quantities
             for (var key in addons) { addons[key].qty = 0; }
-            selectPolicy('flexible');
 
             document.getElementById('addons-site-name').textContent = site.toUpperCase();
             renderAddonsUI();
@@ -3830,7 +3829,11 @@
                 addonsHtml += '<div class="summary-line"><span>' + addons[ak].name + ' x ' + addons[ak].qty + '</span><span>' + sym + (addons[ak].qty * addons[ak].price).toFixed(2) + '</span></div>';
             }}
 
-            addonsHtml += '<div class="summary-line total"><span>Total</span><span>' + sym + (baseCost + extraCost + addonsCost).toFixed(2) + '</span></div>';
+            if (nonRefundableDiscount > 0) {
+                addonsHtml += '<div class="summary-line discount"><span>Non-refundable discount (' + (siteConfig.nonRefundableDiscount || 10) + '%)</span><span>-' + sym + nonRefundableDiscount.toFixed(2) + '</span></div>';
+            }
+
+            addonsHtml += '<div class="summary-line total"><span>Total</span><span>' + sym + total.toFixed(2) + '</span></div>';
 
             document.getElementById('addons-summary-content').innerHTML = addonsHtml;
 
