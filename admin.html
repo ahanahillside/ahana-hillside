@@ -100,7 +100,7 @@
         .dash-header {
             background: var(--color-forest);
             color: var(--color-cream);
-            padding: 1rem 2rem;
+            padding: 1rem 3rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -133,7 +133,7 @@
         .tabs {
             display: flex;
             border-bottom: 1px solid var(--color-light-stone);
-            padding: 0 2rem;
+            padding: 0 3rem;
             background: #fff;
             overflow-x: auto;
         }
@@ -163,7 +163,7 @@
         /* Sub-tabs (inside Campsites) */
         .sub-tabs {
             display: none;
-            padding: 0 2rem;
+            padding: 0 3rem;
             background: #fff;
             border-bottom: 1px solid var(--color-light-stone);
             overflow-x: auto;
@@ -194,9 +194,9 @@
 
         /* Tab content */
         .tab-content {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 2rem 3rem;
         }
 
         .tab-panel { display: none; }
@@ -254,7 +254,7 @@
         .card {
             background: #fff;
             border: 1px solid var(--color-light-stone);
-            padding: 1.5rem;
+            padding: 1.5rem 1.75rem;
         }
 
         .card-title {
@@ -288,7 +288,7 @@
         .field select,
         .field textarea {
             width: 100%;
-            padding: 0.55rem 0.65rem;
+            padding: 0.6rem 0.75rem;
             border: 1px solid var(--color-light-stone);
             background: #fff;
             font-family: var(--font-sans);
@@ -489,7 +489,7 @@
         .booking-card {
             background: #fff;
             border: 1px solid var(--color-light-stone);
-            padding: 1.25rem;
+            padding: 1.5rem 1.75rem;
             margin-bottom: 0.75rem;
         }
 
@@ -528,8 +528,8 @@
 
         .booking-details {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem 1.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.6rem 2rem;
             margin-bottom: 0.75rem;
         }
 
@@ -584,7 +584,7 @@
         .message-card {
             background: #fff;
             border: 1px solid var(--color-light-stone);
-            padding: 1.25rem;
+            padding: 1.5rem 1.75rem;
             margin-bottom: 0.75rem;
             position: relative;
         }
@@ -785,8 +785,8 @@
         /* Image grid */
         .image-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
         }
 
         .img-thumb {
@@ -901,7 +901,18 @@
             grid-column: 1 / -1;
         }
 
-        /* Responsive */
+        /* Responsive — tablet */
+        @media (max-width: 1024px) {
+            .dash-header { padding: 1rem 2rem; }
+            .tabs { padding: 0 2rem; }
+            .sub-tabs { padding: 0 2rem; }
+            .tab-content { padding: 2rem 2rem; }
+            .card-grid-3 { grid-template-columns: 1fr 1fr; }
+            .booking-details { grid-template-columns: 1fr 1fr; }
+            .image-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        /* Responsive — mobile */
         @media (max-width: 768px) {
             .card-grid { grid-template-columns: 1fr; }
             .card-grid-3 { grid-template-columns: 1fr; }
@@ -910,6 +921,10 @@
             .tab-content { padding: 1.5rem 1rem; }
             .tab-btn { padding: 0.75rem 1rem; font-size: 0.8rem; }
             .sub-tab-btn { padding: 0.55rem 0.85rem; font-size: 0.75rem; }
+
+            .dash-header {
+                padding: 1rem 1rem;
+            }
 
             .dash-header .logout-btn {
                 padding: 0.5rem 1rem;
@@ -1101,7 +1116,7 @@
                 <div class="section-heading">Camping Experience Background</div>
                 <div class="section-desc">Replace the background of the "Slow Down. Breathe. Reconnect." section. Accepts images (5MB) or videos (50MB). The default SVG illustration is used when no custom background is set.</div>
 
-                <div class="card" style="max-width:700px">
+                <div class="card" style="max-width:900px">
                     <div class="card-title">Section Background</div>
                     <div id="campsite-bg-preview" style="margin-bottom:0.75rem"></div>
                     <div class="upload-zone" id="upload-zone-campsitebg" onclick="document.getElementById('file-campsitebg').click()">
@@ -1439,7 +1454,7 @@
             <div class="panel-title">Gallery</div>
             <div class="section-desc">Upload images and videos to your public gallery page. Max 50 items. Images: 5MB (JPEG, PNG, WebP). Videos: 50MB (MP4, WebM, MOV).</div>
 
-            <div class="card" style="max-width:700px">
+            <div class="card" style="max-width:900px">
                 <div class="card-title">Upload Media</div>
                 <div class="upload-zone" id="upload-zone-gallery" onclick="document.getElementById('file-gallery').click()">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
@@ -1449,12 +1464,12 @@
                 <div class="upload-progress" id="progress-gallery"></div>
             </div>
 
-            <div class="card" style="max-width:700px">
+            <div class="card" style="max-width:900px">
                 <div class="card-title">Gallery Items <span id="gallery-count" style="font-weight:400;color:var(--color-stone);font-size:0.8rem"></span></div>
                 <div class="image-grid" id="gallery-grid" style="grid-template-columns:repeat(3,1fr)"></div>
             </div>
 
-            <div class="card" style="max-width:700px;margin-top:1.5rem">
+            <div class="card" style="max-width:900px;margin-top:1.5rem">
                 <div class="card-title">Homepage Background</div>
                 <div class="section-desc" style="margin-bottom:0.75rem">Replace the homepage hero background. Accepts images (5MB) or videos (50MB). Videos will autoplay muted and loop.</div>
                 <div id="homepage-bg-preview" style="margin-bottom:0.75rem"></div>
@@ -1466,7 +1481,7 @@
                 <div class="upload-progress" id="progress-homebg"></div>
             </div>
 
-            <div class="card" style="max-width:700px;margin-top:1.5rem">
+            <div class="card" style="max-width:900px;margin-top:1.5rem">
                 <div class="card-title">Kitchen Image</div>
                 <div class="section-desc" style="margin-bottom:0.75rem">Upload a photo of your on-site kitchen for the Local Essentials page. Accepts images (5MB) or videos (50MB).</div>
                 <div class="explore-slot-card" data-slot="kitchen">
@@ -1483,7 +1498,7 @@
                 </div>
             </div>
 
-            <div class="card" style="max-width:700px;margin-top:1.5rem">
+            <div class="card" style="max-width:900px;margin-top:1.5rem">
                 <div class="card-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="toggleExploreSection()">
                     Explore Page &mdash; Section Images
                     <svg id="explore-collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s ease;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1594,7 +1609,7 @@
             <div class="panel-title">Settings</div>
             <div class="panel-desc">Manage payments, email notifications, and dashboard password.</div>
 
-            <div class="card" style="max-width:500px;margin-bottom:1.5rem">
+            <div class="card" style="max-width:650px;margin-bottom:1.5rem">
                 <div class="card-title">Email Notifications</div>
                 <p style="font-size:0.8rem;color:var(--color-stone);margin-bottom:1rem;line-height:1.5">
                     Receive an email when a new booking is submitted. Uses <a href="https://resend.com" target="_blank" style="color:var(--color-forest)">Resend</a> to send emails (free tier: 100 emails/day).
@@ -1631,7 +1646,7 @@
                 </div>
             </div>
 
-            <div class="card" style="max-width:500px;margin-bottom:1.5rem">
+            <div class="card" style="max-width:650px;margin-bottom:1.5rem">
                 <div class="card-title">Stripe Payments</div>
                 <p style="font-size:0.8rem;color:var(--color-stone);margin-bottom:1rem;line-height:1.5">
                     Collect payments when guests book. Uses <a href="https://stripe.com" target="_blank" style="color:var(--color-forest)">Stripe</a> Checkout — guests are redirected to a secure Stripe-hosted payment page.
@@ -1666,7 +1681,7 @@
                 </div>
             </div>
 
-            <div class="card" style="max-width:500px">
+            <div class="card" style="max-width:650px">
                 <div class="card-title">Change Password</div>
                 <div class="field">
                     <label>New password</label>
