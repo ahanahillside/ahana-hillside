@@ -1,3 +1,6 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/campsites", "destination": "/book", "permanent": true }
+  ]
 }
