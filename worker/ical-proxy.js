@@ -33,6 +33,30 @@ const DEFAULT_CONFIG = {
     extraGuestFee: 10,
     maxGuests: 20,
   },
+  'mountain-view': {
+    name: 'MOUNTAIN VIEW ROOM',
+    type: 'Private Room · Sleeps 2 · Mountain Views',
+    description: 'Wake up to stunning mountain views from this cosy private room. Perfect for couples or solo travellers looking for a budget-friendly stay.',
+    basePrice: 85,
+    extraGuestFee: 25,
+    maxGuests: 2,
+  },
+  'garden-view': {
+    name: 'GARDEN VIEW ROOM',
+    type: 'Private Room · Sleeps 2 · Garden Views',
+    description: 'A peaceful room overlooking the tropical garden. Surrounded by lush greenery, this room offers a tranquil retreat.',
+    basePrice: 75,
+    extraGuestFee: 20,
+    maxGuests: 2,
+  },
+  'suite': {
+    name: 'SUITE WITH GARDEN VIEW',
+    type: 'Private Suite · Sleeps 4 · Garden Views',
+    description: 'Our most spacious room option — a private suite with separate living area and garden views. Ideal for small families.',
+    basePrice: 110,
+    extraGuestFee: 30,
+    maxGuests: 4,
+  },
   currency: 'AUD',
   promoCodes: {},
   rules: [
@@ -278,7 +302,7 @@ async function createCheckoutSession(secretKey, booking, siteUrl) {
   params.append('line_items[0][quantity]', '1');
   params.append('mode', 'payment');
   params.append('success_url', siteUrl + '/booking-confirmed');
-  params.append('cancel_url', siteUrl + '/campsites');
+  params.append('cancel_url', siteUrl + '/book');
   params.append('customer_email', booking.email);
   params.append('metadata[booking_id]', booking.id);
 
@@ -474,7 +498,7 @@ export default {
         const site = formData.get('site');
         const file = formData.get('file');
 
-        if (!site || !['samavas', 'chhaya'].includes(site)) {
+        if (!site || !['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].includes(site)) {
           return jsonResponse({ error: 'Invalid site' }, 400, origin);
         }
         if (!file || !(file instanceof File)) {
@@ -528,7 +552,7 @@ export default {
     }
 
     // --- GET /images/list/:site — public, returns image list for a site ---
-    const listMatch = path.match(/^\/images\/list\/(samavas|chhaya)$/);
+    const listMatch = path.match(/^\/images\/list\/(samavas|chhaya|mountain-view|garden-view|suite)$/);
     if (listMatch && request.method === 'GET') {
       const site = listMatch[1];
       const imageList = await getImageList(env, site);
@@ -536,7 +560,7 @@ export default {
     }
 
     // --- GET /images/:site/:id — public, serves an image ---
-    const imgMatch = path.match(/^\/images\/(samavas|chhaya)\/([a-z0-9]+)$/);
+    const imgMatch = path.match(/^\/images\/(samavas|chhaya|mountain-view|garden-view|suite)\/([a-z0-9]+)$/);
     if (imgMatch && request.method === 'GET') {
       const imgId = imgMatch[2];
       try {
@@ -565,7 +589,7 @@ export default {
       { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { site, id } = await request.json();
-        if (!site || !['samavas', 'chhaya'].includes(site)) {
+        if (!site || !['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].includes(site)) {
           return jsonResponse({ error: 'Invalid site' }, 400, origin);
         }
 
@@ -588,7 +612,7 @@ export default {
       { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { site, order } = await request.json();
-        if (!site || !['samavas', 'chhaya'].includes(site)) {
+        if (!site || !['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].includes(site)) {
           return jsonResponse({ error: 'Invalid site' }, 400, origin);
         }
         if (!Array.isArray(order)) {
@@ -990,7 +1014,7 @@ export default {
     if (path === '/bookings' && request.method === 'POST') {
       try {
         const b = await request.json();
-        if (!b.site || !['samavas', 'chhaya'].includes(b.site)) {
+        if (!b.site || !['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].includes(b.site)) {
           return jsonResponse({ error: 'Invalid site' }, 400, origin);
         }
         if (!b.name || !b.email || !b.phone || !b.checkin || !b.checkout) {
@@ -1224,7 +1248,7 @@ export default {
     }
 
     // --- GET /calendar/:site.ics — public, iCal feed for Hipcamp to import ---
-    const calMatch = path.match(/^\/calendar\/(samavas|chhaya)\.ics$/);
+    const calMatch = path.match(/^\/calendar\/(samavas|chhaya|mountain-view|garden-view|suite)\.ics$/);
     if (calMatch && request.method === 'GET') {
       const calSite = calMatch[1];
       try {
@@ -1315,7 +1339,7 @@ export default {
     }
 
     // --- GET /blocked-dates/:site — public, returns manually blocked dates ---
-    const blockedMatch = path.match(/^\/blocked-dates\/(samavas|chhaya)$/);
+    const blockedMatch = path.match(/^\/blocked-dates\/(samavas|chhaya|mountain-view|garden-view|suite)$/);
     if (blockedMatch && request.method === 'GET') {
       const bSite = blockedMatch[1];
       try {
@@ -1331,7 +1355,7 @@ export default {
       { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { site: bSite, dates } = await request.json();
-        if (!bSite || !['samavas', 'chhaya'].includes(bSite)) {
+        if (!bSite || !['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].includes(bSite)) {
           return jsonResponse({ error: 'Invalid site' }, 400, origin);
         }
         if (!Array.isArray(dates)) {
@@ -1349,11 +1373,17 @@ export default {
     // --- iCal proxy (existing) ---
     const site = url.searchParams.get('site');
 
-    if (!site || !ICAL_FEEDS[site]) {
+    const ALL_VALID_SITES = ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'];
+    if (!site || !ALL_VALID_SITES.includes(site)) {
       return jsonResponse(
-        { error: 'Invalid site. Use ?site=samavas or ?site=chhaya' },
+        { error: 'Invalid site' },
         400, origin
       );
+    }
+
+    // Rooms don't have iCal feeds — return empty dates
+    if (!ICAL_FEEDS[site]) {
+      return jsonResponse({ site, bookedDates: [] }, 200, origin, 'public, max-age=300');
     }
 
     try {

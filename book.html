@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campsites — Ahana Hillside</title>
-    <meta name="description" content="Book a campsite at Ahana Hillside. Two unique eco-friendly sites nestled in the Cairns tropical rainforest.">
+    <title>Book Your Stay — Ahana Hillside</title>
+    <meta name="description" content="Book a campsite or room at Ahana Hillside. Eco-friendly campsites and budget-friendly rooms nestled in the Cairns tropical rainforest.">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Book a Campsite — Ahana Hillside">
-    <meta property="og:description" content="Two unique eco-friendly campsites nestled in the Cairns tropical rainforest. Samavas for families, Chhaya for couples.">
-    <meta property="og:url" content="https://ahanahillside.com/campsites">
+    <meta property="og:title" content="Book Your Stay — Ahana Hillside">
+    <meta property="og:description" content="Campsites and rooms nestled in the Cairns tropical rainforest. From camping under the stars to budget-friendly private rooms.">
+    <meta property="og:url" content="https://ahanahillside.com/book">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg">
     <meta property="og:site_name" content="Ahana Hillside">
@@ -17,12 +17,12 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Book a Campsite — Ahana Hillside">
-    <meta name="twitter:description" content="Two unique eco-friendly campsites nestled in the Cairns tropical rainforest. Samavas for families, Chhaya for couples.">
+    <meta name="twitter:title" content="Book Your Stay — Ahana Hillside">
+    <meta name="twitter:description" content="Campsites and rooms nestled in the Cairns tropical rainforest. From camping under the stars to budget-friendly private rooms.">
     <meta name="twitter:image" content="https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg">
 
     <!-- SEO -->
-    <link rel="canonical" href="https://ahanahillside.com/campsites">
+    <link rel="canonical" href="https://ahanahillside.com/book">
     <meta name="geo.region" content="AU-QLD">
     <meta name="geo.placename" content="Aloomba, Queensland">
 
@@ -127,6 +127,68 @@
             height: 1px;
             background-color: var(--color-stone);
             margin: 1.5rem auto 0;
+        }
+
+        /* Category toggle */
+        .category-toggle {
+            max-width: 600px;
+            margin: 1.5rem auto 0;
+            padding: 0 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .category-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 1.5rem;
+            background: #fff;
+            border: 2px solid var(--color-light-stone);
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            text-align: left;
+        }
+
+        .category-btn:hover {
+            border-color: var(--color-stone);
+        }
+
+        .category-btn.active {
+            border-color: var(--color-forest);
+            background: rgba(44, 62, 45, 0.04);
+        }
+
+        .category-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            color: var(--color-stone);
+            transition: color 0.2s;
+        }
+
+        .category-btn.active .category-icon {
+            color: var(--color-forest);
+        }
+
+        .category-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-title {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+            line-height: 1.3;
+        }
+
+        .category-desc {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            margin-top: 0.15rem;
         }
 
         /* Progress indicator */
@@ -1446,8 +1508,8 @@
         "@context": "https://schema.org",
         "@type": "Campground",
         "name": "Ahana Hillside",
-        "description": "Two unique eco-friendly campsites nestled in the Cairns tropical rainforest — Samavas for families with caravan access, Chhaya for couples.",
-        "url": "https://ahanahillside.com/campsites",
+        "description": "Eco-friendly campsites and budget-friendly rooms nestled in the Cairns tropical rainforest.",
+        "url": "https://ahanahillside.com/book",
         "image": "https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg",
         "address": {
             "@type": "PostalAddress",
@@ -1493,7 +1555,7 @@
     <div class="menu-panel">
         <nav>
             <a href="/">Home</a>
-            <a href="/campsites">Campsites</a>
+            <a href="/book">Book</a>
             <a href="/gallery">Gallery</a>
             <a href="/explore">Explore</a>
             <a href="/about">About Us</a>
@@ -1514,9 +1576,27 @@
     </div>
 
     <div class="page-intro">
-        <h1>Our Campsites</h1>
-        <p>Eco-friendly sites nestled in the Cairns tropical rainforest</p>
+        <h1>Book Your Stay</h1>
+        <p>Campsites and rooms nestled in the Cairns tropical rainforest</p>
         <div class="divider"></div>
+    </div>
+
+    <!-- Category Toggle -->
+    <div class="category-toggle">
+        <button class="category-btn active" data-category="campsites" onclick="switchCategory('campsites')">
+            <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 19h20L12 2z"/><path d="M12 19v3"/><path d="M7 19l5-10 5 10"/></svg>
+            <div class="category-text">
+                <span class="category-title">Campsites</span>
+                <span class="category-desc">Camp under the stars</span>
+            </div>
+        </button>
+        <button class="category-btn" data-category="rooms" onclick="switchCategory('rooms')">
+            <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21V11h6v10"/><rect x="10" y="13" width="4" height="3"/></svg>
+            <div class="category-text">
+                <span class="category-title">Rooms</span>
+                <span class="category-desc">Budget-friendly private stays</span>
+            </div>
+        </button>
     </div>
 
     <!-- Camping Experience Section -->
@@ -1875,9 +1955,9 @@
         </div>
     </div>
 
-    <!-- Step 2: Select campsite -->
+    <!-- Step 2: Select site -->
     <div class="wizard-step active" id="step-select">
-        <div class="campsites">
+        <div class="campsites" id="campsites-section">
             <!-- SAMAVAS -->
             <div class="campsite" id="campsite-samavas">
                 <div class="campsite-media">
@@ -1969,13 +2049,151 @@
             </div>
         </div>
 
-        <div class="rules">
+        <div class="rules" id="campground-rules">
             <h2>Campground Rules</h2>
             <ul id="rules-list">
                 <li>No parties allowed without prior permission</li>
                 <li>No loud or open music</li>
                 <li>All dogs must be kept on a leash when on the main campground</li>
             </ul>
+        </div>
+
+        <!-- Room listings (hidden by default) -->
+        <div class="campsites" id="rooms-section" style="display:none">
+            <!-- Mountain View Room -->
+            <div class="campsite" id="campsite-mountain-view">
+                <div class="campsite-media">
+                    <div class="carousel" id="carousel-mountain-view"></div>
+                </div>
+                <div class="campsite-body">
+                    <div class="campsite-header">
+                        <div class="campsite-name">MOUNTAIN VIEW ROOM</div>
+                        <span class="max-badge" id="mountain-view-max-badge">Max 2 guests</span>
+                    </div>
+                    <div class="campsite-type" id="mountain-view-type">Private Room &middot; Sleeps 2 &middot; Mountain Views</div>
+                    <p class="campsite-description" id="mountain-view-desc">
+                        Wake up to stunning mountain views from this cosy private room. Perfect for couples or solo travellers looking for a budget-friendly stay with the comfort of a real bed and a roof overhead.
+                    </p>
+                    <div class="campsite-amenities">
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
+                            Private room
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
+                            Shared bathroom
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            Kitchen access
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
+                            Wi-Fi
+                        </div>
+                    </div>
+                    <div class="campsite-price" id="mountain-view-price">
+                        from <strong>AU$85</strong> / night
+                        <span class="price-note">for 1 guest</span>
+                    </div>
+                    <div class="price-breakdown-mini" id="mountain-view-breakdown" style="display:none;"></div>
+                    <div class="date-warning" id="mountain-view-warning">Selected dates are unavailable for this room. Please choose different dates.</div>
+                    <div class="guest-message" id="mountain-view-guest-msg">
+                        This room accommodates up to <strong><span>2</span> guests</strong>. Please select fewer guests.
+                    </div>
+                    <button type="button" class="btn-select" id="mountain-view-select-btn" onclick="selectSite('mountain-view')" disabled>Select dates first</button>
+                </div>
+            </div>
+
+            <!-- Garden View Room -->
+            <div class="campsite" id="campsite-garden-view">
+                <div class="campsite-media">
+                    <div class="carousel" id="carousel-garden-view"></div>
+                </div>
+                <div class="campsite-body">
+                    <div class="campsite-header">
+                        <div class="campsite-name">GARDEN VIEW ROOM</div>
+                        <span class="max-badge" id="garden-view-max-badge">Max 2 guests</span>
+                    </div>
+                    <div class="campsite-type" id="garden-view-type">Private Room &middot; Sleeps 2 &middot; Garden Views</div>
+                    <p class="campsite-description" id="garden-view-desc">
+                        A peaceful room overlooking the tropical garden. Surrounded by lush greenery, this room offers a tranquil retreat with easy access to all shared facilities.
+                    </p>
+                    <div class="campsite-amenities">
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
+                            Private room
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
+                            Shared bathroom
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            Kitchen access
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
+                            Wi-Fi
+                        </div>
+                    </div>
+                    <div class="campsite-price" id="garden-view-price">
+                        from <strong>AU$75</strong> / night
+                        <span class="price-note">for 1 guest</span>
+                    </div>
+                    <div class="price-breakdown-mini" id="garden-view-breakdown" style="display:none;"></div>
+                    <div class="date-warning" id="garden-view-warning">Selected dates are unavailable for this room. Please choose different dates.</div>
+                    <div class="guest-message" id="garden-view-guest-msg">
+                        This room accommodates up to <strong><span>2</span> guests</strong>. Please select fewer guests.
+                    </div>
+                    <button type="button" class="btn-select" id="garden-view-select-btn" onclick="selectSite('garden-view')" disabled>Select dates first</button>
+                </div>
+            </div>
+
+            <!-- Suite with Garden View -->
+            <div class="campsite" id="campsite-suite">
+                <div class="campsite-media">
+                    <div class="carousel" id="carousel-suite"></div>
+                </div>
+                <div class="campsite-body">
+                    <div class="campsite-header">
+                        <div class="campsite-name">SUITE WITH GARDEN VIEW</div>
+                        <span class="max-badge" id="suite-max-badge">Max 4 guests</span>
+                    </div>
+                    <div class="campsite-type" id="suite-type">Private Suite &middot; Sleeps 4 &middot; Garden Views</div>
+                    <p class="campsite-description" id="suite-desc">
+                        Our most spacious room option — a private suite with separate living area and garden views. Ideal for small families or couples wanting extra space in the heart of the rainforest.
+                    </p>
+                    <div class="campsite-amenities">
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/></svg>
+                            Private suite
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M12 3v18M8 7l4-4 4 4"/></svg>
+                            Shared bathroom
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                            Kitchen access
+                        </div>
+                        <div class="amenity">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3l-4 4-4-4"/></svg>
+                            Wi-Fi
+                        </div>
+                    </div>
+                    <div class="campsite-price" id="suite-price">
+                        from <strong>AU$110</strong> / night
+                        <span class="price-note">for 2 guests</span>
+                    </div>
+                    <div class="price-breakdown-mini" id="suite-breakdown" style="display:none;"></div>
+                    <div class="date-warning" id="suite-warning">Selected dates are unavailable for this suite. Please choose different dates.</div>
+                    <div class="guest-message" id="suite-guest-msg">
+                        This suite accommodates up to <strong><span>4</span> guests</strong>. Please select fewer guests.
+                    </div>
+                    <button type="button" class="btn-select" id="suite-select-btn" onclick="selectSite('suite')" disabled>Select dates first</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2141,11 +2359,46 @@
             firewood: { qty: 0, price: 20, unit: '5kg bundle' }
         };
         let appliedPromo = null;
+        let activeCategory = 'campsites';
+
+        // --- Category toggle ---
+        function switchCategory(category) {
+            activeCategory = category;
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.category === category);
+            });
+            var campExp = document.querySelector('.camp-experience');
+            var campsitesSection = document.getElementById('campsites-section');
+            var roomsSection = document.getElementById('rooms-section');
+            var campRules = document.getElementById('campground-rules');
+            if (category === 'campsites') {
+                if (campExp) campExp.style.display = '';
+                campsitesSection.style.display = '';
+                roomsSection.style.display = 'none';
+                if (campRules) campRules.style.display = '';
+            } else {
+                if (campExp) campExp.style.display = 'none';
+                campsitesSection.style.display = 'none';
+                roomsSection.style.display = '';
+                if (campRules) campRules.style.display = 'none';
+            }
+            // Reset selection when switching
+            selectedSite = null;
+            updateAllCards();
+            // Re-render any open date picker to update blocked dates
+            ['checkin', 'checkout'].forEach(f => {
+                var dd = document.querySelector('.date-picker-wrapper .dp-dropdown');
+                if (dd && dd.style.display !== 'none') renderCalendar(f);
+            });
+        }
 
         // --- Image carousel & lightbox ---
         const SITES = {
-            samavas: { folder: 'images/samavas/', maxImages: 10, alt: 'SAMAVAS campsite at Ahana Hillside' },
-            chhaya:  { folder: 'images/chhaya/',  maxImages: 10, alt: 'CHHAYA campsite at Ahana Hillside' },
+            samavas: { folder: 'images/samavas/', maxImages: 10, alt: 'SAMAVAS campsite at Ahana Hillside', category: 'campsites' },
+            chhaya:  { folder: 'images/chhaya/',  maxImages: 10, alt: 'CHHAYA campsite at Ahana Hillside', category: 'campsites' },
+            'mountain-view': { folder: 'images/mountain-view/', maxImages: 10, alt: 'Mountain View Room at Ahana Hillside', category: 'rooms' },
+            'garden-view':   { folder: 'images/garden-view/',   maxImages: 10, alt: 'Garden View Room at Ahana Hillside', category: 'rooms' },
+            'suite':         { folder: 'images/suite/',         maxImages: 10, alt: 'Suite with Garden View at Ahana Hillside', category: 'rooms' },
         };
 
         const carousels = {};
@@ -2347,6 +2600,9 @@
         const DEFAULT_CONFIG = {
             samavas: { basePrice: 66, extraGuestFee: 15, maxGuests: 20 },
             chhaya:  { basePrice: 60, extraGuestFee: 10, maxGuests: 20 },
+            'mountain-view': { basePrice: 85, extraGuestFee: 25, maxGuests: 2 },
+            'garden-view':   { basePrice: 75, extraGuestFee: 20, maxGuests: 2 },
+            'suite':         { basePrice: 110, extraGuestFee: 30, maxGuests: 4 },
             currency: 'AUD',
             promoCodes: {},
             rules: [],
@@ -2361,7 +2617,7 @@
         }
 
         // --- State ---
-        const bookedDates = { samavas: [], chhaya: [] };
+        const bookedDates = { samavas: [], chhaya: [], 'mountain-view': [], 'garden-view': [], 'suite': [] };
 
         // --- Search bar helpers ---
         function getSearchDate(field) {
@@ -2395,12 +2651,17 @@
 
             updateAllCards();
             updateProgress(2);
-            document.querySelector('.campsites').scrollIntoView({ behavior: 'smooth' });
+            var targetSection = activeCategory === 'campsites' ? document.getElementById('campsites-section') : document.getElementById('rooms-section');
+            targetSection.scrollIntoView({ behavior: 'smooth' });
         }
 
         // --- Update all campsite cards ---
+        const ALL_SITES = ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'];
+        const CAMPSITE_SITES = ['samavas', 'chhaya'];
+        const ROOM_SITES = ['mountain-view', 'garden-view', 'suite'];
+
         function updateAllCards() {
-            ['samavas', 'chhaya'].forEach(site => {
+            ALL_SITES.forEach(site => {
                 updatePerNightPrice(site);
                 updatePriceBreakdown(site);
                 updateWarning(site);
@@ -2424,7 +2685,8 @@
                 btn.textContent = 'Dates unavailable';
             } else {
                 btn.disabled = false;
-                btn.textContent = 'Select ' + site.toUpperCase();
+                var displayName = SITES[site] ? (SITES[site].alt || site).split(' at ')[0] : site.toUpperCase();
+                btn.textContent = 'Select ' + displayName;
             }
         }
 
@@ -2432,11 +2694,12 @@
         function updateGuestAvailability() {
             const guests = getSearchGuests();
 
-            ['samavas', 'chhaya'].forEach(site => {
+            ALL_SITES.forEach(site => {
                 const cfg = siteConfig[site];
                 if (!cfg) return;
                 const maxG = cfg.maxGuests || 20;
                 const card = document.getElementById('campsite-' + site);
+                if (!card) return;
 
                 if (guests > maxG) {
                     card.classList.add('guest-exceeded');
@@ -2457,7 +2720,7 @@
                 const res = await fetch(WORKER_URL + '/config');
                 if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
-                if (data && data.samavas && data.chhaya) {
+                if (data && data.samavas) {
                     siteConfig = data;
                     applyConfig();
                 }
@@ -2467,35 +2730,44 @@
         }
 
         function applyConfig() {
-            ['samavas', 'chhaya'].forEach(site => {
+            ALL_SITES.forEach(site => {
                 const cfg = siteConfig[site];
                 if (!cfg) return;
 
-                if (cfg.description) {
-                    document.getElementById(site + '-desc').textContent = cfg.description;
+                var descEl = document.getElementById(site + '-desc');
+                if (cfg.description && descEl) {
+                    descEl.textContent = cfg.description;
                 }
 
-                if (cfg.type) {
-                    document.getElementById(site + '-type').innerHTML = cfg.type.replace(/·/g, '&middot;');
+                var typeEl = document.getElementById(site + '-type');
+                if (cfg.type && typeEl) {
+                    typeEl.innerHTML = cfg.type.replace(/·/g, '&middot;');
                 }
 
                 const sym = currencySymbol();
-                document.getElementById(site + '-price').innerHTML =
-                    'from <strong>' + sym + cfg.basePrice + '</strong> / night '
-                    + '<span class="price-note">for 2 guests'
-                    + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
-                    + '</span>';
+                var priceEl = document.getElementById(site + '-price');
+                if (priceEl) {
+                    var baseGuests = ROOM_SITES.includes(site) ? '1 guest' : '2 guests';
+                    priceEl.innerHTML =
+                        'from <strong>' + sym + cfg.basePrice + '</strong> / night '
+                        + '<span class="price-note">for ' + baseGuests
+                        + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
+                        + '</span>';
+                }
 
                 const maxG = cfg.maxGuests || 20;
-                document.getElementById(site + '-max-badge').textContent = 'Max ' + maxG + ' guests';
+                var badgeEl = document.getElementById(site + '-max-badge');
+                if (badgeEl) badgeEl.textContent = 'Max ' + maxG + ' guest' + (maxG > 1 ? 's' : '');
 
-                const msgEl = document.getElementById(site + '-guest-msg');
-                msgEl.innerHTML = 'This site accommodates up to <strong>' + maxG + ' guests</strong>. Please select fewer guests.';
+                var msgEl = document.getElementById(site + '-guest-msg');
+                if (msgEl) {
+                    var label = ROOM_SITES.includes(site) ? 'room' : 'site';
+                    msgEl.innerHTML = 'This ' + label + ' accommodates up to <strong>' + maxG + ' guests</strong>. Please select fewer guests.';
+                }
             });
 
             const maxGuests = Math.max(
-                siteConfig.samavas?.maxGuests || 20,
-                siteConfig.chhaya?.maxGuests || 20
+                ...ALL_SITES.map(s => siteConfig[s]?.maxGuests || 20)
             );
             const select = document.getElementById('search-guests');
             const currentVal = select.value;
@@ -2710,7 +2982,8 @@
             for (let d = 1; d <= daysInMonth; d++) {
                 const dateStr = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
                 const isPast = dateStr < todayStr;
-                const blockedBoth = bookedDates.samavas.includes(dateStr) && bookedDates.chhaya.includes(dateStr);
+                const activeSites = activeCategory === 'campsites' ? CAMPSITE_SITES : ROOM_SITES;
+                const blockedBoth = activeSites.every(s => bookedDates[s].includes(dateStr));
                 const isToday = dateStr === todayStr;
                 const isSelected = dateStr === checkinVal || dateStr === checkoutVal;
 
@@ -2778,7 +3051,8 @@
 
         function dpToday(field) {
             const todayStr = new Date().toISOString().split('T')[0];
-            const blockedBoth = bookedDates.samavas.includes(todayStr) && bookedDates.chhaya.includes(todayStr);
+            const todayActiveSites = activeCategory === 'campsites' ? CAMPSITE_SITES : ROOM_SITES;
+            const blockedBoth = todayActiveSites.every(s => bookedDates[s].includes(todayStr));
             if (!blockedBoth) {
                 dpSelect(field, todayStr);
             }
@@ -2830,9 +3104,13 @@
                 el.classList.remove('active');
             });
 
-            // Only show camping experience section on initial campsite view (steps 1-2)
+            // Only show camping experience section for campsites on initial view (steps 1-2)
             var campExp = document.querySelector('.camp-experience');
-            if (campExp) campExp.style.display = currentStep <= 2 ? '' : 'none';
+            if (campExp) campExp.style.display = (currentStep <= 2 && activeCategory === 'campsites') ? '' : 'none';
+
+            // Show/hide category toggle only on initial steps
+            var catToggle = document.querySelector('.category-toggle');
+            if (catToggle) catToggle.style.display = currentStep <= 2 ? '' : 'none';
 
             if (currentStep === 2) {
                 document.getElementById('step-select').classList.add('active');
@@ -3105,8 +3383,7 @@
         // --- Init ---
         initDatePickers();
         fetchConfig();
-        fetchAvailability('samavas');
-        fetchAvailability('chhaya');
+        ALL_SITES.forEach(s => fetchAvailability(s));
     </script>
     <script>
     function toggleMenu() {

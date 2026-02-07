@@ -956,7 +956,7 @@
     <div class="tabs">
         <button class="tab-btn active" data-tab="messages">Messages <span class="msg-badge" id="msg-badge"></span></button>
         <button class="tab-btn" data-tab="bookings">Bookings <span class="msg-badge" id="booking-badge"></span></button>
-        <button class="tab-btn" data-tab="campsites">Campsites</button>
+        <button class="tab-btn" data-tab="campsites">Campsites &amp; Rooms</button>
         <button class="tab-btn" data-tab="gallery">Gallery</button>
         <button class="tab-btn" data-tab="settings">Settings</button>
     </div>
@@ -1029,6 +1029,48 @@
                             <span class="save-msg" id="avail-chhaya-msg"></span>
                         </div>
                     </div>
+
+                    <div class="card">
+                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                        <div class="cal-nav">
+                            <button class="cal-nav-btn" onclick="calNav('mountain-view', -1)">&larr;</button>
+                            <span class="cal-month-label" id="cal-label-mountain-view"></span>
+                            <button class="cal-nav-btn" onclick="calNav('mountain-view', 1)">&rarr;</button>
+                        </div>
+                        <div class="cal-grid" id="cal-grid-mountain-view"></div>
+                        <div class="save-bar" style="margin-top:1rem">
+                            <button class="btn btn-primary" onclick="saveBlockedDates('mountain-view')">Save</button>
+                            <span class="save-msg" id="avail-mountain-view-msg"></span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">GARDEN VIEW ROOM</div>
+                        <div class="cal-nav">
+                            <button class="cal-nav-btn" onclick="calNav('garden-view', -1)">&larr;</button>
+                            <span class="cal-month-label" id="cal-label-garden-view"></span>
+                            <button class="cal-nav-btn" onclick="calNav('garden-view', 1)">&rarr;</button>
+                        </div>
+                        <div class="cal-grid" id="cal-grid-garden-view"></div>
+                        <div class="save-bar" style="margin-top:1rem">
+                            <button class="btn btn-primary" onclick="saveBlockedDates('garden-view')">Save</button>
+                            <span class="save-msg" id="avail-garden-view-msg"></span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                        <div class="cal-nav">
+                            <button class="cal-nav-btn" onclick="calNav('suite', -1)">&larr;</button>
+                            <span class="cal-month-label" id="cal-label-suite"></span>
+                            <button class="cal-nav-btn" onclick="calNav('suite', 1)">&rarr;</button>
+                        </div>
+                        <div class="cal-grid" id="cal-grid-suite"></div>
+                        <div class="save-bar" style="margin-top:1rem">
+                            <button class="btn btn-primary" onclick="saveBlockedDates('suite')">Save</button>
+                            <span class="save-msg" id="avail-suite-msg"></span>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="cal-legend">
@@ -1085,6 +1127,39 @@
                         </div>
                         <div class="upload-progress" id="progress-chhaya"></div>
                         <div class="image-grid" id="images-chhaya"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                        <div class="upload-zone" id="upload-zone-mountain-view" onclick="document.getElementById('file-mountain-view').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-mountain-view" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('mountain-view', this.files)">
+                        </div>
+                        <div class="upload-progress" id="progress-mountain-view"></div>
+                        <div class="image-grid" id="images-mountain-view"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">GARDEN VIEW ROOM</div>
+                        <div class="upload-zone" id="upload-zone-garden-view" onclick="document.getElementById('file-garden-view').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-garden-view" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('garden-view', this.files)">
+                        </div>
+                        <div class="upload-progress" id="progress-garden-view"></div>
+                        <div class="image-grid" id="images-garden-view"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                        <div class="upload-zone" id="upload-zone-suite" onclick="document.getElementById('file-suite').click()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                            <span>Click to upload or drag & drop</span>
+                            <input type="file" id="file-suite" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" multiple style="display:none" onchange="handleFileSelect('suite', this.files)">
+                        </div>
+                        <div class="upload-progress" id="progress-suite"></div>
+                        <div class="image-grid" id="images-suite"></div>
                     </div>
                 </div>
 
@@ -1187,6 +1262,60 @@
                         <div class="field">
                             <label>Maximum guests</label>
                             <input type="number" id="p-chhaya-max" min="1" max="50" step="1">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                        <div class="field">
+                            <label>Base price per night (1-2 guests)</label>
+                            <input type="number" id="p-mountain-view-base" min="0" step="1">
+                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-mountain-view-extra" min="0" step="1">
+                            <div class="hint">Charged for each guest above 2</div>
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-mountain-view-max" min="1" max="50" step="1">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">GARDEN VIEW ROOM</div>
+                        <div class="field">
+                            <label>Base price per night (1-2 guests)</label>
+                            <input type="number" id="p-garden-view-base" min="0" step="1">
+                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-garden-view-extra" min="0" step="1">
+                            <div class="hint">Charged for each guest above 2</div>
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-garden-view-max" min="1" max="50" step="1">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                        <div class="field">
+                            <label>Base price per night (1-2 guests)</label>
+                            <input type="number" id="p-suite-base" min="0" step="1">
+                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                        </div>
+                        <div class="field">
+                            <label>Extra guest fee (per person per night)</label>
+                            <input type="number" id="p-suite-extra" min="0" step="1">
+                            <div class="hint">Charged for each guest above 2</div>
+                        </div>
+                        <div class="field">
+                            <label>Maximum guests</label>
+                            <input type="number" id="p-suite-max" min="1" max="50" step="1">
                         </div>
                     </div>
                 </div>
@@ -1566,6 +1695,15 @@
         document.getElementById('p-chhaya-base').value = c.chhaya?.basePrice ?? 60;
         document.getElementById('p-chhaya-extra').value = c.chhaya?.extraGuestFee ?? 10;
         document.getElementById('p-chhaya-max').value = c.chhaya?.maxGuests ?? 20;
+        document.getElementById('p-mountain-view-base').value = c['mountain-view']?.basePrice ?? 0;
+        document.getElementById('p-mountain-view-extra').value = c['mountain-view']?.extraGuestFee ?? 0;
+        document.getElementById('p-mountain-view-max').value = c['mountain-view']?.maxGuests ?? 4;
+        document.getElementById('p-garden-view-base').value = c['garden-view']?.basePrice ?? 0;
+        document.getElementById('p-garden-view-extra').value = c['garden-view']?.extraGuestFee ?? 0;
+        document.getElementById('p-garden-view-max').value = c['garden-view']?.maxGuests ?? 4;
+        document.getElementById('p-suite-base').value = c['suite']?.basePrice ?? 0;
+        document.getElementById('p-suite-extra').value = c['suite']?.extraGuestFee ?? 0;
+        document.getElementById('p-suite-max').value = c['suite']?.maxGuests ?? 4;
         document.getElementById('p-currency').value = c.currency || 'AUD';
 
         // Content
@@ -1598,6 +1736,24 @@
                 basePrice: parseFloat(document.getElementById('p-chhaya-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-chhaya-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-chhaya-max').value) || 20,
+            },
+            'mountain-view': {
+                name: 'MOUNTAIN VIEW ROOM',
+                basePrice: parseFloat(document.getElementById('p-mountain-view-base').value) || 0,
+                extraGuestFee: parseFloat(document.getElementById('p-mountain-view-extra').value) || 0,
+                maxGuests: parseInt(document.getElementById('p-mountain-view-max').value) || 4,
+            },
+            'garden-view': {
+                name: 'GARDEN VIEW ROOM',
+                basePrice: parseFloat(document.getElementById('p-garden-view-base').value) || 0,
+                extraGuestFee: parseFloat(document.getElementById('p-garden-view-extra').value) || 0,
+                maxGuests: parseInt(document.getElementById('p-garden-view-max').value) || 4,
+            },
+            'suite': {
+                name: 'SUITE WITH GARDEN VIEW',
+                basePrice: parseFloat(document.getElementById('p-suite-base').value) || 0,
+                extraGuestFee: parseFloat(document.getElementById('p-suite-extra').value) || 0,
+                maxGuests: parseInt(document.getElementById('p-suite-max').value) || 4,
             },
             currency: document.getElementById('p-currency').value,
             promoCodes: siteConfig.promoCodes || {},
@@ -2097,10 +2253,13 @@
     const calState = {
         samavas: { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
         chhaya:  { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
+        'mountain-view': { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
+        'garden-view':   { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
+        'suite':         { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set() },
     };
 
     async function loadBlockedDates() {
-        for (const site of ['samavas', 'chhaya']) {
+        for (const site of ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite']) {
             try {
                 const res = await fetch(WORKER_URL + '/blocked-dates/' + site);
                 const data = await res.json();
@@ -2196,10 +2355,10 @@
     }
 
     // --- Images ---
-    let siteImages = { samavas: [], chhaya: [] };
+    let siteImages = { samavas: [], chhaya: [], 'mountain-view': [], 'garden-view': [], 'suite': [] };
 
     async function loadImages() {
-        for (const site of ['samavas', 'chhaya']) {
+        for (const site of ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite']) {
             try {
                 const res = await fetch(WORKER_URL + '/images/list/' + site);
                 const data = await res.json();
@@ -2769,7 +2928,7 @@
         } catch (err) {}
     }
 
-    ['samavas', 'chhaya'].forEach(site => {
+    ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].forEach(site => {
         const zone = document.getElementById('upload-zone-' + site);
         if (!zone) return;
 
