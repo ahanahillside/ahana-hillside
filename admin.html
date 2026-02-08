@@ -2589,6 +2589,7 @@
 
                 <div class="save-bar" style="margin-top:1rem">
                     <button class="btn btn-primary" onclick="saveNotificationSettings()">Save Notifications</button>
+                    <button class="btn btn-secondary" onclick="sendTestEmail()" style="margin-left:0.5rem">Send Test Email</button>
                     <span class="save-msg" id="notif-msg"></span>
                 </div>
             </div>
@@ -3092,6 +3093,27 @@
             }
         } catch (err) {
             showMsg('notif', 'Connection error', 'error');
+        }
+    }
+
+    async function sendTestEmail() {
+        showMsg('notif', 'Sending test email...', 'success');
+        try {
+            const res = await fetch(WORKER_URL + '/test-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + authToken,
+                },
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMsg('notif', 'Test email sent! Check your inbox (and spam folder).', 'success');
+            } else {
+                showMsg('notif', 'Failed: ' + (data.detail || data.error), 'error');
+            }
+        } catch (err) {
+            showMsg('notif', 'Connection error: ' + err.message, 'error');
         }
     }
 
