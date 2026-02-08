@@ -404,6 +404,8 @@
             font-size: 0.9rem;
             color: var(--color-charcoal);
             margin-bottom: 1.5rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Cards */
@@ -425,6 +427,8 @@
             font-size: 0.85rem;
             color: var(--color-charcoal);
             margin-bottom: 1rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .card-grid {
@@ -1119,6 +1123,10 @@
             gap: 0.75rem;
         }
 
+        .image-grid.gallery-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
         .img-thumb {
             position: relative;
             aspect-ratio: 4/3;
@@ -1410,7 +1418,7 @@
             }
             .sidebar.open { left: 0; }
             .sidebar-toggle { display: flex; }
-            .main-content { margin-left: 0; }
+            .main-content { margin-left: 0; overflow-x: hidden; }
             .main-header { padding: 0.85rem 1rem 0.85rem 3.5rem; }
             .main-header-title { font-size: 1.1rem; }
             .tab-content { padding: 1.25rem 0.75rem; }
@@ -1580,6 +1588,26 @@
             /* Prevent horizontal overflow */
             .tab-content {
                 overflow-x: hidden;
+                max-width: 100vw;
+            }
+
+            .tab-panel {
+                overflow-x: hidden;
+            }
+
+            /* Cards — constrain max-width on mobile */
+            .card[style*="max-width"] {
+                max-width: 100% !important;
+            }
+
+            .image-grid.gallery-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            /* Upload zone text wrapping */
+            .upload-zone span {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
 
             /* Filter buttons — scrollable row */
@@ -2566,7 +2594,7 @@
 
             <div class="card" style="max-width:900px">
                 <div class="card-title">Gallery Items <span id="gallery-count" style="font-weight:400;color:var(--color-stone);font-size:0.8rem"></span></div>
-                <div class="image-grid" id="gallery-grid" style="grid-template-columns:repeat(3,1fr)"></div>
+                <div class="image-grid gallery-grid" id="gallery-grid"></div>
             </div>
 
             <div class="card" style="max-width:900px;margin-top:1.5rem">
