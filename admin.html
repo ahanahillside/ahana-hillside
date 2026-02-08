@@ -831,6 +831,49 @@
 
         .cal-nav-btn:hover { border-color: var(--color-forest); }
 
+        /* Site selector */
+        .site-selector {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .site-sel-btn {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.6rem 1.1rem;
+            font-family: var(--font-sans);
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--color-stone);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .site-sel-btn:hover { border-color: var(--color-forest); color: var(--color-charcoal); }
+
+        .site-sel-btn.active {
+            background: var(--color-forest);
+            color: #fff;
+            border-color: var(--color-forest);
+        }
+
+        .site-sel-btn .sel-meta {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 400;
+            opacity: 0.7;
+            margin-top: 0.15rem;
+        }
+
+        .site-sel-btn.active .sel-meta { opacity: 0.8; }
+
+        .site-form { display: none; }
+        .site-form.active { display: block; }
+
         .cal-today-btn {
             background: none;
             border: 1px solid var(--color-light-stone);
@@ -1399,6 +1442,7 @@
             <button class="sub-tab-btn active" data-subtab="availability">Availability</button>
             <button class="sub-tab-btn" data-subtab="content">Content &amp; Media</button>
             <button class="sub-tab-btn" data-subtab="pricing">Pricing &amp; Promos</button>
+            <button class="sub-tab-btn" data-subtab="rules">Rules &amp; Policies</button>
         </div>
 
         <div class="tab-content">
@@ -1569,13 +1613,21 @@
 
                 <hr class="section-divider">
 
-                <!-- ==================== ROOMS ==================== -->
-                <div class="section-heading">Rooms</div>
-                <div class="section-desc">Manage descriptions, amenities, and media for each room. First image is the cover. Max 15 per site.</div>
+                <!-- Site selector -->
+                <div class="section-heading">Rooms &amp; Campsites</div>
+                <div class="section-desc">Select a site to edit its descriptions, amenities, and media. First image is the cover. Max 15 per site.</div>
 
-                <div class="card content-card">
-                    <div class="card-title collapsible" onclick="toggleCard(this)">GARDEN VIEW ROOM <span class="card-toggle">&#9662;</span></div>
-                    <div class="content-card-body">
+                <div class="site-selector" id="content-site-selector">
+                    <button class="site-sel-btn active" data-site="garden-view" onclick="selectContentSite('garden-view')">Garden View Room<span class="sel-meta" id="sel-meta-garden-view"></span></button>
+                    <button class="site-sel-btn" data-site="mountain-view" onclick="selectContentSite('mountain-view')">Mountain View Room<span class="sel-meta" id="sel-meta-mountain-view"></span></button>
+                    <button class="site-sel-btn" data-site="suite" onclick="selectContentSite('suite')">Suite<span class="sel-meta" id="sel-meta-suite"></span></button>
+                    <button class="site-sel-btn" data-site="samavas" onclick="selectContentSite('samavas')">Samavas<span class="sel-meta" id="sel-meta-samavas"></span></button>
+                    <button class="site-sel-btn" data-site="chhaya" onclick="selectContentSite('chhaya')">Chhaya<span class="sel-meta" id="sel-meta-chhaya"></span></button>
+                </div>
+
+                <!-- GARDEN VIEW ROOM -->
+                <div class="site-form active" id="site-form-garden-view">
+                <div class="card">
                     <div class="field">
                         <label>Room type line</label>
                         <input type="text" id="c-garden-view-type">
@@ -1628,12 +1680,16 @@
                         <div class="upload-progress" id="progress-garden-view"></div>
                         <div class="image-grid" id="images-garden-view"></div>
                     </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('content-rooms')">Save</button>
+                        <span class="save-msg" id="content-garden-view-msg"></span>
                     </div>
                 </div>
+                </div>
 
-                <div class="card content-card">
-                    <div class="card-title collapsible" onclick="toggleCard(this)">MOUNTAIN VIEW ROOM <span class="card-toggle">&#9662;</span></div>
-                    <div class="content-card-body">
+                <!-- MOUNTAIN VIEW ROOM -->
+                <div class="site-form" id="site-form-mountain-view">
+                <div class="card">
                     <div class="field">
                         <label>Room type line</label>
                         <input type="text" id="c-mountain-view-type">
@@ -1686,12 +1742,16 @@
                         <div class="upload-progress" id="progress-mountain-view"></div>
                         <div class="image-grid" id="images-mountain-view"></div>
                     </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('content-rooms')">Save</button>
+                        <span class="save-msg" id="content-mountain-view-msg"></span>
                     </div>
                 </div>
+                </div>
 
-                <div class="card content-card">
-                    <div class="card-title collapsible" onclick="toggleCard(this)">SUITE WITH GARDEN VIEW <span class="card-toggle">&#9662;</span></div>
-                    <div class="content-card-body">
+                <!-- SUITE WITH GARDEN VIEW -->
+                <div class="site-form" id="site-form-suite">
+                <div class="card">
                     <div class="field">
                         <label>Room type line</label>
                         <input type="text" id="c-suite-type">
@@ -1744,23 +1804,16 @@
                         <div class="upload-progress" id="progress-suite"></div>
                         <div class="image-grid" id="images-suite"></div>
                     </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('content-rooms')">Save</button>
+                        <span class="save-msg" id="content-suite-msg"></span>
                     </div>
                 </div>
-
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('content-rooms')">Save Rooms</button>
-                    <span class="save-msg" id="content-rooms-msg"></span>
                 </div>
 
-                <hr class="section-divider">
-
-                <!-- ==================== CAMPSITES ==================== -->
-                <div class="section-heading">Campsites</div>
-                <div class="section-desc">Manage descriptions, amenities, and media for each campsite. First image is the cover. Max 15 per site.</div>
-
-                <div class="card content-card">
-                    <div class="card-title collapsible" onclick="toggleCard(this)">SAMAVAS <span class="card-toggle">&#9662;</span></div>
-                    <div class="content-card-body">
+                <!-- SAMAVAS -->
+                <div class="site-form" id="site-form-samavas">
+                <div class="card">
                     <div class="field">
                         <label>Site type line</label>
                         <input type="text" id="c-samavas-type">
@@ -1813,12 +1866,16 @@
                         <div class="upload-progress" id="progress-samavas"></div>
                         <div class="image-grid" id="images-samavas"></div>
                     </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('content-camps')">Save</button>
+                        <span class="save-msg" id="content-samavas-msg"></span>
                     </div>
                 </div>
+                </div>
 
-                <div class="card content-card">
-                    <div class="card-title collapsible" onclick="toggleCard(this)">CHHAYA <span class="card-toggle">&#9662;</span></div>
-                    <div class="content-card-body">
+                <!-- CHHAYA -->
+                <div class="site-form" id="site-form-chhaya">
+                <div class="card">
                     <div class="field">
                         <label>Site type line</label>
                         <input type="text" id="c-chhaya-type">
@@ -1871,38 +1928,39 @@
                         <div class="upload-progress" id="progress-chhaya"></div>
                         <div class="image-grid" id="images-chhaya"></div>
                     </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('content-camps')">Save</button>
+                        <span class="save-msg" id="content-chhaya-msg"></span>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+
+            <!-- Rules & Policies sub-panel -->
+            <div class="sub-panel" id="subpanel-rules">
+                <div class="panel-desc">Manage campground rules and booking terms &amp; conditions.</div>
+
+                <div class="card" style="max-width:900px">
+                    <div class="card-title">Campground Rules</div>
+                    <div style="font-size:0.82rem;color:var(--color-stone);margin-bottom:0.75rem">Rules shown at the bottom of the campsites booking page.</div>
+
+                    <div id="rules-list"></div>
+
+                    <div class="add-row">
+                        <input type="text" id="rule-text" placeholder="New rule..." style="flex:1">
+                        <button class="btn btn-secondary" onclick="addRule()" style="padding:0.5rem 1rem">Add</button>
+                    </div>
+
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('rules')">Save Rules</button>
+                        <span class="save-msg" id="rules-msg"></span>
                     </div>
                 </div>
 
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('content-camps')">Save Campsites</button>
-                    <span class="save-msg" id="content-camps-msg"></span>
-                </div>
-
-                <!-- Rules section -->
-                <hr class="section-divider">
-                <div class="section-heading">Campground Rules</div>
-                <div class="section-desc">Edit the rules shown at the bottom of the campsites page.</div>
-
-                <div id="rules-list"></div>
-
-                <div class="add-row">
-                    <input type="text" id="rule-text" placeholder="New rule..." style="flex:1">
-                    <button class="btn btn-secondary" onclick="addRule()" style="padding:0.5rem 1rem">Add</button>
-                </div>
-
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('rules')">Save Rules</button>
-                    <span class="save-msg" id="rules-msg"></span>
-                </div>
-
-                <!-- Policies & Terms section -->
-                <hr class="section-divider">
-                <div class="section-heading">Policies &amp; Terms</div>
-                <div class="section-desc">Edit the terms and conditions shown on the booking page. Guests must agree before completing their booking.</div>
-
-                <div class="card">
+                <div class="card" style="max-width:900px;margin-top:1.5rem">
                     <div class="card-title">Terms &amp; Conditions</div>
+                    <div style="font-size:0.82rem;color:var(--color-stone);margin-bottom:0.75rem">Displayed on the booking page. Guests must agree before completing their booking.</div>
                     <div class="field">
                         <label>Check-in / Check-out times</label>
                         <div class="field-row">
@@ -1919,11 +1977,11 @@
                         <div class="hint" style="margin-bottom:0.4rem">Full T&amp;C displayed to guests. Use blank lines to separate paragraphs. Section headings will be auto-formatted if they start with a number and period (e.g. "1. Booking and Payment").</div>
                         <textarea id="c-terms" rows="18" style="font-size:0.85rem;line-height:1.6"></textarea>
                     </div>
-                </div>
 
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('policies')">Save Policies</button>
-                    <span class="save-msg" id="policies-msg"></span>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('policies')">Save Policies</button>
+                        <span class="save-msg" id="policies-msg"></span>
+                    </div>
                 </div>
             </div>
 
@@ -3610,6 +3668,7 @@
             }
             renderImages(site);
         }
+        updateSiteSelectorMeta();
     }
 
     function renderImages(site) {
@@ -3737,6 +3796,7 @@
         }
 
         renderImages(site);
+        updateSiteSelectorMeta();
         document.getElementById('file-' + site).value = '';
     }
 
@@ -3750,6 +3810,7 @@
             });
             siteImages[site] = siteImages[site].filter(img => img.id !== id);
             renderImages(site);
+            updateSiteSelectorMeta();
         } catch (err) {}
     }
 
@@ -4300,6 +4361,30 @@
             document.getElementById('subpanel-' + btn.dataset.subtab).classList.add('active');
         });
     });
+
+    // --- Content & Media site selector ---
+    function selectContentSite(site) {
+        // Update selector buttons
+        document.querySelectorAll('.site-sel-btn').forEach(function(b) { b.classList.remove('active'); });
+        var activeBtn = document.querySelector('.site-sel-btn[data-site="' + site + '"]');
+        if (activeBtn) activeBtn.classList.add('active');
+
+        // Show/hide site forms
+        document.querySelectorAll('.site-form').forEach(function(f) { f.classList.remove('active'); });
+        var form = document.getElementById('site-form-' + site);
+        if (form) form.classList.add('active');
+    }
+
+    // Update photo counts in site selector buttons
+    function updateSiteSelectorMeta() {
+        var sites = ['garden-view', 'mountain-view', 'suite', 'samavas', 'chhaya'];
+        sites.forEach(function(site) {
+            var el = document.getElementById('sel-meta-' + site);
+            if (!el) return;
+            var count = (siteImages[site] || []).length;
+            el.textContent = count + ' photo' + (count !== 1 ? 's' : '');
+        });
+    }
 
     // --- Init: auto-login if token exists ---
     if (authToken) {
