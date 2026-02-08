@@ -3668,6 +3668,10 @@
             var catToggle = document.querySelector('.category-toggle');
             if (catToggle) catToggle.style.display = currentStep <= 2 ? '' : 'none';
 
+            // Hide search bar after site selection
+            var searchBar = document.querySelector('.search-bar');
+            if (searchBar) searchBar.style.display = currentStep <= 2 ? '' : 'none';
+
             if (currentStep === 2) {
                 document.getElementById('step-select').classList.add('active');
             } else if (currentStep === 3) {
