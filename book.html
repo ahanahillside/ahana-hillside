@@ -3175,13 +3175,18 @@
                 if (priceEl) {
                     var baseGuests = ROOM_SITES.includes(site) ? '1 guest' : '2 guests';
                     var nrDiscount = siteConfig.nonRefundableDiscount || 10;
+                    var nrEnabled = siteConfig.nonRefundableEnabled !== false;
                     var nrPrice = Math.round(cfg.basePrice * (1 - nrDiscount / 100));
                     var flexSel0 = selectedCancellationPolicy === 'flexible' ? ' rate-selected' : '';
-                    var nrSel0 = selectedCancellationPolicy === 'non-refundable' ? ' rate-selected' : '';
+                    var nrSel0 = (nrEnabled && selectedCancellationPolicy === 'non-refundable') ? ' rate-selected' : '';
+                    if (!nrEnabled && selectedCancellationPolicy === 'non-refundable') { selectedCancellationPolicy = 'flexible'; flexSel0 = ' rate-selected'; }
+                    var nrHtml = nrEnabled
+                        ? '<div class="rate-plan' + nrSel0 + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <span class="rate-price-group"><strong>' + sym + nrPrice + '</strong> <span class="rate-per">/ night</span></span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>'
+                        : '';
                     priceEl.innerHTML =
                         '<div class="rate-plans">'
                         + '<div class="rate-plan' + flexSel0 + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <span class="rate-price-group"><strong>' + sym + cfg.basePrice + '</strong> <span class="rate-per">/ night</span></span></div>'
-                        + '<div class="rate-plan' + nrSel0 + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <span class="rate-price-group"><strong>' + sym + nrPrice + '</strong> <span class="rate-per">/ night</span></span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>'
+                        + nrHtml
                         + '</div>'
                         + '<span class="price-note">for ' + baseGuests
                         + (cfg.extraGuestFee > 0 ? ' &middot; +' + sym + cfg.extraGuestFee + ' per extra guest' : '')
@@ -3307,12 +3312,16 @@
             }
             noteHtml += '</span>';
 
+            var nrEnabled = siteConfig.nonRefundableEnabled !== false;
+            if (!nrEnabled && selectedCancellationPolicy === 'non-refundable') { selectedCancellationPolicy = 'flexible'; }
             var flexSel = selectedCancellationPolicy === 'flexible' ? ' rate-selected' : '';
-            var nrSel = selectedCancellationPolicy === 'non-refundable' ? ' rate-selected' : '';
+            var nrSel = (nrEnabled && selectedCancellationPolicy === 'non-refundable') ? ' rate-selected' : '';
 
             let html = '<div class="rate-plans">';
             html += '<div class="rate-plan' + flexSel + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <span class="rate-price-group"><strong>' + sym + perNight + '</strong> <span class="rate-per">/ night</span></span></div>';
-            html += '<div class="rate-plan' + nrSel + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <span class="rate-price-group"><strong>' + sym + nrPerNight + '</strong> <span class="rate-per">/ night</span></span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>';
+            if (nrEnabled) {
+                html += '<div class="rate-plan' + nrSel + '" onclick="selectPolicy(\'non-refundable\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-nonrefundable">Non-refundable</span> <span class="rate-price-group"><strong>' + sym + nrPerNight + '</strong> <span class="rate-per">/ night</span></span> <span class="rate-save">Save ' + nrDiscount + '%</span></div>';
+            }
             html += '</div>';
             html += noteHtml;
 
