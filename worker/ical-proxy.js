@@ -1456,6 +1456,51 @@ export default {
       }
     }
 
+    // --- POST /test-email — admin only, sends a test email and returns Resend response ---
+    if (path === '/test-email' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const settings = await env.CONFIG.get('notification-settings', 'json');
+        if (!settings || !settings.email || !settings.apiKey) {
+          return jsonResponse({ error: 'Email notifications not configured. Save your settings first.' }, 400, origin);
+        }
+
+        const fromEmail = settings.fromEmail || 'bookings@notifications.ahanahillside.com';
+
+        const resendRes = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + settings.apiKey,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: 'Ahana Hillside <' + fromEmail + '>',
+            to: [settings.email],
+            subject: 'Test Email — Ahana Hillside Notifications',
+            html: '<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px">'
+              + '<h2 style="color:#2C3E2D;margin-bottom:4px">Test Email</h2>'
+              + '<p style="color:#A69583;font-size:14px;margin-top:0">Ahana Hillside Notifications</p>'
+              + '<hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">'
+              + '<p style="font-size:14px;color:#3D3D3D">If you are reading this, your email notifications are working correctly.</p>'
+              + '<p style="font-size:14px;color:#3D3D3D">You will receive an email like this whenever a new booking is submitted.</p>'
+              + '<hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">'
+              + '<p style="font-size:13px;color:#A69583">Sent from your <a href="https://www.ahanahillside.com/admin" style="color:#2C3E2D">Admin Dashboard</a>.</p>'
+              + '</div>',
+          }),
+        });
+
+        const resendData = await resendRes.json();
+
+        if (resendRes.ok) {
+          return jsonResponse({ success: true, resendId: resendData.id }, 200, origin);
+        } else {
+          return jsonResponse({ error: 'Resend API error', detail: resendData.message || JSON.stringify(resendData) }, 400, origin);
+        }
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to send test email', detail: err.message }, 500, origin);
+      }
+    }
+
     // --- GET /calendar/:site.ics — public, iCal feed for Hipcamp to import ---
     const calMatch = path.match(/^\/calendar\/(samavas|chhaya|mountain-view|garden-view|suite)\.ics$/);
     if (calMatch && request.method === 'GET') {
