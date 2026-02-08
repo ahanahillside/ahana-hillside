@@ -657,13 +657,24 @@
         .highlight-tag {
             display: inline-flex;
             align-items: center;
-            gap: 0.3rem;
-            padding: 0.2rem 0.6rem;
+            gap: 0.35rem;
+            padding: 0.3rem 0.65rem;
             border: 1px solid var(--color-light-stone);
+            border-radius: 4px;
             font-size: 0.75rem;
             color: var(--color-charcoal);
             background: #fff;
             white-space: nowrap;
+        }
+        .highlight-tag svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            stroke: var(--color-stone);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .details-toggle {
@@ -721,15 +732,25 @@
         .details-cat-items {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.15rem 1rem;
+            gap: 0.25rem 1rem;
             font-size: 0.8rem;
             color: var(--color-charcoal);
         }
 
-        .details-cat-items span::before {
-            content: '\2713  ';
-            color: var(--color-forest);
-            font-weight: 600;
+        .details-cat-items span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .details-cat-items span svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            stroke: var(--color-forest);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         .campsite-price {
@@ -3120,6 +3141,70 @@
             return div.innerHTML;
         }
 
+        function tagIcon(name) {
+            var n = name.toLowerCase();
+            // View / scenery
+            if (n.includes('mountain view')) return '<svg viewBox="0 0 24 24"><path d="M8 21l4-10 4 10"/><path d="M2 21l5-7 3 4"/><circle cx="18" cy="5" r="2"/></svg>';
+            if (n.includes('garden view') || n.includes('garden')) return '<svg viewBox="0 0 24 24"><path d="M12 18V12"/><path d="M8 18c0-3.3 1.8-6 4-6s4 2.7 4 6"/><path d="M6 18c0-5 2.7-9 6-9"/><path d="M18 18c0-5-2.7-9-6-9"/><line x1="3" y1="21" x2="21" y2="21"/></svg>';
+            if (n.includes('courtyard')) return '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>';
+            if (n.includes('view')) return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/></svg>';
+            // Outdoor
+            if (n.includes('balcony')) return '<svg viewBox="0 0 24 24"><path d="M3 10h18v2H3z"/><path d="M5 12v8"/><path d="M19 12v8"/><path d="M12 12v8"/><path d="M3 20h18"/><path d="M7 3v7"/><path d="M17 3v7"/></svg>';
+            if (n.includes('patio') || n.includes('terrace') || n.includes('deck')) return '<svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M3 12l9-9 9 9"/><path d="M8 21h8"/></svg>';
+            if (n.includes('outdoor furniture')) return '<svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="3" rx="1"/><path d="M5 14v5"/><path d="M19 14v5"/><path d="M6 11V8a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v3"/></svg>';
+            if (n.includes('outdoor dining')) return '<svg viewBox="0 0 24 24"><line x1="3" y1="11" x2="21" y2="11"/><path d="M5 11v9"/><path d="M19 11v9"/><path d="M12 11v9"/><path d="M8 11V7"/><path d="M16 11V7"/></svg>';
+            // Climate
+            if (n.includes('air con')) return '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="8" rx="2"/><path d="M6 16v2"/><path d="M10 16v4"/><path d="M14 16v2"/><path d="M18 16v4"/><path d="M6 12v1"/><path d="M18 12v1"/></svg>';
+            if (n.includes('fan') && !n.includes('infant')) return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2c3 3 2 7 0 10"/><path d="M22 12c-3 3-7 2-10 0"/><path d="M12 22c-3-3-2-7 0-10"/><path d="M2 12c3-3 7-2 10 0"/></svg>';
+            if (n.includes('heating')) return '<svg viewBox="0 0 24 24"><path d="M12 2c1.5 2 3 4 3 6.5S13.5 13 12 13s-3-2-3-4.5S10.5 4 12 2z"/><path d="M5 21h14"/><path d="M8 18h8v3H8z"/></svg>';
+            // Bathroom
+            if (n.includes('shower')) return '<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><path d="M8 9l2 5v7"/><path d="M16 9l-2 5v7"/><path d="M7 21h2"/><path d="M15 21h2"/></svg>';
+            if (n.includes('toilet') && !n.includes('paper')) return '<svg viewBox="0 0 24 24"><path d="M7 19h10v2H7z"/><path d="M8 12h8v7H8z"/><path d="M9 6h6a2 2 0 0 1 2 2v4H7V8a2 2 0 0 1 2-2z"/></svg>';
+            if (n.includes('toilet paper')) return '<svg viewBox="0 0 24 24"><circle cx="10" cy="12" r="6"/><ellipse cx="10" cy="12" rx="2" ry="6"/><path d="M16 6v12c0 1.1.9 2 2 2h2V4h-2c-1.1 0-2 .9-2 2z"/></svg>';
+            if (n.includes('towel')) return '<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="13" x2="20" y2="13"/><line x1="4" y1="18" x2="20" y2="18"/></svg>';
+            if (n.includes('toiletries') || n.includes('free toiletries')) return '<svg viewBox="0 0 24 24"><rect x="8" y="6" width="4" height="14" rx="1"/><path d="M10 6V4"/><rect x="15" y="9" width="3" height="11" rx="1"/><path d="M16.5 9V7"/></svg>';
+            if (n.includes('hairdryer') || n.includes('hair dryer')) return '<svg viewBox="0 0 24 24"><path d="M3 10h4l5 5v-9l-5 5H3z"/><path d="M12 6l6-3v18l-6-3"/></svg>';
+            if (n.includes('bathrobe') || n.includes('robe')) return '<svg viewBox="0 0 24 24"><path d="M8 3l4 5 4-5"/><path d="M12 8v13"/><path d="M8 3v5l-4 13h16L16 8V3"/></svg>';
+            // Entertainment
+            if (n.includes('tv') || n.includes('television') || n.includes('flat-screen') || n.includes('flat screen')) return '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>';
+            if (n.includes('streaming')) return '<svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21"/></svg>';
+            // Connectivity
+            if (n.includes('wifi') || n.includes('wi-fi') || n.includes('internet') || n.includes('wireless')) return '<svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1"/></svg>';
+            // Sleep / bedding
+            if (n.includes('linen') || n.includes('bed linen')) return '<svg viewBox="0 0 24 24"><path d="M3 18v-3a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8v3"/><rect x="2" y="18" width="20" height="3" rx="1"/><circle cx="8" cy="11" r="2"/></svg>';
+            if (n.includes('hypoallergenic')) return '<svg viewBox="0 0 24 24"><path d="M12 2L9.5 8.5 3 10l5 4.5L6.5 21 12 17.5 17.5 21 16 14.5 21 10l-6.5-1.5z"/></svg>';
+            // Room features
+            if (n.includes('desk') || n.includes('workspace')) return '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="3" rx="1"/><path d="M5 11v8"/><path d="M19 11v8"/></svg>';
+            if (n.includes('seating') || n.includes('chair') || n.includes('sofa')) return '<svg viewBox="0 0 24 24"><path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><rect x="3" y="11" width="18" height="6" rx="2"/><path d="M5 17v3"/><path d="M19 17v3"/></svg>';
+            if (n.includes('wardrobe') || n.includes('closet')) return '<svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="18" rx="1"/><line x1="12" y1="2" x2="12" y2="20"/><path d="M4 20h16"/><line x1="10" y1="10" x2="10" y2="13"/><line x1="14" y1="10" x2="14" y2="13"/></svg>';
+            if (n.includes('safe') || n.includes('safety')) return '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M12 9v6"/></svg>';
+            if (n.includes('socket') || n.includes('plug') || n.includes('power')) return '<svg viewBox="0 0 24 24"><path d="M9 2v6"/><path d="M15 2v6"/><path d="M7 8h10v4a5 5 0 0 1-10 0V8z"/><path d="M12 16v5"/></svg>';
+            // Flooring
+            if (n.includes('tile') || n.includes('marble') || n.includes('floor')) return '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>';
+            // Kitchen / dining
+            if (n.includes('kitchen') || n.includes('kitchenette')) return '<svg viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="10" rx="1"/><path d="M3 14h18"/><circle cx="7" cy="12" r="0.5"/><circle cx="12" cy="12" r="0.5"/><path d="M7 4v6"/><path d="M12 4v6"/><path d="M17 6v4"/></svg>';
+            if (n.includes('coffee') || n.includes('tea') || n.includes('kettle')) return '<svg viewBox="0 0 24 24"><path d="M17 8h2a2 2 0 0 1 0 4h-2"/><rect x="3" y="8" width="14" height="8" rx="1"/><path d="M6 1v3"/><path d="M10 1v3"/><path d="M14 1v3"/><line x1="3" y1="20" x2="17" y2="20"/><path d="M5 16v4"/><path d="M15 16v4"/></svg>';
+            if (n.includes('fridge') || n.includes('refrigerator') || n.includes('minibar')) return '<svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="5" y1="10" x2="19" y2="10"/><line x1="9" y1="5" x2="9" y2="8"/><line x1="9" y1="13" x2="9" y2="16"/></svg>';
+            // Laundry
+            if (n.includes('washing') || n.includes('laundry')) return '<svg viewBox="0 0 24 24"><rect x="3" y="2" width="18" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><circle cx="12" cy="13" r="2"/><circle cx="7" cy="5" r="1"/></svg>';
+            if (n.includes('iron')) return '<svg viewBox="0 0 24 24"><path d="M3 17h18l-3-8H8L3 17z"/><path d="M8 9V5h4"/></svg>';
+            if (n.includes('clothes rack') || n.includes('hanger')) return '<svg viewBox="0 0 24 24"><path d="M12 4a2 2 0 1 0 0 4"/><path d="M12 8l-9 7h18l-9-7z"/><path d="M5 15v5"/><path d="M19 15v5"/></svg>';
+            // Parking / transport
+            if (n.includes('parking')) return '<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>';
+            // Fire / BBQ
+            if (n.includes('bbq') || n.includes('firepit') || n.includes('fire pit') || n.includes('campfire')) return '<svg viewBox="0 0 24 24"><path d="M12 2c2 3 4 5.5 4 8.5a4 4 0 1 1-8 0C8 7.5 10 5 12 2z"/><path d="M5 21h14"/><path d="M8 18h8v3H8z"/></svg>';
+            // Size / measurements
+            if (n.includes('m²') || n.includes('sqm') || n.includes('sq ft') || n.includes('square')) return '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1" fill="none"/><path d="M3 9h3"/><path d="M3 15h3"/><path d="M18 9h3"/><path d="M18 15h3"/><path d="M9 3v3"/><path d="M15 3v3"/><path d="M9 18v3"/><path d="M15 18v3"/></svg>';
+            // Ground floor / accessibility
+            if (n.includes('ground floor') || n.includes('accessible')) return '<svg viewBox="0 0 24 24"><rect x="3" y="13" width="18" height="8" rx="1"/><path d="M7 13V9l5-5 5 5v4"/></svg>';
+            // Smoking
+            if (n.includes('smoking') || n.includes('no smoking')) return '<svg viewBox="0 0 24 24"><rect x="1" y="14" width="16" height="4" rx="1"/><path d="M20 10V7c0-1.1-.9-2-2-2h-1"/><path d="M20 14v4"/><path d="M23 14v4"/><line x1="2" y1="22" x2="22" y2="2" stroke-width="2"/></svg>';
+            // Pets
+            if (n.includes('pet') || n.includes('dog')) return '<svg viewBox="0 0 24 24"><path d="M10 5a2 2 0 1 0-4 0 2 2 0 1 0 4 0z"/><path d="M18 5a2 2 0 1 0-4 0 2 2 0 1 0 4 0z"/><path d="M6 12a2 2 0 1 0-4 0 2 2 0 1 0 4 0z"/><path d="M22 12a2 2 0 1 0-4 0 2 2 0 1 0 4 0z"/><path d="M8 17c0-2.2 1.8-4 4-4s4 1.8 4 4c0 1.5-1.3 3-4 3s-4-1.5-4-3z"/></svg>';
+            // Generic / fallback
+            return '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="1.5"/></svg>';
+        }
+
         function toggleDetails(site) {
             var panel = document.getElementById(site + '-details');
             if (!panel) return;
@@ -3209,7 +3294,7 @@
                     var tags = cfg.amenities || [];
                     if (tags.length > 0) {
                         hlEl.innerHTML = tags.map(function(t) {
-                            return '<span class="highlight-tag">' + escapeHtml(t) + '</span>';
+                            return '<span class="highlight-tag">' + tagIcon(t) + escapeHtml(t) + '</span>';
                         }).join('');
                     } else {
                         hlEl.innerHTML = '';
@@ -3236,7 +3321,7 @@
                     if (cats.length > 0) {
                         catsEl.innerHTML = cats.map(function(cat) {
                             var itemsHtml = (cat.items || []).map(function(item) {
-                                return '<span>' + escapeHtml(item) + '</span>';
+                                return '<span>' + tagIcon(item) + escapeHtml(item) + '</span>';
                             }).join('');
                             return '<div class="details-category">' +
                                 '<h4>' + escapeHtml(cat.name) + '</h4>' +
