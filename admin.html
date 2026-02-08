@@ -911,6 +911,7 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 2px;
+            user-select: none;
         }
 
         .cal-header-cell {
@@ -997,7 +998,86 @@
 
         .legend-available { background: #fff; }
         .legend-blocked { background: #c0392b; border-color: #c0392b; }
+        .legend-selected { background: var(--color-forest); border-color: var(--color-forest); }
         .legend-past { background: #f0f0f0; }
+
+        .cal-cell.selected {
+            background: var(--color-forest);
+            color: #fff;
+            border-radius: 2px;
+        }
+
+        .cal-cell.selected:hover {
+            background: #1e3320;
+        }
+
+        .cal-cell.selected.blocked {
+            background: var(--color-forest);
+            outline: 2px solid #c0392b;
+            outline-offset: -2px;
+        }
+
+        .cal-sel-toolbar {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 0.75rem;
+            margin-top: 0.75rem;
+            background: #f5f2ef;
+            border: 1px solid var(--color-light-stone);
+            border-radius: 4px;
+            font-size: 0.78rem;
+            color: var(--color-charcoal);
+            flex-wrap: wrap;
+        }
+
+        .cal-sel-toolbar.visible {
+            display: flex;
+        }
+
+        .cal-sel-toolbar .sel-count {
+            font-weight: 600;
+            margin-right: auto;
+        }
+
+        .cal-sel-btn {
+            padding: 0.3rem 0.7rem;
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            font-weight: 500;
+            border: 1px solid var(--color-light-stone);
+            cursor: pointer;
+            transition: all 0.15s;
+            background: #fff;
+            color: var(--color-charcoal);
+        }
+
+        .cal-sel-btn:hover {
+            border-color: var(--color-forest);
+            color: var(--color-forest);
+        }
+
+        .cal-sel-btn.sel-block {
+            background: #c0392b;
+            color: #fff;
+            border-color: #c0392b;
+        }
+
+        .cal-sel-btn.sel-block:hover {
+            background: #a93226;
+            border-color: #a93226;
+        }
+
+        .cal-sel-btn.sel-open {
+            background: var(--color-forest);
+            color: #fff;
+            border-color: var(--color-forest);
+        }
+
+        .cal-sel-btn.sel-open:hover {
+            background: #1e3320;
+            border-color: #1e3320;
+        }
 
         /* Upload zone */
         .upload-zone {
@@ -1497,7 +1577,7 @@
 
             <!-- Availability sub-panel -->
             <div class="sub-panel active" id="subpanel-availability">
-                <div class="panel-desc">Click dates to block or unblock them. Blocked dates cannot be booked by guests.</div>
+                <div class="panel-desc">Click dates to select them, then block or open in bulk. Shift+click to select a range. Click+drag to select multiple dates. Blocked dates cannot be booked by guests.</div>
                 <div style="display:flex;gap:1rem;margin-bottom:1rem;font-size:0.78rem;color:#666">
                     <span><span style="display:inline-block;width:12px;height:12px;background:#c0392b;border-radius:2px;vertical-align:middle;margin-right:4px"></span> Manually blocked</span>
                     <span><span style="display:inline-block;width:12px;height:12px;background:#2874a6;border-radius:2px;vertical-align:middle;margin-right:4px"></span> Booked by guest</span>
@@ -1514,6 +1594,12 @@
                         </div>
                         <div class="cal-occupancy" id="cal-occ-samavas"></div>
                         <div class="cal-grid" id="cal-grid-samavas"></div>
+                        <div class="cal-sel-toolbar" id="cal-sel-samavas">
+                            <span class="sel-count" id="cal-sel-count-samavas">0 selected</span>
+                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('samavas')">Block Selected</button>
+                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('samavas')">Open Selected</button>
+                            <button class="cal-sel-btn" onclick="clearSelection('samavas')">Clear</button>
+                        </div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('samavas')">Save</button>
                             <span class="save-msg" id="avail-samavas-msg"></span>
@@ -1530,6 +1616,12 @@
                         </div>
                         <div class="cal-occupancy" id="cal-occ-chhaya"></div>
                         <div class="cal-grid" id="cal-grid-chhaya"></div>
+                        <div class="cal-sel-toolbar" id="cal-sel-chhaya">
+                            <span class="sel-count" id="cal-sel-count-chhaya">0 selected</span>
+                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('chhaya')">Block Selected</button>
+                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('chhaya')">Open Selected</button>
+                            <button class="cal-sel-btn" onclick="clearSelection('chhaya')">Clear</button>
+                        </div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('chhaya')">Save</button>
                             <span class="save-msg" id="avail-chhaya-msg"></span>
@@ -1546,6 +1638,12 @@
                         </div>
                         <div class="cal-occupancy" id="cal-occ-mountain-view"></div>
                         <div class="cal-grid" id="cal-grid-mountain-view"></div>
+                        <div class="cal-sel-toolbar" id="cal-sel-mountain-view">
+                            <span class="sel-count" id="cal-sel-count-mountain-view">0 selected</span>
+                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('mountain-view')">Block Selected</button>
+                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('mountain-view')">Open Selected</button>
+                            <button class="cal-sel-btn" onclick="clearSelection('mountain-view')">Clear</button>
+                        </div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('mountain-view')">Save</button>
                             <span class="save-msg" id="avail-mountain-view-msg"></span>
@@ -1562,6 +1660,12 @@
                         </div>
                         <div class="cal-occupancy" id="cal-occ-garden-view"></div>
                         <div class="cal-grid" id="cal-grid-garden-view"></div>
+                        <div class="cal-sel-toolbar" id="cal-sel-garden-view">
+                            <span class="sel-count" id="cal-sel-count-garden-view">0 selected</span>
+                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('garden-view')">Block Selected</button>
+                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('garden-view')">Open Selected</button>
+                            <button class="cal-sel-btn" onclick="clearSelection('garden-view')">Clear</button>
+                        </div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('garden-view')">Save</button>
                             <span class="save-msg" id="avail-garden-view-msg"></span>
@@ -1578,6 +1682,12 @@
                         </div>
                         <div class="cal-occupancy" id="cal-occ-suite"></div>
                         <div class="cal-grid" id="cal-grid-suite"></div>
+                        <div class="cal-sel-toolbar" id="cal-sel-suite">
+                            <span class="sel-count" id="cal-sel-count-suite">0 selected</span>
+                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('suite')">Block Selected</button>
+                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('suite')">Open Selected</button>
+                            <button class="cal-sel-btn" onclick="clearSelection('suite')">Clear</button>
+                        </div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('suite')">Save</button>
                             <span class="save-msg" id="avail-suite-msg"></span>
@@ -1588,6 +1698,7 @@
                 <div class="cal-legend">
                     <span class="legend-item"><span class="legend-swatch legend-available"></span> Available</span>
                     <span class="legend-item"><span class="legend-swatch legend-blocked"></span> Blocked</span>
+                    <span class="legend-item"><span class="legend-swatch legend-selected"></span> Selected</span>
                     <span class="legend-item"><span class="legend-swatch legend-past"></span> Past</span>
                 </div>
             </div>
@@ -3555,13 +3666,18 @@
     }
 
     // --- Availability / Blocked Dates ---
+    function makeCalState() {
+        return { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set(), selected: new Set(), lastClicked: null };
+    }
     const calState = {
-        samavas: { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
-        chhaya:  { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
-        'mountain-view': { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
-        'garden-view':   { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
-        'suite':         { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set() },
+        samavas: makeCalState(),
+        chhaya:  makeCalState(),
+        'mountain-view': makeCalState(),
+        'garden-view':   makeCalState(),
+        'suite':         makeCalState(),
     };
+    // Track drag-selection state
+    let dragState = { active: false, site: null, startDate: null };
 
     async function loadBlockedDates() {
         // Load confirmed bookings to show booked dates
@@ -3635,16 +3751,24 @@
             const isBlocked = state.blocked.has(dateStr);
             const isBooked = state.booked && state.booked.has(dateStr);
             const isToday = dateStr === todayStr;
+            const isSelected = state.selected.has(dateStr);
 
             let cls = 'cal-cell';
             if (isPast) cls += ' past';
             if (isBooked && !isBlocked) cls += ' booked';
             else if (isBlocked) cls += ' blocked';
             if (isToday) cls += ' today';
+            if (isSelected) cls += ' selected';
 
-            // Booked dates cannot be toggled (only manually blocked can)
-            const clickHandler = (isPast || isBooked) ? '' : ' onclick="toggleDate(\'' + site + '\',\'' + dateStr + '\')"';
-            html += '<div class="' + cls + '"' + clickHandler + ' title="' + (isBooked ? 'Booked by guest' : isBlocked ? 'Manually blocked' : '') + '">' + d + '</div>';
+            // Past and booked dates cannot be interacted with
+            let handlers = '';
+            if (!isPast && !isBooked) {
+                handlers = ' onmousedown="calMouseDown(event,\'' + site + '\',\'' + dateStr + '\')"'
+                    + ' onmouseenter="calMouseEnter(event,\'' + site + '\',\'' + dateStr + '\')"';
+            }
+
+            const title = isBooked ? 'Booked by guest' : isBlocked ? 'Manually blocked' : '';
+            html += '<div class="' + cls + '"' + handlers + ' data-date="' + dateStr + '" title="' + title + '">' + d + '</div>';
         }
 
         grid.innerHTML = html;
@@ -3661,8 +3785,135 @@
             var availCount = daysInMonth - bookedCount - blockedCount;
             occEl.innerHTML = '<strong>' + bookedCount + '</strong> booked &middot; <strong>' + blockedCount + '</strong> blocked &middot; <strong>' + availCount + '</strong> available <span style="color:#bbb">/ ' + daysInMonth + ' nights</span>';
         }
+
+        // Update selection toolbar
+        updateSelToolbar(site);
     }
 
+    // --- Multi-date selection helpers ---
+
+    function getDatesInRange(dateA, dateB) {
+        const dates = [];
+        const start = dateA < dateB ? dateA : dateB;
+        const end = dateA < dateB ? dateB : dateA;
+        const cur = new Date(start + 'T00:00:00');
+        const endD = new Date(end + 'T00:00:00');
+        while (cur <= endD) {
+            dates.push(cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0') + '-' + String(cur.getDate()).padStart(2, '0'));
+            cur.setDate(cur.getDate() + 1);
+        }
+        return dates;
+    }
+
+    function isSelectableDate(site, dateStr) {
+        const state = calState[site];
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+        if (dateStr < todayStr) return false;
+        if (state.booked && state.booked.has(dateStr)) return false;
+        return true;
+    }
+
+    function updateSelToolbar(site) {
+        const state = calState[site];
+        const toolbar = document.getElementById('cal-sel-' + site);
+        const countEl = document.getElementById('cal-sel-count-' + site);
+        if (!toolbar) return;
+        const count = state.selected.size;
+        if (count > 0) {
+            toolbar.classList.add('visible');
+            countEl.textContent = count + ' date' + (count === 1 ? '' : 's') + ' selected';
+        } else {
+            toolbar.classList.remove('visible');
+        }
+    }
+
+    function calMouseDown(e, site, dateStr) {
+        e.preventDefault();
+        const state = calState[site];
+
+        if (e.shiftKey && state.lastClicked) {
+            // Shift+click: select range from last clicked to this date
+            const range = getDatesInRange(state.lastClicked, dateStr);
+            range.forEach(function(d) {
+                if (isSelectableDate(site, d)) state.selected.add(d);
+            });
+        } else if (e.ctrlKey || e.metaKey) {
+            // Ctrl/Cmd+click: toggle individual date in selection
+            if (state.selected.has(dateStr)) {
+                state.selected.delete(dateStr);
+            } else {
+                state.selected.add(dateStr);
+            }
+        } else {
+            // Plain click: start drag selection
+            dragState = { active: true, site: site, startDate: dateStr, lastHovered: dateStr };
+            // If date is already the only selected date, deselect it (toggle behavior)
+            if (state.selected.size === 1 && state.selected.has(dateStr)) {
+                state.selected.clear();
+            } else {
+                state.selected.clear();
+                state.selected.add(dateStr);
+            }
+        }
+
+        state.lastClicked = dateStr;
+        renderCalendar(site);
+    }
+
+    function calMouseEnter(e, site, dateStr) {
+        if (!dragState.active || dragState.site !== site) return;
+        if (dateStr === dragState.lastHovered) return;
+        dragState.lastHovered = dateStr;
+
+        const state = calState[site];
+        // Recompute selection as range from start to current hover
+        state.selected.clear();
+        const range = getDatesInRange(dragState.startDate, dateStr);
+        range.forEach(function(d) {
+            if (isSelectableDate(site, d)) state.selected.add(d);
+        });
+        renderCalendar(site);
+    }
+
+    // Global mouseup to end drag selection
+    document.addEventListener('mouseup', function() {
+        if (dragState.active) {
+            dragState.active = false;
+        }
+    });
+
+    // Prevent text selection while dragging on calendar grids
+    document.addEventListener('selectstart', function(e) {
+        if (dragState.active) e.preventDefault();
+    });
+
+    // --- Bulk actions ---
+
+    function bulkBlock(site) {
+        const state = calState[site];
+        state.selected.forEach(function(dateStr) {
+            state.blocked.add(dateStr);
+        });
+        state.selected.clear();
+        renderCalendar(site);
+    }
+
+    function bulkOpen(site) {
+        const state = calState[site];
+        state.selected.forEach(function(dateStr) {
+            state.blocked.delete(dateStr);
+        });
+        state.selected.clear();
+        renderCalendar(site);
+    }
+
+    function clearSelection(site) {
+        calState[site].selected.clear();
+        renderCalendar(site);
+    }
+
+    // Legacy single-click toggle (kept for backward compat but no longer wired to calendar)
     function toggleDate(site, dateStr) {
         const state = calState[site];
         if (state.blocked.has(dateStr)) {
@@ -3678,6 +3929,7 @@
         state.month += dir;
         if (state.month > 11) { state.month = 0; state.year++; }
         if (state.month < 0) { state.month = 11; state.year--; }
+        state.selected.clear();
         renderCalendar(site);
     }
 
@@ -3685,11 +3937,13 @@
         const now = new Date();
         calState[site].year = now.getFullYear();
         calState[site].month = now.getMonth();
+        calState[site].selected.clear();
         renderCalendar(site);
     }
 
     async function saveBlockedDates(site) {
         const dates = [...calState[site].blocked].sort();
+        calState[site].selected.clear();
         try {
             const res = await fetch(WORKER_URL + '/blocked-dates', {
                 method: 'POST',
@@ -3705,6 +3959,7 @@
         } catch (err) {
             showMsg('avail-' + site, 'Connection error', 'error');
         }
+        renderCalendar(site);
     }
 
     // --- Images ---
