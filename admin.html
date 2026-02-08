@@ -831,6 +831,32 @@
 
         .cal-nav-btn:hover { border-color: var(--color-forest); }
 
+        .cal-today-btn {
+            background: none;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.25rem 0.65rem;
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--color-stone);
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+
+        .cal-today-btn:hover { border-color: var(--color-forest); color: var(--color-forest); }
+
+        .cal-occupancy {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            margin-bottom: 0.6rem;
+            line-height: 1.5;
+        }
+
+        .cal-occupancy strong { color: var(--color-charcoal); font-weight: 500; }
+
         .cal-month-label {
             font-family: var(--font-serif);
             font-size: 1.1rem;
@@ -1278,7 +1304,7 @@
                 min-height: 44px;
             }
 
-            .cal-nav-btn {
+            .cal-nav-btn, .cal-today-btn {
                 padding: 0.5rem 0.85rem;
                 min-height: 44px;
             }
@@ -1439,8 +1465,10 @@
                         <div class="cal-nav">
                             <button class="cal-nav-btn" onclick="calNav('samavas', -1)">&larr;</button>
                             <span class="cal-month-label" id="cal-label-samavas"></span>
+                            <button class="cal-today-btn" onclick="calToday('samavas')">Today</button>
                             <button class="cal-nav-btn" onclick="calNav('samavas', 1)">&rarr;</button>
                         </div>
+                        <div class="cal-occupancy" id="cal-occ-samavas"></div>
                         <div class="cal-grid" id="cal-grid-samavas"></div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('samavas')">Save</button>
@@ -1453,8 +1481,10 @@
                         <div class="cal-nav">
                             <button class="cal-nav-btn" onclick="calNav('chhaya', -1)">&larr;</button>
                             <span class="cal-month-label" id="cal-label-chhaya"></span>
+                            <button class="cal-today-btn" onclick="calToday('chhaya')">Today</button>
                             <button class="cal-nav-btn" onclick="calNav('chhaya', 1)">&rarr;</button>
                         </div>
+                        <div class="cal-occupancy" id="cal-occ-chhaya"></div>
                         <div class="cal-grid" id="cal-grid-chhaya"></div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('chhaya')">Save</button>
@@ -1467,8 +1497,10 @@
                         <div class="cal-nav">
                             <button class="cal-nav-btn" onclick="calNav('mountain-view', -1)">&larr;</button>
                             <span class="cal-month-label" id="cal-label-mountain-view"></span>
+                            <button class="cal-today-btn" onclick="calToday('mountain-view')">Today</button>
                             <button class="cal-nav-btn" onclick="calNav('mountain-view', 1)">&rarr;</button>
                         </div>
+                        <div class="cal-occupancy" id="cal-occ-mountain-view"></div>
                         <div class="cal-grid" id="cal-grid-mountain-view"></div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('mountain-view')">Save</button>
@@ -1481,8 +1513,10 @@
                         <div class="cal-nav">
                             <button class="cal-nav-btn" onclick="calNav('garden-view', -1)">&larr;</button>
                             <span class="cal-month-label" id="cal-label-garden-view"></span>
+                            <button class="cal-today-btn" onclick="calToday('garden-view')">Today</button>
                             <button class="cal-nav-btn" onclick="calNav('garden-view', 1)">&rarr;</button>
                         </div>
+                        <div class="cal-occupancy" id="cal-occ-garden-view"></div>
                         <div class="cal-grid" id="cal-grid-garden-view"></div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('garden-view')">Save</button>
@@ -1495,8 +1529,10 @@
                         <div class="cal-nav">
                             <button class="cal-nav-btn" onclick="calNav('suite', -1)">&larr;</button>
                             <span class="cal-month-label" id="cal-label-suite"></span>
+                            <button class="cal-today-btn" onclick="calToday('suite')">Today</button>
                             <button class="cal-nav-btn" onclick="calNav('suite', 1)">&rarr;</button>
                         </div>
+                        <div class="cal-occupancy" id="cal-occ-suite"></div>
                         <div class="cal-grid" id="cal-grid-suite"></div>
                         <div class="save-bar" style="margin-top:1rem">
                             <button class="btn btn-primary" onclick="saveBlockedDates('suite')">Save</button>
@@ -3501,6 +3537,19 @@
         }
 
         grid.innerHTML = html;
+
+        // Occupancy summary
+        var occEl = document.getElementById('cal-occ-' + site);
+        if (occEl) {
+            var bookedCount = 0, blockedCount = 0;
+            for (var d = 1; d <= daysInMonth; d++) {
+                var ds = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                if (state.booked && state.booked.has(ds)) bookedCount++;
+                else if (state.blocked.has(ds)) blockedCount++;
+            }
+            var availCount = daysInMonth - bookedCount - blockedCount;
+            occEl.innerHTML = '<strong>' + bookedCount + '</strong> booked &middot; <strong>' + blockedCount + '</strong> blocked &middot; <strong>' + availCount + '</strong> available <span style="color:#bbb">/ ' + daysInMonth + ' nights</span>';
+        }
     }
 
     function toggleDate(site, dateStr) {
@@ -3518,6 +3567,13 @@
         state.month += dir;
         if (state.month > 11) { state.month = 0; state.year++; }
         if (state.month < 0) { state.month = 11; state.year--; }
+        renderCalendar(site);
+    }
+
+    function calToday(site) {
+        const now = new Date();
+        calState[site].year = now.getFullYear();
+        calState[site].month = now.getMonth();
         renderCalendar(site);
     }
 
