@@ -1161,6 +1161,13 @@
             opacity: 1;
         }
 
+        /* On touch devices, always show image action buttons */
+        @media (hover: none) and (pointer: coarse) {
+            .img-thumb .img-actions {
+                opacity: 1;
+            }
+        }
+
         .img-action-btn {
             flex: 1;
             padding: 5px 0;
@@ -1406,15 +1413,20 @@
             .main-content { margin-left: 0; }
             .main-header { padding: 0.85rem 1rem 0.85rem 3.5rem; }
             .main-header-title { font-size: 1.1rem; }
-            .tab-content { padding: 1.5rem 1rem; }
-            .sub-tabs { padding: 0 1rem; }
-            .sub-tab-btn { padding: 0.55rem 0.85rem; font-size: 0.75rem; }
+            .tab-content { padding: 1.25rem 0.75rem; }
+            .sub-tabs { padding: 0 0.75rem; }
+            .sub-tab-btn { padding: 0.55rem 0.75rem; font-size: 0.75rem; }
             .dash-stats { grid-template-columns: 1fr; }
 
             .field-row { flex-direction: column; gap: 0; }
             .field-row .field { margin-bottom: 1rem; }
             .card-grid { grid-template-columns: 1fr; }
             .card-grid-3 { grid-template-columns: 1fr; }
+
+            /* Cards — reduce padding on small screens */
+            .card { padding: 1rem 1rem; }
+            .booking-card { padding: 1rem 1rem; }
+            .message-card { padding: 1rem 1rem; }
 
             .btn-danger {
                 padding: 0.5rem 0.85rem;
@@ -1433,12 +1445,164 @@
             }
 
             .booking-details {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem 1rem;
+            }
+
+            .booking-actions {
+                flex-wrap: wrap;
+            }
+
+            .booking-actions .btn {
+                min-height: 44px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            /* Image grid — 2 columns on mobile */
+            .image-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.5rem;
+            }
+
+            /* Site selector — scroll horizontally on mobile */
+            .site-selector {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                gap: 0.4rem;
+                padding-bottom: 0.25rem;
+            }
+
+            .site-sel-btn {
+                white-space: nowrap;
+                flex-shrink: 0;
+                min-height: 44px;
+                padding: 0.5rem 0.85rem;
+                font-size: 0.78rem;
+            }
+
+            /* Calendar — tighter on mobile */
+            .cal-cell {
+                padding: 0.35rem 0;
+                font-size: 0.75rem;
+            }
+
+            .cal-header-cell {
+                font-size: 0.62rem;
+                padding: 0.25rem 0;
+            }
+
+            .cal-month-label {
+                font-size: 0.95rem;
+            }
+
+            .cal-legend {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+                font-size: 0.72rem;
+            }
+
+            .cal-sel-toolbar {
+                font-size: 0.72rem;
+                padding: 0.5rem 0.6rem;
+                gap: 0.4rem;
+            }
+
+            .cal-sel-btn {
+                min-height: 36px;
+                padding: 0.3rem 0.6rem;
+            }
+
+            /* Save bar — wrap on mobile */
+            .save-bar {
+                flex-wrap: wrap;
+            }
+
+            .save-bar .btn {
+                min-height: 44px;
+            }
+
+            /* Messages — header stack on small screens */
+            .message-header {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .message-date {
+                align-self: flex-start;
+            }
+
+            /* Explore slot cards */
+            .explore-slot-card {
                 grid-template-columns: 1fr;
             }
 
-            .image-grid {
-                grid-template-columns: 1fr 1fr;
+            .explore-slot-actions {
+                flex-wrap: wrap;
             }
+
+            .explore-slot-actions .btn {
+                min-height: 44px;
+            }
+
+            /* Booking top section — stack on very small screens */
+            .booking-top {
+                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+
+            /* Upload zone */
+            .upload-zone {
+                padding: 1rem;
+            }
+
+            /* Panel description text */
+            .panel-desc {
+                font-size: 0.82rem;
+            }
+
+            .section-desc {
+                font-size: 0.8rem;
+            }
+
+            /* Amenity tags */
+            .amenity-add {
+                flex-wrap: wrap;
+            }
+
+            .amenity-add input {
+                min-width: 0;
+                flex: 1 1 120px;
+            }
+
+            /* Prevent horizontal overflow */
+            .tab-content {
+                overflow-x: hidden;
+            }
+
+            /* Filter buttons — scrollable row */
+            .booking-filters {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 0.25rem;
+            }
+
+            .filter-btn {
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 400px) {
+            .tab-content { padding: 1rem 0.5rem; }
+            .booking-details { grid-template-columns: 1fr; }
+            .image-grid { grid-template-columns: 1fr 1fr; }
+            .stat-card { padding: 1rem; }
+            .card { padding: 0.85rem; }
         }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
