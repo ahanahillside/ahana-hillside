@@ -407,7 +407,49 @@ async function saveImageList(env, site, list) {
   await env.CONFIG.put(`images:${site}`, JSON.stringify(list));
 }
 
-// --- Email notification helper ---
+// --- Email notification helpers ---
+async function sendContactEmail(env, msg) {
+  try {
+    const settings = await env.CONFIG.get('notification-settings', 'json');
+    if (!settings || !settings.enabled || !settings.email || !settings.apiKey) return;
+
+    const fromEmail = settings.fromEmail || 'onboarding@resend.dev';
+
+    const html = `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px">
+        <h2 style="color:#2C3E2D;margin-bottom:4px">New Contact Message</h2>
+        <p style="color:#A69583;font-size:14px;margin-top:0">Ahana Hillside — Contact Form</p>
+        <hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">
+        <table style="width:100%;font-size:14px;border-collapse:collapse">
+          <tr><td style="padding:6px 0;color:#A69583;width:120px">Name</td><td style="padding:6px 0;color:#3D3D3D"><strong>${msg.name}</strong></td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Email</td><td style="padding:6px 0"><a href="mailto:${msg.email}" style="color:#2C3E2D">${msg.email}</a></td></tr>
+          <tr><td style="padding:6px 0;color:#A69583">Subject</td><td style="padding:6px 0;color:#3D3D3D">${msg.subject || 'No subject'}</td></tr>
+        </table>
+        <hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">
+        <div style="font-size:14px;color:#3D3D3D;line-height:1.6;white-space:pre-wrap">${msg.message}</div>
+        <hr style="border:none;border-top:1px solid #e8e0d8;margin:16px 0">
+        <p style="font-size:13px;color:#A69583">View and manage messages on your <a href="https://www.ahanahillside.com/admin" style="color:#2C3E2D">Admin Dashboard</a>.</p>
+      </div>
+    `;
+
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + settings.apiKey,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Ahana Hillside <' + fromEmail + '>',
+        to: [settings.email],
+        subject: 'New Message — ' + (msg.subject || 'No subject') + ' — ' + msg.name,
+        html: html,
+      }),
+    });
+  } catch (e) {
+    // Non-blocking
+  }
+}
+
 async function sendBookingEmail(env, booking) {
   try {
     const settings = await env.CONFIG.get('notification-settings', 'json');
@@ -650,6 +692,10 @@ export default {
         if (messages.length > 200) messages = messages.slice(0, 200);
 
         await env.CONFIG.put('messages', JSON.stringify(messages));
+
+        // Send email notification for new contact message
+        ctx.waitUntil(sendContactEmail(env, messages[0]));
+
         return jsonResponse({ success: true }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Failed to save message', detail: err.message }, 500, origin);
