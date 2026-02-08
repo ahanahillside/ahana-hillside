@@ -436,7 +436,7 @@ async function sendBookingEmail(env, booking) {
       </div>
     `;
 
-    const fromEmail = settings.fromEmail || 'bookings@notifications.ahanahillside.com';
+    const fromEmail = settings.fromEmail || 'onboarding@resend.dev';
 
     await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -1465,7 +1465,7 @@ export default {
           return jsonResponse({ error: 'Email notifications not configured. Save your settings first.' }, 400, origin);
         }
 
-        const fromEmail = settings.fromEmail || 'bookings@notifications.ahanahillside.com';
+        const fromEmail = settings.fromEmail || 'onboarding@resend.dev';
 
         const resendRes = await fetch('https://api.resend.com/emails', {
           method: 'POST',
