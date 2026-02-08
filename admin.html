@@ -1596,23 +1596,6 @@
             <div class="sub-panel" id="subpanel-content">
                 <div class="panel-desc">Manage photos, descriptions, amenities, and campground rules for rooms and campsites.</div>
 
-                <!-- Camping Experience Background -->
-                <div class="section-heading">Camping Experience Background</div>
-                <div class="section-desc">Replace the background of the "Slow Down. Breathe. Reconnect." section. Accepts images (5MB) or videos (50MB). The default SVG illustration is used when no custom background is set.</div>
-
-                <div class="card" style="max-width:900px">
-                    <div class="card-title">Section Background</div>
-                    <div id="campsite-bg-preview" style="margin-bottom:0.75rem"></div>
-                    <div class="upload-zone" id="upload-zone-campsitebg" onclick="document.getElementById('file-campsitebg').click()">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                        <span>Upload background image or video</span>
-                        <input type="file" id="file-campsitebg" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadCampsiteBg(this.files[0])">
-                    </div>
-                    <div class="upload-progress" id="progress-campsitebg"></div>
-                </div>
-
-                <hr class="section-divider">
-
                 <!-- Site selector -->
                 <div class="section-heading">Rooms &amp; Campsites</div>
                 <div class="section-desc">Select a site to edit its descriptions, amenities, and media. First image is the cover. Max 15 per site.</div>
@@ -2321,6 +2304,18 @@
                     <input type="file" id="file-homebg" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadHomepageBg(this.files[0])">
                 </div>
                 <div class="upload-progress" id="progress-homebg"></div>
+            </div>
+
+            <div class="card" style="max-width:900px;margin-top:1.5rem">
+                <div class="card-title">Camping Experience Background</div>
+                <div class="section-desc" style="margin-bottom:0.75rem">Replace the background of the "Slow Down. Breathe. Reconnect." section. Accepts images (5MB) or videos (50MB). The default SVG illustration is used when no custom background is set.</div>
+                <div id="campsite-bg-preview" style="margin-bottom:0.75rem"></div>
+                <div class="upload-zone" id="upload-zone-campsitebg" onclick="document.getElementById('file-campsitebg').click()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span>Upload background image or video</span>
+                    <input type="file" id="file-campsitebg" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadCampsiteBg(this.files[0])">
+                </div>
+                <div class="upload-progress" id="progress-campsitebg"></div>
             </div>
 
             <div class="card" style="max-width:900px;margin-top:1.5rem">
