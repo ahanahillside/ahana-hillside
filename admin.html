@@ -1987,70 +1987,182 @@
 
             <!-- Pricing & Promos sub-panel -->
             <div class="sub-panel" id="subpanel-pricing">
-                <div class="panel-desc">Manage room and campsite rates, rate policies, and discount codes.</div>
+                <div class="panel-desc">Manage per-site rates, rate plans, surcharges, promo codes, and booking add-ons.</div>
 
-                <!-- ==================== ROOMS ==================== -->
-                <div class="section-heading">Room Pricing</div>
-                <div class="section-desc">Base prices per night. Weekend and public holiday surcharges are applied automatically.</div>
+                <!-- Site pricing selector -->
+                <div class="section-heading">Site Pricing</div>
+                <div class="section-desc">Select a site to edit its nightly rates.</div>
 
-                <div class="card-grid card-grid-3">
+                <div class="site-selector" id="pricing-site-selector">
+                    <button class="site-sel-btn active" data-psite="garden-view" onclick="selectPricingSite('garden-view')">Garden View Room<span class="sel-meta" id="psel-meta-garden-view"></span></button>
+                    <button class="site-sel-btn" data-psite="mountain-view" onclick="selectPricingSite('mountain-view')">Mountain View Room<span class="sel-meta" id="psel-meta-mountain-view"></span></button>
+                    <button class="site-sel-btn" data-psite="suite" onclick="selectPricingSite('suite')">Suite<span class="sel-meta" id="psel-meta-suite"></span></button>
+                    <button class="site-sel-btn" data-psite="samavas" onclick="selectPricingSite('samavas')">Samavas<span class="sel-meta" id="psel-meta-samavas"></span></button>
+                    <button class="site-sel-btn" data-psite="chhaya" onclick="selectPricingSite('chhaya')">Chhaya<span class="sel-meta" id="psel-meta-chhaya"></span></button>
+                </div>
+
+                <!-- Per-site pricing forms -->
+                <div class="site-form active" id="price-form-garden-view">
+                <div class="card" style="max-width:500px">
+                    <div class="card-title">GARDEN VIEW ROOM</div>
+                    <div class="field">
+                        <label>Base price per night</label>
+                        <input type="number" id="p-garden-view-base" min="0" step="1">
+                        <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                    </div>
+                    <div class="field">
+                        <label>Extra guest fee (per person per night)</label>
+                        <input type="number" id="p-garden-view-extra" min="0" step="1">
+                    </div>
+                    <div class="field">
+                        <label>Maximum guests</label>
+                        <input type="number" id="p-garden-view-max" min="1" max="50" step="1">
+                    </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('pricing')">Save</button>
+                        <span class="save-msg" id="pricing-garden-view-msg"></span>
+                    </div>
+                </div>
+                </div>
+
+                <div class="site-form" id="price-form-mountain-view">
+                <div class="card" style="max-width:500px">
+                    <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                    <div class="field">
+                        <label>Base price per night</label>
+                        <input type="number" id="p-mountain-view-base" min="0" step="1">
+                        <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                    </div>
+                    <div class="field">
+                        <label>Extra guest fee (per person per night)</label>
+                        <input type="number" id="p-mountain-view-extra" min="0" step="1">
+                    </div>
+                    <div class="field">
+                        <label>Maximum guests</label>
+                        <input type="number" id="p-mountain-view-max" min="1" max="50" step="1">
+                    </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('pricing')">Save</button>
+                        <span class="save-msg" id="pricing-mountain-view-msg"></span>
+                    </div>
+                </div>
+                </div>
+
+                <div class="site-form" id="price-form-suite">
+                <div class="card" style="max-width:500px">
+                    <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                    <div class="field">
+                        <label>Base price per night</label>
+                        <input type="number" id="p-suite-base" min="0" step="1">
+                        <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                    </div>
+                    <div class="field">
+                        <label>Extra guest fee (per person per night)</label>
+                        <input type="number" id="p-suite-extra" min="0" step="1">
+                    </div>
+                    <div class="field">
+                        <label>Maximum guests</label>
+                        <input type="number" id="p-suite-max" min="1" max="50" step="1">
+                    </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('pricing')">Save</button>
+                        <span class="save-msg" id="pricing-suite-msg"></span>
+                    </div>
+                </div>
+                </div>
+
+                <div class="site-form" id="price-form-samavas">
+                <div class="card" style="max-width:500px">
+                    <div class="card-title">SAMAVAS</div>
+                    <div class="field">
+                        <label>Base price per night (1-2 guests)</label>
+                        <input type="number" id="p-samavas-base" min="0" step="1">
+                        <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                    </div>
+                    <div class="field">
+                        <label>Extra guest fee (per person per night)</label>
+                        <input type="number" id="p-samavas-extra" min="0" step="1">
+                    </div>
+                    <div class="field">
+                        <label>Maximum guests</label>
+                        <input type="number" id="p-samavas-max" min="1" max="50" step="1">
+                    </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('pricing')">Save</button>
+                        <span class="save-msg" id="pricing-samavas-msg"></span>
+                    </div>
+                </div>
+                </div>
+
+                <div class="site-form" id="price-form-chhaya">
+                <div class="card" style="max-width:500px">
+                    <div class="card-title">CHHAYA</div>
+                    <div class="field">
+                        <label>Base price per night (1-2 guests)</label>
+                        <input type="number" id="p-chhaya-base" min="0" step="1">
+                        <div class="hint">Shown as "from AU$XX / night" on the site</div>
+                    </div>
+                    <div class="field">
+                        <label>Extra guest fee (per person per night)</label>
+                        <input type="number" id="p-chhaya-extra" min="0" step="1">
+                    </div>
+                    <div class="field">
+                        <label>Maximum guests</label>
+                        <input type="number" id="p-chhaya-max" min="1" max="50" step="1">
+                    </div>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('pricing')">Save</button>
+                        <span class="save-msg" id="pricing-chhaya-msg"></span>
+                    </div>
+                </div>
+                </div>
+
+                <!-- ==================== RATE PLANS ==================== -->
+                <hr class="section-divider">
+                <div class="section-heading">Rate Plans</div>
+                <div class="section-desc">Configure the rate options guests see when booking. These apply to all sites.</div>
+
+                <div class="card-grid">
                     <div class="card">
-                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                        <div class="card-title">Flexible Rate</div>
+                        <div style="font-size:0.82rem;color:var(--color-stone);margin-bottom:0.75rem;line-height:1.6">Guests can cancel for free up to the cutoff date. After that, the booking is non-refundable.</div>
                         <div class="field">
-                            <label>Base price per night</label>
-                            <input type="number" id="p-mountain-view-base" min="0" step="1">
-                            <div class="hint">Standard weeknight rate for 1-2 guests</div>
-                        </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-mountain-view-extra" min="0" step="1">
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-mountain-view-max" min="1" max="50" step="1">
+                            <label>Free cancellation cutoff (days before check-in)</label>
+                            <input type="number" id="p-cancellation-days" min="1" max="90" step="1" value="14">
+                            <div class="hint">e.g. 14 = guests can cancel free up to 14 days before arrival</div>
                         </div>
                     </div>
 
                     <div class="card">
-                        <div class="card-title">GARDEN VIEW ROOM</div>
+                        <div class="card-title">Non-Refundable Rate</div>
+                        <div style="font-size:0.82rem;color:var(--color-stone);margin-bottom:0.75rem;line-height:1.6">A discounted rate for guests who commit to a non-refundable booking. Cannot be cancelled or amended.</div>
                         <div class="field">
-                            <label>Base price per night</label>
-                            <input type="number" id="p-garden-view-base" min="0" step="1">
-                            <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                            <label style="display:flex;align-items:center;gap:0.5rem;text-transform:none;font-size:0.85rem;letter-spacing:0">
+                                <input type="checkbox" id="p-nonrefundable-enabled" style="width:auto;margin:0;padding:0" onchange="toggleNonRefundableFields()">
+                                Enable non-refundable rate
+                            </label>
                         </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-garden-view-extra" min="0" step="1">
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-garden-view-max" min="1" max="50" step="1">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
-                        <div class="field">
-                            <label>Base price per night</label>
-                            <input type="number" id="p-suite-base" min="0" step="1">
-                            <div class="hint">Standard weeknight rate for 1-2 guests</div>
-                        </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-suite-extra" min="0" step="1">
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-suite-max" min="1" max="50" step="1">
+                        <div id="nonrefundable-fields">
+                            <div class="field">
+                                <label>Discount %</label>
+                                <input type="number" id="p-nonrefundable-discount" min="1" max="50" step="1" value="10">
+                                <div class="hint">e.g. 10% off = AU$90 becomes AU$81/night</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Rate Policies (inside Rooms section) -->
-                <div class="section-heading" style="margin-top:1.5rem">Rate Policies</div>
-                <div class="section-desc">Surcharges and booking policies applied to room rates. Calculated as a percentage markup on the base room price above.</div>
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('pricing')">Save Rate Plans</button>
+                    <span class="save-msg" id="rateplans-msg"></span>
+                </div>
 
-                <div class="card-grid card-grid-3">
+                <!-- ==================== SURCHARGES ==================== -->
+                <hr class="section-divider">
+                <div class="section-heading">Surcharges</div>
+                <div class="section-desc">Weekend and holiday markups applied to room rates only. Campsites use flat rates.</div>
+
+                <div class="card-grid">
                     <div class="card">
                         <div class="card-title">Weekend &amp; Holiday Rates</div>
                         <div class="field">
@@ -2061,21 +2173,7 @@
                         <div class="field">
                             <label>Public holiday markup %</label>
                             <input type="number" id="p-holiday-markup" min="0" max="100" step="1" value="25">
-                            <div class="hint">All Australian public holidays (national + state). Holiday takes precedence if both apply.</div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">Cancellation &amp; Booking Policies</div>
-                        <div class="field">
-                            <label>Free cancellation cutoff (days before check-in)</label>
-                            <input type="number" id="p-cancellation-days" min="1" max="90" step="1" value="14">
-                            <div class="hint">Guests can cancel for free up to this many days before arrival</div>
-                        </div>
-                        <div class="field">
-                            <label>Non-refundable discount %</label>
-                            <input type="number" id="p-nonrefundable-discount" min="0" max="50" step="1" value="10">
-                            <div class="hint">Discount offered to guests who choose the non-refundable option</div>
+                            <div class="hint">Holiday takes precedence if both apply</div>
                         </div>
                     </div>
 
@@ -2090,117 +2188,69 @@
                     </div>
                 </div>
 
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('pricing')">Save Room Pricing</button>
-                    <span class="save-msg" id="pricing-msg"></span>
-                </div>
-
-                <!-- ==================== CAMPSITES ==================== -->
-                <hr class="section-divider">
-                <div class="section-heading">Campsite Pricing</div>
-                <div class="section-desc">Flat nightly rates — no weekend or holiday surcharges. These sites are also listed on Hipcamp.</div>
-
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-title">SAMAVAS</div>
-                        <div class="field">
-                            <label>Base price per night (1-2 guests)</label>
-                            <input type="number" id="p-samavas-base" min="0" step="1">
-                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
-                        </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-samavas-extra" min="0" step="1">
-                            <div class="hint">Charged for each guest above 2</div>
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-samavas-max" min="1" max="50" step="1">
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">CHHAYA</div>
-                        <div class="field">
-                            <label>Base price per night (1-2 guests)</label>
-                            <input type="number" id="p-chhaya-base" min="0" step="1">
-                            <div class="hint">Shown as "from AU$XX / night" on the site</div>
-                        </div>
-                        <div class="field">
-                            <label>Extra guest fee (per person per night)</label>
-                            <input type="number" id="p-chhaya-extra" min="0" step="1">
-                            <div class="hint">Charged for each guest above 2</div>
-                        </div>
-                        <div class="field">
-                            <label>Maximum guests</label>
-                            <input type="number" id="p-chhaya-max" min="1" max="50" step="1">
-                        </div>
+                <div class="card" style="max-width:250px;margin-top:1.25rem">
+                    <div class="card-title">Currency</div>
+                    <div class="field">
+                        <label>Display currency</label>
+                        <select id="p-currency">
+                            <option value="AUD">AUD (AU$)</option>
+                            <option value="USD">USD (US$)</option>
+                            <option value="EUR">EUR (&euro;)</option>
+                            <option value="GBP">GBP (&pound;)</option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('campsites')">Save Campsite Pricing</button>
-                    <span class="save-msg" id="campsites-msg"></span>
-                </div>
-
-                <!-- ==================== CURRENCY ==================== -->
-                <hr class="section-divider">
-                <div class="section-heading">Currency</div>
-
-                <div class="field" style="max-width:200px">
-                    <label>Display currency</label>
-                    <select id="p-currency">
-                        <option value="AUD">AUD (AU$)</option>
-                        <option value="USD">USD (US$)</option>
-                        <option value="EUR">EUR (&euro;)</option>
-                        <option value="GBP">GBP (&pound;)</option>
-                    </select>
-                </div>
-
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('currency')">Save Currency</button>
-                    <span class="save-msg" id="currency-msg"></span>
+                    <button class="btn btn-primary" onclick="saveConfig('pricing')">Save Surcharges</button>
+                    <span class="save-msg" id="surcharges-msg"></span>
                 </div>
 
                 <!-- ==================== PROMO CODES ==================== -->
                 <hr class="section-divider">
                 <div class="section-heading">Promo Codes</div>
-                <div class="section-desc">Discount codes that guests can use when booking. These are independent of Hipcamp.</div>
+                <div class="section-desc">Discount codes that guests can use when booking.</div>
 
-                <div id="promo-list"></div>
+                <div class="card" style="max-width:700px">
+                    <div class="card-title">Active Codes</div>
+                    <div id="promo-list"></div>
 
-                <div class="add-row">
-                    <input type="text" id="promo-code" placeholder="Code (e.g. WELCOME10)" style="flex:1;min-width:140px;text-transform:uppercase">
-                    <select id="promo-type" style="width:120px">
-                        <option value="percent">Percentage %</option>
-                        <option value="fixed">Fixed amount $</option>
-                    </select>
-                    <input type="number" id="promo-value" placeholder="Value" min="0" step="1" style="width:80px">
-                    <button class="btn btn-secondary" onclick="addPromo()" style="padding:0.5rem 1rem">Add</button>
-                </div>
+                    <div class="add-row">
+                        <input type="text" id="promo-code" placeholder="Code (e.g. WELCOME10)" style="flex:1;min-width:140px;text-transform:uppercase">
+                        <select id="promo-type" style="width:120px">
+                            <option value="percent">Percentage %</option>
+                            <option value="fixed">Fixed amount $</option>
+                        </select>
+                        <input type="number" id="promo-value" placeholder="Value" min="0" step="1" style="width:80px">
+                        <button class="btn btn-secondary" onclick="addPromo()" style="padding:0.5rem 1rem">Add</button>
+                    </div>
 
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('promos')">Save Promo Codes</button>
-                    <span class="save-msg" id="promos-msg"></span>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('promos')">Save Promo Codes</button>
+                        <span class="save-msg" id="promos-msg"></span>
+                    </div>
                 </div>
 
                 <!-- ==================== BOOKING ADD-ONS ==================== -->
                 <hr class="section-divider">
                 <div class="section-heading">Booking Add-ons</div>
-                <div class="section-desc">Optional extras guests can add when booking (e.g. washing, airport transfers). These appear on the booking form for all sites.</div>
+                <div class="section-desc">Optional extras guests can add when booking (e.g. washing, airport transfers).</div>
 
-                <div id="addons-admin-list"></div>
+                <div class="card" style="max-width:700px">
+                    <div class="card-title">Active Add-ons</div>
+                    <div id="addons-admin-list"></div>
 
-                <div class="add-row" style="flex-wrap:wrap">
-                    <input type="text" id="addon-new-name" placeholder="Name (e.g. Washing)" style="flex:1;min-width:140px">
-                    <input type="number" id="addon-new-price" placeholder="Price" min="0" step="1" style="width:80px">
-                    <input type="text" id="addon-new-desc" placeholder="Description (optional)" style="flex:2;min-width:180px">
-                    <button class="btn btn-secondary" onclick="addAddon()" style="padding:0.5rem 1rem">Add</button>
-                </div>
+                    <div class="add-row" style="flex-wrap:wrap">
+                        <input type="text" id="addon-new-name" placeholder="Name (e.g. Washing)" style="flex:1;min-width:140px">
+                        <input type="number" id="addon-new-price" placeholder="Price" min="0" step="1" style="width:80px">
+                        <input type="text" id="addon-new-desc" placeholder="Description (optional)" style="flex:2;min-width:180px">
+                        <button class="btn btn-secondary" onclick="addAddon()" style="padding:0.5rem 1rem">Add</button>
+                    </div>
 
-                <div class="save-bar">
-                    <button class="btn btn-primary" onclick="saveConfig('addons')">Save Add-ons</button>
-                    <span class="save-msg" id="addons-msg"></span>
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('addons')">Save Add-ons</button>
+                        <span class="save-msg" id="addons-msg"></span>
+                    </div>
                 </div>
             </div>
 
@@ -2594,7 +2644,14 @@
         document.getElementById('p-cancellation-days').value = c.cancellationDays ?? 14;
         document.getElementById('p-nonrefundable-discount').value = c.nonRefundableDiscount ?? 10;
         document.getElementById('p-ota-markup').value = c.otaMarkup ?? 15;
+
+        // Non-refundable toggle
+        var nrEnabled = c.nonRefundableEnabled !== false; // default on for backwards compat
+        document.getElementById('p-nonrefundable-enabled').checked = nrEnabled;
+        toggleNonRefundableFields();
+
         updateOtaComparison();
+        updatePricingSelectorMeta();
 
         // Content — all sites
         ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite'].forEach(function(site) {
@@ -2707,6 +2764,7 @@
             holidayMarkup: parseInt(document.getElementById('p-holiday-markup').value) || 0,
             cancellationDays: parseInt(document.getElementById('p-cancellation-days').value) || 14,
             nonRefundableDiscount: parseInt(document.getElementById('p-nonrefundable-discount').value) || 0,
+            nonRefundableEnabled: document.getElementById('p-nonrefundable-enabled').checked,
             otaMarkup: parseInt(document.getElementById('p-ota-markup').value) || 0,
         };
     }
@@ -4373,6 +4431,38 @@
         document.querySelectorAll('.site-form').forEach(function(f) { f.classList.remove('active'); });
         var form = document.getElementById('site-form-' + site);
         if (form) form.classList.add('active');
+    }
+
+    // --- Pricing site selector ---
+    function selectPricingSite(site) {
+        document.querySelectorAll('#pricing-site-selector .site-sel-btn').forEach(function(b) { b.classList.remove('active'); });
+        var btn = document.querySelector('.site-sel-btn[data-psite="' + site + '"]');
+        if (btn) btn.classList.add('active');
+
+        document.querySelectorAll('#subpanel-pricing .site-form').forEach(function(f) { f.classList.remove('active'); });
+        var form = document.getElementById('price-form-' + site);
+        if (form) form.classList.add('active');
+    }
+
+    function toggleNonRefundableFields() {
+        var enabled = document.getElementById('p-nonrefundable-enabled').checked;
+        document.getElementById('nonrefundable-fields').style.display = enabled ? '' : 'none';
+    }
+
+    function updatePricingSelectorMeta() {
+        var sites = ['garden-view', 'mountain-view', 'suite', 'samavas', 'chhaya'];
+        var sym = 'AU$';
+        if (siteConfig) {
+            var c = siteConfig.currency || 'AUD';
+            sym = c === 'USD' ? 'US$' : c === 'EUR' ? '\u20AC' : c === 'GBP' ? '\u00A3' : 'AU$';
+        }
+        sites.forEach(function(site) {
+            var el = document.getElementById('psel-meta-' + site);
+            if (!el) return;
+            var baseEl = document.getElementById('p-' + site + '-base');
+            var price = baseEl ? baseEl.value : '0';
+            el.textContent = 'from ' + sym + price + ' / night';
+        });
     }
 
     // Update photo counts in site selector buttons
