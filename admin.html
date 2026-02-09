@@ -672,6 +672,7 @@
         .booking-card.status-confirmed { border-left: 3px solid var(--color-success); }
         .booking-card.status-cancelled { border-left: 3px solid var(--color-error); }
         .booking-card.status-completed { border-left: 3px solid var(--color-stone); }
+        .booking-card.status-hipcamp { border-left: 3px solid #2D6A4F; }
 
         .booking-top {
             display: flex;
@@ -700,6 +701,7 @@
         .booking-status.st-confirmed { background: #e8f5e9; color: #2e6e2e; }
         .booking-status.st-cancelled { background: #fde8e8; color: #993333; }
         .booking-status.st-completed { background: #eceae8; color: #555; }
+        .booking-status.st-hipcamp { background: #e0f2e9; color: #2D6A4F; }
 
         .booking-details {
             display: grid;
@@ -973,6 +975,16 @@
             background: #21618c;
         }
 
+        .cal-cell.hipcamp {
+            background: #2D6A4F;
+            color: #fff;
+            border-radius: 2px;
+            cursor: not-allowed;
+        }
+        .cal-cell.hipcamp:hover {
+            background: #245a42;
+        }
+
         .cal-cell.today {
             border: 1px solid var(--color-forest);
             font-weight: 600;
@@ -1001,6 +1013,8 @@
         }
 
         .legend-available { background: #fff; }
+        .legend-booked { background: #2874a6; border-color: #2874a6; }
+        .legend-hipcamp { background: #2D6A4F; border-color: #2D6A4F; }
         .legend-blocked { background: #c0392b; border-color: #c0392b; }
         .legend-selected { background: var(--color-forest); border-color: var(--color-forest); }
         .legend-past { background: #f0f0f0; }
@@ -1763,6 +1777,7 @@
                 <button class="filter-btn" data-filter="confirmed" onclick="filterBookings('confirmed')">Confirmed</button>
                 <button class="filter-btn" data-filter="cancelled" onclick="filterBookings('cancelled')">Cancelled</button>
                 <button class="filter-btn" data-filter="completed" onclick="filterBookings('completed')">Completed</button>
+                <button class="filter-btn" data-filter="hipcamp" onclick="filterBookings('hipcamp')">Hipcamp</button>
             </div>
 
             <div id="bookings-list"><div style="font-size:0.9rem;color:var(--color-stone);padding:1rem 0;">Loading bookings...</div></div>
@@ -1893,6 +1908,8 @@
 
                 <div class="cal-legend">
                     <span class="legend-item"><span class="legend-swatch legend-available"></span> Available</span>
+                    <span class="legend-item"><span class="legend-swatch legend-booked"></span> Booked</span>
+                    <span class="legend-item"><span class="legend-swatch legend-hipcamp"></span> Hipcamp</span>
                     <span class="legend-item"><span class="legend-swatch legend-blocked"></span> Blocked</span>
                     <span class="legend-item"><span class="legend-swatch legend-selected"></span> Selected</span>
                     <span class="legend-item"><span class="legend-swatch legend-past"></span> Past</span>
@@ -4013,6 +4030,44 @@
         } catch (err) {
             bookings = [];
         }
+
+        // Fetch Hipcamp iCal events and create virtual booking entries
+        var siteNames = { samavas: 'SAMAVAS', chhaya: 'CHHAYA' };
+        var hipcampSites = ['samavas', 'chhaya'];
+        for (var i = 0; i < hipcampSites.length; i++) {
+            var hSite = hipcampSites[i];
+            try {
+                var calRes = await fetch(WORKER_URL + '?site=' + hSite + '&_t=' + Date.now(), { cache: 'no-store' });
+                var calData = await calRes.json();
+                var events = calData.events || [];
+                for (var j = 0; j < events.length; j++) {
+                    var ev = events[j];
+                    if (!ev.start || !ev.end) continue;
+                    var startD = new Date(ev.start);
+                    var endD = new Date(ev.end);
+                    var nights = Math.round((endD - startD) / (1000 * 60 * 60 * 24));
+                    if (nights <= 0) nights = ev.dates ? ev.dates.length : 1;
+                    bookings.push({
+                        id: 'hipcamp-' + hSite + '-' + ev.start + '-' + ev.end,
+                        site: hSite,
+                        siteName: siteNames[hSite],
+                        checkin: ev.start,
+                        checkout: ev.end,
+                        guests: 0,
+                        name: ev.summary || 'Hipcamp Guest',
+                        email: '',
+                        phone: '',
+                        nights: nights,
+                        total: 0,
+                        currency: 'AUD',
+                        status: 'hipcamp',
+                        source: 'hipcamp',
+                        date: '',
+                    });
+                }
+            } catch (e) {}
+        }
+
         renderBookings();
         updateBookingBadge();
         updateDashStats();
@@ -4030,7 +4085,7 @@
         const filtered = bookingFilter === 'all' ? bookings : bookings.filter(b => b.status === bookingFilter);
 
         // Update filter counts
-        const counts = { all: bookings.length, pending: 0, confirmed: 0, cancelled: 0, completed: 0 };
+        const counts = { all: bookings.length, pending: 0, confirmed: 0, cancelled: 0, completed: 0, hipcamp: 0 };
         bookings.forEach(b => { if (counts[b.status] !== undefined) counts[b.status]++; });
         document.querySelectorAll('.filter-btn').forEach(btn => {
             const f = btn.dataset.filter;
@@ -4050,6 +4105,23 @@
         }
 
         container.innerHTML = filtered.map(b => {
+            // Hipcamp bookings get a simplified card
+            if (b.status === 'hipcamp') {
+                return '<div class="booking-card status-hipcamp">'
+                    + '<div class="booking-top">'
+                    + '<div><span class="booking-site">' + escHtml(b.siteName || b.site) + '</span></div>'
+                    + '<span class="booking-status st-hipcamp">hipcamp</span>'
+                    + '</div>'
+                    + '<div class="booking-details">'
+                    + '<div><div class="booking-detail-label">Guest</div><div class="booking-detail-value">' + escHtml(b.name || 'Hipcamp Guest') + '</div></div>'
+                    + '<div><div class="booking-detail-label">Check-in</div><div class="booking-detail-value">' + escHtml(b.checkin) + '</div></div>'
+                    + '<div><div class="booking-detail-label">Check-out</div><div class="booking-detail-value">' + escHtml(b.checkout) + '</div></div>'
+                    + '<div><div class="booking-detail-label">Nights</div><div class="booking-detail-value">' + b.nights + '</div></div>'
+                    + '</div>'
+                    + '<div style="font-size:0.78rem;color:#2D6A4F;margin-top:0.3rem;font-weight:500">Synced from Hipcamp iCal feed</div>'
+                    + '</div>';
+            }
+
             const sym = { AUD: 'AU$', USD: 'US$', EUR: '€', GBP: '£' }[b.currency] || 'AU$';
             const submitted = b.date ? new Date(b.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
 
@@ -4137,7 +4209,7 @@
 
     // --- Availability / Blocked Dates ---
     function makeCalState() {
-        return { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set(), selected: new Set(), lastClicked: null };
+        return { year: new Date().getFullYear(), month: new Date().getMonth(), blocked: new Set(), booked: new Set(), hipcamp: new Set(), selected: new Set(), lastClicked: null };
     }
     const calState = {
         samavas: makeCalState(),
@@ -4183,6 +4255,19 @@
             });
             calState[site].booked = bookedSet;
 
+            // Fetch Hipcamp iCal dates for campsite sites
+            const hipcampSet = new Set();
+            if (site === 'samavas' || site === 'chhaya') {
+                try {
+                    const calRes = await fetch(WORKER_URL + '?site=' + site + '&_t=' + Date.now(), { cache: 'no-store' });
+                    const calData = await calRes.json();
+                    (calData.events || []).forEach(function(ev) {
+                        (ev.dates || []).forEach(function(d) { hipcampSet.add(d); });
+                    });
+                } catch (e) {}
+            }
+            calState[site].hipcamp = hipcampSet;
+
             renderCalendar(site);
         }
     }
@@ -4220,24 +4305,26 @@
             const isPast = dateStr < todayStr;
             const isBlocked = state.blocked.has(dateStr);
             const isBooked = state.booked && state.booked.has(dateStr);
+            const isHipcamp = state.hipcamp && state.hipcamp.has(dateStr) && !isBooked && !isBlocked;
             const isToday = dateStr === todayStr;
             const isSelected = state.selected.has(dateStr);
 
             let cls = 'cal-cell';
             if (isPast) cls += ' past';
             if (isBooked && !isBlocked) cls += ' booked';
+            else if (isHipcamp) cls += ' hipcamp';
             else if (isBlocked) cls += ' blocked';
             if (isToday) cls += ' today';
             if (isSelected) cls += ' selected';
 
-            // Past and booked dates cannot be interacted with
+            // Past, booked and hipcamp dates cannot be interacted with
             let handlers = '';
-            if (!isPast && !isBooked) {
+            if (!isPast && !isBooked && !isHipcamp) {
                 handlers = ' onmousedown="calMouseDown(event,\'' + site + '\',\'' + dateStr + '\')"'
                     + ' onmouseenter="calMouseEnter(event,\'' + site + '\',\'' + dateStr + '\')"';
             }
 
-            const title = isBooked ? 'Booked by guest' : isBlocked ? 'Manually blocked' : '';
+            const title = isBooked ? 'Booked by guest' : isHipcamp ? 'Booked via Hipcamp' : isBlocked ? 'Manually blocked' : '';
             html += '<div class="' + cls + '"' + handlers + ' data-date="' + dateStr + '" title="' + title + '">' + d + '</div>';
         }
 
@@ -4246,14 +4333,18 @@
         // Occupancy summary
         var occEl = document.getElementById('cal-occ-' + site);
         if (occEl) {
-            var bookedCount = 0, blockedCount = 0;
+            var bookedCount = 0, blockedCount = 0, hipcampCount = 0;
             for (var d = 1; d <= daysInMonth; d++) {
                 var ds = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
                 if (state.booked && state.booked.has(ds)) bookedCount++;
+                else if (state.hipcamp && state.hipcamp.has(ds) && !state.blocked.has(ds)) hipcampCount++;
                 else if (state.blocked.has(ds)) blockedCount++;
             }
-            var availCount = daysInMonth - bookedCount - blockedCount;
-            occEl.innerHTML = '<strong>' + bookedCount + '</strong> booked &middot; <strong>' + blockedCount + '</strong> blocked &middot; <strong>' + availCount + '</strong> available <span style="color:#bbb">/ ' + daysInMonth + ' nights</span>';
+            var availCount = daysInMonth - bookedCount - blockedCount - hipcampCount;
+            var summary = '<strong>' + bookedCount + '</strong> booked';
+            if (hipcampCount > 0) summary += ' &middot; <strong style="color:#2D6A4F">' + hipcampCount + '</strong> hipcamp';
+            summary += ' &middot; <strong>' + blockedCount + '</strong> blocked &middot; <strong>' + availCount + '</strong> available <span style="color:#bbb">/ ' + daysInMonth + ' nights</span>';
+            occEl.innerHTML = summary;
         }
 
         // Update selection toolbar
@@ -4281,6 +4372,7 @@
         const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
         if (dateStr < todayStr) return false;
         if (state.booked && state.booked.has(dateStr)) return false;
+        if (state.hipcamp && state.hipcamp.has(dateStr)) return false;
         return true;
     }
 
