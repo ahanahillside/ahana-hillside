@@ -304,6 +304,28 @@
             animation: fadeIn 1s ease-out 1s both;
         }
 
+        .book-direct-badge {
+            margin-top: 0.75rem;
+            animation: fadeIn 1s ease-out 0.85s both;
+            text-align: center;
+        }
+
+        .book-direct-badge span {
+            display: inline-block;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            color: rgba(255, 253, 249, 0.9);
+            background: rgba(255, 253, 249, 0.12);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 253, 249, 0.2);
+            border-radius: 20px;
+            padding: 0.35rem 1rem;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
         .contact-link {
             font-family: var(--font-serif);
             font-size: 1rem;
@@ -1095,6 +1117,7 @@
                 <a href="/book" class="book-btn">Book Your Stay</a>
                 <a href="/events" class="book-btn book-btn-outline">Events &amp; Retreats</a>
             </div>
+            <div class="book-direct-badge"><span>Book direct &amp; save up to 10%</span></div>
             <div class="contact-link-row">
                 <a href="/contact" class="contact-link">Have a question? Contact Us &rarr;</a>
             </div>
