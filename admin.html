@@ -2296,9 +2296,14 @@
                 <div class="card" style="max-width:500px">
                     <div class="card-title">GARDEN VIEW ROOM</div>
                     <div class="field">
-                        <label>Base price per night</label>
+                        <label>Solo price per night (1 guest)</label>
+                        <input type="number" id="p-garden-view-solo" min="0" step="1">
+                        <div class="hint">Discounted rate when only 1 guest is staying</div>
+                    </div>
+                    <div class="field">
+                        <label>Base price per night (2 guests)</label>
                         <input type="number" id="p-garden-view-base" min="0" step="1">
-                        <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                        <div class="hint">Standard weeknight rate for 2 guests</div>
                     </div>
                     <div class="field">
                         <label>Extra guest fee (per person per night)</label>
@@ -2319,9 +2324,14 @@
                 <div class="card" style="max-width:500px">
                     <div class="card-title">MOUNTAIN VIEW ROOM</div>
                     <div class="field">
-                        <label>Base price per night</label>
+                        <label>Solo price per night (1 guest)</label>
+                        <input type="number" id="p-mountain-view-solo" min="0" step="1">
+                        <div class="hint">Discounted rate when only 1 guest is staying</div>
+                    </div>
+                    <div class="field">
+                        <label>Base price per night (2 guests)</label>
                         <input type="number" id="p-mountain-view-base" min="0" step="1">
-                        <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                        <div class="hint">Standard weeknight rate for 2 guests</div>
                     </div>
                     <div class="field">
                         <label>Extra guest fee (per person per night)</label>
@@ -2342,9 +2352,14 @@
                 <div class="card" style="max-width:500px">
                     <div class="card-title">SUITE WITH GARDEN VIEW</div>
                     <div class="field">
-                        <label>Base price per night</label>
+                        <label>Solo price per night (1 guest)</label>
+                        <input type="number" id="p-suite-solo" min="0" step="1">
+                        <div class="hint">Discounted rate when only 1 guest is staying</div>
+                    </div>
+                    <div class="field">
+                        <label>Base price per night (2 guests)</label>
                         <input type="number" id="p-suite-base" min="0" step="1">
-                        <div class="hint">Standard weeknight rate for 1-2 guests</div>
+                        <div class="hint">Standard weeknight rate for 2 guests</div>
                     </div>
                     <div class="field">
                         <label>Extra guest fee (per person per night)</label>
@@ -2365,7 +2380,12 @@
                 <div class="card" style="max-width:500px">
                     <div class="card-title">SAMAVAS</div>
                     <div class="field">
-                        <label>Base price per night (1-2 guests)</label>
+                        <label>Solo price per night (1 guest)</label>
+                        <input type="number" id="p-samavas-solo" min="0" step="1">
+                        <div class="hint">Discounted rate when only 1 guest is staying</div>
+                    </div>
+                    <div class="field">
+                        <label>Base price per night (2 guests)</label>
                         <input type="number" id="p-samavas-base" min="0" step="1">
                         <div class="hint">Shown as "from AU$XX / night" on the site</div>
                     </div>
@@ -2388,7 +2408,12 @@
                 <div class="card" style="max-width:500px">
                     <div class="card-title">CHHAYA</div>
                     <div class="field">
-                        <label>Base price per night (1-2 guests)</label>
+                        <label>Solo price per night (1 guest)</label>
+                        <input type="number" id="p-chhaya-solo" min="0" step="1">
+                        <div class="hint">Discounted rate when only 1 guest is staying</div>
+                    </div>
+                    <div class="field">
+                        <label>Base price per night (2 guests)</label>
                         <input type="number" id="p-chhaya-base" min="0" step="1">
                         <div class="hint">Shown as "from AU$XX / night" on the site</div>
                     </div>
@@ -2968,18 +2993,23 @@
         const c = siteConfig;
 
         // Pricing
+        document.getElementById('p-samavas-solo').value = c.samavas?.soloPrice ?? 50;
         document.getElementById('p-samavas-base').value = c.samavas?.basePrice ?? 66;
         document.getElementById('p-samavas-extra').value = c.samavas?.extraGuestFee ?? 15;
         document.getElementById('p-samavas-max').value = c.samavas?.maxGuests ?? 20;
+        document.getElementById('p-chhaya-solo').value = c.chhaya?.soloPrice ?? 45;
         document.getElementById('p-chhaya-base').value = c.chhaya?.basePrice ?? 60;
         document.getElementById('p-chhaya-extra').value = c.chhaya?.extraGuestFee ?? 10;
         document.getElementById('p-chhaya-max').value = c.chhaya?.maxGuests ?? 20;
+        document.getElementById('p-mountain-view-solo').value = c['mountain-view']?.soloPrice ?? 65;
         document.getElementById('p-mountain-view-base').value = c['mountain-view']?.basePrice ?? 0;
         document.getElementById('p-mountain-view-extra').value = c['mountain-view']?.extraGuestFee ?? 0;
         document.getElementById('p-mountain-view-max').value = c['mountain-view']?.maxGuests ?? 4;
+        document.getElementById('p-garden-view-solo').value = c['garden-view']?.soloPrice ?? 60;
         document.getElementById('p-garden-view-base').value = c['garden-view']?.basePrice ?? 0;
         document.getElementById('p-garden-view-extra').value = c['garden-view']?.extraGuestFee ?? 0;
         document.getElementById('p-garden-view-max').value = c['garden-view']?.maxGuests ?? 4;
+        document.getElementById('p-suite-solo').value = c['suite']?.soloPrice ?? 85;
         document.getElementById('p-suite-base').value = c['suite']?.basePrice ?? 0;
         document.getElementById('p-suite-extra').value = c['suite']?.extraGuestFee ?? 0;
         document.getElementById('p-suite-max').value = c['suite']?.maxGuests ?? 4;
@@ -3046,6 +3076,7 @@
                 smoking: document.getElementById('c-samavas-smoking').value,
                 amenities: (siteConfig.samavas && siteConfig.samavas.amenities) || [],
                 amenityCategories: (siteConfig.samavas && siteConfig.samavas.amenityCategories) || [],
+                soloPrice: parseFloat(document.getElementById('p-samavas-solo').value) || 0,
                 basePrice: parseFloat(document.getElementById('p-samavas-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-samavas-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-samavas-max').value) || 20,
@@ -3059,6 +3090,7 @@
                 smoking: document.getElementById('c-chhaya-smoking').value,
                 amenities: (siteConfig.chhaya && siteConfig.chhaya.amenities) || [],
                 amenityCategories: (siteConfig.chhaya && siteConfig.chhaya.amenityCategories) || [],
+                soloPrice: parseFloat(document.getElementById('p-chhaya-solo').value) || 0,
                 basePrice: parseFloat(document.getElementById('p-chhaya-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-chhaya-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-chhaya-max').value) || 20,
@@ -3072,6 +3104,7 @@
                 smoking: document.getElementById('c-mountain-view-smoking').value,
                 amenities: (siteConfig['mountain-view'] && siteConfig['mountain-view'].amenities) || [],
                 amenityCategories: (siteConfig['mountain-view'] && siteConfig['mountain-view'].amenityCategories) || [],
+                soloPrice: parseFloat(document.getElementById('p-mountain-view-solo').value) || 0,
                 basePrice: parseFloat(document.getElementById('p-mountain-view-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-mountain-view-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-mountain-view-max').value) || 4,
@@ -3085,6 +3118,7 @@
                 smoking: document.getElementById('c-garden-view-smoking').value,
                 amenities: (siteConfig['garden-view'] && siteConfig['garden-view'].amenities) || [],
                 amenityCategories: (siteConfig['garden-view'] && siteConfig['garden-view'].amenityCategories) || [],
+                soloPrice: parseFloat(document.getElementById('p-garden-view-solo').value) || 0,
                 basePrice: parseFloat(document.getElementById('p-garden-view-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-garden-view-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-garden-view-max').value) || 4,
@@ -3098,6 +3132,7 @@
                 smoking: document.getElementById('c-suite-smoking').value,
                 amenities: (siteConfig['suite'] && siteConfig['suite'].amenities) || [],
                 amenityCategories: (siteConfig['suite'] && siteConfig['suite'].amenityCategories) || [],
+                soloPrice: parseFloat(document.getElementById('p-suite-solo').value) || 0,
                 basePrice: parseFloat(document.getElementById('p-suite-base').value) || 0,
                 extraGuestFee: parseFloat(document.getElementById('p-suite-extra').value) || 0,
                 maxGuests: parseInt(document.getElementById('p-suite-max').value) || 4,
