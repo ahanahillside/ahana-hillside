@@ -884,6 +884,71 @@ export default {
       }
     }
 
+    // --- Package image endpoints ---
+
+    // GET /package-image/:id — public, serves a package image
+    if (path.startsWith('/package-image/') && request.method === 'GET') {
+      const pkgId = path.replace('/package-image/', '');
+      if (!pkgId) return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      try {
+        const { value, metadata } = await env.CONFIG.getWithMetadata('package-image-file:' + pkgId, 'arrayBuffer');
+        if (!value) return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+        return new Response(value, {
+          status: 200,
+          headers: {
+            'Content-Type': metadata?.contentType || 'image/jpeg',
+            'Cache-Control': 'public, max-age=300',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      }
+    }
+
+    // POST /package-image/upload — admin only, upload a package image
+    if (path === '/package-image/upload' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const formData = await request.formData();
+        const file = formData.get('file');
+        const pkgId = formData.get('packageId');
+        if (!file || !(file instanceof File)) {
+          return jsonResponse({ error: 'No file provided' }, 400, origin);
+        }
+        if (!pkgId) {
+          return jsonResponse({ error: 'No packageId provided' }, 400, origin);
+        }
+        if (!GALLERY_IMAGE_TYPES.includes(file.type)) {
+          return jsonResponse({ error: 'Only JPEG, PNG, or WebP images are allowed' }, 400, origin);
+        }
+        if (file.size > MAX_IMAGE_SIZE) {
+          return jsonResponse({ error: 'Image must be under 5MB' }, 400, origin);
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        await env.CONFIG.put('package-image-file:' + pkgId, arrayBuffer, {
+          metadata: { contentType: file.type, name: file.name },
+        });
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Upload failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // POST /package-image/delete — admin only, delete a package image
+    if (path === '/package-image/delete' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const body = await request.json();
+        const pkgId = body.packageId;
+        if (!pkgId) return jsonResponse({ error: 'No packageId' }, 400, origin);
+        await env.CONFIG.delete('package-image-file:' + pkgId);
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);
+      }
+    }
+
     // --- GET /experiences — public, returns affiliate experiences ---
     if (path === '/experiences' && request.method === 'GET') {
       const config = await getConfig(env);
