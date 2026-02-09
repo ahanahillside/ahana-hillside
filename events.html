@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events & Retreats — Ahana Hillside</title>
+    <meta name="description" content="Host your yoga retreat, wellness weekend, or small private event at Ahana Hillside — a peaceful open-air rainforest setting near Cairns, Queensland.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Events & Retreats — Ahana Hillside">
+    <meta property="og:description" content="Host your yoga retreat, wellness weekend, or private event in the tropical rainforest near Cairns.">
+    <meta property="og:url" content="https://ahanahillside.com/events">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg">
+    <meta property="og:site_name" content="Ahana Hillside">
+    <meta property="og:locale" content="en_AU">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Events & Retreats — Ahana Hillside">
+    <meta name="twitter:description" content="Host your yoga retreat, wellness weekend, or private event in the tropical rainforest near Cairns.">
+    <meta name="twitter:image" content="https://ahana-ical-proxy.ahanahillside.workers.dev/homepage-bg">
+
+    <!-- SEO -->
+    <link rel="canonical" href="https://ahanahillside.com/events">
+    <meta name="geo.region" content="AU-QLD">
+    <meta name="geo.placename" content="Aloomba, Queensland">
+    <meta name="keywords" content="yoga retreat Cairns, private event Cairns, wellness retreat Queensland, outdoor event space Cairns, group camping Cairns, rainforest retreat, small party venue Cairns, open air venue tropical North Queensland">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-stone: #A69583;
+            --color-forest: #2C3E2D;
+            --color-cream: #F3F1EC;
+            --color-charcoal: #3D3D3D;
+            --color-light-stone: #e8e0d8;
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--color-cream);
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 1.5rem 2rem 1rem;
+        }
+        .header a { text-decoration: none; }
+        .header-logo-img {
+            height: 70px;
+            width: auto;
+            filter: brightness(0) saturate(100%) invert(20%) sepia(9%) saturate(2184%) hue-rotate(81deg) brightness(96%) contrast(91%);
+        }
+        @media (max-width: 768px) {
+            .header-logo-img { height: 50px; }
+        }
+        @media (max-width: 480px) {
+            .header-logo-img { height: 40px; }
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--color-stone);
+            text-decoration: none;
+            letter-spacing: 0.05em;
+            transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--color-forest); }
+
+        .page-intro {
+            text-align: center;
+            padding: 1rem 2rem 2rem;
+        }
+        .page-intro h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+        .page-intro p {
+            font-family: var(--font-serif);
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--color-stone);
+        }
+        .divider {
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-stone);
+            margin: 1rem auto 0;
+        }
+
+        /* --- Botanical SVG divider --- */
+        .botanical-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem 0;
+        }
+        .botanical-divider .leaf-line {
+            width: 50px;
+            height: 1px;
+            background: var(--color-light-stone);
+        }
+        .botanical-divider svg {
+            color: var(--color-stone);
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        /* --- Content sections --- */
+        .section-cream,
+        .section-white {
+            padding: 3rem 2rem;
+        }
+        .section-cream { background: var(--color-cream); }
+        .section-white { background: #fff; }
+
+        .section-inner {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .section-inner h2 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-inner p {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            color: var(--color-charcoal);
+        }
+
+        /* --- Pull quote banner --- */
+        .pull-quote {
+            background: var(--color-forest);
+            color: var(--color-cream);
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .pull-quote blockquote {
+            max-width: 700px;
+            margin: 0 auto;
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            font-style: italic;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        .pull-quote .quote-attr {
+            margin-top: 0.75rem;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-style: normal;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        /* --- Use case cards --- */
+        .use-cases {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+
+        .use-card {
+            background: var(--color-cream);
+            border-left: 3px solid var(--color-forest);
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        .use-card .use-icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            color: var(--color-forest);
+            opacity: 0.7;
+        }
+        .use-card .use-text h3 {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.35rem;
+        }
+        .use-card .use-text p {
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: var(--color-stone);
+            margin: 0;
+        }
+
+        /* --- What's included list --- */
+        .included-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+        .included-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.85rem;
+            color: var(--color-charcoal);
+        }
+        .included-item svg {
+            flex-shrink: 0;
+            width: 16px;
+            height: 16px;
+            color: var(--color-forest);
+        }
+
+        /* --- Enquiry form --- */
+        .enquiry-section {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 3rem 2rem 3.5rem;
+        }
+        .enquiry-section h2 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--color-forest);
+            margin-bottom: 0.25rem;
+            text-align: center;
+        }
+        .enquiry-subtitle {
+            font-size: 0.85rem;
+            color: var(--color-stone);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-field {
+            margin-bottom: 1rem;
+        }
+        .form-field label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-charcoal);
+            margin-bottom: 0.3rem;
+        }
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 0.65rem 0.75rem;
+            border: 1px solid var(--color-light-stone);
+            background: #fff;
+            font-family: var(--font-sans);
+            font-size: 16px;
+            color: var(--color-charcoal);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .form-field input::placeholder,
+        .form-field textarea::placeholder {
+            color: var(--color-stone);
+            opacity: 0.7;
+        }
+        .form-field input:focus,
+        .form-field select:focus,
+        .form-field textarea:focus {
+            border-color: var(--color-forest);
+        }
+        .form-field textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        .form-field select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A69583' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            padding-right: 2rem;
+        }
+
+        .btn-send {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-cream);
+            background-color: var(--color-forest);
+            border: 1px solid var(--color-forest);
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .btn-send:hover {
+            background-color: transparent;
+            color: var(--color-forest);
+        }
+        .btn-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-msg {
+            display: none;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .form-msg.show { display: block; }
+        .form-msg.success { color: #5a9a5a; }
+        .form-msg.error { color: #b44; }
+        .form-msg p {
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+        .form-msg .detail {
+            font-size: 0.8rem;
+            color: var(--color-stone);
+        }
+
+        /* --- Footer --- */
+        .site-footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            border-top: 1px solid var(--color-light-stone);
+        }
+        .site-footer a {
+            color: var(--color-stone);
+            text-decoration: none;
+            margin: 0 0.5rem;
+            transition: color 0.2s;
+        }
+        .site-footer a:hover { color: var(--color-forest); }
+
+        /* --- Hamburger Menu --- */
+        .menu-btn { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 1000; width: 44px; height: 44px; background: rgba(255,255,255,0.9); border: 1px solid var(--color-light-stone); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; transition: background 0.3s; backdrop-filter: blur(4px); }
+        .menu-btn:hover { background: #fff; }
+        .menu-btn span { display: block; width: 18px; height: 2px; background: var(--color-forest); transition: transform 0.3s, opacity 0.3s; }
+        .menu-btn.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .menu-btn.open span:nth-child(2) { opacity: 0; }
+        .menu-btn.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .menu-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 998; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .menu-overlay.open { opacity: 1; visibility: visible; }
+        .menu-panel { position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw; height: 100%; background: #fff; z-index: 999; transition: right 0.3s ease; display: flex; flex-direction: column; padding: 5rem 2rem 2rem; }
+        .menu-panel.open { right: 0; }
+        .menu-panel nav a { display: block; font-family: var(--font-serif); font-size: 1.4rem; font-weight: 500; color: var(--color-forest); text-decoration: none; padding: 0.75rem 0; border-bottom: 1px solid var(--color-light-stone); transition: color 0.2s, padding-left 0.2s; }
+        .menu-panel nav a:hover { padding-left: 0.5rem; color: var(--color-stone); }
+        .menu-panel nav a:last-child { border-bottom: none; }
+        .menu-footer-nav { margin-top: auto; font-size: 0.75rem; color: var(--color-stone); line-height: 1.8; }
+        .menu-footer-nav a { color: var(--color-stone); text-decoration: none; transition: color 0.2s; }
+        .menu-footer-nav a:hover { color: var(--color-forest); }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .use-cases { grid-template-columns: 1fr; }
+            .included-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .section-cream, .section-white { padding: 2rem 1.25rem; }
+            .pull-quote { padding: 2.5rem 1.5rem; }
+            .enquiry-section { padding: 2rem 1.25rem 3rem; }
+        }
+    </style>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "EventVenue",
+        "name": "Ahana Hillside — Events & Retreats",
+        "url": "https://ahanahillside.com/events",
+        "description": "Open-air rainforest venue for yoga retreats, wellness weekends, and private events near Cairns, Queensland.",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "69863 Bruce Highway",
+            "addressLocality": "Aloomba",
+            "addressRegion": "QLD",
+            "postalCode": "4871",
+            "addressCountry": "AU"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": -17.1078,
+            "longitude": 145.8536
+        },
+        "telephone": "+61466735737"
+    }
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu"><span></span><span></span><span></span></button>
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+    <div class="menu-panel">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/book">Book</a>
+            <a href="/gallery">Gallery</a>
+            <a href="/explore">Explore</a>
+            <a href="/about">About Us</a>
+            <a href="/events">Events</a>
+            <a href="/contact">Contact</a>
+        </nav>
+        <div class="menu-footer-nav">
+            <a href="/disclaimer">Disclaimer</a> &middot; <a href="/terms-and-conditions">Terms &amp; Conditions</a> &middot; <a href="/contact">Get in Touch</a><br>
+            &copy; 2026 Ahana Hillside &middot; ABN: 731 5158 2872
+        </div>
+    </div>
+
+    <div class="header">
+        <a href="/">
+            <img src="images/logo-white.png" alt="Ahana Hillside" class="header-logo-img">
+        </a>
+        <br>
+        <a href="/" class="back-link">&larr; Back to home</a>
+    </div>
+
+    <div class="page-intro" style="animation: fadeIn 0.6s ease-out 0.1s both;">
+        <h1>Events &amp; Retreats</h1>
+        <p>Your private rainforest venue near Cairns</p>
+        <div class="divider"></div>
+    </div>
+
+    <!-- Intro section -->
+    <div class="section-cream" style="animation: fadeIn 0.6s ease-out 0.2s both;">
+        <div class="section-inner">
+            <h2>Host Your Event in Nature</h2>
+            <p>Ahana Hillside offers a unique open-air setting surrounded by tropical rainforest, perfect for intimate gatherings, wellness retreats, and private celebrations. Set on a peaceful hillside just 35 minutes south of Cairns, our grounds provide a natural escape from the everyday — with space to breathe, move, and connect.</p>
+            <p>Whether you're a yoga teacher looking for a retreat location, planning a small birthday celebration, or organising a team offsite, we'll work with you to create a tailored experience that suits your group.</p>
+        </div>
+    </div>
+
+    <!-- Botanical divider -->
+    <div class="botanical-divider">
+        <span class="leaf-line"></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c-4-4-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8-8 12z"/>
+            <path d="M12 10V22"/>
+            <path d="M8 14c2-1 4-1 4-4"/>
+            <path d="M16 14c-2-1-4-1-4-4"/>
+        </svg>
+        <span class="leaf-line"></span>
+    </div>
+
+    <!-- Use cases -->
+    <div class="section-white">
+        <div class="section-inner">
+            <h2>Perfect For</h2>
+            <div class="use-cases">
+                <div class="use-card">
+                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                        <line x1="9" y1="9" x2="9.01" y2="9"/>
+                        <line x1="15" y1="9" x2="15.01" y2="9"/>
+                    </svg>
+                    <div class="use-text">
+                        <h3>Yoga &amp; Wellness Retreats</h3>
+                        <p>Open-air practice space surrounded by rainforest canopy. Perfect for morning yoga, meditation sessions, and wellness workshops.</p>
+                    </div>
+                </div>
+                <div class="use-card">
+                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                    <div class="use-text">
+                        <h3>Private Celebrations</h3>
+                        <p>Birthdays, hen's parties, anniversaries, or milestone gatherings in a unique tropical setting under the stars.</p>
+                    </div>
+                </div>
+                <div class="use-card">
+                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <div class="use-text">
+                        <h3>Team Offsites &amp; Workshops</h3>
+                        <p>Disconnect your team from the office and reconnect in nature. Ideal for creative workshops, planning days, and team building.</p>
+                    </div>
+                </div>
+                <div class="use-card">
+                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                    <div class="use-text">
+                        <h3>Photography &amp; Creative Groups</h3>
+                        <p>Stunning natural backdrops for photo shoots, plein air painting, or creative residencies in the rainforest.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pull quote -->
+    <div class="pull-quote">
+        <blockquote>
+            "A place to gather, breathe, and let the rainforest set the pace."
+        </blockquote>
+        <div class="quote-attr">Ahana Hillside</div>
+    </div>
+
+    <!-- What's included -->
+    <div class="section-white">
+        <div class="section-inner">
+            <h2>What We Offer</h2>
+            <p>Every event enquiry is tailored to your needs. Our grounds and facilities can be configured to suit your group size and requirements. Here's what's available:</p>
+            <div class="included-grid">
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Open-air grounds with rainforest views
+                </div>
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Flat grassy areas for yoga or activities
+                </div>
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Campsite accommodation for guests
+                </div>
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Budget rooms available for add-on
+                </div>
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Campfire pit for evening gatherings
+                </div>
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Shared amenities and facilities
+                </div>
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Exclusive-use options available
+                </div>
+                <div class="included-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    Custom packages and pricing
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botanical divider -->
+    <div class="botanical-divider" style="background:var(--color-cream)">
+        <span class="leaf-line"></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c-4-4-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8-8 12z"/>
+            <path d="M12 10V22"/>
+            <path d="M8 14c2-1 4-1 4-4"/>
+            <path d="M16 14c-2-1-4-1-4-4"/>
+        </svg>
+        <span class="leaf-line"></span>
+    </div>
+
+    <!-- Enquiry form -->
+    <div class="enquiry-section" style="animation: fadeIn 0.6s ease-out 0.3s both;">
+        <h2>Send Us an Enquiry</h2>
+        <p class="enquiry-subtitle">Tell us about your event and we'll get back to you with a custom quote.</p>
+
+        <form id="enquiry-form" onsubmit="handleEnquiry(event)">
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="eq-name">Your name</label>
+                    <input type="text" id="eq-name" placeholder="Full name" required>
+                </div>
+                <div class="form-field">
+                    <label for="eq-email">Email</label>
+                    <input type="email" id="eq-email" placeholder="you@email.com" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="eq-phone">Phone (optional)</label>
+                    <input type="tel" id="eq-phone" placeholder="+61 xxx xxx xxx">
+                </div>
+                <div class="form-field">
+                    <label for="eq-type">Event type</label>
+                    <select id="eq-type" required>
+                        <option value="" disabled selected>Select an option</option>
+                        <option value="Yoga / Wellness Retreat">Yoga / Wellness Retreat</option>
+                        <option value="Private Celebration">Private Celebration</option>
+                        <option value="Team Offsite / Workshop">Team Offsite / Workshop</option>
+                        <option value="Photography / Creative">Photography / Creative</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-field">
+                    <label for="eq-guests">Estimated group size</label>
+                    <input type="text" id="eq-guests" placeholder="e.g. 8-12 people">
+                </div>
+                <div class="form-field">
+                    <label for="eq-dates">Preferred dates</label>
+                    <input type="text" id="eq-dates" placeholder="e.g. 15-17 March 2026">
+                </div>
+            </div>
+            <div class="form-field">
+                <label for="eq-message">Tell us more about your event</label>
+                <textarea id="eq-message" placeholder="What are you planning? Any special requirements, facilities needed, or questions?" required></textarea>
+            </div>
+            <button type="submit" class="btn-send" id="btn-send">Send Enquiry</button>
+        </form>
+
+        <div class="form-msg" id="form-success">
+            <p>Enquiry sent!</p>
+            <span class="detail">Thank you for your interest. We'll review your enquiry and get back to you within 24-48 hours with availability and a custom quote.</span>
+        </div>
+
+        <div class="form-msg" id="form-error">
+            <span class="detail" id="error-text" style="color:#b44">Something went wrong. Please try again or email us directly.</span>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <a href="/disclaimer">Disclaimer</a> &middot; <a href="/terms-and-conditions">Terms &amp; Conditions</a> &middot; <a href="/contact">Contact</a>
+        <br><br>
+        &copy; 2026 Ahana Hillside &middot; ABN: 731 5158 2872
+    </footer>
+
+    <script>
+    function toggleMenu() {
+        document.querySelector('.menu-btn').classList.toggle('open');
+        document.querySelector('.menu-overlay').classList.toggle('open');
+        document.querySelector('.menu-panel').classList.toggle('open');
+    }
+
+    var WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+
+    async function handleEnquiry(e) {
+        e.preventDefault();
+
+        var btn = document.getElementById('btn-send');
+        var form = document.getElementById('enquiry-form');
+        var successMsg = document.getElementById('form-success');
+        var errorMsg = document.getElementById('form-error');
+
+        btn.disabled = true;
+        btn.textContent = 'Sending...';
+        errorMsg.classList.remove('show');
+
+        var eventType = document.getElementById('eq-type').value;
+        var guests = document.getElementById('eq-guests').value.trim();
+        var dates = document.getElementById('eq-dates').value.trim();
+        var phone = document.getElementById('eq-phone').value.trim();
+
+        var details = 'Event Type: ' + eventType;
+        if (guests) details += '\nGroup Size: ' + guests;
+        if (dates) details += '\nPreferred Dates: ' + dates;
+        if (phone) details += '\nPhone: ' + phone;
+        details += '\n\n' + document.getElementById('eq-message').value.trim();
+
+        var data = {
+            name: document.getElementById('eq-name').value.trim(),
+            email: document.getElementById('eq-email').value.trim(),
+            subject: 'Events & Retreats Enquiry — ' + eventType,
+            message: details,
+            date: new Date().toISOString(),
+        };
+
+        try {
+            var res = await fetch(WORKER_URL + '/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            var result = await res.json();
+
+            if (result.success) {
+                form.style.display = 'none';
+                successMsg.classList.add('show');
+            } else {
+                throw new Error(result.error || 'Failed');
+            }
+        } catch (err) {
+            btn.disabled = false;
+            btn.textContent = 'Send Enquiry';
+            document.getElementById('error-text').textContent = 'Could not send enquiry. Please try again.';
+            errorMsg.classList.add('show');
+        }
+    }
+    </script>
+</body>
+</html>
