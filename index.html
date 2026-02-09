@@ -922,6 +922,40 @@
                 padding: 3rem 1.25rem 2rem;
             }
         }
+
+        /* --- Scroll Reveal --- */
+        .sr {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .sr-scale {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .sr.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .sr-scale.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .hero {
+            overflow: hidden;
+        }
+        .hero-content,
+        .scroll-arrow {
+            will-change: transform, opacity;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .sr, .sr-scale {
+                opacity: 1 !important;
+                transform: none !important;
+                transition: none !important;
+            }
+        }
     </style>
 
     <!-- Structured Data -->
@@ -1077,18 +1111,18 @@
     <!-- Welcome Section -->
     <div class="welcome-wrapper" id="neighbourhood">
         <section class="welcome">
-            <p class="welcome-label">Welcome</p>
-            <h2 class="welcome-title"><em>Eco-Friendly</em> Camping &amp; Stays Near Cairns</h2>
-            <div class="welcome-divider"></div>
-            <p class="welcome-desc">
+            <p class="welcome-label sr">Welcome</p>
+            <h2 class="welcome-title sr" style="transition-delay:0.1s"><em>Eco-Friendly</em> Camping &amp; Stays Near Cairns</h2>
+            <div class="welcome-divider sr" style="transition-delay:0.2s"></div>
+            <p class="welcome-desc sr" style="transition-delay:0.3s">
                 Tucked away in the lush green hills just 35 minutes south of Cairns, Ahana Hillside is a private rainforest retreat where nature meets comfort. Wake to birdsong, breathe in the tropical air, and let the pace of the hillside slow you down.
             </p>
-            <p class="welcome-desc">
+            <p class="welcome-desc sr" style="transition-delay:0.35s">
                 Whether you're camping under the stars at one of our spacious campsites or enjoying a budget-friendly room, Ahana is your base to explore the wonders of Tropical North Queensland &mdash; from the Great Barrier Reef to ancient Daintree Rainforest and hidden waterfalls.
             </p>
-            <a href="/about" class="welcome-link">Learn more about us &rarr;</a>
+            <a href="/about" class="welcome-link sr" style="transition-delay:0.4s">Learn more about us &rarr;</a>
 
-            <div class="awards-strip">
+            <div class="awards-strip sr" style="transition-delay:0.5s">
                 <p class="awards-label">Recognised by</p>
                 <div class="awards-row">
                     <a href="https://www.booking.com/hotel/au/ahana-budget-stay-near-cairns.en-gb.html" target="_blank" rel="noopener noreferrer" class="award-badge" aria-label="Booking.com Traveller Review Awards 2026">
@@ -1107,19 +1141,19 @@
         <section class="neighbourhood">
             <div class="neighbourhood-inner">
                 <div class="neighbourhood-text">
-                    <p class="neighbourhood-label">The Neighbourhood</p>
-                    <h2 class="neighbourhood-title"><em>Things to Do</em> Near Cairns &amp; the Great Barrier Reef</h2>
-                    <div class="neighbourhood-divider"></div>
-                    <p class="neighbourhood-desc">
+                    <p class="neighbourhood-label sr">The Neighbourhood</p>
+                    <h2 class="neighbourhood-title sr" style="transition-delay:0.1s"><em>Things to Do</em> Near Cairns &amp; the Great Barrier Reef</h2>
+                    <div class="neighbourhood-divider sr" style="transition-delay:0.2s"></div>
+                    <p class="neighbourhood-desc sr" style="transition-delay:0.3s">
                         Nestled in the hills above Cairns, Ahana Hillside places you at the doorstep of Tropical North Queensland's most extraordinary natural wonders. From ancient rainforests and cascading waterfalls to the Great Barrier Reef, this corner of Australia offers experiences found nowhere else on Earth.
                     </p>
-                    <p class="neighbourhood-desc">
+                    <p class="neighbourhood-desc sr" style="transition-delay:0.35s">
                         Spend your mornings chasing waterfalls at Crystal Cascades or Josephine Falls, your afternoons snorkelling the reef, and your evenings watching the sunset from your hillside retreat.
                     </p>
-                    <a href="/explore" class="neighbourhood-link">More info</a>
+                    <a href="/explore" class="neighbourhood-link sr" style="transition-delay:0.4s">More info</a>
                 </div>
                 <div>
-                    <img id="img-neighbourhood" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/neighbourhood" alt="Tropical North Queensland landscape" class="neighbourhood-image">
+                    <img id="img-neighbourhood" src="https://ahana-ical-proxy.ahanahillside.workers.dev/explore/neighbourhood" alt="Tropical North Queensland landscape" class="neighbourhood-image sr-scale">
                 </div>
             </div>
         </section>
@@ -1127,8 +1161,8 @@
 
     <!-- Discover Experiences -->
     <section class="discover-section" id="discover-section" style="display:none">
-        <h2><em>Discover</em> Tropical North Queensland</h2>
-        <p class="discover-subtitle">World-class experiences right on your doorstep</p>
+        <h2 class="sr"><em>Discover</em> Tropical North Queensland</h2>
+        <p class="discover-subtitle sr" style="transition-delay:0.1s">World-class experiences right on your doorstep</p>
         <div class="discover-scroll-wrap">
             <button class="discover-scroll-btn discover-scroll-prev" id="discover-prev" onclick="scrollDiscover(-1)">&#8249;</button>
             <div class="discover-grid" id="discover-grid"></div>
@@ -1139,8 +1173,8 @@
 
     <!-- Guest Reviews -->
     <section class="reviews-section" id="reviews-section">
-        <h2><em>What Our</em> Guests Say</h2>
-        <p class="reviews-subtitle">Real reviews from real guests</p>
+        <h2 class="sr"><em>What Our</em> Guests Say</h2>
+        <p class="reviews-subtitle sr" style="transition-delay:0.1s">Real reviews from real guests</p>
         <div class="reviews-scroll-wrap">
             <button class="reviews-scroll-btn reviews-scroll-prev" id="reviews-prev" onclick="scrollReviews(-1)">&#8249;</button>
             <div class="reviews-grid" id="reviews-grid"></div>
@@ -1318,6 +1352,72 @@
                 heroImg.src = bgUrl;
             }
         } catch (e) {}
+    })();
+
+    // --- Scroll Reveal (IntersectionObserver) ---
+    (function() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+        document.querySelectorAll('.sr, .sr-scale').forEach(function(el) {
+            observer.observe(el);
+        });
+
+        // Watch for dynamically loaded cards (discover + reviews)
+        function watchGrid(gridId, cardClass) {
+            var grid = document.getElementById(gridId);
+            if (!grid) return;
+            new MutationObserver(function(_, obs) {
+                var cards = grid.querySelectorAll('.' + cardClass);
+                if (!cards.length) return;
+                cards.forEach(function(card, i) {
+                    card.classList.add('sr');
+                    card.style.transitionDelay = (i * 0.08) + 's';
+                });
+                requestAnimationFrame(function() {
+                    cards.forEach(function(card) { observer.observe(card); });
+                });
+                obs.disconnect();
+            }).observe(grid, { childList: true });
+        }
+        watchGrid('discover-grid', 'discover-card');
+        watchGrid('reviews-grid', 'review-card');
+    })();
+
+    // --- Hero Parallax ---
+    (function() {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var content = document.querySelector('.hero-content');
+        var arrow = document.querySelector('.scroll-arrow');
+        var hero = document.querySelector('.hero');
+        if (!content || !hero) return;
+
+        var ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    var y = window.pageYOffset;
+                    var h = hero.offsetHeight;
+                    if (y <= h) {
+                        var r = y / h;
+                        content.style.transform = 'translateY(' + (y * 0.35) + 'px)';
+                        content.style.opacity = Math.max(0, 1 - r * 1.5);
+                        if (arrow) arrow.style.opacity = Math.max(0, 1 - r * 4);
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
     })();
 
     // Load custom neighbourhood image if uploaded
