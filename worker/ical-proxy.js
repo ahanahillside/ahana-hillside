@@ -250,7 +250,9 @@ function getAustralianHolidays(year) {
   return holidays;
 }
 
-const DEFAULT_PASSWORD = 'ahana2026';
+const DEFAULT_PASSWORD = 'ahana2026'; // Only used for first-time migration to hashed password
+const SESSION_TTL = 7200; // 2 hours in seconds
+const PASSWORD_MIN_LENGTH = 8;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
 const MAX_IMAGES_PER_SITE = 15;
 const SITE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -330,14 +332,100 @@ async function getConfig(env) {
   return DEFAULT_CONFIG;
 }
 
-async function getPassword(env) {
-  try {
-    const pwd = await env.CONFIG.get('admin-password');
-    if (pwd) return pwd;
-  } catch (e) {}
-  return DEFAULT_PASSWORD;
+// --- PBKDF2 password hashing helpers (Web Crypto API) ---
+async function hashPassword(password, salt) {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw', enc.encode(password), 'PBKDF2', false, ['deriveBits']
+  );
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'PBKDF2', salt: enc.encode(salt), iterations: 100000, hash: 'SHA-256' },
+    keyMaterial, 256
+  );
+  return btoa(String.fromCharCode(...new Uint8Array(bits)));
 }
 
+function generateSalt() {
+  const arr = new Uint8Array(16);
+  crypto.getRandomValues(arr);
+  return btoa(String.fromCharCode(...arr));
+}
+
+function generateSessionToken() {
+  const arr = new Uint8Array(32);
+  crypto.getRandomValues(arr);
+  return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
+}
+
+// Get stored password hash, or migrate from plaintext/default
+async function getPasswordHash(env) {
+  try {
+    const hashData = await env.CONFIG.get('admin-password-hash', 'json');
+    if (hashData && hashData.hash && hashData.salt) return hashData;
+  } catch (e) {}
+
+  // Migration: check for old plaintext password and hash it
+  let plaintext = DEFAULT_PASSWORD;
+  try {
+    const oldPwd = await env.CONFIG.get('admin-password');
+    if (oldPwd) plaintext = oldPwd;
+  } catch (e) {}
+
+  // Hash the plaintext password and store it
+  const salt = generateSalt();
+  const hash = await hashPassword(plaintext, salt);
+  const hashData = { hash, salt };
+  await env.CONFIG.put('admin-password-hash', JSON.stringify(hashData));
+
+  // Clean up old plaintext password from KV
+  try { await env.CONFIG.delete('admin-password'); } catch (e) {}
+
+  return hashData;
+}
+
+async function verifyPassword(password, env) {
+  const { hash, salt } = await getPasswordHash(env);
+  const inputHash = await hashPassword(password, salt);
+  // Constant-time comparison to prevent timing attacks
+  if (inputHash.length !== hash.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < hash.length; i++) {
+    mismatch |= hash.charCodeAt(i) ^ inputHash.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
+function validatePasswordComplexity(password) {
+  if (!password || password.length < PASSWORD_MIN_LENGTH) {
+    return 'Password must be at least ' + PASSWORD_MIN_LENGTH + ' characters';
+  }
+  if (!/[A-Z]/.test(password)) return 'Password must contain an uppercase letter';
+  if (!/[a-z]/.test(password)) return 'Password must contain a lowercase letter';
+  if (!/[0-9]/.test(password)) return 'Password must contain a number';
+  return null; // valid
+}
+
+// --- Session management ---
+async function createSession(env) {
+  const token = generateSessionToken();
+  await env.CONFIG.put('session:' + token, JSON.stringify({ created: Date.now() }), { expirationTtl: SESSION_TTL });
+  return token;
+}
+
+async function validateSession(token, env) {
+  if (!token) return false;
+  try {
+    const session = await env.CONFIG.get('session:' + token, 'json');
+    return !!session;
+  } catch (e) { return false; }
+}
+
+async function destroySession(token, env) {
+  if (!token) return;
+  try { await env.CONFIG.delete('session:' + token); } catch (e) {}
+}
+
+// --- Rate limiting ---
 const RATE_LIMIT_MAX = 5;        // max failed attempts
 const RATE_LIMIT_WINDOW = 900;   // 15-minute lockout (seconds)
 
@@ -360,7 +448,6 @@ async function recordFailedAttempt(ip, env) {
     const data = await env.CONFIG.get(key, 'json') || { count: 0, firstAttempt: Date.now() };
     const elapsed = (Date.now() - data.firstAttempt) / 1000;
     if (elapsed >= RATE_LIMIT_WINDOW) {
-      // Window expired, start fresh
       await env.CONFIG.put(key, JSON.stringify({ count: 1, firstAttempt: Date.now() }), { expirationTtl: RATE_LIMIT_WINDOW });
     } else {
       data.count++;
@@ -373,22 +460,21 @@ async function clearRateLimit(ip, env) {
   try { await env.CONFIG.delete('ratelimit:' + ip); } catch (e) {}
 }
 
+// --- Auth verification (now uses session tokens) ---
 async function verifyAuth(request, env) {
   const authHeader = request.headers.get('Authorization') || '';
   const token = authHeader.replace('Bearer ', '');
-  const password = await getPassword(env);
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
 
-  // Check rate limit before verifying
+  // Check rate limit
   const { blocked } = await checkRateLimit(ip, env);
   if (blocked) return { ok: false, rateLimited: true };
 
-  if (token === password) {
-    clearRateLimit(ip, env); // Reset on success
+  const valid = await validateSession(token, env);
+  if (valid) {
     return { ok: true, rateLimited: false };
   }
 
-  await recordFailedAttempt(ip, env);
   return { ok: false, rateLimited: false };
 }
 
@@ -640,7 +726,7 @@ export default {
       return jsonResponse({ holidays: unique }, 200, origin, 'public, max-age=86400');
     }
 
-    // --- POST /auth — login, returns token on success ---
+    // --- POST /auth — login, returns session token on success ---
     if (path === '/auth' && request.method === 'POST') {
       const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
       const { blocked } = await checkRateLimit(ip, env);
@@ -649,10 +735,11 @@ export default {
       }
       try {
         const { password } = await request.json();
-        const stored = await getPassword(env);
-        if (password === stored) {
+        const valid = await verifyPassword(password, env);
+        if (valid) {
           await clearRateLimit(ip, env);
-          return jsonResponse({ success: true, token: stored }, 200, origin);
+          const sessionToken = await createSession(env);
+          return jsonResponse({ success: true, token: sessionToken }, 200, origin);
         }
         await recordFailedAttempt(ip, env);
         return jsonResponse({ error: 'Invalid password' }, 401, origin);
@@ -661,16 +748,35 @@ export default {
       }
     }
 
+    // --- POST /logout — destroys session ---
+    if (path === '/logout' && request.method === 'POST') {
+      const authHeader = request.headers.get('Authorization') || '';
+      const token = authHeader.replace('Bearer ', '');
+      await destroySession(token, env);
+      return jsonResponse({ success: true }, 200, origin);
+    }
+
     // --- POST /password — admin only, changes admin password ---
     if (path === '/password' && request.method === 'POST') {
       { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
       try {
         const { newPassword } = await request.json();
-        if (!newPassword || newPassword.length < 6) {
-          return jsonResponse({ error: 'Password must be at least 6 characters' }, 400, origin);
+        const complexityError = validatePasswordComplexity(newPassword);
+        if (complexityError) {
+          return jsonResponse({ error: complexityError }, 400, origin);
         }
-        await env.CONFIG.put('admin-password', newPassword);
-        return jsonResponse({ success: true }, 200, origin);
+        // Hash the new password and store it
+        const salt = generateSalt();
+        const hash = await hashPassword(newPassword, salt);
+        await env.CONFIG.put('admin-password-hash', JSON.stringify({ hash, salt }));
+        // Clean up any old plaintext password
+        try { await env.CONFIG.delete('admin-password'); } catch (e) {}
+        // Invalidate current session and create a new one
+        const authHeader = request.headers.get('Authorization') || '';
+        const oldToken = authHeader.replace('Bearer ', '');
+        await destroySession(oldToken, env);
+        const newSessionToken = await createSession(env);
+        return jsonResponse({ success: true, token: newSessionToken }, 200, origin);
       } catch (err) {
         return jsonResponse({ error: 'Invalid request' }, 400, origin);
       }

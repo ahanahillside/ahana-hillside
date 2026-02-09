@@ -3255,6 +3255,20 @@
     let authToken = sessionStorage.getItem('ahana-token') || '';
     let siteConfig = null;
 
+    // --- Authenticated fetch wrapper: auto-logout on expired session ---
+    async function authFetch(url, options) {
+        const res = await fetch(url, options);
+        if (res.status === 401 && authToken && !url.includes('/auth')) {
+            // Session expired server-side
+            handleLogout();
+            var errorEl = document.getElementById('login-error');
+            errorEl.textContent = 'Session expired. Please log in again.';
+            errorEl.classList.add('show');
+            throw new Error('Session expired');
+        }
+        return res;
+    }
+
     // --- Session timeout (30 min inactivity) ---
     const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
     let sessionTimer = null;
@@ -3365,6 +3379,13 @@
     var dashRefreshInterval = null;
 
     function handleLogout() {
+        // Destroy server-side session
+        if (authToken) {
+            fetch(WORKER_URL + '/logout', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + authToken },
+            }).catch(function() {});
+        }
         authToken = '';
         sessionStorage.removeItem('ahana-token');
         sessionStorage.removeItem('ahana-last-activity');
@@ -3406,7 +3427,7 @@
     // --- Config ---
     async function loadConfig() {
         try {
-            const res = await fetch(WORKER_URL + '/config');
+            const res = await authFetch(WORKER_URL + '/config');
             siteConfig = await res.json();
         } catch (err) {
             siteConfig = null;
@@ -3623,7 +3644,7 @@
         siteConfig = gatherConfig();
 
         try {
-            const res = await fetch(WORKER_URL + '/config', {
+            const res = await authFetch(WORKER_URL + '/config', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3662,7 +3683,7 @@
         }
 
         try {
-            const res = await fetch(WORKER_URL + '/password', {
+            const res = await authFetch(WORKER_URL + '/password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3672,8 +3693,11 @@
             });
             const data = await res.json();
             if (data.success) {
-                authToken = newPwd;
-                sessionStorage.setItem('ahana-token', authToken);
+                // Server returns a new session token after password change
+                if (data.token) {
+                    authToken = data.token;
+                    sessionStorage.setItem('ahana-token', authToken);
+                }
                 resetSessionTimer();
                 showMsg('settings', 'Password updated', 'success');
                 document.getElementById('new-password').value = '';
@@ -3689,7 +3713,7 @@
     // --- Stripe Settings ---
     async function loadStripeSettings() {
         try {
-            const res = await fetch(WORKER_URL + '/stripe-settings', {
+            const res = await authFetch(WORKER_URL + '/stripe-settings', {
                 headers: { 'Authorization': 'Bearer ' + authToken },
             });
             const data = await res.json();
@@ -3727,7 +3751,7 @@
         if (newWebhookSecret) settings.webhookSecret = newWebhookSecret;
 
         try {
-            const res = await fetch(WORKER_URL + '/stripe-settings', {
+            const res = await authFetch(WORKER_URL + '/stripe-settings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3750,7 +3774,7 @@
     // --- Notification Settings ---
     async function loadNotificationSettings() {
         try {
-            const res = await fetch(WORKER_URL + '/notification-settings', {
+            const res = await authFetch(WORKER_URL + '/notification-settings', {
                 headers: { 'Authorization': 'Bearer ' + authToken },
             });
             const data = await res.json();
@@ -3790,7 +3814,7 @@
         }
 
         try {
-            const res = await fetch(WORKER_URL + '/notification-settings', {
+            const res = await authFetch(WORKER_URL + '/notification-settings', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -3813,7 +3837,7 @@
     async function sendTestEmail() {
         showMsg('notif', 'Sending test email...', 'success');
         try {
-            const res = await fetch(WORKER_URL + '/test-email', {
+            const res = await authFetch(WORKER_URL + '/test-email', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -4371,7 +4395,7 @@
 
     async function loadMessages() {
         try {
-            const res = await fetch(WORKER_URL + '/messages', {
+            const res = await authFetch(WORKER_URL + '/messages', {
                 headers: { 'Authorization': 'Bearer ' + authToken },
             });
             const data = await res.json();
@@ -4426,7 +4450,7 @@
 
     async function markRead(id) {
         try {
-            await fetch(WORKER_URL + '/messages/read', {
+            await authFetch(WORKER_URL + '/messages/read', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ id }),
@@ -4441,7 +4465,7 @@
     async function deleteMessage(id) {
         if (!confirm('Delete this message?')) return;
         try {
-            await fetch(WORKER_URL + '/messages/delete', {
+            await authFetch(WORKER_URL + '/messages/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ id }),
@@ -4464,7 +4488,7 @@
 
     async function loadBookings() {
         try {
-            const res = await fetch(WORKER_URL + '/bookings', {
+            const res = await authFetch(WORKER_URL + '/bookings', {
                 headers: { 'Authorization': 'Bearer ' + authToken },
             });
             const data = await res.json();
@@ -4479,7 +4503,7 @@
         for (var i = 0; i < hipcampSites.length; i++) {
             var hSite = hipcampSites[i];
             try {
-                var calRes = await fetch(WORKER_URL + '?site=' + hSite + '&_t=' + Date.now(), { cache: 'no-store' });
+                var calRes = await authFetch(WORKER_URL + '?site=' + hSite + '&_t=' + Date.now(), { cache: 'no-store' });
                 var calData = await calRes.json();
                 var events = calData.events || [];
                 for (var j = 0; j < events.length; j++) {
@@ -4621,7 +4645,7 @@
 
     async function updateBookingStatus(id, status) {
         try {
-            await fetch(WORKER_URL + '/bookings/status', {
+            await authFetch(WORKER_URL + '/bookings/status', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ id, status }),
@@ -4638,7 +4662,7 @@
     async function deleteBooking(id) {
         if (!confirm('Delete this booking permanently?')) return;
         try {
-            await fetch(WORKER_URL + '/bookings/delete', {
+            await authFetch(WORKER_URL + '/bookings/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ id }),
@@ -4667,7 +4691,7 @@
         // Load confirmed bookings to show booked dates
         let allBookings = [];
         try {
-            const bRes = await fetch(WORKER_URL + '/bookings', {
+            const bRes = await authFetch(WORKER_URL + '/bookings', {
                 headers: { 'Authorization': 'Bearer ' + authToken },
             });
             const bData = await bRes.json();
@@ -4677,7 +4701,7 @@
         for (const site of ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite']) {
             // Load manually blocked dates
             try {
-                const res = await fetch(WORKER_URL + '/blocked-dates/' + site);
+                const res = await authFetch(WORKER_URL + '/blocked-dates/' + site);
                 const data = await res.json();
                 calState[site].blocked = new Set(data.blockedDates || []);
             } catch (err) {
@@ -4701,7 +4725,7 @@
             const hipcampSet = new Set();
             if (site === 'samavas' || site === 'chhaya') {
                 try {
-                    const calRes = await fetch(WORKER_URL + '?site=' + site + '&_t=' + Date.now(), { cache: 'no-store' });
+                    const calRes = await authFetch(WORKER_URL + '?site=' + site + '&_t=' + Date.now(), { cache: 'no-store' });
                     const calData = await calRes.json();
                     (calData.events || []).forEach(function(ev) {
                         (ev.dates || []).forEach(function(d) { hipcampSet.add(d); });
@@ -4956,7 +4980,7 @@
         const dates = [...calState[site].blocked].sort();
         calState[site].selected.clear();
         try {
-            const res = await fetch(WORKER_URL + '/blocked-dates', {
+            const res = await authFetch(WORKER_URL + '/blocked-dates', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ site, dates }),
@@ -4979,7 +5003,7 @@
     async function loadImages() {
         for (const site of ['samavas', 'chhaya', 'mountain-view', 'garden-view', 'suite']) {
             try {
-                const res = await fetch(WORKER_URL + '/images/list/' + site);
+                const res = await authFetch(WORKER_URL + '/images/list/' + site);
                 const data = await res.json();
                 siteImages[site] = data.images || [];
             } catch (err) {
@@ -5084,7 +5108,7 @@
             formData.append('file', uploadFile);
 
             try {
-                const res = await fetch(WORKER_URL + '/images/upload', {
+                const res = await authFetch(WORKER_URL + '/images/upload', {
                     method: 'POST',
                     headers: { 'Authorization': 'Bearer ' + authToken },
                     body: formData,
@@ -5122,7 +5146,7 @@
     async function deleteImage(site, id) {
         if (!confirm('Delete this image?')) return;
         try {
-            await fetch(WORKER_URL + '/images/delete', {
+            await authFetch(WORKER_URL + '/images/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ site, id }),
@@ -5145,7 +5169,7 @@
         // Save new order to server
         const order = images.map(img => img.id);
         try {
-            await fetch(WORKER_URL + '/images/reorder', {
+            await authFetch(WORKER_URL + '/images/reorder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ site, order }),
@@ -5159,7 +5183,7 @@
 
     async function loadGalleryItems() {
         try {
-            const res = await fetch(WORKER_URL + '/gallery/list');
+            const res = await authFetch(WORKER_URL + '/gallery/list');
             const data = await res.json();
             galleryItems = data.items || [];
         } catch (err) {
@@ -5209,7 +5233,7 @@
             formData.append('file', file);
 
             try {
-                const res = await fetch(WORKER_URL + '/gallery/upload', {
+                const res = await authFetch(WORKER_URL + '/gallery/upload', {
                     method: 'POST',
                     headers: { 'Authorization': 'Bearer ' + authToken },
                     body: formData,
@@ -5246,7 +5270,7 @@
     async function deleteGalleryItem(id) {
         if (!confirm('Delete this gallery item?')) return;
         try {
-            await fetch(WORKER_URL + '/gallery/delete', {
+            await authFetch(WORKER_URL + '/gallery/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ id }),
@@ -5263,7 +5287,7 @@
         renderGallery();
         const order = galleryItems.map(item => item.id);
         try {
-            await fetch(WORKER_URL + '/gallery/reorder', {
+            await authFetch(WORKER_URL + '/gallery/reorder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ order }),
@@ -5284,7 +5308,7 @@
     async function loadHomepageBg() {
         const preview = document.getElementById('homepage-bg-preview');
         try {
-            const res = await fetch(WORKER_URL + '/homepage-bg/info');
+            const res = await authFetch(WORKER_URL + '/homepage-bg/info');
             const data = await res.json();
             if (data.exists) {
                 const url = WORKER_URL + '/homepage-bg?t=' + Date.now();
@@ -5318,7 +5342,7 @@
         formData.append('file', file);
 
         try {
-            const res = await fetch(WORKER_URL + '/homepage-bg/upload', {
+            const res = await authFetch(WORKER_URL + '/homepage-bg/upload', {
                 method: 'POST',
                 headers: { 'Authorization': 'Bearer ' + authToken },
                 body: formData,
@@ -5340,7 +5364,7 @@
     async function deleteHomepageBg() {
         if (!confirm('Remove custom background? The homepage will revert to the default image.')) return;
         try {
-            await fetch(WORKER_URL + '/homepage-bg/delete', {
+            await authFetch(WORKER_URL + '/homepage-bg/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: '{}',
@@ -5362,7 +5386,7 @@
     async function loadAboutHero() {
         const preview = document.getElementById('about-hero-preview');
         try {
-            const res = await fetch(WORKER_URL + '/about-hero/info');
+            const res = await authFetch(WORKER_URL + '/about-hero/info');
             const data = await res.json();
             if (data.exists) {
                 const url = WORKER_URL + '/about-hero?t=' + Date.now();
@@ -5386,7 +5410,7 @@
         const formData = new FormData();
         formData.append('file', file);
         try {
-            const res = await fetch(WORKER_URL + '/about-hero/upload', {
+            const res = await authFetch(WORKER_URL + '/about-hero/upload', {
                 method: 'POST',
                 headers: { 'Authorization': 'Bearer ' + authToken },
                 body: formData,
@@ -5408,7 +5432,7 @@
     async function deleteAboutHero() {
         if (!confirm('Remove the about page hero image?')) return;
         try {
-            await fetch(WORKER_URL + '/about-hero/delete', {
+            await authFetch(WORKER_URL + '/about-hero/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: '{}',
@@ -5430,7 +5454,7 @@
     async function loadEventsHero() {
         const preview = document.getElementById('events-hero-preview');
         try {
-            const res = await fetch(WORKER_URL + '/events-hero/info');
+            const res = await authFetch(WORKER_URL + '/events-hero/info');
             const data = await res.json();
             if (data.exists) {
                 const url = WORKER_URL + '/events-hero?t=' + Date.now();
@@ -5464,7 +5488,7 @@
         formData.append('file', file);
 
         try {
-            const res = await fetch(WORKER_URL + '/events-hero/upload', {
+            const res = await authFetch(WORKER_URL + '/events-hero/upload', {
                 method: 'POST',
                 headers: { 'Authorization': 'Bearer ' + authToken },
                 body: formData,
@@ -5486,7 +5510,7 @@
     async function deleteEventsHero() {
         if (!confirm('Remove the events page hero background?')) return;
         try {
-            await fetch(WORKER_URL + '/events-hero/delete', {
+            await authFetch(WORKER_URL + '/events-hero/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: '{}',
@@ -5508,7 +5532,7 @@
     async function loadCampsiteBg() {
         const preview = document.getElementById('campsite-bg-preview');
         try {
-            const res = await fetch(WORKER_URL + '/campsite-bg/info');
+            const res = await authFetch(WORKER_URL + '/campsite-bg/info');
             const data = await res.json();
             if (data.exists) {
                 const url = WORKER_URL + '/campsite-bg?t=' + Date.now();
@@ -5560,7 +5584,7 @@
         formData.append('file', uploadFile);
 
         try {
-            const res = await fetch(WORKER_URL + '/campsite-bg/upload', {
+            const res = await authFetch(WORKER_URL + '/campsite-bg/upload', {
                 method: 'POST',
                 headers: { 'Authorization': 'Bearer ' + authToken },
                 body: formData,
@@ -5582,7 +5606,7 @@
     async function deleteCampsiteBg() {
         if (!confirm('Remove custom background? The section will revert to the default SVG illustration.')) return;
         try {
-            await fetch(WORKER_URL + '/campsite-bg/delete', {
+            await authFetch(WORKER_URL + '/campsite-bg/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: '{}',
@@ -5619,7 +5643,7 @@
 
     async function loadExploreSlots() {
         try {
-            const res = await fetch(WORKER_URL + '/explore/list');
+            const res = await authFetch(WORKER_URL + '/explore/list');
             const data = await res.json();
             exploreSlots = data.slots || {};
         } catch (e) {
@@ -5664,7 +5688,7 @@
         formData.append('slot', slot);
 
         try {
-            const res = await fetch(WORKER_URL + '/explore/upload', {
+            const res = await authFetch(WORKER_URL + '/explore/upload', {
                 method: 'POST',
                 headers: { 'Authorization': 'Bearer ' + authToken },
                 body: formData,
@@ -5686,7 +5710,7 @@
     async function deleteExploreSlot(slot) {
         if (!confirm('Remove this image? The page will fall back to the default.')) return;
         try {
-            await fetch(WORKER_URL + '/explore/delete', {
+            await authFetch(WORKER_URL + '/explore/delete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
                 body: JSON.stringify({ slot }),
