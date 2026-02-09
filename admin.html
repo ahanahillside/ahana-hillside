@@ -1686,6 +1686,10 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 Viator
             </button>
+            <button class="nav-item" data-tab="reviews" onclick="switchTab('reviews')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                Reviews
+            </button>
             <button class="nav-item" data-tab="gallery" onclick="switchTab('gallery')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                 Gallery
@@ -2578,6 +2582,44 @@
             </div>
         </div>
 
+        <!-- REVIEWS PANEL -->
+        <div class="tab-panel" id="panel-reviews">
+            <div class="panel-desc">Manage guest reviews displayed on the homepage and booking page. Copy your best reviews from Booking.com, Hipcamp, or Google.</div>
+
+            <div class="card" style="max-width:900px">
+                <div class="card-title">Reviews</div>
+
+                <div id="reviews-admin-list"></div>
+
+                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:1rem">
+                    <input type="text" id="rev-new-name" placeholder="Guest name" style="flex:1;min-width:140px">
+                    <select id="rev-new-source" style="flex:0 0 auto;min-width:150px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;background:#fff">
+                        <option value="booking">Booking.com</option>
+                        <option value="hipcamp">Hipcamp</option>
+                        <option value="google">Google</option>
+                        <option value="direct">Direct Guest</option>
+                    </select>
+                    <select id="rev-new-rating" style="flex:0 0 auto;min-width:80px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;background:#fff">
+                        <option value="5">5 Stars</option>
+                        <option value="4">4 Stars</option>
+                        <option value="3">3 Stars</option>
+                    </select>
+                </div>
+                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
+                    <textarea id="rev-new-text" placeholder="Review text" rows="2" style="flex:1;min-width:300px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;resize:vertical"></textarea>
+                </div>
+                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
+                    <input type="date" id="rev-new-date" style="flex:0 0 auto;min-width:150px">
+                    <button class="btn btn-secondary" onclick="addReview()" style="padding:0.5rem 1rem">Add Review</button>
+                </div>
+
+                <div class="save-bar">
+                    <button class="btn btn-primary" onclick="saveConfig('reviews')">Save Reviews</button>
+                    <span class="save-msg" id="reviews-msg"></span>
+                </div>
+            </div>
+        </div>
+
         <!-- GALLERY PANEL -->
         <div class="tab-panel" id="panel-gallery">
             <div class="section-desc">Upload images and videos to your public gallery page. Max 50 items. Images: 5MB (JPEG, PNG, WebP). Videos: 50MB (MP4, WebM, MOV).</div>
@@ -2975,6 +3017,9 @@
         // Affiliate experiences
         renderExperiences();
 
+        // Guest reviews
+        renderReviews();
+
         // Rules
         renderRules();
 
@@ -3055,6 +3100,7 @@
             promoCodes: siteConfig.promoCodes || {},
             bookingAddons: siteConfig.bookingAddons || [],
             experiences: siteConfig.experiences || [],
+            reviews: siteConfig.reviews || [],
             rules: siteConfig.rules || [],
             checkinTime: document.getElementById('c-checkin-time').value || '3:00 PM',
             checkoutTime: document.getElementById('c-checkout-time').value || '10:00 AM',
@@ -3495,6 +3541,88 @@
         e.imageUrl = newImage.trim();
         e.affiliateUrl = newUrl.trim() || e.affiliateUrl;
         renderExperiences();
+    }
+
+    // --- Reviews ---
+    var reviewSourceLabels = { booking: 'Booking.com', hipcamp: 'Hipcamp', google: 'Google', direct: 'Direct Guest' };
+    var reviewSourceColors = { booking: '#003580', hipcamp: '#2D6A4F', google: '#EA4335', direct: '#A69583' };
+
+    function renderReviews() {
+        var container = document.getElementById('reviews-admin-list');
+        if (!container) return;
+        var list = siteConfig.reviews || [];
+        if (list.length === 0) {
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No reviews yet. Add your best reviews from Booking.com or Hipcamp above.</div>';
+            return;
+        }
+        container.innerHTML = list.map(function(r, i) {
+            var stars = '';
+            for (var s = 0; s < (r.rating || 5); s++) stars += '<span style="color:#E8A83E">&#9733;</span>';
+            var srcColor = reviewSourceColors[r.source] || '#666';
+            var srcLabel = reviewSourceLabels[r.source] || r.source;
+            return '<div class="list-item" style="flex-wrap:wrap;gap:0.5rem">'
+                + '<div style="flex:1;min-width:200px">'
+                + '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem">'
+                + '<strong>' + escapeHtml(r.guestName) + '</strong>'
+                + '<span style="font-size:0.7rem;padding:0.15rem 0.5rem;background:' + srcColor + ';color:#fff;border-radius:3px;letter-spacing:0.02em">' + srcLabel + '</span>'
+                + '<span style="font-size:0.85rem">' + stars + '</span>'
+                + (r.date ? '<span style="font-size:0.75rem;color:var(--color-stone)">' + r.date + '</span>' : '')
+                + '</div>'
+                + '<div style="font-size:0.85rem;color:var(--color-charcoal);line-height:1.5">' + escapeHtml(r.text) + '</div>'
+                + '</div>'
+                + '<div style="display:flex;gap:0.4rem;align-items:center">'
+                + '<button class="btn btn-secondary" onclick="editReview(' + i + ')" style="padding:0.3rem 0.6rem;font-size:0.8rem">Edit</button>'
+                + '<label style="font-size:0.8rem;display:flex;align-items:center;gap:0.3rem;cursor:pointer"><input type="checkbox" onchange="toggleReview(' + i + ')" ' + (r.enabled !== false ? 'checked' : '') + '> Enabled</label>'
+                + '<button class="btn btn-danger" onclick="removeReview(' + i + ')" style="padding:0.3rem 0.6rem">Remove</button>'
+                + '</div></div>';
+        }).join('');
+    }
+
+    function addReview() {
+        var guestName = document.getElementById('rev-new-name').value.trim();
+        var source = document.getElementById('rev-new-source').value;
+        var rating = parseInt(document.getElementById('rev-new-rating').value) || 5;
+        var text = document.getElementById('rev-new-text').value.trim();
+        var date = document.getElementById('rev-new-date').value;
+        if (!guestName || !text) { alert('Guest name and review text are required.'); return; }
+        if (!siteConfig.reviews) siteConfig.reviews = [];
+        siteConfig.reviews.push({ guestName: guestName, source: source, rating: rating, text: text, date: date, enabled: true });
+        document.getElementById('rev-new-name').value = '';
+        document.getElementById('rev-new-text').value = '';
+        document.getElementById('rev-new-date').value = '';
+        renderReviews();
+    }
+
+    function removeReview(index) {
+        if (!siteConfig.reviews) return;
+        siteConfig.reviews.splice(index, 1);
+        renderReviews();
+    }
+
+    function toggleReview(index) {
+        if (!siteConfig.reviews || !siteConfig.reviews[index]) return;
+        siteConfig.reviews[index].enabled = !siteConfig.reviews[index].enabled;
+    }
+
+    function editReview(index) {
+        var r = siteConfig.reviews[index];
+        if (!r) return;
+        var newName = prompt('Guest name:', r.guestName);
+        if (newName === null) return;
+        var newSource = prompt('Source (booking, hipcamp, google, direct):', r.source || 'booking');
+        if (newSource === null) return;
+        var newRating = prompt('Rating (1-5):', r.rating || 5);
+        if (newRating === null) return;
+        var newText = prompt('Review text:', r.text);
+        if (newText === null) return;
+        var newDate = prompt('Date (YYYY-MM-DD):', r.date || '');
+        if (newDate === null) return;
+        r.guestName = newName.trim() || r.guestName;
+        r.source = newSource.trim() || r.source;
+        r.rating = parseInt(newRating) || r.rating;
+        r.text = newText.trim() || r.text;
+        r.date = newDate.trim();
+        renderReviews();
     }
 
     // --- Rules ---
@@ -4787,6 +4915,7 @@
         bookings: 'Bookings',
         campsites: 'Campsites & Rooms',
         viator: 'Viator',
+        reviews: 'Guest Reviews',
         gallery: 'Gallery',
         settings: 'Settings'
     };

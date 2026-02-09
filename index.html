@@ -697,6 +697,84 @@
             .discover-scroll-btn { display: none !important; }
         }
 
+        /* --- Guest Reviews --- */
+        .reviews-section {
+            background: var(--color-cream);
+            padding: 4rem 2rem;
+            text-align: center;
+            display: none;
+        }
+        .reviews-section h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 400;
+            color: var(--color-forest);
+            margin-bottom: 0.5rem;
+        }
+        .reviews-section h2 em { font-style: italic; }
+        .reviews-subtitle {
+            font-size: 0.9rem;
+            color: var(--color-stone);
+            margin-bottom: 2.5rem;
+        }
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .review-card {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .review-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .review-guest {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+        }
+        .review-source {
+            font-size: 0.65rem;
+            letter-spacing: 0.04em;
+            padding: 0.2rem 0.55rem;
+            border-radius: 3px;
+            color: #fff;
+            font-weight: 500;
+        }
+        .review-stars {
+            color: #E8A83E;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+        .review-text {
+            font-size: 0.9rem;
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            flex: 1;
+        }
+        .review-date {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
+        @media (max-width: 640px) {
+            .reviews-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* --- Site Footer (outside hero) --- */
         .site-footer {
             text-align: center;
@@ -970,6 +1048,13 @@
         </div>
     </section>
 
+    <!-- Guest Reviews -->
+    <section class="reviews-section" id="reviews-section">
+        <h2><em>What Our</em> Guests Say</h2>
+        <p class="reviews-subtitle">Real reviews from real guests</p>
+        <div class="reviews-grid" id="reviews-grid"></div>
+    </section>
+
     <footer class="site-footer">
         <a href="/disclaimer">Disclaimer</a> &middot; <a href="/terms-and-conditions">Terms &amp; Conditions</a> &middot; <a href="/contact">Contact</a>
         <br><br>
@@ -982,6 +1067,43 @@
         document.querySelector('.menu-overlay').classList.toggle('open');
         document.querySelector('.menu-panel').classList.toggle('open');
     }
+
+    // --- Load guest reviews ---
+    (async function() {
+        try {
+            var res = await fetch('https://ahana-ical-proxy.ahanahillside.workers.dev/reviews');
+            var data = await res.json();
+            var reviews = data.reviews || [];
+            if (reviews.length === 0) return;
+
+            var sourceColors = { booking: '#003580', hipcamp: '#2D6A4F', google: '#EA4335', direct: '#A69583' };
+            var sourceLabels = { booking: 'Booking.com', hipcamp: 'Hipcamp', google: 'Google', direct: 'Direct Guest' };
+
+            var grid = document.getElementById('reviews-grid');
+            grid.innerHTML = reviews.map(function(r) {
+                var stars = '';
+                for (var s = 0; s < (r.rating || 5); s++) stars += '&#9733;';
+                var srcColor = sourceColors[r.source] || '#666';
+                var srcLabel = sourceLabels[r.source] || r.source;
+                var dateStr = '';
+                if (r.date) {
+                    var d = new Date(r.date + 'T00:00:00');
+                    dateStr = d.toLocaleDateString('en-AU', { year: 'numeric', month: 'long' });
+                }
+                return '<div class="review-card">'
+                    + '<div class="review-header">'
+                    + '<span class="review-guest">' + r.guestName.replace(/</g, '&lt;') + '</span>'
+                    + '<span class="review-source" style="background:' + srcColor + '">' + srcLabel + '</span>'
+                    + '</div>'
+                    + '<div class="review-stars">' + stars + '</div>'
+                    + '<div class="review-text">' + r.text.replace(/</g, '&lt;') + '</div>'
+                    + (dateStr ? '<div class="review-date">' + dateStr + '</div>' : '')
+                    + '</div>';
+            }).join('');
+
+            document.getElementById('reviews-section').style.display = '';
+        } catch (err) {}
+    })();
 
     // --- Load affiliate experiences ---
     (async function() {
