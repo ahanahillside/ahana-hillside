@@ -719,7 +719,7 @@
         }
         .reviews-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
             max-width: 1100px;
             margin: 0 auto;
@@ -731,13 +731,32 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.6rem;
         }
-        .review-header {
+        .review-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+        }
+        .review-score {
+            flex-shrink: 0;
+            width: 38px;
+            height: 38px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 6px 6px 6px 0;
+        }
+        .review-meta {
+            flex: 1;
+        }
+        .review-guest-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
             flex-wrap: wrap;
         }
         .review-guest {
@@ -746,28 +765,42 @@
             font-weight: 500;
             color: var(--color-forest);
         }
+        .review-country {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
         .review-source {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             letter-spacing: 0.04em;
-            padding: 0.2rem 0.55rem;
+            padding: 0.15rem 0.45rem;
             border-radius: 3px;
             color: #fff;
             font-weight: 500;
-        }
-        .review-stars {
-            color: #E8A83E;
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-        }
-        .review-text {
-            font-size: 0.9rem;
-            color: var(--color-charcoal);
-            line-height: 1.7;
-            flex: 1;
+            margin-left: auto;
         }
         .review-date {
             font-size: 0.75rem;
             color: var(--color-stone);
+            margin-top: 0.1rem;
+        }
+        .review-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+        }
+        .review-liked, .review-disliked {
+            font-size: 0.88rem;
+            color: var(--color-charcoal);
+            line-height: 1.7;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .review-liked .review-icon { color: #3D7A3D; flex-shrink: 0; }
+        .review-disliked .review-icon { color: #B93E3E; flex-shrink: 0; }
+        .review-stars {
+            color: #E8A83E;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
         }
         @media (max-width: 640px) {
             .reviews-grid {
@@ -1079,25 +1112,48 @@
             var sourceColors = { booking: '#003580', hipcamp: '#2D6A4F', google: '#EA4335', direct: '#A69583' };
             var sourceLabels = { booking: 'Booking.com', hipcamp: 'Hipcamp', google: 'Google', direct: 'Direct Guest' };
 
+            var esc = function(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
+
             var grid = document.getElementById('reviews-grid');
             grid.innerHTML = reviews.map(function(r) {
-                var stars = '';
-                for (var s = 0; s < (r.rating || 5); s++) stars += '&#9733;';
                 var srcColor = sourceColors[r.source] || '#666';
                 var srcLabel = sourceLabels[r.source] || r.source;
+                var score = r.score || 10;
+                var liked = r.liked || r.text || '';
+                var disliked = r.disliked || '';
                 var dateStr = '';
                 if (r.date) {
                     var d = new Date(r.date + 'T00:00:00');
                     dateStr = d.toLocaleDateString('en-AU', { year: 'numeric', month: 'long' });
                 }
+                var countryStr = r.country ? '<span class="review-country">' + esc(r.country.toUpperCase()) + '</span>' : '';
+
+                // Platform-native display
+                var isBooking = r.source === 'booking';
+                var scoreHtml = '<div class="review-score" style="background:' + srcColor + '">' + score + '</div>';
+
+                // For non-Booking sources, show stars instead of numeric score
+                var starsHtml = '';
+                if (!isBooking) {
+                    var starCount = Math.round(score / 2);
+                    for (var s = 0; s < starCount; s++) starsHtml += '&#9733;';
+                }
+
                 return '<div class="review-card">'
-                    + '<div class="review-header">'
-                    + '<span class="review-guest">' + r.guestName.replace(/</g, '&lt;') + '</span>'
+                    + '<div class="review-top">'
+                    + scoreHtml
+                    + '<div class="review-meta">'
+                    + '<div class="review-guest-row">'
+                    + '<span class="review-guest">' + esc(r.guestName) + '</span>'
+                    + countryStr
                     + '<span class="review-source" style="background:' + srcColor + '">' + srcLabel + '</span>'
                     + '</div>'
-                    + '<div class="review-stars">' + stars + '</div>'
-                    + '<div class="review-text">' + r.text.replace(/</g, '&lt;') + '</div>'
                     + (dateStr ? '<div class="review-date">' + dateStr + '</div>' : '')
+                    + '</div></div>'
+                    + (r.title ? '<div class="review-title">' + esc(r.title) + '</div>' : '')
+                    + (!isBooking && starsHtml ? '<div class="review-stars">' + starsHtml + '</div>' : '')
+                    + '<div class="review-liked"><span class="review-icon">&#9786;</span><span>' + esc(liked) + '</span></div>'
+                    + (disliked ? '<div class="review-disliked"><span class="review-icon">&#9785;</span><span>' + esc(disliked) + '</span></div>' : '')
                     + '</div>';
             }).join('');
 
