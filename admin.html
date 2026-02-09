@@ -508,6 +508,71 @@
         .dash-checkin-badge.in { background: #e8f5e9; color: #2e6e2e; }
         .dash-checkin-badge.out { background: #fef3e2; color: #c06a10; }
 
+        .review-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-filter-btn {
+            background: none;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.35rem 0.75rem;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            color: var(--color-charcoal);
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 2px;
+        }
+
+        .review-filter-btn:hover { border-color: var(--color-forest); }
+        .review-filter-btn.active { background: var(--color-forest); color: #fff; border-color: var(--color-forest); }
+
+        .review-filter-btn .rev-filter-count {
+            display: inline-block;
+            font-size: 0.62rem;
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            width: 17px;
+            height: 17px;
+            line-height: 17px;
+            text-align: center;
+            margin-left: 0.25rem;
+            vertical-align: middle;
+        }
+
+        .review-filter-btn.active .rev-filter-count { background: rgba(255,255,255,0.25); }
+
+        .review-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 0 0.25rem;
+            font-size: 0.82rem;
+        }
+
+        .review-page-btn {
+            background: none;
+            border: 1px solid var(--color-light-stone);
+            padding: 0.35rem 0.85rem;
+            font-family: var(--font-sans);
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--color-charcoal);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .review-page-btn:hover:not(:disabled) { border-color: var(--color-forest); color: var(--color-forest); }
+        .review-page-btn:disabled { opacity: 0.35; cursor: default; }
+
+        .review-page-info { color: var(--color-stone); font-size: 0.78rem; }
+
         .panel-title {
             font-family: var(--font-serif);
             font-size: 1.5rem;
@@ -2809,7 +2874,16 @@
             <div class="card" style="max-width:900px">
                 <div class="card-title">Reviews</div>
 
+                <div class="review-filters" id="review-filters">
+                    <button class="review-filter-btn active" data-source="all" onclick="filterReviews('all')">All</button>
+                    <button class="review-filter-btn" data-source="booking" onclick="filterReviews('booking')">Booking.com</button>
+                    <button class="review-filter-btn" data-source="hipcamp" onclick="filterReviews('hipcamp')">Hipcamp</button>
+                    <button class="review-filter-btn" data-source="google" onclick="filterReviews('google')">Google</button>
+                    <button class="review-filter-btn" data-source="direct" onclick="filterReviews('direct')">Direct</button>
+                </div>
+
                 <div id="reviews-admin-list"></div>
+                <div id="reviews-pagination"></div>
 
                 <div style="border:1px solid var(--color-light-stone);padding:1rem;margin-top:1rem;background:#fafaf9">
                     <div style="font-size:0.8rem;font-weight:500;color:var(--color-forest);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.08em">Add New Review</div>
@@ -3833,6 +3907,23 @@
     // --- Reviews ---
     var reviewSourceLabels = { booking: 'Booking.com', hipcamp: 'Hipcamp', google: 'Google', direct: 'Direct Guest' };
     var reviewSourceColors = { booking: '#003580', hipcamp: '#2D6A4F', google: '#EA4335', direct: '#A69583' };
+    var reviewSourceFilter = 'all';
+    var reviewPage = 0;
+    var REVIEWS_PER_PAGE = 10;
+
+    function filterReviews(source) {
+        reviewSourceFilter = source;
+        reviewPage = 0;
+        document.querySelectorAll('.review-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        var btn = document.querySelector('.review-filter-btn[data-source="' + source + '"]');
+        if (btn) btn.classList.add('active');
+        renderReviews();
+    }
+
+    function reviewGoPage(page) {
+        reviewPage = page;
+        renderReviews();
+    }
 
     function reviewScoreBadge(score, source) {
         var bg = reviewSourceColors[source] || '#666';
@@ -3841,13 +3932,57 @@
 
     function renderReviews() {
         var container = document.getElementById('reviews-admin-list');
+        var pagEl = document.getElementById('reviews-pagination');
         if (!container) return;
-        var list = siteConfig.reviews || [];
-        if (list.length === 0) {
-            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No reviews yet. Add your best reviews from Booking.com or Hipcamp below.</div>';
+        var allList = siteConfig.reviews || [];
+
+        // Update filter counts
+        var counts = { all: allList.length, booking: 0, hipcamp: 0, google: 0, direct: 0 };
+        allList.forEach(function(r) { if (counts[r.source] !== undefined) counts[r.source]++; });
+        document.querySelectorAll('.review-filter-btn').forEach(function(btn) {
+            var src = btn.dataset.source;
+            var countEl = btn.querySelector('.rev-filter-count');
+            if (countEl) countEl.textContent = counts[src] || 0;
+            else if (counts[src] > 0) {
+                var span = document.createElement('span');
+                span.className = 'rev-filter-count';
+                span.textContent = counts[src];
+                btn.appendChild(span);
+            }
+        });
+
+        // Filter by source
+        var filtered = reviewSourceFilter === 'all' ? allList : allList.filter(function(r) { return r.source === reviewSourceFilter; });
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No ' + (reviewSourceFilter === 'all' ? '' : (reviewSourceLabels[reviewSourceFilter] || reviewSourceFilter) + ' ') + 'reviews yet.</div>';
+            if (pagEl) pagEl.innerHTML = '';
             return;
         }
-        container.innerHTML = list.map(function(r, i) {
+
+        // Pagination
+        var totalPages = Math.ceil(filtered.length / REVIEWS_PER_PAGE);
+        if (reviewPage >= totalPages) reviewPage = totalPages - 1;
+        if (reviewPage < 0) reviewPage = 0;
+        var start = reviewPage * REVIEWS_PER_PAGE;
+        var pageItems = filtered.slice(start, start + REVIEWS_PER_PAGE);
+
+        // We need the original index in siteConfig.reviews for edit/toggle/remove
+        var indexMap = [];
+        if (reviewSourceFilter === 'all') {
+            for (var k = start; k < start + pageItems.length; k++) indexMap.push(k);
+        } else {
+            var fi = 0, ai = 0;
+            for (ai = 0; ai < allList.length; ai++) {
+                if (allList[ai].source === reviewSourceFilter) {
+                    if (fi >= start && fi < start + pageItems.length) indexMap.push(ai);
+                    fi++;
+                }
+            }
+        }
+
+        container.innerHTML = pageItems.map(function(r, pi) {
+            var i = indexMap[pi];
             var srcColor = reviewSourceColors[r.source] || '#666';
             var srcLabel = reviewSourceLabels[r.source] || r.source;
             var countryFlag = r.country ? '<span style="font-size:0.75rem;color:var(--color-stone);margin-left:0.15rem">' + escapeHtml(r.country.toUpperCase()) + '</span>' : '';
@@ -3874,6 +4009,17 @@
                 + '<button class="btn btn-danger" onclick="removeReview(' + i + ')" style="padding:0.3rem 0.6rem">Remove</button>'
                 + '</div></div>';
         }).join('');
+
+        // Render pagination
+        if (pagEl && totalPages > 1) {
+            pagEl.innerHTML = '<div class="review-pagination">'
+                + '<button class="review-page-btn" onclick="reviewGoPage(' + (reviewPage - 1) + ')"' + (reviewPage === 0 ? ' disabled' : '') + '>&larr; Previous</button>'
+                + '<span class="review-page-info">Page ' + (reviewPage + 1) + ' of ' + totalPages + ' (' + filtered.length + ' reviews)</span>'
+                + '<button class="review-page-btn" onclick="reviewGoPage(' + (reviewPage + 1) + ')"' + (reviewPage >= totalPages - 1 ? ' disabled' : '') + '>Next &rarr;</button>'
+                + '</div>';
+        } else if (pagEl) {
+            pagEl.innerHTML = '';
+        }
     }
 
     function addReview() {
