@@ -2548,23 +2548,44 @@
 
                 <!-- ==================== BOOKING ADD-ONS ==================== -->
                 <hr class="section-divider">
-                <div class="section-heading">Booking Add-ons</div>
-                <div class="section-desc">Optional extras guests can add when booking (e.g. washing, airport transfers).</div>
+                <div class="section-heading">Room Add-ons</div>
+                <div class="section-desc">Optional extras for room bookings (e.g. laundry, airport transfers).</div>
 
                 <div class="card" style="max-width:700px">
-                    <div class="card-title">Active Add-ons</div>
-                    <div id="addons-admin-list"></div>
+                    <div class="card-title">Room Add-ons</div>
+                    <div id="room-addons-admin-list"></div>
 
                     <div class="add-row" style="flex-wrap:wrap">
-                        <input type="text" id="addon-new-name" placeholder="Name (e.g. Washing)" style="flex:1;min-width:140px">
-                        <input type="number" id="addon-new-price" placeholder="Price" min="0" step="1" style="width:80px">
-                        <input type="text" id="addon-new-desc" placeholder="Description (optional)" style="flex:2;min-width:180px">
-                        <button class="btn btn-secondary" onclick="addAddon()" style="padding:0.5rem 1rem">Add</button>
+                        <input type="text" id="room-addon-new-name" placeholder="Name (e.g. Laundry)" style="flex:1;min-width:140px">
+                        <input type="number" id="room-addon-new-price" placeholder="Price" min="0" step="1" style="width:80px">
+                        <input type="text" id="room-addon-new-desc" placeholder="Description (optional)" style="flex:2;min-width:180px">
+                        <button class="btn btn-secondary" onclick="addAddonTo('room')" style="padding:0.5rem 1rem">Add</button>
                     </div>
 
                     <div class="save-bar">
                         <button class="btn btn-primary" onclick="saveConfig('addons')">Save Add-ons</button>
                         <span class="save-msg" id="addons-msg"></span>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                <div class="section-heading">Campsite Add-ons</div>
+                <div class="section-desc">Optional extras for campsite bookings (e.g. firewood).</div>
+
+                <div class="card" style="max-width:700px">
+                    <div class="card-title">Campsite Add-ons</div>
+                    <div id="campsite-addons-admin-list"></div>
+
+                    <div class="add-row" style="flex-wrap:wrap">
+                        <input type="text" id="campsite-addon-new-name" placeholder="Name (e.g. Firewood)" style="flex:1;min-width:140px">
+                        <input type="number" id="campsite-addon-new-price" placeholder="Price" min="0" step="1" style="width:80px">
+                        <input type="text" id="campsite-addon-new-desc" placeholder="Description (optional)" style="flex:2;min-width:180px">
+                        <button class="btn btn-secondary" onclick="addAddonTo('campsite')" style="padding:0.5rem 1rem">Add</button>
+                    </div>
+
+                    <div class="save-bar">
+                        <button class="btn btn-primary" onclick="saveConfig('campsite-addons')">Save Add-ons</button>
+                        <span class="save-msg" id="campsite-addons-msg"></span>
                     </div>
                 </div>
             </div>
@@ -3139,7 +3160,8 @@
             },
             currency: document.getElementById('p-currency').value,
             promoCodes: siteConfig.promoCodes || {},
-            bookingAddons: siteConfig.bookingAddons || [],
+            roomAddons: siteConfig.roomAddons || [],
+            campsiteAddons: siteConfig.campsiteAddons || [],
             experiences: siteConfig.experiences || [],
             reviews: siteConfig.reviews || [],
             rules: siteConfig.rules || [],
@@ -3441,11 +3463,19 @@
         renderPromos();
     }
 
-    // --- Booking Add-ons ---
+    // --- Booking Add-ons (Room / Campsite) ---
+    function getAddonKey(cat) { return cat === 'room' ? 'roomAddons' : 'campsiteAddons'; }
+
     function renderAddons() {
-        var container = document.getElementById('addons-admin-list');
+        renderAddonList('room');
+        renderAddonList('campsite');
+    }
+
+    function renderAddonList(cat) {
+        var key = getAddonKey(cat);
+        var container = document.getElementById(cat + '-addons-admin-list');
         if (!container) return;
-        var list = siteConfig.bookingAddons || [];
+        var list = siteConfig[key] || [];
         if (list.length === 0) {
             container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No add-ons yet.</div>';
             return;
@@ -3458,45 +3488,48 @@
                 + (a.description ? '<br><span style="font-size:0.8rem;color:var(--color-stone)">' + escapeHtml(a.description) + '</span>' : '')
                 + '</div>'
                 + '<div style="display:flex;gap:0.4rem;align-items:center">'
-                + '<button class="btn btn-secondary" onclick="editAddon(' + i + ')" style="padding:0.3rem 0.6rem;font-size:0.8rem">Edit</button>'
-                + '<label style="font-size:0.8rem;display:flex;align-items:center;gap:0.3rem;cursor:pointer"><input type="checkbox" onchange="toggleAddon(' + i + ')" ' + (a.enabled !== false ? 'checked' : '') + '> Enabled</label>'
-                + '<button class="btn btn-danger" onclick="removeAddon(' + i + ')" style="padding:0.3rem 0.6rem">Remove</button>'
+                + '<button class="btn btn-secondary" onclick="editAddonIn(\'' + cat + '\',' + i + ')" style="padding:0.3rem 0.6rem;font-size:0.8rem">Edit</button>'
+                + '<label style="font-size:0.8rem;display:flex;align-items:center;gap:0.3rem;cursor:pointer"><input type="checkbox" onchange="toggleAddonIn(\'' + cat + '\',' + i + ')" ' + (a.enabled !== false ? 'checked' : '') + '> Enabled</label>'
+                + '<button class="btn btn-danger" onclick="removeAddonFrom(\'' + cat + '\',' + i + ')" style="padding:0.3rem 0.6rem">Remove</button>'
                 + '</div></div>';
         }).join('');
     }
 
-    function addAddon() {
-        var name = document.getElementById('addon-new-name').value.trim();
-        var price = parseFloat(document.getElementById('addon-new-price').value) || 0;
-        var desc = document.getElementById('addon-new-desc').value.trim();
+    function addAddonTo(cat) {
+        var key = getAddonKey(cat);
+        var name = document.getElementById(cat + '-addon-new-name').value.trim();
+        var price = parseFloat(document.getElementById(cat + '-addon-new-price').value) || 0;
+        var desc = document.getElementById(cat + '-addon-new-desc').value.trim();
         if (!name) return;
-        if (!siteConfig.bookingAddons) siteConfig.bookingAddons = [];
+        if (!siteConfig[key]) siteConfig[key] = [];
         var id = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-        // Ensure unique id
-        var existing = siteConfig.bookingAddons.map(function(a) { return a.id; });
+        var existing = siteConfig[key].map(function(a) { return a.id; });
         var base = id;
         var n = 1;
         while (existing.indexOf(id) !== -1) { id = base + '-' + (++n); }
-        siteConfig.bookingAddons.push({ id: id, name: name, price: price, description: desc, enabled: true });
-        document.getElementById('addon-new-name').value = '';
-        document.getElementById('addon-new-price').value = '';
-        document.getElementById('addon-new-desc').value = '';
-        renderAddons();
+        siteConfig[key].push({ id: id, name: name, price: price, description: desc, enabled: true });
+        document.getElementById(cat + '-addon-new-name').value = '';
+        document.getElementById(cat + '-addon-new-price').value = '';
+        document.getElementById(cat + '-addon-new-desc').value = '';
+        renderAddonList(cat);
     }
 
-    function removeAddon(index) {
-        if (!siteConfig.bookingAddons) return;
-        siteConfig.bookingAddons.splice(index, 1);
-        renderAddons();
+    function removeAddonFrom(cat, index) {
+        var key = getAddonKey(cat);
+        if (!siteConfig[key]) return;
+        siteConfig[key].splice(index, 1);
+        renderAddonList(cat);
     }
 
-    function toggleAddon(index) {
-        if (!siteConfig.bookingAddons || !siteConfig.bookingAddons[index]) return;
-        siteConfig.bookingAddons[index].enabled = !siteConfig.bookingAddons[index].enabled;
+    function toggleAddonIn(cat, index) {
+        var key = getAddonKey(cat);
+        if (!siteConfig[key] || !siteConfig[key][index]) return;
+        siteConfig[key][index].enabled = !siteConfig[key][index].enabled;
     }
 
-    function editAddon(index) {
-        var a = siteConfig.bookingAddons[index];
+    function editAddonIn(cat, index) {
+        var key = getAddonKey(cat);
+        var a = siteConfig[key][index];
         if (!a) return;
         var newName = prompt('Add-on name:', a.name);
         if (newName === null) return;
@@ -3507,7 +3540,7 @@
         a.name = newName.trim() || a.name;
         a.price = parseFloat(newPrice) || 0;
         a.description = newDesc.trim();
-        renderAddons();
+        renderAddonList(cat);
     }
 
     // --- Affiliate Experiences ---

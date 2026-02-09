@@ -63,11 +63,12 @@ const DEFAULT_CONFIG = {
     maxGuests: 4,
   },
   currency: 'AUD',
-  bookingAddons: [
-    { id: 'washing', name: 'Washing', price: 15, description: 'Use of washing machine for one load', enabled: true },
-    { id: 'dryer', name: 'Clothes Dryer', price: 10, description: 'Use of clothes dryer for one load', enabled: true },
-    { id: 'airport-pickup', name: 'Airport Pickup', price: 50, description: 'Pickup from Cairns Airport to Ahana Hillside', enabled: true },
-    { id: 'airport-drop', name: 'Airport Drop-off', price: 50, description: 'Drop-off from Ahana Hillside to Cairns Airport', enabled: true },
+  roomAddons: [
+    { id: 'laundry', name: 'Laundry', price: 20, description: 'Washing & Drying (7kg Load) x1', enabled: true },
+    { id: 'airport', name: 'Airport Pick & Drop', price: 140, description: 'Pickup from Cairns Airport (Between 10 AM - 8PM)', enabled: true },
+  ],
+  campsiteAddons: [
+    { id: 'firewood', name: 'Firewood Bundle', price: 15, description: 'Seasoned hardwood bundle for campfire', enabled: true },
   ],
   promoCodes: {},
   rules: [

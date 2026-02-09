@@ -3931,8 +3931,8 @@
         // --- Select site ---
         function selectSite(site) {
             selectedSite = site;
-            // Reset all addon quantities
-            for (var key in addons) { addons[key].qty = 0; }
+            // Re-initialize add-ons for the correct category (room vs campsite)
+            initAddons();
 
             document.getElementById('addons-site-name').textContent = site.toUpperCase();
             renderAddonsUI();
@@ -3941,7 +3941,14 @@
 
         // --- Add-ons ---
         function initAddons() {
-            var addonDefs = siteConfig.bookingAddons || [];
+            var isRoomSite = selectedSite && ROOM_SITES.includes(selectedSite);
+            var addonDefs = isRoomSite
+                ? (siteConfig.roomAddons || [])
+                : (siteConfig.campsiteAddons || []);
+            // Fall back to legacy bookingAddons if new keys not set
+            if (addonDefs.length === 0 && siteConfig.bookingAddons) {
+                addonDefs = siteConfig.bookingAddons;
+            }
             addons = {};
             addonDefs.forEach(function(a) {
                 if (a.enabled !== false) {
