@@ -5205,7 +5205,7 @@
             if (data.exists) {
                 const url = WORKER_URL + '/homepage-bg?t=' + Date.now();
                 if (data.mediaType === 'video') {
-                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" autoplay muted loop></video>'
+                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" muted loop preload="metadata" data-autoplay></video>'
                         + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
                         + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: video background</span>'
                         + '<button class="btn btn-danger" onclick="deleteHomepageBg()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
@@ -5351,7 +5351,7 @@
             if (data.exists) {
                 const url = WORKER_URL + '/events-hero?t=' + Date.now();
                 if (data.mediaType === 'video') {
-                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" autoplay muted loop></video>'
+                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" muted loop preload="metadata" data-autoplay></video>'
                         + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
                         + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: video background</span>'
                         + '<button class="btn btn-danger" onclick="deleteEventsHero()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
@@ -5429,7 +5429,7 @@
             if (data.exists) {
                 const url = WORKER_URL + '/campsite-bg?t=' + Date.now();
                 if (data.mediaType === 'video') {
-                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" autoplay muted loop></video>'
+                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" muted loop preload="metadata" data-autoplay></video>'
                         + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
                         + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: video background</span>'
                         + '<button class="btn btn-danger" onclick="deleteCampsiteBg()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
@@ -5654,6 +5654,11 @@
 
     // --- Sidebar navigation ---
     function switchTab(tab) {
+        // Pause all playing videos before switching (prevents mobile popup glitch)
+        document.querySelectorAll('.tab-panel video').forEach(function(v) {
+            v.pause();
+        });
+
         // Update nav items
         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
         var activeBtn = document.querySelector('.nav-item[data-tab="' + tab + '"]');
@@ -5666,6 +5671,13 @@
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
         var panel = document.getElementById('panel-' + tab);
         if (panel) panel.classList.add('active');
+
+        // Resume videos in the now-active panel
+        if (panel) {
+            panel.querySelectorAll('video[data-autoplay]').forEach(function(v) {
+                v.play().catch(function() {});
+            });
+        }
 
         // Show/hide sub-tabs for campsites
         var subTabs = document.getElementById('campsites-sub-tabs');
