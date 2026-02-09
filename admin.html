@@ -343,7 +343,7 @@
         /* Dashboard home panel */
         .dash-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 1.25rem;
             margin-bottom: 2rem;
         }
@@ -391,6 +391,122 @@
             color: var(--color-forest);
             margin-bottom: 0.75rem;
         }
+
+        .dash-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .dash-section {
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .dash-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .dash-section-title {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+        }
+
+        .dash-section-link {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .dash-section-link:hover { color: var(--color-forest); }
+
+        .dash-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.55rem 0.75rem;
+            background: var(--color-cream);
+            border: 1px solid var(--color-light-stone);
+            margin-bottom: 0.35rem;
+            font-size: 0.82rem;
+        }
+
+        .dash-item-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 0;
+        }
+
+        .dash-item-left > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .dash-item-right {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-shrink: 0;
+        }
+
+        .dash-item-date {
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
+
+        .dash-empty {
+            font-size: 0.82rem;
+            color: var(--color-stone);
+            padding: 0.75rem 0;
+        }
+
+        .dash-refresh-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.75rem;
+            color: var(--color-stone);
+        }
+
+        .dash-refresh-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--color-success);
+        }
+
+        .dash-refresh-dot.stale { background: #e67e22; }
+
+        @keyframes dashPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .dash-refreshing { animation: dashPulse 1s ease-in-out; }
+
+        .dash-checkin-badge {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 0.15rem 0.45rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .dash-checkin-badge.in { background: #e8f5e9; color: #2e6e2e; }
+        .dash-checkin-badge.out { background: #fef3e2; color: #c06a10; }
 
         .panel-title {
             font-family: var(--font-serif);
@@ -1422,6 +1538,7 @@
             .booking-details { grid-template-columns: 1fr 1fr; }
             .image-grid { grid-template-columns: repeat(3, 1fr); }
             .dash-stats { grid-template-columns: repeat(2, 1fr); }
+            .dash-grid { grid-template-columns: 1fr; }
         }
 
         /* Responsive — mobile */
@@ -1742,6 +1859,11 @@
 
         <!-- DASHBOARD HOME PANEL -->
         <div class="tab-panel active" id="panel-dashboard">
+            <div class="dash-refresh-bar">
+                <span class="dash-refresh-dot" id="dash-live-dot"></span>
+                <span id="dash-last-updated">Updating...</span>
+            </div>
+
             <div class="dash-stats">
                 <div class="stat-card" onclick="switchTab('messages')">
                     <div class="stat-number" id="stat-messages">—</div>
@@ -1753,15 +1875,51 @@
                     <div class="stat-label">Pending Bookings</div>
                     <div class="stat-hint">Click to view bookings</div>
                 </div>
-                <div class="stat-card" onclick="switchTab('campsites')">
-                    <div class="stat-number" id="stat-sites">—</div>
-                    <div class="stat-label">Active Sites &amp; Rooms</div>
-                    <div class="stat-hint">Click to manage</div>
+                <div class="stat-card" onclick="switchTab('bookings')">
+                    <div class="stat-number" id="stat-confirmed">—</div>
+                    <div class="stat-label">Confirmed Bookings</div>
+                    <div class="stat-hint">Click to view bookings</div>
+                </div>
+                <div class="stat-card" onclick="switchTab('calendar')">
+                    <div class="stat-number" id="stat-checkins-today">—</div>
+                    <div class="stat-label">Today's Check-ins</div>
+                    <div class="stat-hint">Click to view calendar</div>
                 </div>
             </div>
 
-            <div class="dash-recent-title">Recent Bookings</div>
-            <div id="dash-recent-bookings"><div style="font-size:0.85rem;color:var(--color-stone)">Loading...</div></div>
+            <div class="dash-grid">
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <div class="dash-section-title">Today's Activity</div>
+                        <span class="dash-section-link" onclick="switchTab('calendar')">View calendar</span>
+                    </div>
+                    <div id="dash-today-activity"><div class="dash-empty">Loading...</div></div>
+                </div>
+
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <div class="dash-section-title">Recent Messages</div>
+                        <span class="dash-section-link" onclick="switchTab('messages')">View all</span>
+                    </div>
+                    <div id="dash-recent-messages"><div class="dash-empty">Loading...</div></div>
+                </div>
+
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <div class="dash-section-title">Upcoming Bookings</div>
+                        <span class="dash-section-link" onclick="switchTab('bookings')">View all</span>
+                    </div>
+                    <div id="dash-upcoming-bookings"><div class="dash-empty">Loading...</div></div>
+                </div>
+
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <div class="dash-section-title">Recent Bookings</div>
+                        <span class="dash-section-link" onclick="switchTab('bookings')">View all</span>
+                    </div>
+                    <div id="dash-recent-bookings"><div class="dash-empty">Loading...</div></div>
+                </div>
+            </div>
         </div>
 
         <!-- MESSAGES PANEL -->
@@ -3011,12 +3169,21 @@
         }
     }
 
+    var dashRefreshInterval = null;
+
     function handleLogout() {
         authToken = '';
         sessionStorage.removeItem('ahana-token');
+        if (dashRefreshInterval) { clearInterval(dashRefreshInterval); dashRefreshInterval = null; }
         document.getElementById('dashboard').classList.remove('show');
         document.getElementById('login-screen').style.display = 'flex';
         document.getElementById('login-password').value = '';
+    }
+
+    async function dashRefresh() {
+        if (!authToken) return;
+        try { await loadMessages(); } catch (e) {}
+        try { await loadBookings(); } catch (e) {}
     }
 
     async function showDashboard() {
@@ -3035,6 +3202,10 @@
         loadAboutHero();
         loadEventsHero();
         loadExploreSlots();
+
+        // Auto-refresh bookings & messages every 60 seconds
+        if (dashRefreshInterval) clearInterval(dashRefreshInterval);
+        dashRefreshInterval = setInterval(dashRefresh, 60000);
     }
 
     // --- Config ---
@@ -5333,44 +5504,139 @@
     }
 
     // --- Dashboard stats ---
+    var dashLastUpdated = null;
+
+    function getTodayStr() {
+        var d = new Date();
+        return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+
+    function formatDate(dateStr) {
+        if (!dateStr) return '';
+        var d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+    }
+
+    function renderDashItem(siteName, guestName, status, extra) {
+        var statusClass = 'st-' + (status || 'pending');
+        return '<div class="dash-item">' +
+            '<div class="dash-item-left"><strong style="color:var(--color-forest)">' + escapeHtml(siteName || '—') + '</strong><span>' + escapeHtml(guestName || '—') + '</span></div>' +
+            '<div class="dash-item-right">' + (extra || '') +
+            '<span class="booking-status ' + statusClass + '" style="font-size:0.68rem;padding:0.2rem 0.5rem">' + escapeHtml(status || 'pending') + '</span>' +
+            '</div></div>';
+    }
+
     function updateDashStats() {
-        // Unread messages
-        var unread = (typeof messages !== 'undefined' && messages) ? messages.filter(function(m) { return !m.read; }).length : 0;
+        var today = getTodayStr();
+        var allBookings = (typeof bookings !== 'undefined' && bookings) ? bookings : [];
+        var allMessages = (typeof messages !== 'undefined' && messages) ? messages : [];
+
+        // --- Stat cards ---
+        var unread = allMessages.filter(function(m) { return !m.read; }).length;
         document.getElementById('stat-messages').textContent = unread;
 
-        // Pending bookings
-        var pending = (typeof bookings !== 'undefined' && bookings) ? bookings.filter(function(b) { return b.status === 'pending'; }).length : 0;
+        var pending = allBookings.filter(function(b) { return b.status === 'pending'; }).length;
         document.getElementById('stat-bookings').textContent = pending;
 
-        // Active sites
-        var siteCount = 0;
-        if (siteConfig) {
-            var cats = ['campsites', 'rooms'];
-            cats.forEach(function(cat) {
-                if (siteConfig[cat]) {
-                    siteConfig[cat].forEach(function(s) { if (s.enabled !== false) siteCount++; });
-                }
-            });
-        }
-        document.getElementById('stat-sites').textContent = siteCount;
+        var confirmed = allBookings.filter(function(b) { return b.status === 'confirmed' || b.status === 'hipcamp'; }).length;
+        document.getElementById('stat-confirmed').textContent = confirmed;
 
-        // Recent bookings (last 5)
-        var el = document.getElementById('dash-recent-bookings');
-        if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) {
-            var recent = bookings.slice(0, 5);
-            el.innerHTML = recent.map(function(b) {
-                var statusClass = 'st-' + (b.status || 'pending');
-                return '<div style="display:flex;align-items:center;justify-content:space-between;padding:0.6rem 0.85rem;background:#fff;border:1px solid var(--color-light-stone);margin-bottom:0.4rem;font-size:0.85rem">' +
-                    '<div><strong style="color:var(--color-forest)">' + escapeHtml(b.siteName || b.site || '—') + '</strong> &middot; ' + escapeHtml(b.guestName || b.name || '—') + '</div>' +
-                    '<div style="display:flex;align-items:center;gap:0.75rem">' +
-                        '<span style="font-size:0.78rem;color:var(--color-stone)">' + escapeHtml(b.checkIn || '') + '</span>' +
-                        '<span class="booking-status ' + statusClass + '" style="font-size:0.68rem;padding:0.2rem 0.5rem">' + (b.status || 'pending') + '</span>' +
-                    '</div></div>';
+        var checkinsToday = allBookings.filter(function(b) {
+            return b.checkin === today && (b.status === 'confirmed' || b.status === 'hipcamp');
+        }).length;
+        document.getElementById('stat-checkins-today').textContent = checkinsToday;
+
+        // --- Today's Activity ---
+        var actEl = document.getElementById('dash-today-activity');
+        var todayItems = [];
+        allBookings.forEach(function(b) {
+            if (b.status === 'cancelled') return;
+            if (b.checkin === today) {
+                todayItems.push({ type: 'in', b: b });
+            }
+            if (b.checkout === today) {
+                todayItems.push({ type: 'out', b: b });
+            }
+        });
+        if (todayItems.length > 0) {
+            actEl.innerHTML = todayItems.map(function(item) {
+                var badge = item.type === 'in'
+                    ? '<span class="dash-checkin-badge in">Check-in</span>'
+                    : '<span class="dash-checkin-badge out">Check-out</span>';
+                return '<div class="dash-item">' +
+                    '<div class="dash-item-left"><strong style="color:var(--color-forest)">' + escapeHtml(item.b.siteName || item.b.site || '—') + '</strong><span>' + escapeHtml(item.b.name || '—') + '</span></div>' +
+                    '<div class="dash-item-right">' + badge + '</div></div>';
             }).join('');
         } else {
-            el.innerHTML = '<div style="font-size:0.85rem;color:var(--color-stone)">No bookings yet.</div>';
+            actEl.innerHTML = '<div class="dash-empty">No check-ins or check-outs today.</div>';
+        }
+
+        // --- Recent Messages (last 5) ---
+        var msgEl = document.getElementById('dash-recent-messages');
+        if (allMessages.length > 0) {
+            var recentMsgs = allMessages.slice(0, 5);
+            msgEl.innerHTML = recentMsgs.map(function(m) {
+                var dateStr = m.date ? new Date(m.date).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : '';
+                var unreadDot = !m.read ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--color-forest);flex-shrink:0"></span>' : '';
+                return '<div class="dash-item">' +
+                    '<div class="dash-item-left">' + unreadDot + '<strong>' + escapeHtml(m.name || '—') + '</strong><span>' + escapeHtml((m.message || '').substring(0, 50)) + (m.message && m.message.length > 50 ? '...' : '') + '</span></div>' +
+                    '<div class="dash-item-right"><span class="dash-item-date">' + escapeHtml(dateStr) + '</span></div></div>';
+            }).join('');
+        } else {
+            msgEl.innerHTML = '<div class="dash-empty">No messages yet.</div>';
+        }
+
+        // --- Upcoming Bookings (next 7 days) ---
+        var upEl = document.getElementById('dash-upcoming-bookings');
+        var next7 = new Date();
+        next7.setDate(next7.getDate() + 7);
+        var next7Str = next7.getFullYear() + '-' + String(next7.getMonth() + 1).padStart(2, '0') + '-' + String(next7.getDate()).padStart(2, '0');
+        var upcoming = allBookings.filter(function(b) {
+            return b.checkin >= today && b.checkin <= next7Str && b.status !== 'cancelled';
+        }).sort(function(a, b) { return a.checkin < b.checkin ? -1 : 1; });
+        if (upcoming.length > 0) {
+            upEl.innerHTML = upcoming.slice(0, 6).map(function(b) {
+                return renderDashItem(b.siteName || b.site, b.name, b.status, '<span class="dash-item-date">' + formatDate(b.checkin) + '</span>');
+            }).join('');
+        } else {
+            upEl.innerHTML = '<div class="dash-empty">No upcoming bookings in the next 7 days.</div>';
+        }
+
+        // --- Recent Bookings (last 5 by submission date) ---
+        var recEl = document.getElementById('dash-recent-bookings');
+        if (allBookings.length > 0) {
+            var recent = allBookings.slice(0, 5);
+            recEl.innerHTML = recent.map(function(b) {
+                return renderDashItem(b.siteName || b.site, b.name, b.status, '<span class="dash-item-date">' + formatDate(b.checkin) + '</span>');
+            }).join('');
+        } else {
+            recEl.innerHTML = '<div class="dash-empty">No bookings yet.</div>';
+        }
+
+        // --- Last updated timestamp ---
+        dashLastUpdated = new Date();
+        updateLastUpdatedLabel();
+    }
+
+    function updateLastUpdatedLabel() {
+        var el = document.getElementById('dash-last-updated');
+        var dot = document.getElementById('dash-live-dot');
+        if (!dashLastUpdated || !el) return;
+        var secs = Math.round((Date.now() - dashLastUpdated.getTime()) / 1000);
+        if (secs < 10) {
+            el.textContent = 'Live — just now';
+        } else if (secs < 60) {
+            el.textContent = 'Updated ' + secs + 's ago';
+        } else {
+            el.textContent = 'Updated ' + Math.floor(secs / 60) + 'm ago';
+        }
+        if (dot) {
+            dot.className = 'dash-refresh-dot' + (secs > 120 ? ' stale' : '');
         }
     }
+
+    // Update the "X ago" label every 10 seconds
+    setInterval(updateLastUpdatedLabel, 10000);
 
     // --- Sub-tab switching (within Campsites) ---
     document.querySelectorAll('.sub-tab-btn').forEach(btn => {
