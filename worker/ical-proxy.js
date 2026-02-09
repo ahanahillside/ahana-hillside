@@ -804,6 +804,86 @@ export default {
       return jsonResponse(config, 200, origin, 'public, max-age=60');
     }
 
+    // --- GET /packages — public, returns event packages config ---
+    if (path === '/packages' && request.method === 'GET') {
+      try {
+        const data = await env.CONFIG.get('event-packages', 'json');
+        if (data) return jsonResponse(data, 200, origin, 'public, max-age=60');
+      } catch (e) {}
+      // Default packages
+      return jsonResponse({
+        packages: [
+          {
+            id: 'day-hire',
+            name: 'Day Hire',
+            tagline: 'Perfect for workshops, yoga sessions & small gatherings',
+            description: 'Exclusive access to our rainforest grounds for a full day. BYO food, drinks and equipment.',
+            duration: '9am – 5pm',
+            priceFrom: 35,
+            priceUnit: 'per person',
+            minGuests: 8,
+            includes: ['Exclusive grounds access', 'Open-air practice space', 'Firepit area', 'Parking', 'Amenities access'],
+            enabled: true,
+          },
+          {
+            id: 'weekend-retreat',
+            name: 'Weekend Retreat',
+            tagline: 'Host your own retreat in the rainforest',
+            description: '2-night exclusive venue hire with camping and room accommodation. Bring your own instructor, facilitator and catering.',
+            duration: 'Fri 2pm – Sun 11am (2 nights)',
+            priceFrom: 45,
+            priceUnit: 'per person / night',
+            minGuests: 15,
+            includes: ['Exclusive use of entire property', 'Campsite & room accommodation', 'Open-air practice space', 'Firepit & communal areas', 'Creek access & nature walks', 'Parking'],
+            enabled: true,
+          },
+          {
+            id: 'private-celebration',
+            name: 'Private Celebration',
+            tagline: 'Birthdays, hens parties & intimate gatherings',
+            description: 'Your own private rainforest venue for the day or weekend. Set up however you like — we provide the space, you bring the vibe.',
+            duration: 'Day or overnight',
+            priceFrom: 40,
+            priceUnit: 'per person',
+            minGuests: 8,
+            includes: ['Exclusive grounds access', 'Firepit area', 'Fairy light setup available', 'BYO food & drinks', 'Overnight camping add-on available', 'Parking'],
+            enabled: true,
+          },
+          {
+            id: 'creative-shoot',
+            name: 'Photo & Creative Shoot',
+            tagline: 'Photography, film & art in the rainforest',
+            description: 'Half-day or full-day access for photographers, videographers and artists. Stunning natural backdrops with rainforest, creek and mountain views.',
+            duration: '4-hour block',
+            priceFrom: 250,
+            priceUnit: 'flat rate',
+            minGuests: 1,
+            maxGuests: 6,
+            includes: ['Grounds access', 'Multiple shooting locations', 'Natural light & rainforest canopy', 'Creek & trail access', 'Parking'],
+            enabled: true,
+          },
+        ],
+        extras: [
+          { id: 'firewood', name: 'Firewood bundle', price: 15, unit: 'per bundle', enabled: true },
+          { id: 'fairy-lights', name: 'Fairy light setup', price: 50, unit: 'flat rate', enabled: true },
+          { id: 'early-checkin', name: 'Early check-in (from 12pm)', price: 100, unit: 'flat rate', enabled: true },
+          { id: 'late-checkout', name: 'Late checkout (until 2pm)', price: 100, unit: 'flat rate', enabled: true },
+        ],
+      }, 200, origin, 'public, max-age=60');
+    }
+
+    // --- POST /packages — admin only, saves event packages config ---
+    if (path === '/packages' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const body = await request.json();
+        await env.CONFIG.put('event-packages', JSON.stringify(body));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Invalid data', detail: err.message }, 400, origin);
+      }
+    }
+
     // --- GET /experiences — public, returns affiliate experiences ---
     if (path === '/experiences' && request.method === 'GET') {
       const config = await getConfig(env);
