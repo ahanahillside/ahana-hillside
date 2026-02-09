@@ -227,44 +227,6 @@
             opacity: 0.6;
         }
 
-        /* --- Use case cards --- */
-        .use-cases {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-            margin-top: 1.25rem;
-        }
-
-        .use-card {
-            background: var(--color-cream);
-            border-left: 3px solid var(--color-forest);
-            border-radius: 12px;
-            padding: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-        }
-        .use-card .use-icon {
-            flex-shrink: 0;
-            width: 32px;
-            height: 32px;
-            color: var(--color-forest);
-            opacity: 0.7;
-        }
-        .use-card .use-text h3 {
-            font-family: var(--font-serif);
-            font-size: 1.15rem;
-            font-weight: 500;
-            color: var(--color-forest);
-            margin-bottom: 0.35rem;
-        }
-        .use-card .use-text p {
-            font-size: 0.8rem;
-            line-height: 1.6;
-            color: var(--color-stone);
-            margin: 0;
-        }
-
         /* --- What's included list --- */
         .included-grid {
             display: grid;
@@ -307,29 +269,36 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
-        .pkg-toggle-btn:hover {
-            border-color: var(--color-forest);
-            color: var(--color-forest);
-        }
-        .pkg-toggle-btn.active {
-            background: var(--color-forest);
-            color: #fff;
-            border-color: var(--color-forest);
-        }
+        .pkg-toggle-btn:hover { border-color: var(--color-forest); color: var(--color-forest); }
+        .pkg-toggle-btn.active { background: var(--color-forest); color: #fff; border-color: var(--color-forest); }
+
         .pkg-card {
             display: none;
-            background: #fff;
-            border: 1px solid var(--color-light-stone);
             border-radius: 14px;
-            padding: 2rem;
-            max-width: 580px;
+            overflow: hidden;
+            max-width: 900px;
             margin: 0 auto;
             animation: fadeIn 0.4s ease-out;
         }
-        .pkg-card.active { display: block; }
+        .pkg-card.active { display: grid; grid-template-columns: 1fr 1fr; }
+        .pkg-card-img {
+            width: 100%;
+            height: 100%;
+            min-height: 360px;
+            background: var(--color-light-stone);
+            background-size: cover;
+            background-position: center;
+        }
+        .pkg-card-body {
+            padding: 2rem;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
         .pkg-card-name {
             font-family: var(--font-serif);
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-weight: 500;
             color: var(--color-forest);
             margin-bottom: 0.2rem;
@@ -341,74 +310,62 @@
             margin-bottom: 1rem;
         }
         .pkg-card-desc {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             color: var(--color-charcoal);
             line-height: 1.6;
             margin-bottom: 1.25rem;
         }
         .pkg-card-meta {
             display: flex;
-            gap: 1.5rem;
+            gap: 1.25rem;
             flex-wrap: wrap;
             margin-bottom: 1.25rem;
-            padding: 1rem;
+            padding: 0.85rem;
             background: var(--color-cream);
             border-radius: 10px;
         }
-        .pkg-meta-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-        }
+        .pkg-meta-item { display: flex; flex-direction: column; gap: 0.1rem; }
         .pkg-meta-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--color-stone);
+            font-weight: 500;
+        }
+        .pkg-meta-value { font-size: 0.9rem; font-weight: 500; color: var(--color-charcoal); }
+        .pkg-meta-value .price-from {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            color: var(--color-forest);
+            font-weight: 600;
+        }
+        .pkg-meta-value .price-unit { font-size: 0.7rem; color: var(--color-stone); font-weight: 400; }
+        .pkg-includes-title {
             font-size: 0.7rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
             color: var(--color-stone);
             font-weight: 500;
-        }
-        .pkg-meta-value {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--color-charcoal);
-        }
-        .pkg-meta-value .price-from {
-            font-family: var(--font-serif);
-            font-size: 1.6rem;
-            color: var(--color-forest);
-            font-weight: 600;
-        }
-        .pkg-meta-value .price-unit {
-            font-size: 0.75rem;
-            color: var(--color-stone);
-            font-weight: 400;
-        }
-        .pkg-includes-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--color-stone);
-            font-weight: 500;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
         .pkg-includes-list {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.4rem;
-            margin-bottom: 1.5rem;
+            gap: 0.35rem;
+            margin-bottom: 1.25rem;
         }
         .pkg-includes-list .inc-item {
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--color-charcoal);
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
         }
         .pkg-includes-list .inc-item::before {
             content: '';
             display: inline-block;
-            width: 14px;
-            height: 14px;
+            width: 13px;
+            height: 13px;
             flex-shrink: 0;
             background: var(--color-forest);
             -webkit-mask: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/contain no-repeat;
@@ -416,9 +373,9 @@
         }
         .pkg-enquire-btn {
             display: inline-block;
-            padding: 0.75rem 2rem;
+            padding: 0.7rem 1.75rem;
             font-family: var(--font-sans);
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 500;
             letter-spacing: 0.06em;
             text-decoration: none;
@@ -429,8 +386,8 @@
         }
         .pkg-enquire-btn:hover { opacity: 0.85; }
         .pkg-extras {
-            margin-top: 2rem;
-            max-width: 580px;
+            margin-top: 2.5rem;
+            max-width: 900px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -458,16 +415,15 @@
             border-radius: 8px;
             border: 1px solid var(--color-light-stone);
         }
-        .pkg-extra-price {
-            font-weight: 500;
-            color: var(--color-forest);
-            white-space: nowrap;
-        }
+        .pkg-extra-price { font-weight: 500; color: var(--color-forest); white-space: nowrap; }
 
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
+            .pkg-card.active { grid-template-columns: 1fr; }
+            .pkg-card-img { min-height: 220px; }
+            .pkg-card-body { padding: 1.5rem; }
             .pkg-includes-list { grid-template-columns: 1fr; }
             .pkg-extras-grid { grid-template-columns: 1fr; }
-            .pkg-card-meta { flex-direction: column; gap: 0.75rem; }
+            .pkg-card-meta { flex-direction: column; gap: 0.6rem; }
         }
 
         /* --- Enquiry form --- */
@@ -631,7 +587,6 @@
         @media (max-width: 768px) {
             .events-hero { min-height: 380px; }
             .events-hero-overlay { padding: 2rem 1.25rem; }
-            .use-cases { grid-template-columns: 1fr; }
             .included-grid { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
             .section-cream, .section-white { padding: 2rem 1.25rem; }
@@ -707,83 +662,27 @@
         </div>
     </div>
 
-    <!-- Botanical divider -->
-    <div class="botanical-divider">
-        <span class="leaf-line"></span>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22c-4-4-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8-8 12z"/>
-            <path d="M12 10V22"/>
-            <path d="M8 14c2-1 4-1 4-4"/>
-            <path d="M16 14c-2-1-4-1-4-4"/>
-        </svg>
-        <span class="leaf-line"></span>
-    </div>
+    <!-- Packages section -->
+    <div class="section-cream" id="packages-section">
+        <div class="section-inner" style="max-width:960px">
+            <h2 style="text-align:center">Our Packages</h2>
+            <p style="text-align:center;font-size:0.88rem;color:var(--color-stone);margin-bottom:1.5rem">We provide the rainforest — you bring the rest. Choose a package below or enquire for something custom.</p>
 
-    <!-- Use cases -->
-    <div class="section-white">
-        <div class="section-inner">
-            <h2>Perfect For</h2>
-            <div class="use-cases">
-                <div class="use-card">
-                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
-                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-                        <line x1="9" y1="9" x2="9.01" y2="9"/>
-                        <line x1="15" y1="9" x2="15.01" y2="9"/>
-                    </svg>
-                    <div class="use-text">
-                        <h3>Yoga &amp; Wellness Retreats</h3>
-                        <p>Open-air practice space surrounded by rainforest canopy. Perfect for morning yoga, meditation sessions, and wellness workshops.</p>
-                    </div>
-                </div>
-                <div class="use-card">
-                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                    </svg>
-                    <div class="use-text">
-                        <h3>Private Celebrations</h3>
-                        <p>Birthdays, hen's parties, anniversaries, or milestone gatherings in a unique tropical setting under the stars.</p>
-                    </div>
-                </div>
-                <div class="use-card">
-                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                        <circle cx="9" cy="7" r="4"/>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    <div class="use-text">
-                        <h3>Team Offsites &amp; Workshops</h3>
-                        <p>Disconnect your team from the office and reconnect in nature. Ideal for creative workshops, planning days, and team building.</p>
-                    </div>
-                </div>
-                <div class="use-card">
-                    <svg class="use-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                        <circle cx="12" cy="13" r="4"/>
-                    </svg>
-                    <div class="use-text">
-                        <h3>Photography &amp; Creative Groups</h3>
-                        <p>Stunning natural backdrops for photo shoots, plein air painting, or creative residencies in the rainforest.</p>
-                    </div>
-                </div>
+            <div class="pkg-toggle-row" id="pkg-toggles"></div>
+            <div id="pkg-cards"></div>
+
+            <div class="pkg-extras" id="pkg-extras-area" style="display:none">
+                <div class="pkg-extras-title">Optional Extras</div>
+                <div class="pkg-extras-grid" id="pkg-extras-grid"></div>
             </div>
         </div>
-    </div>
-
-    <!-- Pull quote -->
-    <div class="pull-quote">
-        <blockquote>
-            "A place to gather, breathe, and let the rainforest set the pace."
-        </blockquote>
-        <div class="quote-attr">Ahana Hillside</div>
     </div>
 
     <!-- What's included -->
     <div class="section-white">
         <div class="section-inner">
             <h2>What We Offer</h2>
-            <p>Every event enquiry is tailored to your needs. Our grounds and facilities can be configured to suit your group size and requirements. Here's what's available:</p>
+            <p>Every event enquiry is tailored to your needs. Our grounds and facilities can be configured to suit your group size and requirements.</p>
             <div class="included-grid">
                 <div class="included-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -815,30 +714,22 @@
                 </div>
                 <div class="included-item">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    Custom packages and pricing
+                    BYO food, drinks and equipment
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Packages section -->
-    <div class="section-cream" id="packages-section">
-        <div class="section-inner" style="max-width:760px">
-            <h2 style="text-align:center">Popular Packages</h2>
-            <p style="text-align:center;font-size:0.88rem;color:var(--color-stone);margin-bottom:1.5rem">We provide the rainforest — you bring the rest. Choose a package below or enquire for something custom.</p>
-
-            <div class="pkg-toggle-row" id="pkg-toggles"></div>
-            <div id="pkg-cards"></div>
-
-            <div class="pkg-extras" id="pkg-extras-area" style="display:none">
-                <div class="pkg-extras-title">Optional Extras</div>
-                <div class="pkg-extras-grid" id="pkg-extras-grid"></div>
-            </div>
-        </div>
+    <!-- Pull quote -->
+    <div class="pull-quote">
+        <blockquote>
+            "A place to gather, breathe, and let the rainforest set the pace."
+        </blockquote>
+        <div class="quote-attr">Ahana Hillside</div>
     </div>
 
     <!-- Botanical divider -->
-    <div class="botanical-divider" style="background:var(--color-cream)">
+    <div class="botanical-divider" style="background:#fff">
         <span class="leaf-line"></span>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M12 22c-4-4-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8-8 12z"/>
@@ -1042,7 +933,12 @@
                 minMax = 'Min. ' + pkg.minGuests + ' guests';
             }
 
+            var imgUrl = WORKER_URL + '/package-image/' + pkg.id;
+            var imgStyle = 'background-image:url(' + imgUrl + ')';
+
             cardsHtml += '<div class="pkg-card' + (i === 0 ? ' active' : '') + '" id="pkg-' + pkg.id + '">';
+            cardsHtml += '<div class="pkg-card-img" style="' + imgStyle + '"></div>';
+            cardsHtml += '<div class="pkg-card-body">';
             cardsHtml += '<div class="pkg-card-name">' + pkg.name + '</div>';
             cardsHtml += '<div class="pkg-card-tagline">' + (pkg.tagline || '') + '</div>';
             cardsHtml += '<div class="pkg-card-desc">' + (pkg.description || '') + '</div>';
@@ -1067,7 +963,8 @@
             }
 
             cardsHtml += '<a href="#enquiry-form" class="pkg-enquire-btn">Enquire About This Package</a>';
-            cardsHtml += '</div>';
+            cardsHtml += '</div>'; // close pkg-card-body
+            cardsHtml += '</div>'; // close pkg-card
         });
         document.getElementById('pkg-cards').innerHTML = cardsHtml;
 

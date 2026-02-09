@@ -4034,6 +4034,15 @@
             html += '<div class="field"><label>Includes (one per line)</label>';
             html += '<textarea rows="3" onchange="adminPackagesData.packages[' + i + '].includes=this.value.split(\'\\n\').filter(function(l){return l.trim()})">' + (pkg.includes || []).join('\n') + '</textarea></div>';
 
+            html += '<div class="field"><label>Package Image</label>';
+            html += '<div id="pkg-img-preview-' + pkg.id + '" style="margin-bottom:.5rem">';
+            html += '<img src="' + WORKER_URL + '/package-image/' + pkg.id + '" style="max-width:300px;max-height:160px;border-radius:8px;object-fit:cover;display:none" onload="this.style.display=\'block\'" onerror="this.style.display=\'none\'">';
+            html += '</div>';
+            html += '<div style="display:flex;gap:.5rem;align-items:center">';
+            html += '<input type="file" accept="image/jpeg,image/png,image/webp" id="pkg-img-input-' + pkg.id + '" style="font-size:13px" onchange="uploadPackageImage(\'' + pkg.id + '\', this)">';
+            html += '<button type="button" class="btn" style="font-size:12px;padding:.3rem .7rem" onclick="deletePackageImage(\'' + pkg.id + '\')">Remove</button>';
+            html += '</div></div>';
+
             html += '</div>';
         });
 
@@ -4075,6 +4084,55 @@
             }
         } catch (e) {
             showMsg('packages', 'Connection error', 'error');
+        }
+    }
+
+    async function uploadPackageImage(pkgId, input) {
+        if (!input.files || !input.files[0]) return;
+        var file = input.files[0];
+        if (file.size > 5 * 1024 * 1024) { showMsg('packages', 'Image must be under 5MB', 'error'); return; }
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('packageId', pkgId);
+        try {
+            var res = await authFetch(WORKER_URL + '/package-image/upload', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + authToken },
+                body: fd,
+            });
+            var data = await res.json();
+            if (data.success) {
+                showMsg('packages', 'Image uploaded', 'success');
+                var preview = document.querySelector('#pkg-img-preview-' + pkgId + ' img');
+                if (preview) { preview.src = WORKER_URL + '/package-image/' + pkgId + '?t=' + Date.now(); preview.style.display = 'block'; }
+            } else {
+                showMsg('packages', data.error || 'Upload failed', 'error');
+            }
+        } catch (e) {
+            showMsg('packages', 'Upload failed', 'error');
+        }
+    }
+
+    async function deletePackageImage(pkgId) {
+        if (!confirm('Remove this package image?')) return;
+        try {
+            var res = await authFetch(WORKER_URL + '/package-image/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ packageId: pkgId }),
+            });
+            var data = await res.json();
+            if (data.success) {
+                showMsg('packages', 'Image removed', 'success');
+                var preview = document.querySelector('#pkg-img-preview-' + pkgId + ' img');
+                if (preview) preview.style.display = 'none';
+                var input = document.getElementById('pkg-img-input-' + pkgId);
+                if (input) input.value = '';
+            } else {
+                showMsg('packages', data.error || 'Delete failed', 'error');
+            }
+        } catch (e) {
+            showMsg('packages', 'Delete failed', 'error');
         }
     }
 
