@@ -3233,7 +3233,7 @@
                 <div class="card-title">Change Password</div>
                 <div class="field">
                     <label>New password</label>
-                    <input type="password" id="new-password" placeholder="Min. 6 characters" minlength="6">
+                    <input type="password" id="new-password" placeholder="Min. 8 chars, upper+lower+number" minlength="8">
                 </div>
                 <div class="field">
                     <label>Confirm new password</label>
@@ -3255,12 +3255,55 @@
     let authToken = sessionStorage.getItem('ahana-token') || '';
     let siteConfig = null;
 
+    // --- Session timeout (30 min inactivity) ---
+    const SESSION_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+    let sessionTimer = null;
+
+    function resetSessionTimer() {
+        if (sessionTimer) clearTimeout(sessionTimer);
+        if (!authToken) return;
+        sessionStorage.setItem('ahana-last-activity', Date.now().toString());
+        sessionTimer = setTimeout(function() {
+            handleLogout();
+            var errorEl = document.getElementById('login-error');
+            errorEl.textContent = 'Session expired due to inactivity. Please log in again.';
+            errorEl.classList.add('show');
+        }, SESSION_TIMEOUT_MS);
+    }
+
+    // Track user activity for session timeout
+    ['click', 'keydown', 'mousemove', 'scroll', 'touchstart'].forEach(function(evt) {
+        document.addEventListener(evt, function() {
+            if (authToken) resetSessionTimer();
+        }, { passive: true });
+    });
+
+    // Check if session expired on page load
+    (function checkSessionExpiry() {
+        var lastActivity = sessionStorage.getItem('ahana-last-activity');
+        if (authToken && lastActivity) {
+            var elapsed = Date.now() - parseInt(lastActivity, 10);
+            if (elapsed > SESSION_TIMEOUT_MS) {
+                authToken = '';
+                sessionStorage.removeItem('ahana-token');
+                sessionStorage.removeItem('ahana-last-activity');
+            }
+        }
+    })();
+
     // --- Auth ---
+    var loginFailCount = 0;
+    var loginLockoutTimer = null;
+
     async function handleLogin(e) {
         e.preventDefault();
+        const loginBtn = e.target.querySelector('button[type="submit"]');
         const password = document.getElementById('login-password').value;
         const errorEl = document.getElementById('login-error');
         errorEl.classList.remove('show');
+
+        // Disable button during request
+        if (loginBtn) loginBtn.disabled = true;
 
         try {
             const res = await fetch(WORKER_URL + '/auth', {
@@ -3270,19 +3313,53 @@
             });
             const data = await res.json();
             if (data.success) {
+                loginFailCount = 0;
                 authToken = data.token;
                 sessionStorage.setItem('ahana-token', authToken);
+                resetSessionTimer();
                 showDashboard();
             } else {
-                errorEl.textContent = res.status === 429
-                    ? 'Too many failed attempts. Try again in 15 minutes.'
-                    : 'Invalid password';
+                if (res.status === 429) {
+                    errorEl.textContent = 'Too many failed attempts. Try again in 15 minutes.';
+                    startLockoutCountdown(errorEl, loginBtn);
+                } else {
+                    loginFailCount++;
+                    var remaining = 5 - loginFailCount;
+                    if (remaining > 0) {
+                        errorEl.textContent = 'Invalid password. ' + remaining + ' attempt' + (remaining !== 1 ? 's' : '') + ' remaining.';
+                    } else {
+                        errorEl.textContent = 'Too many failed attempts. Try again in 15 minutes.';
+                        startLockoutCountdown(errorEl, loginBtn);
+                    }
+                }
                 errorEl.classList.add('show');
             }
         } catch (err) {
             errorEl.textContent = 'Connection error. Is the worker deployed?';
             errorEl.classList.add('show');
         }
+        if (loginBtn && !loginBtn.disabled) loginBtn.disabled = false;
+        else if (loginBtn && !loginLockoutTimer) loginBtn.disabled = false;
+    }
+
+    function startLockoutCountdown(errorEl, loginBtn) {
+        if (loginBtn) loginBtn.disabled = true;
+        var secondsLeft = 900; // 15 minutes
+        if (loginLockoutTimer) clearInterval(loginLockoutTimer);
+        loginLockoutTimer = setInterval(function() {
+            secondsLeft--;
+            if (secondsLeft <= 0) {
+                clearInterval(loginLockoutTimer);
+                loginLockoutTimer = null;
+                loginFailCount = 0;
+                errorEl.classList.remove('show');
+                if (loginBtn) loginBtn.disabled = false;
+                return;
+            }
+            var m = Math.floor(secondsLeft / 60);
+            var s = secondsLeft % 60;
+            errorEl.textContent = 'Account locked. Try again in ' + m + ':' + (s < 10 ? '0' : '') + s;
+        }, 1000);
     }
 
     var dashRefreshInterval = null;
@@ -3290,6 +3367,8 @@
     function handleLogout() {
         authToken = '';
         sessionStorage.removeItem('ahana-token');
+        sessionStorage.removeItem('ahana-last-activity');
+        if (sessionTimer) { clearTimeout(sessionTimer); sessionTimer = null; }
         if (dashRefreshInterval) { clearInterval(dashRefreshInterval); dashRefreshInterval = null; }
         document.getElementById('dashboard').classList.remove('show');
         document.getElementById('login-screen').style.display = 'flex';
@@ -3569,8 +3648,12 @@
         const newPwd = document.getElementById('new-password').value;
         const confirmPwd = document.getElementById('confirm-password').value;
 
-        if (newPwd.length < 6) {
-            showMsg('settings', 'Password must be at least 6 characters', 'error');
+        if (newPwd.length < 8) {
+            showMsg('settings', 'Password must be at least 8 characters', 'error');
+            return;
+        }
+        if (!/[A-Z]/.test(newPwd) || !/[a-z]/.test(newPwd) || !/[0-9]/.test(newPwd)) {
+            showMsg('settings', 'Password must contain uppercase, lowercase, and a number', 'error');
             return;
         }
         if (newPwd !== confirmPwd) {
@@ -3591,6 +3674,7 @@
             if (data.success) {
                 authToken = newPwd;
                 sessionStorage.setItem('ahana-token', authToken);
+                resetSessionTimer();
                 showMsg('settings', 'Password updated', 'success');
                 document.getElementById('new-password').value = '';
                 document.getElementById('confirm-password').value = '';
@@ -5913,6 +5997,7 @@
 
     // --- Init: auto-login if token exists ---
     if (authToken) {
+        resetSessionTimer();
         showDashboard();
     }
 </script>
