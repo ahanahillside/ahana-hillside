@@ -2733,6 +2733,18 @@
             </div>
 
             <div class="card" style="max-width:900px;margin-top:1.5rem">
+                <div class="card-title">About Page Hero Image</div>
+                <div class="section-desc" style="margin-bottom:0.75rem">Upload a landscape image for the About Us page. Displayed below the heading. Accepts JPEG, PNG, or WebP (max 5MB).</div>
+                <div id="about-hero-preview" style="margin-bottom:0.75rem"></div>
+                <div class="upload-zone" id="upload-zone-abouthero" onclick="document.getElementById('file-abouthero').click()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span>Upload about page hero image</span>
+                    <input type="file" id="file-abouthero" accept="image/jpeg,image/png,image/webp" style="display:none" onchange="uploadAboutHero(this.files[0])">
+                </div>
+                <div class="upload-progress" id="progress-abouthero"></div>
+            </div>
+
+            <div class="card" style="max-width:900px;margin-top:1.5rem">
                 <div class="card-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="toggleExploreSection()">
                     Explore Page &mdash; Section Images
                     <svg id="explore-collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s ease;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
@@ -2992,6 +3004,7 @@
         loadGalleryItems();
         loadHomepageBg();
         loadCampsiteBg();
+        loadAboutHero();
         loadExploreSlots();
     }
 
@@ -4789,6 +4802,74 @@
         zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
         zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
         zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); uploadHomepageBg(e.dataTransfer.files[0]); });
+    })();
+
+    // --- About Page Hero Image ---
+    async function loadAboutHero() {
+        const preview = document.getElementById('about-hero-preview');
+        try {
+            const res = await fetch(WORKER_URL + '/about-hero/info');
+            const data = await res.json();
+            if (data.exists) {
+                const url = WORKER_URL + '/about-hero?t=' + Date.now();
+                preview.innerHTML = '<img src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)">'
+                    + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
+                    + '<span style="font-size:0.82rem;color:var(--color-stone)">Current about page hero image</span>'
+                    + '<button class="btn btn-danger" onclick="deleteAboutHero()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
+                    + '</div>';
+            } else {
+                preview.innerHTML = '<div style="font-size:0.8rem;color:var(--color-stone);padding:0.5rem 0">No image uploaded yet</div>';
+            }
+        } catch (err) {
+            preview.innerHTML = '<div style="font-size:0.8rem;color:var(--color-stone)">Could not load preview</div>';
+        }
+    }
+
+    async function uploadAboutHero(file) {
+        if (!file) return;
+        const progressEl = document.getElementById('progress-abouthero');
+        progressEl.textContent = 'Uploading ' + file.name + '...';
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            const res = await fetch(WORKER_URL + '/about-hero/upload', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + authToken },
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+                progressEl.textContent = 'Image uploaded!';
+                setTimeout(() => { progressEl.textContent = ''; }, 3000);
+                loadAboutHero();
+            } else {
+                progressEl.textContent = 'Error: ' + (data.error || 'Upload failed');
+            }
+        } catch (err) {
+            progressEl.textContent = 'Upload failed — connection error';
+        }
+        document.getElementById('file-abouthero').value = '';
+    }
+
+    async function deleteAboutHero() {
+        if (!confirm('Remove the about page hero image?')) return;
+        try {
+            await fetch(WORKER_URL + '/about-hero/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: '{}',
+            });
+            loadAboutHero();
+        } catch (err) {}
+    }
+
+    // About hero drag & drop
+    (function() {
+        const zone = document.getElementById('upload-zone-abouthero');
+        if (!zone) return;
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+        zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
+        zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); uploadAboutHero(e.dataTransfer.files[0]); });
     })();
 
     // --- Camping Experience Background ---
