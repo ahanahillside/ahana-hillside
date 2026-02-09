@@ -1692,6 +1692,10 @@
                 Bookings
                 <span class="nav-badge" id="booking-badge"></span>
             </button>
+            <button class="nav-item" data-tab="calendar" onclick="switchTab('calendar')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><rect x="8" y="14" width="2" height="2"/><rect x="14" y="14" width="2" height="2"/></svg>
+                Calendar
+            </button>
             <button class="nav-item" data-tab="campsites" onclick="switchTab('campsites')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18l9-6 9 6"/><path d="M3 12l9-6 9 6"/></svg>
                 Campsites &amp; Rooms
@@ -1729,8 +1733,7 @@
 
         <!-- Sub-tabs for Campsites -->
         <div class="sub-tabs" id="campsites-sub-tabs">
-            <button class="sub-tab-btn active" data-subtab="availability">Availability</button>
-            <button class="sub-tab-btn" data-subtab="content">Content &amp; Media</button>
+            <button class="sub-tab-btn active" data-subtab="content">Content &amp; Media</button>
             <button class="sub-tab-btn" data-subtab="pricing">Pricing &amp; Promos</button>
             <button class="sub-tab-btn" data-subtab="rules">Rules &amp; Policies</button>
         </div>
@@ -1783,141 +1786,137 @@
             <div id="bookings-list"><div style="font-size:0.9rem;color:var(--color-stone);padding:1rem 0;">Loading bookings...</div></div>
         </div>
 
-        <!-- CAMPSITES PANEL (contains sub-panels) -->
-        <div class="tab-panel" id="panel-campsites">
+        <!-- CALENDAR PANEL (standalone) -->
+        <div class="tab-panel" id="panel-calendar">
+            <div class="panel-desc">Click dates to select them, then block or open in bulk. Shift+click to select a range. Click+drag to select multiple dates. Blocked dates cannot be booked by guests.</div>
 
-            <!-- Availability sub-panel -->
-            <div class="sub-panel active" id="subpanel-availability">
-                <div class="panel-desc">Click dates to select them, then block or open in bulk. Shift+click to select a range. Click+drag to select multiple dates. Blocked dates cannot be booked by guests.</div>
-                <div style="display:flex;gap:1rem;margin-bottom:1rem;font-size:0.78rem;color:#666">
-                    <span><span style="display:inline-block;width:12px;height:12px;background:#c0392b;border-radius:2px;vertical-align:middle;margin-right:4px"></span> Manually blocked</span>
-                    <span><span style="display:inline-block;width:12px;height:12px;background:#2874a6;border-radius:2px;vertical-align:middle;margin-right:4px"></span> Booked by guest</span>
-                </div>
-
-                <div class="card-grid">
-                    <div class="card">
-                        <div class="card-title">SAMAVAS</div>
-                        <div class="cal-nav">
-                            <button class="cal-nav-btn" onclick="calNav('samavas', -1)">&larr;</button>
-                            <span class="cal-month-label" id="cal-label-samavas"></span>
-                            <button class="cal-today-btn" onclick="calToday('samavas')">Today</button>
-                            <button class="cal-nav-btn" onclick="calNav('samavas', 1)">&rarr;</button>
-                        </div>
-                        <div class="cal-occupancy" id="cal-occ-samavas"></div>
-                        <div class="cal-grid" id="cal-grid-samavas"></div>
-                        <div class="cal-sel-toolbar" id="cal-sel-samavas">
-                            <span class="sel-count" id="cal-sel-count-samavas">0 selected</span>
-                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('samavas')">Block Selected</button>
-                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('samavas')">Open Selected</button>
-                            <button class="cal-sel-btn" onclick="clearSelection('samavas')">Clear</button>
-                        </div>
-                        <div class="save-bar" style="margin-top:1rem">
-                            <button class="btn btn-primary" onclick="saveBlockedDates('samavas')">Save</button>
-                            <span class="save-msg" id="avail-samavas-msg"></span>
-                        </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title">SAMAVAS</div>
+                    <div class="cal-nav">
+                        <button class="cal-nav-btn" onclick="calNav('samavas', -1)">&larr;</button>
+                        <span class="cal-month-label" id="cal-label-samavas"></span>
+                        <button class="cal-today-btn" onclick="calToday('samavas')">Today</button>
+                        <button class="cal-nav-btn" onclick="calNav('samavas', 1)">&rarr;</button>
                     </div>
-
-                    <div class="card">
-                        <div class="card-title">CHHAYA</div>
-                        <div class="cal-nav">
-                            <button class="cal-nav-btn" onclick="calNav('chhaya', -1)">&larr;</button>
-                            <span class="cal-month-label" id="cal-label-chhaya"></span>
-                            <button class="cal-today-btn" onclick="calToday('chhaya')">Today</button>
-                            <button class="cal-nav-btn" onclick="calNav('chhaya', 1)">&rarr;</button>
-                        </div>
-                        <div class="cal-occupancy" id="cal-occ-chhaya"></div>
-                        <div class="cal-grid" id="cal-grid-chhaya"></div>
-                        <div class="cal-sel-toolbar" id="cal-sel-chhaya">
-                            <span class="sel-count" id="cal-sel-count-chhaya">0 selected</span>
-                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('chhaya')">Block Selected</button>
-                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('chhaya')">Open Selected</button>
-                            <button class="cal-sel-btn" onclick="clearSelection('chhaya')">Clear</button>
-                        </div>
-                        <div class="save-bar" style="margin-top:1rem">
-                            <button class="btn btn-primary" onclick="saveBlockedDates('chhaya')">Save</button>
-                            <span class="save-msg" id="avail-chhaya-msg"></span>
-                        </div>
+                    <div class="cal-occupancy" id="cal-occ-samavas"></div>
+                    <div class="cal-grid" id="cal-grid-samavas"></div>
+                    <div class="cal-sel-toolbar" id="cal-sel-samavas">
+                        <span class="sel-count" id="cal-sel-count-samavas">0 selected</span>
+                        <button class="cal-sel-btn sel-block" onclick="bulkBlock('samavas')">Block Selected</button>
+                        <button class="cal-sel-btn sel-open" onclick="bulkOpen('samavas')">Open Selected</button>
+                        <button class="cal-sel-btn" onclick="clearSelection('samavas')">Clear</button>
                     </div>
-
-                    <div class="card">
-                        <div class="card-title">MOUNTAIN VIEW ROOM</div>
-                        <div class="cal-nav">
-                            <button class="cal-nav-btn" onclick="calNav('mountain-view', -1)">&larr;</button>
-                            <span class="cal-month-label" id="cal-label-mountain-view"></span>
-                            <button class="cal-today-btn" onclick="calToday('mountain-view')">Today</button>
-                            <button class="cal-nav-btn" onclick="calNav('mountain-view', 1)">&rarr;</button>
-                        </div>
-                        <div class="cal-occupancy" id="cal-occ-mountain-view"></div>
-                        <div class="cal-grid" id="cal-grid-mountain-view"></div>
-                        <div class="cal-sel-toolbar" id="cal-sel-mountain-view">
-                            <span class="sel-count" id="cal-sel-count-mountain-view">0 selected</span>
-                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('mountain-view')">Block Selected</button>
-                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('mountain-view')">Open Selected</button>
-                            <button class="cal-sel-btn" onclick="clearSelection('mountain-view')">Clear</button>
-                        </div>
-                        <div class="save-bar" style="margin-top:1rem">
-                            <button class="btn btn-primary" onclick="saveBlockedDates('mountain-view')">Save</button>
-                            <span class="save-msg" id="avail-mountain-view-msg"></span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">GARDEN VIEW ROOM</div>
-                        <div class="cal-nav">
-                            <button class="cal-nav-btn" onclick="calNav('garden-view', -1)">&larr;</button>
-                            <span class="cal-month-label" id="cal-label-garden-view"></span>
-                            <button class="cal-today-btn" onclick="calToday('garden-view')">Today</button>
-                            <button class="cal-nav-btn" onclick="calNav('garden-view', 1)">&rarr;</button>
-                        </div>
-                        <div class="cal-occupancy" id="cal-occ-garden-view"></div>
-                        <div class="cal-grid" id="cal-grid-garden-view"></div>
-                        <div class="cal-sel-toolbar" id="cal-sel-garden-view">
-                            <span class="sel-count" id="cal-sel-count-garden-view">0 selected</span>
-                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('garden-view')">Block Selected</button>
-                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('garden-view')">Open Selected</button>
-                            <button class="cal-sel-btn" onclick="clearSelection('garden-view')">Clear</button>
-                        </div>
-                        <div class="save-bar" style="margin-top:1rem">
-                            <button class="btn btn-primary" onclick="saveBlockedDates('garden-view')">Save</button>
-                            <span class="save-msg" id="avail-garden-view-msg"></span>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-title">SUITE WITH GARDEN VIEW</div>
-                        <div class="cal-nav">
-                            <button class="cal-nav-btn" onclick="calNav('suite', -1)">&larr;</button>
-                            <span class="cal-month-label" id="cal-label-suite"></span>
-                            <button class="cal-today-btn" onclick="calToday('suite')">Today</button>
-                            <button class="cal-nav-btn" onclick="calNav('suite', 1)">&rarr;</button>
-                        </div>
-                        <div class="cal-occupancy" id="cal-occ-suite"></div>
-                        <div class="cal-grid" id="cal-grid-suite"></div>
-                        <div class="cal-sel-toolbar" id="cal-sel-suite">
-                            <span class="sel-count" id="cal-sel-count-suite">0 selected</span>
-                            <button class="cal-sel-btn sel-block" onclick="bulkBlock('suite')">Block Selected</button>
-                            <button class="cal-sel-btn sel-open" onclick="bulkOpen('suite')">Open Selected</button>
-                            <button class="cal-sel-btn" onclick="clearSelection('suite')">Clear</button>
-                        </div>
-                        <div class="save-bar" style="margin-top:1rem">
-                            <button class="btn btn-primary" onclick="saveBlockedDates('suite')">Save</button>
-                            <span class="save-msg" id="avail-suite-msg"></span>
-                        </div>
+                    <div class="save-bar" style="margin-top:1rem">
+                        <button class="btn btn-primary" onclick="saveBlockedDates('samavas')">Save</button>
+                        <span class="save-msg" id="avail-samavas-msg"></span>
                     </div>
                 </div>
 
-                <div class="cal-legend">
-                    <span class="legend-item"><span class="legend-swatch legend-available"></span> Available</span>
-                    <span class="legend-item"><span class="legend-swatch legend-booked"></span> Booked</span>
-                    <span class="legend-item"><span class="legend-swatch legend-hipcamp"></span> Hipcamp</span>
-                    <span class="legend-item"><span class="legend-swatch legend-blocked"></span> Blocked</span>
-                    <span class="legend-item"><span class="legend-swatch legend-selected"></span> Selected</span>
-                    <span class="legend-item"><span class="legend-swatch legend-past"></span> Past</span>
+                <div class="card">
+                    <div class="card-title">CHHAYA</div>
+                    <div class="cal-nav">
+                        <button class="cal-nav-btn" onclick="calNav('chhaya', -1)">&larr;</button>
+                        <span class="cal-month-label" id="cal-label-chhaya"></span>
+                        <button class="cal-today-btn" onclick="calToday('chhaya')">Today</button>
+                        <button class="cal-nav-btn" onclick="calNav('chhaya', 1)">&rarr;</button>
+                    </div>
+                    <div class="cal-occupancy" id="cal-occ-chhaya"></div>
+                    <div class="cal-grid" id="cal-grid-chhaya"></div>
+                    <div class="cal-sel-toolbar" id="cal-sel-chhaya">
+                        <span class="sel-count" id="cal-sel-count-chhaya">0 selected</span>
+                        <button class="cal-sel-btn sel-block" onclick="bulkBlock('chhaya')">Block Selected</button>
+                        <button class="cal-sel-btn sel-open" onclick="bulkOpen('chhaya')">Open Selected</button>
+                        <button class="cal-sel-btn" onclick="clearSelection('chhaya')">Clear</button>
+                    </div>
+                    <div class="save-bar" style="margin-top:1rem">
+                        <button class="btn btn-primary" onclick="saveBlockedDates('chhaya')">Save</button>
+                        <span class="save-msg" id="avail-chhaya-msg"></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">MOUNTAIN VIEW ROOM</div>
+                    <div class="cal-nav">
+                        <button class="cal-nav-btn" onclick="calNav('mountain-view', -1)">&larr;</button>
+                        <span class="cal-month-label" id="cal-label-mountain-view"></span>
+                        <button class="cal-today-btn" onclick="calToday('mountain-view')">Today</button>
+                        <button class="cal-nav-btn" onclick="calNav('mountain-view', 1)">&rarr;</button>
+                    </div>
+                    <div class="cal-occupancy" id="cal-occ-mountain-view"></div>
+                    <div class="cal-grid" id="cal-grid-mountain-view"></div>
+                    <div class="cal-sel-toolbar" id="cal-sel-mountain-view">
+                        <span class="sel-count" id="cal-sel-count-mountain-view">0 selected</span>
+                        <button class="cal-sel-btn sel-block" onclick="bulkBlock('mountain-view')">Block Selected</button>
+                        <button class="cal-sel-btn sel-open" onclick="bulkOpen('mountain-view')">Open Selected</button>
+                        <button class="cal-sel-btn" onclick="clearSelection('mountain-view')">Clear</button>
+                    </div>
+                    <div class="save-bar" style="margin-top:1rem">
+                        <button class="btn btn-primary" onclick="saveBlockedDates('mountain-view')">Save</button>
+                        <span class="save-msg" id="avail-mountain-view-msg"></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">GARDEN VIEW ROOM</div>
+                    <div class="cal-nav">
+                        <button class="cal-nav-btn" onclick="calNav('garden-view', -1)">&larr;</button>
+                        <span class="cal-month-label" id="cal-label-garden-view"></span>
+                        <button class="cal-today-btn" onclick="calToday('garden-view')">Today</button>
+                        <button class="cal-nav-btn" onclick="calNav('garden-view', 1)">&rarr;</button>
+                    </div>
+                    <div class="cal-occupancy" id="cal-occ-garden-view"></div>
+                    <div class="cal-grid" id="cal-grid-garden-view"></div>
+                    <div class="cal-sel-toolbar" id="cal-sel-garden-view">
+                        <span class="sel-count" id="cal-sel-count-garden-view">0 selected</span>
+                        <button class="cal-sel-btn sel-block" onclick="bulkBlock('garden-view')">Block Selected</button>
+                        <button class="cal-sel-btn sel-open" onclick="bulkOpen('garden-view')">Open Selected</button>
+                        <button class="cal-sel-btn" onclick="clearSelection('garden-view')">Clear</button>
+                    </div>
+                    <div class="save-bar" style="margin-top:1rem">
+                        <button class="btn btn-primary" onclick="saveBlockedDates('garden-view')">Save</button>
+                        <span class="save-msg" id="avail-garden-view-msg"></span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">SUITE WITH GARDEN VIEW</div>
+                    <div class="cal-nav">
+                        <button class="cal-nav-btn" onclick="calNav('suite', -1)">&larr;</button>
+                        <span class="cal-month-label" id="cal-label-suite"></span>
+                        <button class="cal-today-btn" onclick="calToday('suite')">Today</button>
+                        <button class="cal-nav-btn" onclick="calNav('suite', 1)">&rarr;</button>
+                    </div>
+                    <div class="cal-occupancy" id="cal-occ-suite"></div>
+                    <div class="cal-grid" id="cal-grid-suite"></div>
+                    <div class="cal-sel-toolbar" id="cal-sel-suite">
+                        <span class="sel-count" id="cal-sel-count-suite">0 selected</span>
+                        <button class="cal-sel-btn sel-block" onclick="bulkBlock('suite')">Block Selected</button>
+                        <button class="cal-sel-btn sel-open" onclick="bulkOpen('suite')">Open Selected</button>
+                        <button class="cal-sel-btn" onclick="clearSelection('suite')">Clear</button>
+                    </div>
+                    <div class="save-bar" style="margin-top:1rem">
+                        <button class="btn btn-primary" onclick="saveBlockedDates('suite')">Save</button>
+                        <span class="save-msg" id="avail-suite-msg"></span>
+                    </div>
                 </div>
             </div>
 
+            <div class="cal-legend">
+                <span class="legend-item"><span class="legend-swatch legend-available"></span> Available</span>
+                <span class="legend-item"><span class="legend-swatch legend-booked"></span> Booked</span>
+                <span class="legend-item"><span class="legend-swatch legend-hipcamp"></span> Hipcamp</span>
+                <span class="legend-item"><span class="legend-swatch legend-blocked"></span> Blocked</span>
+                <span class="legend-item"><span class="legend-swatch legend-selected"></span> Selected</span>
+                <span class="legend-item"><span class="legend-swatch legend-past"></span> Past</span>
+            </div>
+        </div>
+
+        <!-- CAMPSITES PANEL (contains sub-panels) -->
+        <div class="tab-panel" id="panel-campsites">
+
             <!-- Content & Media sub-panel (Images + Content + Rules) -->
-            <div class="sub-panel" id="subpanel-content">
+            <div class="sub-panel active" id="subpanel-content">
                 <div class="panel-desc">Manage photos, descriptions, amenities, and campground rules for rooms and campsites.</div>
 
                 <!-- Site selector -->
@@ -5279,6 +5278,7 @@
         dashboard: 'Dashboard',
         messages: 'Messages',
         bookings: 'Bookings',
+        calendar: 'Calendar',
         campsites: 'Campsites & Rooms',
         viator: 'Viator',
         reviews: 'Guest Reviews',
@@ -5311,6 +5311,9 @@
 
         // Update dashboard stats when returning to dashboard
         if (tab === 'dashboard') updateDashStats();
+
+        // Refresh calendar data when switching to calendar tab
+        if (tab === 'calendar') loadBlockedDates();
 
         // Close mobile sidebar
         closeSidebar();
