@@ -3222,10 +3222,17 @@
         }
 
         // Get the nightly rate for a room on a given date
+        function getBaseRate(site) {
+            const cfg = siteConfig[site];
+            if (!cfg) return 0;
+            const guestCount = getSearchGuests();
+            return (guestCount === 1 && cfg.soloPrice) ? cfg.soloPrice : cfg.basePrice;
+        }
+
         function getNightlyRate(site, dateStr) {
             const cfg = siteConfig[site];
             if (!cfg) return 0;
-            const base = cfg.basePrice;
+            const base = getBaseRate(site);
             if (!isRoom(site)) return base; // campsites: flat rate always
             const wkPct = siteConfig.weekendMarkup || 0;
             const holPct = siteConfig.holidayMarkup || 0;
@@ -3393,10 +3400,12 @@
                 const sym = currencySymbol();
                 var priceEl = document.getElementById(site + '-price');
                 if (priceEl) {
-                    var baseGuests = ROOM_SITES.includes(site) ? '1 guest' : '2 guests';
+                    var isRoomSite = ROOM_SITES.includes(site);
+                    var baseGuests = isRoomSite ? '1 guest' : '2 guests';
+                    var initPrice = (isRoomSite && cfg.soloPrice) ? cfg.soloPrice : cfg.basePrice;
                     var nrDiscount = siteConfig.nonRefundableDiscount || 10;
                     var nrEnabled = siteConfig.nonRefundableEnabled !== false;
-                    var nrPrice = Math.round(cfg.basePrice * (1 - nrDiscount / 100));
+                    var nrPrice = Math.round(initPrice * (1 - nrDiscount / 100));
                     var flexSel0 = selectedCancellationPolicy === 'flexible' ? ' rate-selected' : '';
                     var nrSel0 = (nrEnabled && selectedCancellationPolicy === 'non-refundable') ? ' rate-selected' : '';
                     if (!nrEnabled && selectedCancellationPolicy === 'non-refundable') { selectedCancellationPolicy = 'flexible'; flexSel0 = ' rate-selected'; }
@@ -3405,7 +3414,7 @@
                         : '';
                     priceEl.innerHTML =
                         '<div class="rate-plans">'
-                        + '<div class="rate-plan' + flexSel0 + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <span class="rate-price-group"><strong>' + sym + cfg.basePrice + '</strong> <span class="rate-per">/ night</span></span></div>'
+                        + '<div class="rate-plan' + flexSel0 + '" onclick="selectPolicy(\'flexible\');updateAllCards()"><span class="rate-uncheck"></span><span class="rate-check"></span><span class="rate-badge rate-badge-flexible">Flexible</span> <span class="rate-price-group"><strong>' + sym + initPrice + '</strong> <span class="rate-per">/ night</span></span></div>'
                         + nrHtml
                         + '</div>'
                         + '<span class="price-note">for ' + baseGuests
@@ -3515,12 +3524,15 @@
             const sym = currencySymbol();
             const guestCount = getSearchGuests();
             const extraGuests = Math.max(0, guestCount - 2);
-            const perNight = cfg.basePrice + (extraGuests * cfg.extraGuestFee);
+            const effectiveBase = (guestCount === 1 && cfg.soloPrice) ? cfg.soloPrice : cfg.basePrice;
+            const perNight = effectiveBase + (extraGuests * cfg.extraGuestFee);
             const nrDiscount = siteConfig.nonRefundableDiscount || 10;
             const nrPerNight = Math.round(perNight * (1 - nrDiscount / 100));
 
             let noteHtml = '<span class="price-note">for ' + guestCount + ' guest' + (guestCount > 1 ? 's' : '');
-            if (extraGuests > 0) {
+            if (guestCount === 1 && cfg.soloPrice) {
+                noteHtml += ' &middot; solo rate';
+            } else if (extraGuests > 0) {
                 noteHtml += ' &middot; base ' + sym + cfg.basePrice + ' + ' + extraGuests + ' extra x ' + sym + cfg.extraGuestFee;
             }
             if (isRoom(site)) {
@@ -3571,26 +3583,28 @@
 
             const sym = currencySymbol();
             const baseCost = breakdown.totalBase;
-            const extraGuests = Math.max(0, guestCount - 2);
+            const isSolo = guestCount === 1 && cfg.soloPrice;
+            const extraGuests = isSolo ? 0 : Math.max(0, guestCount - 2);
             const extraCost = extraGuests * cfg.extraGuestFee * breakdown.nights;
             const total = baseCost + extraCost;
 
+            var effectiveBase = getBaseRate(site);
             let html = '';
             if (isRoom(site) && (breakdown.weekendNights > 0 || breakdown.holidayNights > 0)) {
                 // Show per-rate-type breakdown for rooms
                 if (breakdown.standardNights > 0) {
-                    html += '<div class="price-line"><span>' + breakdown.standardNights + ' standard night' + (breakdown.standardNights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + (breakdown.standardNights * cfg.basePrice).toFixed(2) + '</span></div>';
+                    html += '<div class="price-line"><span>' + breakdown.standardNights + ' standard night' + (breakdown.standardNights > 1 ? 's' : '') + ' x ' + sym + effectiveBase + '</span><span>' + sym + (breakdown.standardNights * effectiveBase).toFixed(2) + '</span></div>';
                 }
                 if (breakdown.weekendNights > 0) {
-                    var wkRate = Math.round(cfg.basePrice * (1 + (siteConfig.weekendMarkup || 0) / 100));
+                    var wkRate = Math.round(effectiveBase * (1 + (siteConfig.weekendMarkup || 0) / 100));
                     html += '<div class="price-line"><span>' + breakdown.weekendNights + ' weekend night' + (breakdown.weekendNights > 1 ? 's' : '') + ' x ' + sym + wkRate + '</span><span>' + sym + (breakdown.weekendNights * wkRate).toFixed(2) + '</span></div>';
                 }
                 if (breakdown.holidayNights > 0) {
-                    var holRate = Math.round(cfg.basePrice * (1 + (siteConfig.holidayMarkup || 0) / 100));
+                    var holRate = Math.round(effectiveBase * (1 + (siteConfig.holidayMarkup || 0) / 100));
                     html += '<div class="price-line"><span>' + breakdown.holidayNights + ' holiday night' + (breakdown.holidayNights > 1 ? 's' : '') + ' x ' + sym + holRate + '</span><span>' + sym + (breakdown.holidayNights * holRate).toFixed(2) + '</span></div>';
                 }
             } else {
-                html += '<div class="price-line"><span>' + breakdown.nights + ' night' + (breakdown.nights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + baseCost.toFixed(2) + '</span></div>';
+                html += '<div class="price-line"><span>' + breakdown.nights + ' night' + (breakdown.nights > 1 ? 's' : '') + ' x ' + sym + effectiveBase + '</span><span>' + sym + baseCost.toFixed(2) + '</span></div>';
             }
 
             if (extraCost > 0) {
@@ -4025,7 +4039,8 @@
 
             const sym = currencySymbol();
             const baseCost = breakdown.totalBase;
-            const extraGuests = Math.max(0, guestCount - 2);
+            const isSolo = guestCount === 1 && cfg.soloPrice;
+            const extraGuests = isSolo ? 0 : Math.max(0, guestCount - 2);
             const extraCost = extraGuests * cfg.extraGuestFee * breakdown.nights;
 
             let addonsCost = 0;
@@ -4071,20 +4086,21 @@
         // --- Update summaries ---
         function buildAccomLines(sym, cfg, breakdown) {
             let html = '';
+            var effectiveBase = getBaseRate(selectedSite);
             if (isRoom(selectedSite) && (breakdown.weekendNights > 0 || breakdown.holidayNights > 0)) {
                 if (breakdown.standardNights > 0) {
-                    html += '<div class="summary-line"><span>' + breakdown.standardNights + ' standard night' + (breakdown.standardNights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + (breakdown.standardNights * cfg.basePrice).toFixed(2) + '</span></div>';
+                    html += '<div class="summary-line"><span>' + breakdown.standardNights + ' standard night' + (breakdown.standardNights > 1 ? 's' : '') + ' x ' + sym + effectiveBase + '</span><span>' + sym + (breakdown.standardNights * effectiveBase).toFixed(2) + '</span></div>';
                 }
                 if (breakdown.weekendNights > 0) {
-                    var wkRate = Math.round(cfg.basePrice * (1 + (siteConfig.weekendMarkup || 0) / 100));
+                    var wkRate = Math.round(effectiveBase * (1 + (siteConfig.weekendMarkup || 0) / 100));
                     html += '<div class="summary-line"><span>' + breakdown.weekendNights + ' weekend night' + (breakdown.weekendNights > 1 ? 's' : '') + ' x ' + sym + wkRate + '</span><span>' + sym + (breakdown.weekendNights * wkRate).toFixed(2) + '</span></div>';
                 }
                 if (breakdown.holidayNights > 0) {
-                    var holRate = Math.round(cfg.basePrice * (1 + (siteConfig.holidayMarkup || 0) / 100));
+                    var holRate = Math.round(effectiveBase * (1 + (siteConfig.holidayMarkup || 0) / 100));
                     html += '<div class="summary-line"><span>' + breakdown.holidayNights + ' holiday night' + (breakdown.holidayNights > 1 ? 's' : '') + ' x ' + sym + holRate + '</span><span>' + sym + (breakdown.holidayNights * holRate).toFixed(2) + '</span></div>';
                 }
             } else {
-                html += '<div class="summary-line"><span>' + breakdown.nights + ' night' + (breakdown.nights > 1 ? 's' : '') + ' x ' + sym + cfg.basePrice + '</span><span>' + sym + breakdown.totalBase.toFixed(2) + '</span></div>';
+                html += '<div class="summary-line"><span>' + breakdown.nights + ' night' + (breakdown.nights > 1 ? 's' : '') + ' x ' + sym + effectiveBase + '</span><span>' + sym + breakdown.totalBase.toFixed(2) + '</span></div>';
             }
             return html;
         }
