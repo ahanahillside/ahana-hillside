@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 
     <style>
         :root {
@@ -1873,10 +1874,17 @@
     <div class="login-card">
         <h1>Ahana Hillside</h1>
         <div class="subtitle">Admin Dashboard</div>
-        <form onsubmit="handleLogin(event)">
+        <form onsubmit="handleLogin(event)" id="login-form">
             <input type="password" id="login-password" placeholder="Enter admin password" autocomplete="current-password" required>
             <div class="login-error" id="login-error">Invalid password. Please try again.</div>
             <button type="submit" class="btn btn-primary" style="width:100%">Sign In</button>
+        </form>
+        <form onsubmit="handleTotpLogin(event)" id="totp-form" style="display:none">
+            <div style="text-align:center;margin-bottom:1rem;font-size:14px;color:var(--color-stone)">Enter the 6-digit code from your authenticator app</div>
+            <input type="text" id="totp-code" placeholder="000000" autocomplete="one-time-code" inputmode="numeric" maxlength="8" pattern="[0-9a-fA-F]*" required style="text-align:center;font-size:1.5rem;letter-spacing:.3rem">
+            <div class="login-error" id="totp-error"></div>
+            <button type="submit" class="btn btn-primary" style="width:100%">Verify</button>
+            <div style="text-align:center;margin-top:.75rem"><a href="#" onclick="showPasswordStep();return false" style="font-size:13px;color:var(--color-stone)">Back to password</a></div>
         </form>
     </div>
 </div>
@@ -3244,6 +3252,53 @@
                     <span class="save-msg" id="settings-msg"></span>
                 </div>
             </div>
+
+            <div class="card" style="max-width:650px" id="twofa-card">
+                <div class="card-title">Two-Factor Authentication</div>
+                <div id="twofa-status-area">
+                    <p style="color:var(--color-stone);font-size:14px;margin-bottom:1rem">Loading 2FA status...</p>
+                </div>
+
+                <!-- Setup flow (hidden by default) -->
+                <div id="twofa-setup-area" style="display:none">
+                    <div style="margin-bottom:1rem">
+                        <p style="font-size:14px;color:var(--color-stone);margin-bottom:.75rem">Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.):</p>
+                        <div id="twofa-qr" style="text-align:center;margin:1rem 0;background:#fff;padding:1rem;border-radius:8px;display:inline-block"></div>
+                        <div style="margin-top:.5rem">
+                            <label style="font-size:13px;color:var(--color-stone)">Or enter this key manually:</label>
+                            <div id="twofa-secret-display" style="font-family:monospace;font-size:15px;background:#f0f0ee;padding:.5rem .75rem;border-radius:6px;word-break:break-all;margin-top:.25rem"></div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Enter the 6-digit code from your app to confirm</label>
+                        <input type="text" id="twofa-confirm-code" placeholder="000000" inputmode="numeric" maxlength="6" style="max-width:200px;text-align:center;font-size:1.3rem;letter-spacing:.2rem">
+                    </div>
+                    <div class="save-bar" style="margin-top:.75rem">
+                        <button class="btn btn-primary" onclick="confirmTwoFA()">Activate 2FA</button>
+                        <button class="btn" onclick="cancelTwoFASetup()" style="margin-left:.5rem">Cancel</button>
+                        <span class="save-msg" id="twofa-setup-msg"></span>
+                    </div>
+
+                    <div id="twofa-recovery-area" style="display:none;margin-top:1.5rem;padding:1rem;background:#fef9f0;border:1px solid #e8dcc8;border-radius:8px">
+                        <div style="font-weight:500;margin-bottom:.5rem;color:var(--color-charcoal)">Recovery Codes</div>
+                        <p style="font-size:13px;color:var(--color-stone);margin-bottom:.75rem">Save these codes somewhere safe. Each code can only be used once to log in if you lose access to your authenticator app.</p>
+                        <div id="twofa-recovery-codes" style="font-family:monospace;font-size:14px;columns:2;column-gap:2rem;line-height:2"></div>
+                    </div>
+                </div>
+
+                <!-- Disable flow (hidden by default) -->
+                <div id="twofa-disable-area" style="display:none">
+                    <div class="field">
+                        <label>Enter your current 6-digit code to disable 2FA</label>
+                        <input type="text" id="twofa-disable-code" placeholder="000000" inputmode="numeric" maxlength="6" style="max-width:200px;text-align:center;font-size:1.3rem;letter-spacing:.2rem">
+                    </div>
+                    <div class="save-bar" style="margin-top:.75rem">
+                        <button class="btn" onclick="disableTwoFA()" style="background:var(--color-error);color:#fff">Disable 2FA</button>
+                        <button class="btn" onclick="cancelTwoFADisable()" style="margin-left:.5rem">Cancel</button>
+                        <span class="save-msg" id="twofa-disable-msg"></span>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -3308,6 +3363,15 @@
     // --- Auth ---
     var loginFailCount = 0;
     var loginLockoutTimer = null;
+    var pendingTempToken = null;
+
+    function showPasswordStep() {
+        document.getElementById('login-form').style.display = '';
+        document.getElementById('totp-form').style.display = 'none';
+        document.getElementById('totp-code').value = '';
+        document.getElementById('totp-error').classList.remove('show');
+        pendingTempToken = null;
+    }
 
     async function handleLogin(e) {
         e.preventDefault();
@@ -3316,7 +3380,6 @@
         const errorEl = document.getElementById('login-error');
         errorEl.classList.remove('show');
 
-        // Disable button during request
         if (loginBtn) loginBtn.disabled = true;
 
         try {
@@ -3328,10 +3391,18 @@
             const data = await res.json();
             if (data.success) {
                 loginFailCount = 0;
-                authToken = data.token;
-                sessionStorage.setItem('ahana-token', authToken);
-                resetSessionTimer();
-                showDashboard();
+                if (data.requires2FA) {
+                    // Show TOTP input step
+                    pendingTempToken = data.tempToken;
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('totp-form').style.display = '';
+                    document.getElementById('totp-code').focus();
+                } else {
+                    authToken = data.token;
+                    sessionStorage.setItem('ahana-token', authToken);
+                    resetSessionTimer();
+                    showDashboard();
+                }
             } else {
                 if (res.status === 429) {
                     errorEl.textContent = 'Too many failed attempts. Try again in 15 minutes.';
@@ -3354,6 +3425,41 @@
         }
         if (loginBtn && !loginBtn.disabled) loginBtn.disabled = false;
         else if (loginBtn && !loginLockoutTimer) loginBtn.disabled = false;
+    }
+
+    async function handleTotpLogin(e) {
+        e.preventDefault();
+        var code = document.getElementById('totp-code').value.trim();
+        var errorEl = document.getElementById('totp-error');
+        var btn = e.target.querySelector('button[type="submit"]');
+        errorEl.classList.remove('show');
+        if (btn) btn.disabled = true;
+
+        try {
+            var res = await fetch(WORKER_URL + '/auth/2fa', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tempToken: pendingTempToken, code: code }),
+            });
+            var data = await res.json();
+            if (data.success) {
+                pendingTempToken = null;
+                authToken = data.token;
+                sessionStorage.setItem('ahana-token', authToken);
+                resetSessionTimer();
+                if (data.recoveryUsed) {
+                    alert('Recovery code used. You have ' + data.recoveryRemaining + ' remaining. Consider generating new codes in Settings.');
+                }
+                showDashboard();
+            } else {
+                errorEl.textContent = data.error || 'Invalid code';
+                errorEl.classList.add('show');
+            }
+        } catch (err) {
+            errorEl.textContent = 'Connection error';
+            errorEl.classList.add('show');
+        }
+        if (btn) btn.disabled = false;
     }
 
     function startLockoutCountdown(errorEl, loginBtn) {
@@ -3394,6 +3500,7 @@
         document.getElementById('dashboard').classList.remove('show');
         document.getElementById('login-screen').style.display = 'flex';
         document.getElementById('login-password').value = '';
+        showPasswordStep();
     }
 
     async function dashRefresh() {
@@ -3707,6 +3814,137 @@
             }
         } catch (err) {
             showMsg('settings', 'Connection error', 'error');
+        }
+    }
+
+    // --- Two-Factor Authentication ---
+    async function load2FAStatus() {
+        try {
+            var res = await authFetch(WORKER_URL + '/2fa/status', {
+                headers: { 'Authorization': 'Bearer ' + authToken },
+            });
+            var data = await res.json();
+            var area = document.getElementById('twofa-status-area');
+            if (data.enabled) {
+                area.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem">' +
+                    '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--color-success)"></span>' +
+                    '<span style="font-weight:500;color:var(--color-success)">2FA is enabled</span></div>' +
+                    '<p style="font-size:14px;color:var(--color-stone);margin-bottom:.5rem">Recovery codes remaining: <strong>' + data.recoveryCodesRemaining + '</strong></p>' +
+                    '<button class="btn" onclick="showTwoFADisable()">Disable 2FA</button>';
+            } else {
+                area.innerHTML = '<div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem">' +
+                    '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--color-stone)"></span>' +
+                    '<span style="color:var(--color-stone)">2FA is not enabled</span></div>' +
+                    '<p style="font-size:14px;color:var(--color-stone);margin-bottom:.75rem">Add an extra layer of security to your account. You\'ll need an authenticator app like Google Authenticator or Authy.</p>' +
+                    '<button class="btn btn-primary" onclick="startTwoFASetup()">Set Up 2FA</button>';
+            }
+            document.getElementById('twofa-setup-area').style.display = 'none';
+            document.getElementById('twofa-disable-area').style.display = 'none';
+        } catch (e) {}
+    }
+
+    async function startTwoFASetup() {
+        try {
+            var res = await authFetch(WORKER_URL + '/2fa/setup', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + authToken },
+            });
+            var data = await res.json();
+            if (data.error) {
+                showMsg('twofa-setup', data.error, 'error');
+                return;
+            }
+            // Show QR code
+            var qrEl = document.getElementById('twofa-qr');
+            if (typeof qrcode !== 'undefined') {
+                var qr = qrcode(0, 'M');
+                qr.addData(data.otpauthUri);
+                qr.make();
+                qrEl.innerHTML = qr.createImgTag(5, 8);
+            } else {
+                qrEl.innerHTML = '<p style="color:var(--color-stone);font-size:13px">QR library not loaded. Enter the key manually below.</p>';
+            }
+            // Show secret
+            document.getElementById('twofa-secret-display').textContent = data.secret;
+            // Show recovery codes
+            var codesEl = document.getElementById('twofa-recovery-codes');
+            codesEl.innerHTML = data.recoveryCodes.map(function(c) { return '<div>' + c + '</div>'; }).join('');
+            document.getElementById('twofa-recovery-area').style.display = '';
+            // Show setup area
+            document.getElementById('twofa-setup-area').style.display = '';
+            document.getElementById('twofa-status-area').style.display = 'none';
+            document.getElementById('twofa-confirm-code').value = '';
+        } catch (e) {
+            showMsg('twofa-setup', 'Connection error', 'error');
+        }
+    }
+
+    async function confirmTwoFA() {
+        var code = document.getElementById('twofa-confirm-code').value.trim();
+        if (!code || code.length !== 6) {
+            showMsg('twofa-setup', 'Enter the 6-digit code from your app', 'error');
+            return;
+        }
+        try {
+            var res = await authFetch(WORKER_URL + '/2fa/confirm', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ code: code }),
+            });
+            var data = await res.json();
+            if (data.success) {
+                showMsg('twofa-setup', '2FA activated!', 'success');
+                setTimeout(function() {
+                    document.getElementById('twofa-status-area').style.display = '';
+                    load2FAStatus();
+                }, 1500);
+            } else {
+                showMsg('twofa-setup', data.error || 'Invalid code', 'error');
+            }
+        } catch (e) {
+            showMsg('twofa-setup', 'Connection error', 'error');
+        }
+    }
+
+    function cancelTwoFASetup() {
+        document.getElementById('twofa-setup-area').style.display = 'none';
+        document.getElementById('twofa-status-area').style.display = '';
+        load2FAStatus();
+    }
+
+    function showTwoFADisable() {
+        document.getElementById('twofa-disable-area').style.display = '';
+        document.getElementById('twofa-disable-code').value = '';
+    }
+
+    function cancelTwoFADisable() {
+        document.getElementById('twofa-disable-area').style.display = 'none';
+    }
+
+    async function disableTwoFA() {
+        var code = document.getElementById('twofa-disable-code').value.trim();
+        if (!code || code.length !== 6) {
+            showMsg('twofa-disable', 'Enter your current 6-digit code', 'error');
+            return;
+        }
+        try {
+            var res = await authFetch(WORKER_URL + '/2fa/disable', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: JSON.stringify({ code: code }),
+            });
+            var data = await res.json();
+            if (data.success) {
+                showMsg('twofa-disable', '2FA disabled', 'success');
+                setTimeout(function() {
+                    document.getElementById('twofa-disable-area').style.display = 'none';
+                    load2FAStatus();
+                }, 1500);
+            } else {
+                showMsg('twofa-disable', data.error || 'Invalid code', 'error');
+            }
+        } catch (e) {
+            showMsg('twofa-disable', 'Connection error', 'error');
         }
     }
 
@@ -5800,6 +6038,9 @@
 
         // Refresh calendar data when switching to calendar tab
         if (tab === 'calendar') loadBlockedDates();
+
+        // Load 2FA status when switching to settings tab
+        if (tab === 'settings') load2FAStatus();
 
         // Close mobile sidebar
         closeSidebar();
