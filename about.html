@@ -62,14 +62,10 @@
             filter: brightness(0) saturate(100%) invert(20%) sepia(9%) saturate(2184%) hue-rotate(81deg) brightness(96%) contrast(91%);
         }
         @media (max-width: 768px) {
-            .header-logo-img {
-                height: 50px;
-            }
+            .header-logo-img { height: 50px; }
         }
         @media (max-width: 480px) {
-            .header-logo-img {
-                height: 40px;
-            }
+            .header-logo-img { height: 40px; }
         }
         .back-link {
             display: inline-block;
@@ -106,6 +102,7 @@
             margin: 1rem auto 0;
         }
 
+        /* --- Hero image --- */
         .about-hero-wrap {
             max-width: 900px;
             margin: 0 auto 2rem;
@@ -122,17 +119,39 @@
             .about-hero-img { height: 220px; }
         }
 
-        .about-content {
+        /* --- Botanical SVG divider --- */
+        .botanical-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 2rem 0;
+        }
+        .botanical-divider .leaf-line {
+            width: 50px;
+            height: 1px;
+            background: var(--color-light-stone);
+        }
+        .botanical-divider svg {
+            color: var(--color-stone);
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        /* --- Content sections --- */
+        .about-section-cream,
+        .about-section-white {
+            padding: 3rem 2rem;
+        }
+        .about-section-cream { background: var(--color-cream); }
+        .about-section-white { background: #fff; }
+
+        .about-inner {
             max-width: 720px;
             margin: 0 auto;
-            padding: 1rem 2rem 4rem;
         }
 
-        .about-section {
-            margin-bottom: 2.5rem;
-        }
-
-        .about-section h2 {
+        .about-inner h2 {
             font-family: var(--font-serif);
             font-size: 1.5rem;
             font-weight: 500;
@@ -140,46 +159,82 @@
             margin-bottom: 0.75rem;
         }
 
-        .about-section p {
+        .about-inner p {
             font-size: 0.9rem;
             line-height: 1.8;
             margin-bottom: 1rem;
             color: var(--color-charcoal);
         }
 
+        /* --- Pull quote banner --- */
+        .pull-quote {
+            background: var(--color-forest);
+            color: var(--color-cream);
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .pull-quote blockquote {
+            max-width: 700px;
+            margin: 0 auto;
+            font-family: var(--font-serif);
+            font-size: clamp(1.4rem, 3.5vw, 2rem);
+            font-style: italic;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+        .pull-quote .quote-attr {
+            margin-top: 0.75rem;
+            font-family: var(--font-sans);
+            font-size: 0.75rem;
+            font-style: normal;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        /* --- Values grid --- */
         .values-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.25rem;
-            margin-top: 1rem;
+            margin-top: 1.25rem;
         }
 
         .value-card {
-            background: #fff;
-            border: 1px solid var(--color-light-stone);
-            padding: 1.25rem;
+            background: var(--color-cream);
+            border-left: 3px solid var(--color-forest);
+            padding: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
         }
-
-        .value-card h3 {
+        .value-card .value-icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            color: var(--color-forest);
+            opacity: 0.7;
+        }
+        .value-card .value-text h3 {
             font-family: var(--font-serif);
             font-size: 1.15rem;
             font-weight: 500;
             color: var(--color-forest);
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.35rem;
         }
-
-        .value-card p {
+        .value-card .value-text p {
             font-size: 0.8rem;
             line-height: 1.6;
             color: var(--color-stone);
             margin: 0;
         }
 
+        /* --- CTA --- */
         .cta-row {
             text-align: center;
-            margin-top: 2rem;
+            padding: 2.5rem 2rem 3.5rem;
+            background: var(--color-cream);
         }
-
         .cta-row a {
             display: inline-block;
             padding: 0.75rem 2rem;
@@ -194,7 +249,6 @@
             border: 1px solid var(--color-forest);
             transition: background-color 0.3s, color 0.3s;
         }
-
         .cta-row a:hover {
             background: transparent;
             color: var(--color-forest);
@@ -235,7 +289,8 @@
 
         @media (max-width: 768px) {
             .values-grid { grid-template-columns: 1fr; }
-            .about-content { padding: 1rem 1.25rem 3rem; }
+            .about-section-cream, .about-section-white { padding: 2rem 1.25rem; }
+            .pull-quote { padding: 2.5rem 1.5rem; }
         }
     </style>
     <script defer src="/_vercel/insights/script.js"></script>
@@ -276,44 +331,112 @@
         <img class="about-hero-img" id="about-hero-img" alt="Ahana Hillside">
     </div>
 
-    <div class="about-content">
-        <div class="about-section">
+    <!-- Our Story -->
+    <div class="about-section-cream">
+        <div class="about-inner">
             <h2>Our Story</h2>
             <p>Ahana Hillside is a private retreat nestled in the lush tropical rainforest hills just outside Cairns, in Tropical North Queensland. What began as a love for the land has grown into a welcoming space where travellers can disconnect from the everyday and reconnect with nature.</p>
             <p>Set on a quiet hillside surrounded by native bushland, our property offers a peaceful escape with sweeping views and the sounds of the rainforest. Whether you're looking for a budget-friendly stay or a unique camping experience, Ahana Hillside is your base to explore everything the region has to offer.</p>
         </div>
+    </div>
 
-        <div class="about-section">
+    <!-- Botanical divider -->
+    <div class="botanical-divider">
+        <span class="leaf-line"></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c-4-4-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8-8 12z"/>
+            <path d="M12 10V22"/>
+            <path d="M8 14c2-1 4-1 4-4"/>
+            <path d="M16 14c-2-1-4-1-4-4"/>
+        </svg>
+        <span class="leaf-line"></span>
+    </div>
+
+    <!-- The Experience -->
+    <div class="about-section-white">
+        <div class="about-inner">
             <h2>The Experience</h2>
             <p>Wake up to birdsong and morning mist rolling through the hills. Spend your days exploring the Great Barrier Reef, Daintree Rainforest, or the Atherton Tablelands, and return to the tranquillity of your hillside retreat.</p>
             <p>Our eco-friendly campsites are designed to sit gently on the land, offering a genuine connection to the tropical environment while providing the essentials for a comfortable stay.</p>
         </div>
+    </div>
 
-        <div class="about-section">
+    <!-- Pull quote -->
+    <div class="pull-quote">
+        <blockquote>
+            "Where the rainforest meets the hillside, and the everyday fades away."
+        </blockquote>
+        <div class="quote-attr">Ahana Hillside</div>
+    </div>
+
+    <!-- What We Value -->
+    <div class="about-section-white">
+        <div class="about-inner">
             <h2>What We Value</h2>
             <div class="values-grid">
                 <div class="value-card">
-                    <h3>Simplicity</h3>
-                    <p>No frills, no fuss. Just nature, fresh air, and a good night's rest under the stars.</p>
+                    <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                        <line x1="9" y1="9" x2="9.01" y2="9"/>
+                        <line x1="15" y1="9" x2="15.01" y2="9"/>
+                    </svg>
+                    <div class="value-text">
+                        <h3>Simplicity</h3>
+                        <p>No frills, no fuss. Just nature, fresh air, and a good night's rest under the stars.</p>
+                    </div>
                 </div>
                 <div class="value-card">
-                    <h3>Sustainability</h3>
-                    <p>We tread lightly on the land, using locally sourced materials and eco-friendly practices.</p>
+                    <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22c-4-4-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8-8 12z"/>
+                        <path d="M12 10V22"/>
+                        <path d="M8 14c2-1 4-1 4-4"/>
+                        <path d="M16 14c-2-1-4-1-4-4"/>
+                    </svg>
+                    <div class="value-text">
+                        <h3>Sustainability</h3>
+                        <p>We tread lightly on the land, using locally sourced materials and eco-friendly practices.</p>
+                    </div>
                 </div>
                 <div class="value-card">
-                    <h3>Community</h3>
-                    <p>Travellers from all over the world share stories around the campfire here.</p>
+                    <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 21c-1-1-8-5.9-8-11a8 8 0 0 1 16 0c0 5.1-7 10-8 11z"/>
+                        <path d="M9 17l3-8 3 8"/>
+                        <path d="M8 21h8"/>
+                    </svg>
+                    <div class="value-text">
+                        <h3>Community</h3>
+                        <p>Travellers from all over the world share stories around the campfire here.</p>
+                    </div>
                 </div>
                 <div class="value-card">
-                    <h3>Privacy</h3>
-                    <p>Spacious, well-separated sites so you can enjoy your own slice of the hillside.</p>
+                    <svg class="value-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <div class="value-text">
+                        <h3>Privacy</h3>
+                        <p>Spacious, well-separated sites so you can enjoy your own slice of the hillside.</p>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="cta-row">
-            <a href="/book">Book Your Stay</a>
-        </div>
+    <!-- Botanical divider -->
+    <div class="botanical-divider" style="background:var(--color-cream)">
+        <span class="leaf-line"></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22c-4-4-8-7.5-8-12a8 8 0 0 1 16 0c0 4.5-4 8-8 12z"/>
+            <path d="M12 10V22"/>
+            <path d="M8 14c2-1 4-1 4-4"/>
+            <path d="M16 14c-2-1-4-1-4-4"/>
+        </svg>
+        <span class="leaf-line"></span>
+    </div>
+
+    <div class="cta-row">
+        <a href="/book">Book Your Stay</a>
     </div>
 
     <footer class="site-footer">
