@@ -744,7 +744,14 @@
             max-width: calc(33.333% - 1rem);
             scroll-snap-align: start;
             flex-shrink: 0;
+            max-height: 280px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-light-stone) transparent;
         }
+        .review-card::-webkit-scrollbar { width: 4px; }
+        .review-card::-webkit-scrollbar-track { background: transparent; }
+        .review-card::-webkit-scrollbar-thumb { background: var(--color-light-stone); border-radius: 2px; }
         .reviews-scroll-btn {
             position: absolute;
             top: 50%;
