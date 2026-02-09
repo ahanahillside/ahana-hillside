@@ -2591,26 +2591,32 @@
 
                 <div id="reviews-admin-list"></div>
 
-                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:1rem">
-                    <input type="text" id="rev-new-name" placeholder="Guest name" style="flex:1;min-width:140px">
-                    <select id="rev-new-source" style="flex:0 0 auto;min-width:150px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;background:#fff">
-                        <option value="booking">Booking.com</option>
-                        <option value="hipcamp">Hipcamp</option>
-                        <option value="google">Google</option>
-                        <option value="direct">Direct Guest</option>
-                    </select>
-                    <select id="rev-new-rating" style="flex:0 0 auto;min-width:80px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;background:#fff">
-                        <option value="5">5 Stars</option>
-                        <option value="4">4 Stars</option>
-                        <option value="3">3 Stars</option>
-                    </select>
-                </div>
-                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
-                    <textarea id="rev-new-text" placeholder="Review text" rows="2" style="flex:1;min-width:300px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;resize:vertical"></textarea>
-                </div>
-                <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
-                    <input type="date" id="rev-new-date" style="flex:0 0 auto;min-width:150px">
-                    <button class="btn btn-secondary" onclick="addReview()" style="padding:0.5rem 1rem">Add Review</button>
+                <div style="border:1px solid var(--color-light-stone);padding:1rem;margin-top:1rem;background:#fafaf9">
+                    <div style="font-size:0.8rem;font-weight:500;color:var(--color-forest);margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.08em">Add New Review</div>
+                    <div class="add-row" style="flex-wrap:wrap;gap:0.5rem">
+                        <input type="text" id="rev-new-name" placeholder="Guest name (e.g. Annelies)" style="flex:1;min-width:140px">
+                        <input type="text" id="rev-new-country" placeholder="Country code (e.g. au, de)" style="flex:0 0 auto;min-width:100px;max-width:130px">
+                        <select id="rev-new-source" style="flex:0 0 auto;min-width:150px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;background:#fff">
+                            <option value="booking">Booking.com</option>
+                            <option value="hipcamp">Hipcamp</option>
+                            <option value="google">Google</option>
+                            <option value="direct">Direct Guest</option>
+                        </select>
+                    </div>
+                    <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
+                        <input type="number" id="rev-new-score" placeholder="Score (1-10)" min="1" max="10" value="10" style="flex:0 0 auto;min-width:110px;max-width:130px">
+                        <input type="date" id="rev-new-date" style="flex:0 0 auto;min-width:150px">
+                        <input type="text" id="rev-new-title" placeholder="Review title (e.g. Great stay)" style="flex:1;min-width:180px">
+                    </div>
+                    <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
+                        <textarea id="rev-new-liked" placeholder="What they liked (positive comment)" rows="2" style="flex:1;min-width:300px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;resize:vertical"></textarea>
+                    </div>
+                    <div class="add-row" style="flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem">
+                        <textarea id="rev-new-disliked" placeholder="What they didn't like (optional — adds authenticity)" rows="1" style="flex:1;min-width:300px;padding:0.5rem 0.6rem;border:1px solid var(--color-light-stone);font-family:var(--font-sans);font-size:0.85rem;resize:vertical"></textarea>
+                    </div>
+                    <div style="margin-top:0.75rem">
+                        <button class="btn btn-secondary" onclick="addReview()" style="padding:0.5rem 1rem">Add Review</button>
+                    </div>
                 </div>
 
                 <div class="save-bar">
@@ -3547,30 +3553,41 @@
     var reviewSourceLabels = { booking: 'Booking.com', hipcamp: 'Hipcamp', google: 'Google', direct: 'Direct Guest' };
     var reviewSourceColors = { booking: '#003580', hipcamp: '#2D6A4F', google: '#EA4335', direct: '#A69583' };
 
+    function reviewScoreBadge(score, source) {
+        var bg = reviewSourceColors[source] || '#666';
+        return '<span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;background:' + bg + ';color:#fff;font-weight:600;font-size:0.85rem;border-radius:4px 4px 4px 0">' + (score || 10) + '</span>';
+    }
+
     function renderReviews() {
         var container = document.getElementById('reviews-admin-list');
         if (!container) return;
         var list = siteConfig.reviews || [];
         if (list.length === 0) {
-            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No reviews yet. Add your best reviews from Booking.com or Hipcamp above.</div>';
+            container.innerHTML = '<div style="font-size:0.9rem;color:var(--color-stone);padding:0.5rem 0;">No reviews yet. Add your best reviews from Booking.com or Hipcamp below.</div>';
             return;
         }
         container.innerHTML = list.map(function(r, i) {
-            var stars = '';
-            for (var s = 0; s < (r.rating || 5); s++) stars += '<span style="color:#E8A83E">&#9733;</span>';
             var srcColor = reviewSourceColors[r.source] || '#666';
             var srcLabel = reviewSourceLabels[r.source] || r.source;
-            return '<div class="list-item" style="flex-wrap:wrap;gap:0.5rem">'
+            var countryFlag = r.country ? '<span style="font-size:0.75rem;color:var(--color-stone);margin-left:0.15rem">' + escapeHtml(r.country.toUpperCase()) + '</span>' : '';
+            var liked = r.liked || r.text || '';
+            var disliked = r.disliked || '';
+            return '<div class="list-item" style="flex-wrap:wrap;gap:0.5rem;align-items:flex-start">'
+                + '<div style="flex-shrink:0;padding-top:0.1rem">' + reviewScoreBadge(r.score, r.source) + '</div>'
                 + '<div style="flex:1;min-width:200px">'
-                + '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.2rem">'
+                + '<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem">'
                 + '<strong>' + escapeHtml(r.guestName) + '</strong>'
+                + countryFlag
                 + '<span style="font-size:0.7rem;padding:0.15rem 0.5rem;background:' + srcColor + ';color:#fff;border-radius:3px;letter-spacing:0.02em">' + srcLabel + '</span>'
-                + '<span style="font-size:0.85rem">' + stars + '</span>'
                 + (r.date ? '<span style="font-size:0.75rem;color:var(--color-stone)">' + r.date + '</span>' : '')
                 + '</div>'
-                + '<div style="font-size:0.85rem;color:var(--color-charcoal);line-height:1.5">' + escapeHtml(r.text) + '</div>'
+                + (r.title ? '<div style="font-size:0.85rem;font-weight:500;margin-bottom:0.2rem">' + escapeHtml(r.title) + '</div>' : '')
+                + '<div style="font-size:0.85rem;color:var(--color-charcoal);line-height:1.5">'
+                + '<span style="color:var(--color-success)">&#9786;</span> ' + escapeHtml(liked)
                 + '</div>'
-                + '<div style="display:flex;gap:0.4rem;align-items:center">'
+                + (disliked ? '<div style="font-size:0.85rem;color:var(--color-charcoal);line-height:1.5;margin-top:0.15rem"><span style="color:var(--color-error)">&#9785;</span> ' + escapeHtml(disliked) + '</div>' : '')
+                + '</div>'
+                + '<div style="display:flex;gap:0.4rem;align-items:center;flex-shrink:0">'
                 + '<button class="btn btn-secondary" onclick="editReview(' + i + ')" style="padding:0.3rem 0.6rem;font-size:0.8rem">Edit</button>'
                 + '<label style="font-size:0.8rem;display:flex;align-items:center;gap:0.3rem;cursor:pointer"><input type="checkbox" onchange="toggleReview(' + i + ')" ' + (r.enabled !== false ? 'checked' : '') + '> Enabled</label>'
                 + '<button class="btn btn-danger" onclick="removeReview(' + i + ')" style="padding:0.3rem 0.6rem">Remove</button>'
@@ -3580,15 +3597,23 @@
 
     function addReview() {
         var guestName = document.getElementById('rev-new-name').value.trim();
+        var country = document.getElementById('rev-new-country').value.trim().toLowerCase();
         var source = document.getElementById('rev-new-source').value;
-        var rating = parseInt(document.getElementById('rev-new-rating').value) || 5;
-        var text = document.getElementById('rev-new-text').value.trim();
+        var score = parseInt(document.getElementById('rev-new-score').value) || 10;
+        if (score < 1) score = 1; if (score > 10) score = 10;
+        var title = document.getElementById('rev-new-title').value.trim();
+        var liked = document.getElementById('rev-new-liked').value.trim();
+        var disliked = document.getElementById('rev-new-disliked').value.trim();
         var date = document.getElementById('rev-new-date').value;
-        if (!guestName || !text) { alert('Guest name and review text are required.'); return; }
+        if (!guestName || !liked) { alert('Guest name and "liked" comment are required.'); return; }
         if (!siteConfig.reviews) siteConfig.reviews = [];
-        siteConfig.reviews.push({ guestName: guestName, source: source, rating: rating, text: text, date: date, enabled: true });
+        siteConfig.reviews.push({ guestName: guestName, country: country, source: source, score: score, title: title, liked: liked, disliked: disliked, date: date, enabled: true });
         document.getElementById('rev-new-name').value = '';
-        document.getElementById('rev-new-text').value = '';
+        document.getElementById('rev-new-country').value = '';
+        document.getElementById('rev-new-score').value = '10';
+        document.getElementById('rev-new-title').value = '';
+        document.getElementById('rev-new-liked').value = '';
+        document.getElementById('rev-new-disliked').value = '';
         document.getElementById('rev-new-date').value = '';
         renderReviews();
     }
@@ -3609,18 +3634,27 @@
         if (!r) return;
         var newName = prompt('Guest name:', r.guestName);
         if (newName === null) return;
+        var newCountry = prompt('Country code (e.g. au, de):', r.country || '');
+        if (newCountry === null) return;
         var newSource = prompt('Source (booking, hipcamp, google, direct):', r.source || 'booking');
         if (newSource === null) return;
-        var newRating = prompt('Rating (1-5):', r.rating || 5);
-        if (newRating === null) return;
-        var newText = prompt('Review text:', r.text);
-        if (newText === null) return;
+        var newScore = prompt('Score (1-10):', r.score || 10);
+        if (newScore === null) return;
+        var newTitle = prompt('Review title:', r.title || '');
+        if (newTitle === null) return;
+        var newLiked = prompt('What they liked:', r.liked || r.text || '');
+        if (newLiked === null) return;
+        var newDisliked = prompt('What they didn\'t like (optional):', r.disliked || '');
+        if (newDisliked === null) return;
         var newDate = prompt('Date (YYYY-MM-DD):', r.date || '');
         if (newDate === null) return;
         r.guestName = newName.trim() || r.guestName;
+        r.country = newCountry.trim().toLowerCase();
         r.source = newSource.trim() || r.source;
-        r.rating = parseInt(newRating) || r.rating;
-        r.text = newText.trim() || r.text;
+        r.score = Math.min(10, Math.max(1, parseInt(newScore) || r.score));
+        r.title = newTitle.trim();
+        r.liked = newLiked.trim() || r.liked;
+        r.disliked = newDisliked.trim();
         r.date = newDate.trim();
         renderReviews();
     }

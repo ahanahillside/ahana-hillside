@@ -1608,40 +1608,59 @@
             text-align: left;
             flex-shrink: 0;
         }
-        .review-mini-header {
+        .review-mini-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+        }
+        .review-mini-score {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 0.4rem;
-            margin-bottom: 0.4rem;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border-radius: 5px 5px 5px 0;
         }
+        .review-mini-info { flex: 1; }
         .review-mini-name {
             font-family: var(--font-serif);
             font-size: 1rem;
             font-weight: 500;
             color: var(--color-forest);
         }
+        .review-mini-country {
+            font-size: 0.7rem;
+            color: var(--color-stone);
+            margin-left: 0.2rem;
+        }
         .review-mini-badge {
-            font-size: 0.6rem;
-            padding: 0.15rem 0.4rem;
+            font-size: 0.55rem;
+            padding: 0.12rem 0.35rem;
             border-radius: 3px;
             color: #fff;
+            margin-left: 0.3rem;
         }
-        .review-mini-stars {
-            color: #E8A83E;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            margin-bottom: 0.4rem;
-        }
-        .review-mini-text {
+        .review-mini-title {
             font-size: 0.82rem;
+            font-weight: 500;
             color: var(--color-charcoal);
-            line-height: 1.6;
+            margin-bottom: 0.3rem;
+        }
+        .review-mini-liked {
+            font-size: 0.8rem;
+            color: var(--color-charcoal);
+            line-height: 1.55;
             display: -webkit-box;
-            -webkit-line-clamp: 4;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+        .review-mini-liked .rm-icon { color: #3D7A3D; margin-right: 0.3rem; }
 
         /* Footer */
         .footer {
@@ -2757,20 +2776,25 @@
 
                 var sourceColors = { booking: '#003580', hipcamp: '#2D6A4F', google: '#EA4335', direct: '#A69583' };
                 var sourceLabels = { booking: 'Booking.com', hipcamp: 'Hipcamp', google: 'Google', direct: 'Direct Guest' };
+                var esc = function(s) { return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); };
 
                 var container = document.getElementById('reviews-scroll');
                 container.innerHTML = reviews.map(function(r) {
-                    var stars = '';
-                    for (var s = 0; s < (r.rating || 5); s++) stars += '&#9733;';
                     var srcColor = sourceColors[r.source] || '#666';
                     var srcLabel = sourceLabels[r.source] || r.source;
+                    var score = r.score || 10;
+                    var liked = r.liked || r.text || '';
+                    var countryStr = r.country ? '<span class="review-mini-country">' + esc(r.country.toUpperCase()) + '</span>' : '';
                     return '<div class="review-mini">'
-                        + '<div class="review-mini-header">'
-                        + '<span class="review-mini-name">' + r.guestName.replace(/</g, '&lt;') + '</span>'
+                        + '<div class="review-mini-top">'
+                        + '<div class="review-mini-score" style="background:' + srcColor + '">' + score + '</div>'
+                        + '<div class="review-mini-info">'
+                        + '<span class="review-mini-name">' + esc(r.guestName) + '</span>'
+                        + countryStr
                         + '<span class="review-mini-badge" style="background:' + srcColor + '">' + srcLabel + '</span>'
-                        + '</div>'
-                        + '<div class="review-mini-stars">' + stars + '</div>'
-                        + '<div class="review-mini-text">' + r.text.replace(/</g, '&lt;') + '</div>'
+                        + '</div></div>'
+                        + (r.title ? '<div class="review-mini-title">' + esc(r.title) + '</div>' : '')
+                        + '<div class="review-mini-liked"><span class="rm-icon">&#9786;</span>' + esc(liked) + '</div>'
                         + '</div>';
                 }).join('');
 
