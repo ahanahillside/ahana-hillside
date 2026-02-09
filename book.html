@@ -149,6 +149,7 @@
             padding: 1.25rem 1.5rem;
             background: #fff;
             border: 1px solid var(--color-light-stone);
+            border-radius: 12px;
             cursor: pointer;
             transition: border-color 0.2s, background 0.2s;
             text-align: left;
@@ -282,8 +283,11 @@
             display: flex;
             align-items: flex-end;
             gap: 1rem;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--color-light-stone);
+            border-radius: 16px;
             padding: 1.25rem 1.5rem;
         }
 
@@ -307,6 +311,7 @@
             box-sizing: border-box;
             padding: 0.65rem 0.75rem;
             border: 1px solid var(--color-light-stone);
+            border-radius: 8px;
             background: #fff;
             font-family: var(--font-sans);
             font-size: 16px;
@@ -335,6 +340,7 @@
             color: var(--color-cream);
             background-color: var(--color-forest);
             border: 1px solid var(--color-forest);
+            border-radius: 12px;
             cursor: pointer;
             white-space: nowrap;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -360,6 +366,7 @@
             color: var(--color-forest);
             background-color: transparent;
             border: 1px solid var(--color-forest);
+            border-radius: 12px;
             cursor: pointer;
             white-space: nowrap;
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -393,6 +400,7 @@
         .campsite {
             background: #fff;
             border: 1px solid var(--color-light-stone);
+            border-radius: 16px;
             display: grid;
             grid-template-columns: 2fr 3fr;
             animation: fadeIn 0.6s ease-out both;
@@ -424,6 +432,7 @@
             padding: 1rem;
             background: #fef2f2;
             border: 1px solid #fecaca;
+            border-radius: 12px;
             font-size: 0.85rem;
             color: #b44;
             margin-top: auto;
@@ -660,7 +669,7 @@
             gap: 0.35rem;
             padding: 0.3rem 0.65rem;
             border: 1px solid var(--color-light-stone);
-            border-radius: 4px;
+            border-radius: 8px;
             font-size: 0.75rem;
             color: var(--color-charcoal);
             background: #fff;
@@ -866,7 +875,7 @@
             width: 92%;
             max-width: 680px;
             max-height: 82vh;
-            border-radius: 6px;
+            border-radius: 16px;
             display: flex;
             flex-direction: column;
             box-shadow: 0 8px 40px rgba(0,0,0,0.25);
@@ -927,7 +936,7 @@
             padding: 0.75rem 1rem;
             background: #f9f7f3;
             border: 1px solid #e5e0d8;
-            border-radius: 4px;
+            border-radius: 8px;
         }
         .tc-agreement input[type="checkbox"] {
             margin-top: 0.2rem;
@@ -1045,6 +1054,7 @@
             color: var(--color-cream);
             background-color: var(--color-forest);
             border: 1px solid var(--color-forest);
+            border-radius: 12px;
             cursor: pointer;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -1066,6 +1076,7 @@
             padding: 0.5rem 0.65rem;
             background: #fef2f2;
             border: 1px solid #fecaca;
+            border-radius: 8px;
             margin-bottom: 0.5rem;
         }
 
@@ -1099,6 +1110,7 @@
         .addon-card {
             background: #fff;
             border: 1px solid var(--color-light-stone);
+            border-radius: 16px;
             padding: 1.25rem;
             margin-bottom: 1rem;
         }
@@ -1155,6 +1167,7 @@
             width: 32px;
             height: 32px;
             border: 1px solid var(--color-light-stone);
+            border-radius: 8px;
             background: #fff;
             font-size: 1.1rem;
             cursor: pointer;
@@ -1183,6 +1196,7 @@
         .summary-box {
             background: #fff;
             border: 1px solid var(--color-light-stone);
+            border-radius: 16px;
             padding: 1.25rem;
             margin-top: 2rem;
         }
@@ -1238,6 +1252,7 @@
         .details-form {
             background: #fff;
             border: 1px solid var(--color-light-stone);
+            border-radius: 16px;
             padding: 1.5rem;
         }
 
@@ -1268,6 +1283,7 @@
         .form-field input {
             padding: 0.75rem;
             border: 1px solid var(--color-light-stone);
+            border-radius: 8px;
             background: #fff;
             font-family: var(--font-sans);
             font-size: 16px;
@@ -1303,6 +1319,7 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
             border: 1px solid var(--color-forest);
+            border-radius: 8px;
             background: transparent;
             color: var(--color-forest);
             cursor: pointer;
@@ -1326,6 +1343,7 @@
         .review-card {
             background: #fff;
             border: 1px solid var(--color-light-stone);
+            border-radius: 16px;
             padding: 1.5rem;
         }
 
@@ -1604,6 +1622,7 @@
             max-width: 320px;
             background: var(--color-cream);
             border: 1px solid var(--color-light-stone);
+            border-radius: 16px;
             padding: 1.25rem;
             text-align: left;
             flex-shrink: 0;
@@ -1947,7 +1966,7 @@
         .menu-overlay.open { opacity: 1; visibility: visible; }
         .menu-panel {
             position: fixed; top: 0; right: -320px; width: 300px; max-width: 85vw;
-            height: 100%; background: #fff; z-index: 999;
+            height: 100%; background: rgba(255, 255, 255, 0.82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 999;
             transition: right 0.3s ease; display: flex; flex-direction: column;
             padding: 5rem 2rem 2rem;
         }
