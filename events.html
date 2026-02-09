@@ -103,6 +103,57 @@
             margin: 1rem auto 0;
         }
 
+        /* --- Events hero section with background --- */
+        .events-hero {
+            position: relative;
+            overflow: hidden;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .events-hero-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--color-cream);
+        }
+        .events-hero-bg img,
+        .events-hero-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4);
+        }
+        .events-hero-overlay {
+            position: relative;
+            z-index: 2;
+            max-width: 640px;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .events-hero-overlay h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .events-hero-overlay p {
+            font-size: 0.92rem;
+            line-height: 1.85;
+            color: rgba(255,255,255,0.88);
+            margin-bottom: 0.75rem;
+        }
+        /* When no background is uploaded, fall back to cream + dark text */
+        .events-hero.no-bg .events-hero-overlay h2 {
+            color: var(--color-forest);
+        }
+        .events-hero.no-bg .events-hero-overlay p {
+            color: var(--color-charcoal);
+        }
+
         /* --- Botanical SVG divider --- */
         .botanical-divider {
             display: flex;
@@ -391,6 +442,8 @@
         }
 
         @media (max-width: 768px) {
+            .events-hero { min-height: 380px; }
+            .events-hero-overlay { padding: 2rem 1.25rem; }
             .use-cases { grid-template-columns: 1fr; }
             .included-grid { grid-template-columns: 1fr; }
             .form-row { grid-template-columns: 1fr; }
@@ -458,9 +511,10 @@
         <div class="divider"></div>
     </div>
 
-    <!-- Intro section -->
-    <div class="section-cream" style="animation: fadeIn 0.6s ease-out 0.2s both;">
-        <div class="section-inner">
+    <!-- Hero section with uploadable background -->
+    <div class="events-hero no-bg" id="events-hero" style="animation: fadeIn 0.6s ease-out 0.2s both;">
+        <div class="events-hero-bg" id="events-hero-bg"></div>
+        <div class="events-hero-overlay">
             <h2>Host Your Event in Nature</h2>
             <p>Ahana Hillside offers a unique open-air setting surrounded by tropical rainforest, perfect for intimate gatherings, wellness retreats, and private celebrations. Set on a peaceful hillside just 35 minutes south of Cairns, our grounds provide a natural escape from the everyday — with space to breathe, move, and connect.</p>
             <p>Whether you're a yoga teacher looking for a retreat location, planning a small birthday celebration, or organising a team offsite, we'll work with you to create a tailored experience that suits your group.</p>
@@ -721,6 +775,24 @@
             errorMsg.classList.add('show');
         }
     }
+
+    // Load events hero background
+    (async function() {
+        try {
+            var res = await fetch(WORKER_URL + '/events-hero/info');
+            var data = await res.json();
+            if (!data.exists) return;
+            var hero = document.getElementById('events-hero');
+            var bg = document.getElementById('events-hero-bg');
+            var url = WORKER_URL + '/events-hero';
+            hero.classList.remove('no-bg');
+            if (data.mediaType === 'video') {
+                bg.innerHTML = '<video src="' + url + '" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;filter:brightness(0.4)"></video>';
+            } else {
+                bg.innerHTML = '<img src="' + url + '" alt="Events at Ahana Hillside" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.4)">';
+            }
+        } catch (e) {}
+    })();
     </script>
 </body>
 </html>
