@@ -717,14 +717,22 @@
             color: var(--color-stone);
             margin-bottom: 2.5rem;
         }
-        .reviews-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
+        .reviews-scroll-wrap {
+            position: relative;
             max-width: 1100px;
             margin: 0 auto;
+        }
+        .reviews-grid {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding-bottom: 0.5rem;
             text-align: left;
         }
+        .reviews-grid::-webkit-scrollbar { display: none; }
         .review-card {
             background: #fff;
             border: 1px solid var(--color-light-stone);
@@ -732,7 +740,37 @@
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
+            min-width: calc(33.333% - 1rem);
+            max-width: calc(33.333% - 1rem);
+            scroll-snap-align: start;
+            flex-shrink: 0;
         }
+        .reviews-scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            color: var(--color-forest);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .reviews-scroll-btn:hover {
+            background: var(--color-cream);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .reviews-scroll-btn.show { display: flex; }
+        .reviews-scroll-prev { left: -18px; }
+        .reviews-scroll-next { right: -18px; }
         .review-top {
             display: flex;
             align-items: flex-start;
@@ -802,10 +840,12 @@
             font-size: 0.95rem;
             letter-spacing: 1px;
         }
-        @media (max-width: 640px) {
-            .reviews-grid {
-                grid-template-columns: 1fr;
+        @media (max-width: 768px) {
+            .review-card {
+                min-width: 85vw;
+                max-width: 85vw;
             }
+            .reviews-scroll-btn { display: none !important; }
         }
 
         /* --- Site Footer (outside hero) --- */
@@ -1085,7 +1125,11 @@
     <section class="reviews-section" id="reviews-section">
         <h2><em>What Our</em> Guests Say</h2>
         <p class="reviews-subtitle">Real reviews from real guests</p>
-        <div class="reviews-grid" id="reviews-grid"></div>
+        <div class="reviews-scroll-wrap">
+            <button class="reviews-scroll-btn reviews-scroll-prev" id="reviews-prev" onclick="scrollReviews(-1)">&#8249;</button>
+            <div class="reviews-grid" id="reviews-grid"></div>
+            <button class="reviews-scroll-btn reviews-scroll-next" id="reviews-next" onclick="scrollReviews(1)">&#8250;</button>
+        </div>
     </section>
 
     <footer class="site-footer">
@@ -1158,8 +1202,29 @@
             }).join('');
 
             document.getElementById('reviews-section').style.display = 'block';
+            updateReviewsBtns();
+            grid.addEventListener('scroll', updateReviewsBtns);
         } catch (err) {}
     })();
+
+    function scrollReviews(dir) {
+        var grid = document.getElementById('reviews-grid');
+        var card = grid.querySelector('.review-card');
+        if (!card) return;
+        var scrollAmt = card.offsetWidth + 24;
+        grid.scrollBy({ left: dir * scrollAmt, behavior: 'smooth' });
+    }
+
+    function updateReviewsBtns() {
+        var grid = document.getElementById('reviews-grid');
+        var prev = document.getElementById('reviews-prev');
+        var next = document.getElementById('reviews-next');
+        if (!grid || !prev || !next) return;
+        var atStart = grid.scrollLeft <= 5;
+        var atEnd = grid.scrollLeft + grid.clientWidth >= grid.scrollWidth - 5;
+        prev.classList.toggle('show', !atStart);
+        next.classList.toggle('show', !atEnd);
+    }
 
     // --- Load affiliate experiences ---
     (async function() {
