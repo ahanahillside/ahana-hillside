@@ -1039,9 +1039,10 @@
         <div class="hero-background" id="hero-bg">
             <img
                 id="hero-image"
-                src="images/homepage/hero.jpg"
+                src=""
                 alt="Lush tropical rainforest hillside in Cairns, Australia"
                 class="hero-image"
+                style="display:none"
             >
             <div class="hero-overlay"></div>
         </div>
@@ -1308,6 +1309,7 @@
                 video.setAttribute('playsinline', '');
                 heroImg.replaceWith(video);
             } else {
+                heroImg.onload = function() { heroImg.style.display = ''; };
                 heroImg.src = bgUrl;
             }
         } catch (e) {}
