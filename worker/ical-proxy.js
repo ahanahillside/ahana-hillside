@@ -253,6 +253,10 @@ function getAustralianHolidays(year) {
 const DEFAULT_PASSWORD = 'ahana2026'; // Only used for first-time migration to hashed password
 const SESSION_TTL = 7200; // 2 hours in seconds
 const PASSWORD_MIN_LENGTH = 8;
+const TOTP_TEMP_TOKEN_TTL = 300; // 5 minutes for 2FA step
+const TOTP_ISSUER = 'Ahana Hillside';
+const TOTP_ACCOUNT = 'admin';
+const RECOVERY_CODE_COUNT = 8;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB per image
 const MAX_IMAGES_PER_SITE = 15;
 const SITE_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -485,6 +489,128 @@ async function getImageList(env, site) {
     if (list) return list;
   } catch (e) {}
   return [];
+}
+
+// --- TOTP (RFC 6238) implementation using Web Crypto API ---
+const BASE32_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+
+function base32Encode(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let result = '', bits = 0, value = 0;
+  for (const byte of bytes) {
+    value = (value << 8) | byte;
+    bits += 8;
+    while (bits >= 5) {
+      result += BASE32_CHARS[(value >>> (bits - 5)) & 31];
+      bits -= 5;
+    }
+  }
+  if (bits > 0) result += BASE32_CHARS[(value << (5 - bits)) & 31];
+  return result;
+}
+
+function base32Decode(str) {
+  str = str.replace(/[= \-]/g, '').toUpperCase();
+  const bytes = [];
+  let bits = 0, value = 0;
+  for (const char of str) {
+    const idx = BASE32_CHARS.indexOf(char);
+    if (idx === -1) continue;
+    value = (value << 5) | idx;
+    bits += 5;
+    if (bits >= 8) {
+      bytes.push((value >>> (bits - 8)) & 255);
+      bits -= 8;
+    }
+  }
+  return new Uint8Array(bytes);
+}
+
+function generateTotpSecret() {
+  const arr = new Uint8Array(20); // 160 bits per RFC
+  crypto.getRandomValues(arr);
+  return base32Encode(arr.buffer);
+}
+
+async function computeTotp(secretBase32, counter) {
+  const secretBytes = base32Decode(secretBase32);
+  // Counter as 8-byte big-endian
+  const counterBuf = new ArrayBuffer(8);
+  const view = new DataView(counterBuf);
+  view.setUint32(0, Math.floor(counter / 0x100000000));
+  view.setUint32(4, counter >>> 0);
+
+  const key = await crypto.subtle.importKey(
+    'raw', secretBytes, { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, counterBuf);
+  const hmac = new Uint8Array(sig);
+
+  // Dynamic truncation (RFC 4226)
+  const offset = hmac[hmac.length - 1] & 0xf;
+  const code = ((hmac[offset] & 0x7f) << 24) |
+               ((hmac[offset + 1] & 0xff) << 16) |
+               ((hmac[offset + 2] & 0xff) << 8) |
+               (hmac[offset + 3] & 0xff);
+  return (code % 1000000).toString().padStart(6, '0');
+}
+
+async function verifyTotp(secretBase32, code, window = 1) {
+  const counter = Math.floor(Date.now() / 30000);
+  for (let i = -window; i <= window; i++) {
+    const expected = await computeTotp(secretBase32, counter + i);
+    // Constant-time comparison
+    if (expected.length === code.length) {
+      let match = 0;
+      for (let j = 0; j < expected.length; j++) {
+        match |= expected.charCodeAt(j) ^ code.charCodeAt(j);
+      }
+      if (match === 0) return true;
+    }
+  }
+  return false;
+}
+
+function generateRecoveryCodes() {
+  const codes = [];
+  for (let i = 0; i < RECOVERY_CODE_COUNT; i++) {
+    const arr = new Uint8Array(4);
+    crypto.getRandomValues(arr);
+    codes.push(Array.from(arr, b => b.toString(16).padStart(2, '0')).join(''));
+  }
+  return codes;
+}
+
+async function get2FAConfig(env) {
+  try {
+    const data = await env.CONFIG.get('2fa-config', 'json');
+    if (data) return data;
+  } catch (e) {}
+  return { enabled: false };
+}
+
+async function save2FAConfig(env, config) {
+  await env.CONFIG.put('2fa-config', JSON.stringify(config));
+}
+
+// Create a temporary token for the 2FA step (password verified, awaiting TOTP)
+async function createTempToken(env) {
+  const token = generateSessionToken();
+  await env.CONFIG.put('temp2fa:' + token, JSON.stringify({ created: Date.now() }), { expirationTtl: TOTP_TEMP_TOKEN_TTL });
+  return token;
+}
+
+async function validateTempToken(token, env) {
+  if (!token) return false;
+  try {
+    const data = await env.CONFIG.get('temp2fa:' + token, 'json');
+    return !!data;
+  } catch (e) { return false; }
+}
+
+async function destroyTempToken(token, env) {
+  if (!token) return;
+  try { await env.CONFIG.delete('temp2fa:' + token); } catch (e) {}
 }
 
 // Helper: returns an error Response if auth fails, or null if OK
@@ -726,7 +852,7 @@ export default {
       return jsonResponse({ holidays: unique }, 200, origin, 'public, max-age=86400');
     }
 
-    // --- POST /auth — login, returns session token on success ---
+    // --- POST /auth — login step 1: password check ---
     if (path === '/auth' && request.method === 'POST') {
       const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
       const { blocked } = await checkRateLimit(ip, env);
@@ -738,11 +864,69 @@ export default {
         const valid = await verifyPassword(password, env);
         if (valid) {
           await clearRateLimit(ip, env);
+          // Check if 2FA is enabled
+          const twofa = await get2FAConfig(env);
+          if (twofa.enabled && twofa.secret) {
+            // Return temp token — client must complete 2FA step
+            const tempToken = await createTempToken(env);
+            return jsonResponse({ success: true, requires2FA: true, tempToken }, 200, origin);
+          }
+          // No 2FA — issue session directly
           const sessionToken = await createSession(env);
           return jsonResponse({ success: true, token: sessionToken }, 200, origin);
         }
         await recordFailedAttempt(ip, env);
         return jsonResponse({ error: 'Invalid password' }, 401, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Invalid request' }, 400, origin);
+      }
+    }
+
+    // --- POST /auth/2fa — login step 2: verify TOTP code ---
+    if (path === '/auth/2fa' && request.method === 'POST') {
+      const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+      const { blocked } = await checkRateLimit(ip, env);
+      if (blocked) {
+        return jsonResponse({ error: 'Too many failed attempts. Try again in 15 minutes.' }, 429, origin);
+      }
+      try {
+        const { tempToken, code } = await request.json();
+        // Validate temp token (proves password was already verified)
+        const tempValid = await validateTempToken(tempToken, env);
+        if (!tempValid) {
+          return jsonResponse({ error: 'Session expired. Please log in again.' }, 401, origin);
+        }
+        const twofa = await get2FAConfig(env);
+        if (!twofa.enabled || !twofa.secret) {
+          await destroyTempToken(tempToken, env);
+          return jsonResponse({ error: '2FA is not enabled' }, 400, origin);
+        }
+
+        const codeStr = (code || '').toString().trim();
+
+        // Check if it's a recovery code
+        if (codeStr.length === 8 && twofa.recoveryCodes) {
+          const idx = twofa.recoveryCodes.indexOf(codeStr);
+          if (idx !== -1) {
+            // Use recovery code (one-time)
+            twofa.recoveryCodes.splice(idx, 1);
+            await save2FAConfig(env, twofa);
+            await destroyTempToken(tempToken, env);
+            const sessionToken = await createSession(env);
+            return jsonResponse({ success: true, token: sessionToken, recoveryUsed: true, recoveryRemaining: twofa.recoveryCodes.length }, 200, origin);
+          }
+        }
+
+        // Verify TOTP code
+        const totpValid = await verifyTotp(twofa.secret, codeStr);
+        if (totpValid) {
+          await destroyTempToken(tempToken, env);
+          const sessionToken = await createSession(env);
+          return jsonResponse({ success: true, token: sessionToken }, 200, origin);
+        }
+
+        await recordFailedAttempt(ip, env);
+        return jsonResponse({ error: 'Invalid code' }, 401, origin);
       } catch (err) {
         return jsonResponse({ error: 'Invalid request' }, 400, origin);
       }
@@ -754,6 +938,79 @@ export default {
       const token = authHeader.replace('Bearer ', '');
       await destroySession(token, env);
       return jsonResponse({ success: true }, 200, origin);
+    }
+
+    // --- GET /2fa/status — check if 2FA is enabled ---
+    if (path === '/2fa/status' && request.method === 'GET') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      const twofa = await get2FAConfig(env);
+      return jsonResponse({
+        enabled: !!twofa.enabled,
+        recoveryCodesRemaining: twofa.recoveryCodes ? twofa.recoveryCodes.length : 0,
+      }, 200, origin);
+    }
+
+    // --- POST /2fa/setup — generate secret + recovery codes (does NOT enable yet) ---
+    if (path === '/2fa/setup' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      const twofa = await get2FAConfig(env);
+      if (twofa.enabled) {
+        return jsonResponse({ error: '2FA is already enabled. Disable it first.' }, 400, origin);
+      }
+      const secret = generateTotpSecret();
+      const recoveryCodes = generateRecoveryCodes();
+      // Store pending setup (not enabled yet — needs confirmation)
+      await save2FAConfig(env, { enabled: false, pendingSecret: secret, pendingRecoveryCodes: recoveryCodes });
+      const otpauthUri = 'otpauth://totp/' + encodeURIComponent(TOTP_ISSUER) + ':' + encodeURIComponent(TOTP_ACCOUNT) + '?secret=' + secret + '&issuer=' + encodeURIComponent(TOTP_ISSUER) + '&algorithm=SHA1&digits=6&period=30';
+      return jsonResponse({ secret, otpauthUri, recoveryCodes }, 200, origin);
+    }
+
+    // --- POST /2fa/confirm — verify a code to activate 2FA ---
+    if (path === '/2fa/confirm' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const { code } = await request.json();
+        const twofa = await get2FAConfig(env);
+        if (twofa.enabled) {
+          return jsonResponse({ error: '2FA is already enabled' }, 400, origin);
+        }
+        if (!twofa.pendingSecret) {
+          return jsonResponse({ error: 'No pending 2FA setup. Call /2fa/setup first.' }, 400, origin);
+        }
+        const valid = await verifyTotp(twofa.pendingSecret, (code || '').toString().trim());
+        if (!valid) {
+          return jsonResponse({ error: 'Invalid code. Check your authenticator app and try again.' }, 401, origin);
+        }
+        // Activate 2FA
+        await save2FAConfig(env, {
+          enabled: true,
+          secret: twofa.pendingSecret,
+          recoveryCodes: twofa.pendingRecoveryCodes || [],
+        });
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Invalid request' }, 400, origin);
+      }
+    }
+
+    // --- POST /2fa/disable — disable 2FA (requires current TOTP code) ---
+    if (path === '/2fa/disable' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const { code } = await request.json();
+        const twofa = await get2FAConfig(env);
+        if (!twofa.enabled) {
+          return jsonResponse({ error: '2FA is not enabled' }, 400, origin);
+        }
+        const valid = await verifyTotp(twofa.secret, (code || '').toString().trim());
+        if (!valid) {
+          return jsonResponse({ error: 'Invalid code' }, 401, origin);
+        }
+        await save2FAConfig(env, { enabled: false });
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Invalid request' }, 400, origin);
+      }
     }
 
     // --- POST /password — admin only, changes admin password ---
