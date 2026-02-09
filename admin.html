@@ -573,6 +573,41 @@
 
         .review-page-info { color: var(--color-stone); font-size: 0.78rem; }
 
+        .cal-type-toggle {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        .cal-type-btn {
+            flex: 1;
+            max-width: 200px;
+            padding: 0.65rem 1.25rem;
+            background: #fff;
+            border: 1px solid var(--color-light-stone);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--color-stone);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .cal-type-btn:first-child { border-right: none; }
+
+        .cal-type-btn.active {
+            background: var(--color-forest);
+            color: #fff;
+            border-color: var(--color-forest);
+        }
+
+        .cal-type-btn:hover:not(.active) { color: var(--color-charcoal); border-color: var(--color-forest); }
+
+        .cal-group { display: none; }
+        .cal-group.active { display: grid; }
+
         .panel-title {
             font-family: var(--font-serif);
             font-size: 1.5rem;
@@ -2013,7 +2048,12 @@
         <div class="tab-panel" id="panel-calendar">
             <div class="panel-desc">Click dates to select them, then block or open in bulk. Shift+click to select a range. Click+drag to select multiple dates. Blocked dates cannot be booked by guests.</div>
 
-            <div class="card-grid">
+            <div class="cal-type-toggle">
+                <button class="cal-type-btn active" id="cal-type-campsites" onclick="switchCalType('campsites')">Campsites</button>
+                <button class="cal-type-btn" id="cal-type-rooms" onclick="switchCalType('rooms')">Rooms</button>
+            </div>
+
+            <div class="card-grid cal-group active" id="cal-group-campsites">
                 <div class="card">
                     <div class="card-title">SAMAVAS</div>
                     <div class="cal-nav">
@@ -2057,7 +2097,9 @@
                         <span class="save-msg" id="avail-chhaya-msg"></span>
                     </div>
                 </div>
+            </div>
 
+            <div class="card-grid cal-group" id="cal-group-rooms">
                 <div class="card">
                     <div class="card-title">MOUNTAIN VIEW ROOM</div>
                     <div class="cal-nav">
@@ -4800,6 +4842,13 @@
             state.blocked.add(dateStr);
         }
         renderCalendar(site);
+    }
+
+    function switchCalType(type) {
+        document.getElementById('cal-type-campsites').classList.toggle('active', type === 'campsites');
+        document.getElementById('cal-type-rooms').classList.toggle('active', type === 'rooms');
+        document.getElementById('cal-group-campsites').classList.toggle('active', type === 'campsites');
+        document.getElementById('cal-group-rooms').classList.toggle('active', type === 'rooms');
     }
 
     function calNav(site, dir) {
