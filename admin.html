@@ -2745,6 +2745,18 @@
             </div>
 
             <div class="card" style="max-width:900px;margin-top:1.5rem">
+                <div class="card-title">Events Page Hero Background</div>
+                <div class="section-desc" style="margin-bottom:0.75rem">Upload a background image or video for the "Host Your Event in Nature" section on the Events &amp; Retreats page. Accepts images (5MB) or videos (50MB). Content appears behind the text with a dark overlay.</div>
+                <div id="events-hero-preview" style="margin-bottom:0.75rem"></div>
+                <div class="upload-zone" id="upload-zone-eventshero" onclick="document.getElementById('file-eventshero').click()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span>Upload events hero background image or video</span>
+                    <input type="file" id="file-eventshero" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,video/quicktime" style="display:none" onchange="uploadEventsHero(this.files[0])">
+                </div>
+                <div class="upload-progress" id="progress-eventshero"></div>
+            </div>
+
+            <div class="card" style="max-width:900px;margin-top:1.5rem">
                 <div class="card-title" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between" onclick="toggleExploreSection()">
                     Explore Page &mdash; Section Images
                     <svg id="explore-collapse-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transition:transform 0.3s ease;transform:rotate(180deg)"><polyline points="6 9 12 15 18 9"/></svg>
@@ -3005,6 +3017,7 @@
         loadHomepageBg();
         loadCampsiteBg();
         loadAboutHero();
+        loadEventsHero();
         loadExploreSlots();
     }
 
@@ -4870,6 +4883,84 @@
         zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
         zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
         zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); uploadAboutHero(e.dataTransfer.files[0]); });
+    })();
+
+    // --- Events Page Hero Background ---
+    async function loadEventsHero() {
+        const preview = document.getElementById('events-hero-preview');
+        try {
+            const res = await fetch(WORKER_URL + '/events-hero/info');
+            const data = await res.json();
+            if (data.exists) {
+                const url = WORKER_URL + '/events-hero?t=' + Date.now();
+                if (data.mediaType === 'video') {
+                    preview.innerHTML = '<video src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)" autoplay muted loop></video>'
+                        + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
+                        + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: video background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteEventsHero()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
+                        + '</div>';
+                } else {
+                    preview.innerHTML = '<img src="' + url + '" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--color-light-stone)">'
+                        + '<div style="margin-top:0.5rem;display:flex;align-items:center;justify-content:space-between">'
+                        + '<span style="font-size:0.82rem;color:var(--color-stone)">Current: image background</span>'
+                        + '<button class="btn btn-danger" onclick="deleteEventsHero()" style="padding:0.35rem 0.85rem;font-size:0.78rem">Remove</button>'
+                        + '</div>';
+                }
+            } else {
+                preview.innerHTML = '<div style="font-size:0.8rem;color:var(--color-stone);padding:0.5rem 0">No custom background set — the section uses a plain cream background by default.</div>';
+            }
+        } catch (err) {
+            preview.innerHTML = '<div style="font-size:0.8rem;color:var(--color-stone)">Could not load preview</div>';
+        }
+    }
+
+    async function uploadEventsHero(file) {
+        if (!file) return;
+        const progressEl = document.getElementById('progress-eventshero');
+        progressEl.textContent = 'Uploading ' + file.name + '...';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await fetch(WORKER_URL + '/events-hero/upload', {
+                method: 'POST',
+                headers: { 'Authorization': 'Bearer ' + authToken },
+                body: formData,
+            });
+            const data = await res.json();
+            if (data.success) {
+                progressEl.textContent = 'Background updated!';
+                setTimeout(() => { progressEl.textContent = ''; }, 3000);
+                loadEventsHero();
+            } else {
+                progressEl.textContent = 'Error: ' + (data.error || 'Upload failed');
+            }
+        } catch (err) {
+            progressEl.textContent = 'Upload failed — connection error';
+        }
+        document.getElementById('file-eventshero').value = '';
+    }
+
+    async function deleteEventsHero() {
+        if (!confirm('Remove the events page hero background?')) return;
+        try {
+            await fetch(WORKER_URL + '/events-hero/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                body: '{}',
+            });
+            loadEventsHero();
+        } catch (err) {}
+    }
+
+    // Events hero drag & drop
+    (function() {
+        const zone = document.getElementById('upload-zone-eventshero');
+        if (!zone) return;
+        zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
+        zone.addEventListener('dragleave', () => { zone.classList.remove('dragover'); });
+        zone.addEventListener('drop', (e) => { e.preventDefault(); zone.classList.remove('dragover'); uploadEventsHero(e.dataTransfer.files[0]); });
     })();
 
     // --- Camping Experience Background ---
