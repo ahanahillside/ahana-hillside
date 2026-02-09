@@ -1101,6 +1101,77 @@ export default {
       }
     }
 
+    // --- About page hero image endpoints ---
+
+    // GET /about-hero/info — public, returns metadata
+    if (path === '/about-hero/info' && request.method === 'GET') {
+      try {
+        const meta = await env.CONFIG.get('about-hero-meta', 'json');
+        if (meta) return jsonResponse({ exists: true, contentType: meta.contentType }, 200, origin, 'public, max-age=60');
+        return jsonResponse({ exists: false }, 200, origin, 'public, max-age=60');
+      } catch (e) {
+        return jsonResponse({ exists: false }, 200, origin);
+      }
+    }
+
+    // GET /about-hero — public, serves the image
+    if (path === '/about-hero' && request.method === 'GET') {
+      try {
+        const { value, metadata } = await env.CONFIG.getWithMetadata('about-hero-file', 'arrayBuffer');
+        if (!value) return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+        return new Response(value, {
+          status: 200,
+          headers: {
+            'Content-Type': metadata?.contentType || 'image/jpeg',
+            'Cache-Control': 'public, max-age=300',
+            ...corsHeaders(origin),
+          },
+        });
+      } catch (err) {
+        return new Response('Not found', { status: 404, headers: corsHeaders(origin) });
+      }
+    }
+
+    // POST /about-hero/upload — admin only
+    if (path === '/about-hero/upload' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        const formData = await request.formData();
+        const file = formData.get('file');
+        if (!file || !(file instanceof File)) {
+          return jsonResponse({ error: 'No file provided' }, 400, origin);
+        }
+        if (!GALLERY_IMAGE_TYPES.includes(file.type)) {
+          return jsonResponse({ error: 'Only JPEG, PNG, or WebP images are allowed' }, 400, origin);
+        }
+        if (file.size > MAX_IMAGE_SIZE) {
+          return jsonResponse({ error: 'Image must be under 5MB' }, 400, origin);
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        await env.CONFIG.put('about-hero-file', arrayBuffer, {
+          metadata: { contentType: file.type, name: file.name },
+        });
+        await env.CONFIG.put('about-hero-meta', JSON.stringify({
+          contentType: file.type, name: file.name, size: file.size, uploadedAt: new Date().toISOString(),
+        }));
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Upload failed', detail: err.message }, 500, origin);
+      }
+    }
+
+    // POST /about-hero/delete — admin only
+    if (path === '/about-hero/delete' && request.method === 'POST') {
+      { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }
+      try {
+        await env.CONFIG.delete('about-hero-file');
+        await env.CONFIG.delete('about-hero-meta');
+        return jsonResponse({ success: true }, 200, origin);
+      } catch (err) {
+        return jsonResponse({ error: 'Delete failed', detail: err.message }, 500, origin);
+      }
+    }
+
     // --- Camping experience background endpoints ---
 
     // GET /campsite-bg/info — public, returns background metadata
