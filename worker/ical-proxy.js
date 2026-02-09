@@ -593,6 +593,14 @@ export default {
       return jsonResponse({ experiences }, 200, origin, 'public, max-age=60');
     }
 
+    // --- GET /reviews — public, returns guest reviews ---
+    if (path === '/reviews' && request.method === 'GET') {
+      const config = await getConfig(env);
+      const reviews = (config.reviews || []).filter(r => r.enabled !== false);
+      reviews.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      return jsonResponse({ reviews }, 200, origin, 'public, max-age=60');
+    }
+
     // --- POST /config — admin only, updates site configuration ---
     if (path === '/config' && request.method === 'POST') {
       { const authErr = await requireAuth(request, env, origin); if (authErr) return authErr; }

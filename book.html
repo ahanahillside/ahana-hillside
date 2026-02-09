@@ -1569,6 +1569,80 @@
             border-bottom: none;
         }
 
+        /* Guest Reviews */
+        .reviews-strip {
+            background: #fff;
+            border-top: 1px solid var(--color-light-stone);
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        .reviews-strip-title {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--color-forest);
+            margin-bottom: 1.5rem;
+        }
+        .reviews-strip-title em { font-style: italic; }
+        .reviews-scroll {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 0.5rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .reviews-scroll::-webkit-scrollbar { height: 4px; }
+        .reviews-scroll::-webkit-scrollbar-track { background: transparent; }
+        .reviews-scroll::-webkit-scrollbar-thumb { background: var(--color-light-stone); border-radius: 2px; }
+        .review-mini {
+            scroll-snap-align: start;
+            min-width: 280px;
+            max-width: 320px;
+            background: var(--color-cream);
+            border: 1px solid var(--color-light-stone);
+            padding: 1.25rem;
+            text-align: left;
+            flex-shrink: 0;
+        }
+        .review-mini-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+        .review-mini-name {
+            font-family: var(--font-serif);
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-forest);
+        }
+        .review-mini-badge {
+            font-size: 0.6rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            color: #fff;
+        }
+        .review-mini-stars {
+            color: #E8A83E;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+        }
+        .review-mini-text {
+            font-size: 0.82rem;
+            color: var(--color-charcoal);
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -2636,6 +2710,12 @@
         </div>
     </div>
 
+    <!-- Guest Reviews -->
+    <div class="reviews-strip" id="reviews-strip">
+        <div class="reviews-strip-title"><em>Loved</em> by Our Guests</div>
+        <div class="reviews-scroll" id="reviews-scroll"></div>
+    </div>
+
     <footer class="footer">
         <div class="footer-links">
             <a href="/disclaimer">Disclaimer</a> &middot; <a href="/terms-and-conditions">Terms &amp; Conditions</a> &middot; <a href="/contact">Contact</a>
@@ -2666,6 +2746,37 @@
 
     <script>
         const WORKER_URL = 'https://ahana-ical-proxy.ahanahillside.workers.dev';
+
+        // --- Load guest reviews ---
+        (async function() {
+            try {
+                var res = await fetch(WORKER_URL + '/reviews');
+                var data = await res.json();
+                var reviews = data.reviews || [];
+                if (reviews.length === 0) return;
+
+                var sourceColors = { booking: '#003580', hipcamp: '#2D6A4F', google: '#EA4335', direct: '#A69583' };
+                var sourceLabels = { booking: 'Booking.com', hipcamp: 'Hipcamp', google: 'Google', direct: 'Direct Guest' };
+
+                var container = document.getElementById('reviews-scroll');
+                container.innerHTML = reviews.map(function(r) {
+                    var stars = '';
+                    for (var s = 0; s < (r.rating || 5); s++) stars += '&#9733;';
+                    var srcColor = sourceColors[r.source] || '#666';
+                    var srcLabel = sourceLabels[r.source] || r.source;
+                    return '<div class="review-mini">'
+                        + '<div class="review-mini-header">'
+                        + '<span class="review-mini-name">' + r.guestName.replace(/</g, '&lt;') + '</span>'
+                        + '<span class="review-mini-badge" style="background:' + srcColor + '">' + srcLabel + '</span>'
+                        + '</div>'
+                        + '<div class="review-mini-stars">' + stars + '</div>'
+                        + '<div class="review-mini-text">' + r.text.replace(/</g, '&lt;') + '</div>'
+                        + '</div>';
+                }).join('');
+
+                document.getElementById('reviews-strip').style.display = '';
+            } catch (err) {}
+        })();
 
         // --- Wizard state ---
         let currentStep = 2;
